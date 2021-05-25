@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\app",
+    "\\src\\app\\modules",
+    "\\src\\app\\pages",
+    "\\src\\app\\pages\\_layout",
+    "\\src\\app\\pages\\_layout\\components",
+    "\\src\\app\\pages\\_layout\\components\\topbar"
+  ],
+  "SelectedNode": "\\src\\app\\pages\\_layout\\components\\topbar\\topbar.component.html",
+  "PreviewInSolutionExplorer": false
+}
