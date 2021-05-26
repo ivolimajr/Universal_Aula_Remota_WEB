@@ -70,7 +70,7 @@
             cacheSVG="true"
             class="svg-icon menu-icon"
           ></span>
-          <span class="menu-text">Auto Escola</span>
+          <span class="menu-text">Cadastro de empresa</span>
         </a>
       </li>
 
@@ -79,30 +79,104 @@
       aria-haspopup="true"
       routerLinkActive="menu-item-active"
     >
-      <a class="menu-link" routerLink="/builder" routerLinkActive="active">
+      <a class="menu-link" routerLink="/user-profile" routerLinkActive="active">
         <span
           [inlineSVG]="'./assets/media/svg/icons/Communication/Address-card.svg'"
           cacheSVG="true"
           class="svg-icon menu-icon"
         ></span>
-        <span class="menu-text">Perfil</span>
+        <span class="menu-text">Cadastro do Admin CFC</span>
       </a>
     </li>
-      <!-- begin::1 Level -->
+    
+    <li
+    class="menu-item"
+    aria-haspopup="true"
+    routerLinkActive="menu-item-active"
+  >
+    <a class="menu-link" routerLink="auth/registration" routerLinkActive="active">
+      <span
+        [inlineSVG]="'./assets/media/svg/icons/Communication/Group.svg'"
+        cacheSVG="true"
+        class="svg-icon menu-icon"
+      ></span>
+      <span class="menu-text">Gerar senha</span>
+    </a>
+  </li>
+  <li
+  class="menu-item"
+  aria-haspopup="true"
+  routerLinkActive="menu-item-active"
+>
+  <a class="menu-link" routerLink="auth/logout" routerLinkActive="active">
+    <span
+      [inlineSVG]="'./assets/media/svg/icons/Communication/Group.svg'"
+      cacheSVG="true"
+      class="svg-icon menu-icon"
+    ></span>
+    <span class="menu-text">Logout</span>
+  </a>
+</li>
+
       <li
-        class="menu-item menu-item-submenu"
+    class="menu-item"
+    aria-haspopup="true"
+    routerLinkActive="menu-item-active"
+  >
+    <li
+    class="menu-item menu-item-submenu"
+    aria-haspopup="true"
+    data-menu-toggle="hover"
+    routerLinkActive="menu-item-open"
+  >
+    <a
+      class="menu-link menu-toggle"
+      href="/material/form-controls"
+      routerLinkActive="active"
+    >
+      <i class="menu-bullet menu-bullet-dot">
+        <span></span>
+      </i>
+      <span class="menu-text">Bloquear Acesso</span>
+      <i class="menu-arrow"></i>
+    </a>
+    <div class="menu-submenu">
+      <i class="menu-arrow"></i>
+      <ul class="menu-subnav">
+        <!-- begin::3 Level -->
+        <li
+          class="menu-item"
+          aria-haspopup="true"
+          routerLinkActive="menu-item-active"
+        >
+          <a
+            class="menu-link"
+            routerLink="/material/form-controls/autocomplete"
+            routerLinkActive="active"
+          >
+            <i class="menu-bullet menu-bullet-dot">
+              <span></span>
+            </i>
+            <span class="menu-text">CFC</span>
+          </a>
+        </li>
+        
+        <li
+        class="menu-item"
         aria-haspopup="true"
-        data-menu-toggle="hover"
-        routerLinkActive="menu-item-open"
+        routerLinkActive="menu-item-active"
       >
         <a
-          class="menu-link menu-toggle"
-          href="/material"
+          class="menu-link"
+          routerLink="/material/form-controls/autocomplete"
           routerLinkActive="active"
         >
-          <span
-            [inlineSVG]="'./assets/media/svg/icons/Design/Cap-2.svg'"
-            cacheSVG="true"
-            class="svg-icon menu-icon"
-          ></span>
-          <span class="menu-text">Sair</span>
+          <i class="menu-bullet menu-bullet-dot">
+            <span></span>
+          </i>
+          <span class="menu-text">Administrador CFC</span>
+        </a>
+      </li>
+      
+      <!-- begin::1 Level -->
+    
