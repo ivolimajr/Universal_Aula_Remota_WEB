@@ -19,6 +19,12 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./pages/layout.module').then((m) => m.LayoutModule),
   },
+  {
+    path: '',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./pages/layout.module').then((m) => m.LayoutModule),
+  },
   { path: '**', redirectTo: 'error/404' },
 ];
 

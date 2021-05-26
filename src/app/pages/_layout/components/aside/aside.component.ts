@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/modules/auth';
 import { LayoutService } from '../../../../_metronic/core';
 
 @Component({
@@ -20,7 +21,7 @@ export class AsideComponent implements OnInit {
   asideMenuScroll = 1;
   asideSelfMinimizeToggle = false;
 
-  constructor(private layout: LayoutService, private loc: Location) { }
+  constructor(private layout: LayoutService, private loc: Location, private auth: AuthService) { }
 
   ngOnInit(): void {
     // load view settings
@@ -48,5 +49,9 @@ export class AsideComponent implements OnInit {
     } else {
       return './assets/media/logos/logo-light.png';
     }
+  }
+  logout() {
+    this.auth.logout();
+    document.location.reload();
   }
 }
