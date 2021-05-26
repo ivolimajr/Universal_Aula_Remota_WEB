@@ -108,7 +108,7 @@
   aria-haspopup="true"
   routerLinkActive="menu-item-active"
 >
-  <a class="menu-link" routerLink="auth/logout" routerLinkActive="active">
+  <a class="menu-link"  (click)="logout()" routerLinkActive="active">
     <span
       [inlineSVG]="'./assets/media/svg/icons/Communication/Group.svg'"
       cacheSVG="true"
@@ -117,6 +117,7 @@
     <span class="menu-text">Logout</span>
   </a>
 </li>
+
 
       <li
     class="menu-item"
