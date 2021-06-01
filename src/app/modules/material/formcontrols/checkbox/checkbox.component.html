@@ -1,132 +1,203 @@
-<app-notice [svg]="'assets/media/svg/icons/Tools/Compass.svg'">
-  For more info please check the components's official demos & documentation
-  <a
-    class="font-weight-bold"
-    href="https://material.angular.io/components/checkbox/overview"
-    target="_blank"
-    >demos & documentation</a
-  >
-</app-notice>
+<!-- Cadastro de Administrador -->
+<div class="container">
+<!DOCTYPE html>
+ 
+<html>
+ <head>
+ <title> Cadastro Simples </title>
+ <meta name="description" content="Aprenda a criar um site completo que usa formulários em HTML">
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+ </head>
 
-<div class="row">
-  <div class="col-xl-6">
-    <app-code-preview [viewItem]="exampleBasicCheckboxes">
-      <div class="example-preview">
-        <span>
-          <code>&lt;mat-checkbox&gt;</code> provides the same functionality as a
-          native <code>&lt;input type="checkbox"&gt;</code> enhanced with
-          Material Design styling and animations.
-        </span>
-        <div class="separator separator-dashed my-6"></div>
-        <div>
-          <mat-checkbox [color]="'primary'">Check me!</mat-checkbox>
-        </div>
-      </div>
-    </app-code-preview>
+ <body>
+  <h1> Teste de Cadastro #1 </h1> 
+  <h2> Preencha o formulário para cadastrar um Administrador de confiança no E-Driving!</h2><br />
 
-    <app-code-preview [viewItem]="exampleLabelPositions">
-      <div class="example-preview">
-        <span>
-          <code>@Input() labelPosition: 'before' | 'after'</code> Whether the
-          label should appear after or before the checkbox. Defaults to 'after'
-        </span>
-        <div class="separator separator-dashed my-6"></div>
-        <div>
-          <mat-checkbox [labelPosition]="labelPosition" [color]="'primary'"
-            >Check me!</mat-checkbox
-          >
-          <div class="separator separator-dashed my-6"></div>
-          <mat-slide-toggle (change)="changeLablesPositions()"
-            >Slide labels position</mat-slide-toggle
-          >
-        </div>
-      </div>
-    </app-code-preview>
+<form action="Script_do_Formulario.php" method="post">
 
-    <app-code-preview [viewItem]="exampleChangeEvent">
-      <div class="example-preview">
-        <span>
-          <code>@Output() change: EventEmitter&lt;MatCheckboxChange&gt;</code>
-          Event emitted when the checkbox's checked value changes.
-        </span>
-        <div class="separator separator-dashed my-6"></div>
-        <div>
-          <mat-checkbox
-            [(ngModel)]="myValue"
-            (change)="changeValueEvent()"
-            [color]="'primary'"
-            >Check me!</mat-checkbox
-          >
-          <div class="separator separator-dashed my-6"></div>
-          <span
-            >Checked: <mark>{{ myValue }}</mark></span
-          >
-        </div>
-      </div>
-    </app-code-preview>
-  </div>
-  <div class="col-xl-6">
-    <app-code-preview [viewItem]="exampleConfigurableCheckbox">
-      <div class="example-preview">
-        <span>
-          When user clicks on the
-          <code>mat-checkbox</code>, the default behavior is toggle checked
-          value and set indeterminate to false. This behavior can be customized
-          by
-          <a
-            href="https://angular.io/guide/dependency-injection"
-            target="_blank"
-            >providing a new value</a
-          >
-          of <code>MAT_CHECKBOX_CLICK_ACTION</code> to the checkbox.
-        </span>
-        <div class="separator separator-dashed my-6"></div>
-        <div>
-          <mat-checkbox
-            class="example-margin"
-            [(ngModel)]="checked"
-            [color]="'primary'"
-            >Checked</mat-checkbox
-          >
-          <mat-checkbox
-            class="example-margin"
-            [(ngModel)]="indeterminate"
-            [color]="'primary'"
-            >Indeterminate</mat-checkbox
-          >
-          <div class="separator separator-dashed my-6"></div>
-          <label class="example-margin">Align:</label>
-          <mat-radio-group [(ngModel)]="align">
-            <mat-radio-button class="example-margin" value="start"
-              >Start</mat-radio-button
-            >
-            <mat-radio-button class="example-margin" value="end"
-              >End</mat-radio-button
-            >
-          </mat-radio-group>
+<!-- DADOS PESSOAIS-->
+<fieldset>
+ <legend>Dados Pessoais</legend>
+ <table cellspacing="10">
+  <tr>
+   <td>
+    <label for="nome">Nome: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="email">
+   </td>
+   <td>
+    <label for="sobrenome">Sobrenome: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="sobrenome">
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label>Nascimento: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="dia" size="2" maxlength="2" value="dd"> 
+   <input type="text" name="mes" size="2" maxlength="2" value="mm"> 
+   <input type="text" name="ano" size="4" maxlength="4" value="aaaa">
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="rg">RG: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="rg" size="13" maxlength="13"> 
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label>CPF:</label>
+   </td>
+   <td align="left">
+    <input type="text" name="cpf" size="9" maxlength="9"> - <input type="text" name="cpf2" size="2" maxlength="2">
+   </td>
+  </tr>
+ </table>
+</fieldset>
 
-          <div class="separator separator-dashed my-6"></div>
-          <mat-checkbox
-            class="example-margin"
-            [(ngModel)]="disabled"
-            [color]="'primary'"
-            >Disabled</mat-checkbox
-          >
+<br />
+<!-- ENDEREÇO -->
+<fieldset>
+ <legend>Dados de Endereço</legend>
+ <table cellspacing="10">
 
-          <div class="separator separator-dashed my-6"></div>
+  <tr>
+   <td>
+    <label for="rua">Rua:</label>
+   </td>
+   <td align="left">
+    <input type="text" name="rua">
+   </td>
+   <td>
+    <label for="numero">Numero:</label>
+   </td>
+   <td align="left">
+    <input type="text" name="numero" size="4">
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="bairro">Bairro: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="bairro">
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="estado">Estado:</label>
+   </td>
+   <td align="left">
+    <select name="estado"> 
+    <option value="ac">Acre</option> 
+    <option value="al">Alagoas</option> 
+    <option value="am">Amazonas</option> 
+    <option value="ap">Amapá</option> 
+    <option value="ba">Bahia</option> 
+    <option value="ce">Ceará</option> 
+    <option value="df">Distrito Federal</option> 
+    <option value="es">Espírito Santo</option> 
+    <option value="go">Goiás</option> 
+    <option value="ma">Maranhão</option> 
+    <option value="mt">Mato Grosso</option> 
+    <option value="ms">Mato Grosso do Sul</option> 
+    <option value="mg">Minas Gerais</option> 
+    <option value="pa">Pará</option> 
+    <option value="pb">Paraíba</option> 
+    <option value="pr">Paraná</option> 
+    <option value="pe">Pernambuco</option> 
+    <option value="pi">Piauí</option> 
+    <option value="rj">Rio de Janeiro</option> 
+    <option value="rn">Rio Grande do Norte</option> 
+    <option value="ro">Rondônia</option> 
+    <option value="rs">Rio Grande do Sul</option> 
+    <option value="rr">Roraima</option> 
+    <option value="sc">Santa Catarina</option> 
+    <option value="se">Sergipe</option> 
+    <option value="sp">São Paulo</option> 
+    <option value="to">Tocantins</option> 
+   </select>
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="cidade">Cidade: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="cidade">
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="cep">CEP: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="cep" size="5" maxlength="5"> - <input type="text" name="cep2" size="3" maxlength="3">
+   </td>
+  </tr>
+ </table>
+</fieldset>
+<br />
 
-          Result:
-          <mat-checkbox
-            class="example-margin"
-            [(ngModel)]="checked"
-            [(indeterminate)]="indeterminate"
-            [disabled]="disabled"
-            [color]="'primary'"
-          >
-            I'm a checkbox
-          </mat-checkbox>
-        </div>
-      </div>
-    </app-code-preview>
-  </div>
+<!-- DADOS DE LOGIN -->
+<fieldset>
+ <legend>Dados de login</legend>
+ <table cellspacing="10">
+  <tr>
+   <td>
+    <label for="email">E-mail: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="email">
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="imagem">Imagem de perfil:</label>
+   </td>
+   <td>
+    <input type="file" name="imagem" >
+
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="login">Login de usuário: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="login">
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="pass">Senha: </label>
+   </td>
+   <td align="left">
+    <input type="password" name="pass">
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="passconfirm">Confirme a senha: </label>
+   </td>
+   <td align="left">
+    <input type="password" name="passconfirm">
+   </td>
+  </tr>
+ </table>
+</fieldset>
+<br />
+<input type="submit">
+<input type="reset" value="Limpar">
+</form>
+
+ </body>
+</html>
 </div>

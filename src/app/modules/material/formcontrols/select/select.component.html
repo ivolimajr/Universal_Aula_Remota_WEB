@@ -1,237 +1,203 @@
-<app-notice [svg]="'assets/media/svg/icons/Tools/Compass.svg'">
-  For more info please check the components's official demos & documentation
-  <a
-    class="font-weight-bold"
-    href="https://material.angular.io/components/select/overview"
-    target="_blank"
-    >demos & documentation</a
-  >
-</app-notice>
+<!-- Builder = Cadastro de empresa-->
+<div class="container">
+<!DOCTYPE html>
+ 
+<html>
+ <head>
+ <title> Cadastro Simples </title>
+ <meta name="description" content="Aprenda a criar um site completo que usa formulários em HTML">
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+ </head>
 
-<div class="row">
-  <div class="col-xl-6">
-    <app-code-preview [viewItem]="exampleBasicSelect">
-      <div class="example-preview">
-        <span>
-          <code>mat-select</code> is a form control for selecting a value from a
-          set of options, similar to the native
-          <code>&lt;select&gt;</code> element. You can read more about selects
-          in the Material Design spec. It is designed to work inside of a
-          <code>mat-form-field</code> element.
-        </span>
-        <div class="separator separator-dashed my-6"></div>
-        <div class="example-container">
-          <mat-form-field>
-            <mat-select placeholder="Favorite food">
-              <mat-option *ngFor="let food of foods" [value]="food.value">
-                {{ food.viewValue }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-    </app-code-preview>
+ <body>
+  <h1> Teste de Cadastro #1 </h1> 
+  <h2> Preencha o formulário abaixo cadastrar a empresa que vai utilizar o E-Driving!</h2><br />
 
-    <app-code-preview [viewItem]="exampleSelectWith2WayValueBinding">
-      <div class="example-preview">
-        <div class="example-container">
-          <mat-form-field>
-            <mat-select [(value)]="selected">
-              <mat-option>None</mat-option>
-              <mat-option value="option1">Option 1</mat-option>
-              <mat-option value="option2">Option 2</mat-option>
-              <mat-option value="option3">Option 3</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div class="separator separator-dashed my-6"></div>
+<form action="Script_do_Formulario.php" method="post">
 
-          You selected:
-          <mark *ngIf="selected">{{ selected }}</mark>
-        </div>
-      </div>
-    </app-code-preview>
+<!-- DADOS PESSOAIS-->
+<fieldset>
+ <legend>Dados Pessoais</legend>
+ <table cellspacing="10">
+  <tr>
+   <td>
+    <label for="nome">Nome: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="email">
+   </td>
+   <td>
+    <label for="sobrenome">Sobrenome: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="sobrenome">
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label>Nascimento: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="dia" size="2" maxlength="2" value="dd"> 
+   <input type="text" name="mes" size="2" maxlength="2" value="mm"> 
+   <input type="text" name="ano" size="4" maxlength="4" value="aaaa">
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="rg">RG: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="rg" size="13" maxlength="13"> 
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label>CPF:</label>
+   </td>
+   <td align="left">
+    <input type="text" name="cpf" size="9" maxlength="9"> - <input type="text" name="cpf2" size="2" maxlength="2">
+   </td>
+  </tr>
+ </table>
+</fieldset>
 
-    <app-code-preview [viewItem]="exampleSelectInAForm">
-      <div class="example-preview">
-        <div class="example-container">
-          <form class="example-container">
-            <mat-form-field>
-              <mat-select
-                placeholder="Favorite food"
-                [(ngModel)]="selectedValue"
-                name="food"
-              >
-                <mat-option *ngFor="let food of foods" [value]="food.value">
-                  {{ food.viewValue }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+<br />
+<!-- ENDEREÇO -->
+<fieldset>
+ <legend>Dados de Endereço</legend>
+ <table cellspacing="10">
 
-            <div class="separator separator-dashed my-6"></div>
-            Selected value:
-            <mark *ngIf="selectedValue">{{ selectedValue }}</mark>
-          </form>
-        </div>
-      </div>
-    </app-code-preview>
+  <tr>
+   <td>
+    <label for="rua">Rua:</label>
+   </td>
+   <td align="left">
+    <input type="text" name="rua">
+   </td>
+   <td>
+    <label for="numero">Numero:</label>
+   </td>
+   <td align="left">
+    <input type="text" name="numero" size="4">
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="bairro">Bairro: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="bairro">
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="estado">Estado:</label>
+   </td>
+   <td align="left">
+    <select name="estado"> 
+    <option value="ac">Acre</option> 
+    <option value="al">Alagoas</option> 
+    <option value="am">Amazonas</option> 
+    <option value="ap">Amapá</option> 
+    <option value="ba">Bahia</option> 
+    <option value="ce">Ceará</option> 
+    <option value="df">Distrito Federal</option> 
+    <option value="es">Espírito Santo</option> 
+    <option value="go">Goiás</option> 
+    <option value="ma">Maranhão</option> 
+    <option value="mt">Mato Grosso</option> 
+    <option value="ms">Mato Grosso do Sul</option> 
+    <option value="mg">Minas Gerais</option> 
+    <option value="pa">Pará</option> 
+    <option value="pb">Paraíba</option> 
+    <option value="pr">Paraná</option> 
+    <option value="pe">Pernambuco</option> 
+    <option value="pi">Piauí</option> 
+    <option value="rj">Rio de Janeiro</option> 
+    <option value="rn">Rio Grande do Norte</option> 
+    <option value="ro">Rondônia</option> 
+    <option value="rs">Rio Grande do Sul</option> 
+    <option value="rr">Roraima</option> 
+    <option value="sc">Santa Catarina</option> 
+    <option value="se">Sergipe</option> 
+    <option value="sp">São Paulo</option> 
+    <option value="to">Tocantins</option> 
+   </select>
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="cidade">Cidade: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="cidade">
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="cep">CEP: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="cep" size="5" maxlength="5"> - <input type="text" name="cep2" size="3" maxlength="3">
+   </td>
+  </tr>
+ </table>
+</fieldset>
+<br />
 
-    <app-code-preview [viewItem]="exampleSelectWithFormFieldFeature">
-      <div class="example-preview">
-        <div class="example-container">
-          <mat-form-field>
-            <mat-select
-              placeholder="Favorite animal"
-              [formControl]="animalControl"
-              required
-            >
-              <mat-option>--</mat-option>
-              <mat-option *ngFor="let animal of animals" [value]="animal">
-                {{ animal.name }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="animalControl.hasError('required')"
-              >Please choose an animal</mat-error
-            >
-            <mat-hint>{{ animalControl.value?.sound }}</mat-hint>
-          </mat-form-field>
-        </div>
-      </div>
-    </app-code-preview>
+<!-- DADOS DE LOGIN -->
+<fieldset>
+ <legend>Dados de login</legend>
+ <table cellspacing="10">
+  <tr>
+   <td>
+    <label for="email">E-mail: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="email">
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="imagem">Imagem de perfil:</label>
+   </td>
+   <td>
+    <input type="file" name="imagem" >
 
-    <app-code-preview [viewItem]="exampleSelectWithResetOption">
-      <div class="example-preview">
-        <div class="example-container">
-          <mat-form-field>
-            <mat-select placeholder="State">
-              <mat-option>None</mat-option>
-              <mat-option *ngFor="let state of states" [value]="state">{{
-                state
-              }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-    </app-code-preview>
-  </div>
-  <div class="col-xl-6">
-    <app-code-preview [viewItem]="exampleSelectWithOptionGroups">
-      <div class="example-preview">
-        <div class="example-container">
-          <mat-form-field>
-            <mat-select placeholder="Pokemon" [formControl]="pokemonControl">
-              <mat-option>-- None --</mat-option>
-              <mat-optgroup
-                *ngFor="let group of pokemonGroups"
-                [label]="group.name"
-                [disabled]="group.disabled"
-              >
-                <mat-option
-                  *ngFor="let pokemon of group.pokemon"
-                  [value]="pokemon.value"
-                >
-                  {{ pokemon.viewValue }}
-                </mat-option>
-              </mat-optgroup>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-    </app-code-preview>
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="login">Login de usuário: </label>
+   </td>
+   <td align="left">
+    <input type="text" name="login">
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="pass">Senha: </label>
+   </td>
+   <td align="left">
+    <input type="password" name="pass">
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <label for="passconfirm">Confirme a senha: </label>
+   </td>
+   <td align="left">
+    <input type="password" name="passconfirm">
+   </td>
+  </tr>
+ </table>
+</fieldset>
+<br />
+<input type="submit">
+<input type="reset" value="Limpar">
+</form>
 
-    <app-code-preview [viewItem]="exampleSelectWithMultipleSelection">
-      <div class="example-preview">
-        <div class="example-container">
-          <mat-form-field>
-            <mat-select
-              placeholder="Toppings"
-              [formControl]="toppings"
-              multiple
-            >
-              <mat-option
-                *ngFor="let topping of toppingList"
-                [value]="topping"
-                >{{ topping }}</mat-option
-              >
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-    </app-code-preview>
-
-    <app-code-preview [viewItem]="exampleSelectWithCustomTriggerText">
-      <div class="example-preview">
-        <div class="example-container">
-          <mat-form-field>
-            <mat-select
-              placeholder="Toppings"
-              [formControl]="toppings2"
-              multiple
-            >
-              <mat-select-trigger>
-                {{ toppings2.value ? toppings2.value[0] : "" }}
-                <span
-                  *ngIf="toppings2.value?.length > 1"
-                  class="example-additional-selection"
-                >
-                  (+{{ toppings2.value.length - 1 }} others)
-                </span>
-              </mat-select-trigger>
-              <mat-option
-                *ngFor="let topping of toppingList2"
-                [value]="topping"
-                >{{ topping }}</mat-option
-              >
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-    </app-code-preview>
-
-    <app-code-preview [viewItem]="exampleSelectWithCustomPanelStyling">
-      <div class="example-preview">
-        <div class="example-container">
-          <mat-form-field>
-            <mat-select
-              placeholder="Panel color"
-              [formControl]="panelColor"
-              panelClass="example-panel-{{ panelColor.value }}"
-            >
-              <mat-option value="red">Red</mat-option>
-              <mat-option value="green">Green</mat-option>
-              <mat-option value="blue">Blue</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </div>
-    </app-code-preview>
-
-    <app-code-preview [viewItem]="exampleSelectWithACustomErrorStateMatcher">
-      <div class="example-preview">
-        <div class="example-container">
-          <mat-form-field>
-            <mat-select
-              placeholder="Choose one"
-              [formControl]="selected2"
-              [errorStateMatcher]="matcher"
-            >
-              <mat-option>Clear</mat-option>
-              <mat-option value="valid">Valid option</mat-option>
-              <mat-option value="invalid">Invalid option</mat-option>
-            </mat-select>
-            <mat-hint>Errors appear instantly!</mat-hint>
-            <mat-error *ngIf="selected2.hasError('required')"
-              >You must make a selection</mat-error
-            >
-            <mat-error
-              *ngIf="
-                selected2.hasError('pattern') && !selected2.hasError('required')
-              "
-            >
-              Your selection is invalid
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-    </app-code-preview>
-  </div>
+ </body>
+</html>
 </div>
