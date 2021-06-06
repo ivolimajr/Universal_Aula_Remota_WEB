@@ -23,16 +23,6 @@
           ></app-aside>
           <!--FIM MENU LATERAL ESQUERDO-->
         </ng-container>
-        <ng-container *ngIf="!asideMenuStatic">
-          <!--begin::DYNAMIC Aside-->
-          <app-aside-dynamic
-            #ktAside
-            id="kt_aside"
-            class="aside aside-left d-flex flex-column flex-row-auto"
-            [ngClass]="asideCSSClasses"
-          ></app-aside-dynamic>
-          <!--end::DYNAMIC Aside-->
-        </ng-container>
       </ng-container>
       <!-- end:: Aside Left -->
 

@@ -1,20 +1,16 @@
 <!--begin::Brand-->
 <div class="brand flex-column-auto" id="kt_brand" [ngClass]="brandClasses">
   <!--begin::Logo-->
-  <a routerLink="/" class="brand-logo">
-    <img alt="" [attr.src]="" />
+  <a routerLink="" class="brand-logo">
+    <img alt="headerLogo" [attr.src]="headerLogo" style="width: 90%;" />
   </a>
   <!--end::Logo-->
 
   <ng-container *ngIf="asideSelfMinimizeToggle">
     <button class="brand-toggle btn btn-sm px-0" id="kt_aside_toggle">
-      <span
-        [inlineSVG]="
+      <span [inlineSVG]="
           './assets/media/svg/icons/Navigation/Angle-double-left.svg'
-        "
-        cacheSVG="true"
-        class="svg-icon svg-icon-xl"
-      ></span>
+        " cacheSVG="true" class="svg-icon svg-icon-xl"></span>
     </button>
   </ng-container>
 </div>
@@ -30,172 +26,42 @@
     <!--end::Header Logo-->
   </ng-container>
   <!--begin::Menu Container-->
-  <div
-    id="kt_aside_menu"
-    class="aside-menu"
-    [ngClass]="asideMenuCSSClasses"
-    data-menu-vertical="1"
-    [attr.data-menu-scroll]="asideMenuScroll"
-    [attr.data-menu-dropdown]="asideMenuDropdown"
-    data-menu-dropdown-timeout="500"
-  >
+  <div id="kt_aside_menu" class="aside-menu" [ngClass]="asideMenuCSSClasses" data-menu-vertical="1" [attr.data-menu-scroll]="asideMenuScroll" [attr.data-menu-dropdown]="asideMenuDropdown" data-menu-dropdown-timeout="500">
     <!-- begin::Menu Nav -->
     <ul class="menu-nav" [ngClass]="ulCSSClasses">
       <!-- begin::1 Level -->
-      <li
-        class="menu-item"
-        aria-haspopup="true"
-        routerLinkActive="menu-item-active"
-      >
-        <a class="menu-link" routerLink="/dashboard" routerLinkActive="active">
-          <span
-            [inlineSVG]="'./assets/media/svg/icons/Design/Layers.svg'"
-            cacheSVG="true"
-            class="svg-icon menu-icon"
-          ></span>
-          <span class="menu-text" translate="MENU.DASHBOARD"></span>
+      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
+        <a class="menu-link" routerLink="" routerLinkActive="active">
+          <span [inlineSVG]="'./assets/media/svg/icons/Design/Layers.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
+          <span class="menu-text">Início</span>
         </a>
       </li>
       <!-- end::1 Level -->
 
-      <!-- begin::1 Level -->
-
-      <li
-      class="menu-item"
-      aria-haspopup="true"
-      routerLinkActive="menu-item-active"
-
-      
-    >
-      <a class="menu-link" routerLink="/builder" routerLinkActive="active">
-        <span
-          [inlineSVG]="'./assets/media/svg/icons/Communication/Group.svg'"
-          cacheSVG="true"
-          class="svg-icon menu-icon"
-        ></span>
-        <span class="menu-text">Cadastro do E-Driving</span> 
-      </a>
-    </li>
-
-      <li
-        class="menu-item"
-        aria-haspopup="true"
-        routerLinkActive="menu-item-active"
-
-        
-      >
-        <a class="menu-link" routerLink="/material/form-controls/select" routerLinkActive="active">
-          <span
-            [inlineSVG]="'./assets/media/svg/icons/Communication/Group.svg'"
-            cacheSVG="true"
-            class="svg-icon menu-icon"
-          ></span>
-          <span class="menu-text">Cadastro de Parceiro</span> 
+      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
+        <a class="menu-link" routerLink="/edriving" routerLinkActive="active">
+          <span [inlineSVG]="'./assets/media/svg/icons/Communication/Group.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
+          <span class="menu-text">Usuários E-Driving</span>
         </a>
       </li>
-
-      <li
-      class="menu-item"
-      aria-haspopup="true"
-      routerLinkActive="menu-item-active"
-    >
-      <a class="menu-link" routerLink="/material/form-controls/checkbox" routerLinkActive="">
-        <span
-          [inlineSVG]="'./assets/media/svg/icons/Communication/Address-card.svg'"
-          cacheSVG="true"
-          class="svg-icon menu-icon"
-        ></span>
-        <span class="menu-text">Cadastro do Admin CFC</span>
-      </a>
-    </li>
-    
-    <li
-    class="menu-item"
-    aria-haspopup="true"
-    routerLinkActive="menu-item-active"
-  >
-    <a class="menu-link" routerLink="/material/form-controls/input" routerLinkActive="active">
-      <span
-        [inlineSVG]="'./assets/media/svg/icons/Communication/Group.svg'"
-        cacheSVG="true"
-        class="svg-icon menu-icon"
-      ></span>
-      <span class="menu-text">Gerar senha</span>
-    </a>
-  </li>
-  <li
-  class="menu-item"
-  aria-haspopup="true"
-  routerLinkActive="menu-item-active"
->
-  <a class="menu-link"  (click)="logout()" routerLinkActive="active">
-    <span
-      [inlineSVG]="'./assets/media/svg/icons/Communication/Group.svg'"
-      cacheSVG="true"
-      class="svg-icon menu-icon"
-    ></span>
-    <span class="menu-text">Logout</span>
-  </a>
-</li>
-
-
-      <li
-    class="menu-item"
-    aria-haspopup="true"
-    routerLinkActive="menu-item-active"
-  >
-    <li
-    class="menu-item menu-item-submenu"
-    aria-haspopup="true"
-    data-menu-toggle="hover"
-    routerLinkActive="menu-item-open"
-  >
-    <a
-      class="menu-link menu-toggle"
-      href="/material/form-controls"
-      routerLinkActive="active"
-    >
-      <i class="menu-bullet menu-bullet-dot">
-        <span></span>
-      </i>
-      <span class="menu-text">Bloquear Acesso</span>
-      <i class="menu-arrow"></i>
-    </a>
-    <div class="menu-submenu">
-      <i class="menu-arrow"></i>
-      <ul class="menu-subnav">
-        <!-- begin::3 Level -->
-        <li
-          class="menu-item"
-          aria-haspopup="true"
-          routerLinkActive="menu-item-active"
-        >
-          <a
-            class="menu-link"
-            routerLink="/material/form-controls/datepicker"
-            routerLinkActive="active"
-          >
-            <i class="menu-bullet menu-bullet-dot">
-              <span></span>
-            </i>
-            <span class="menu-text">CFC</span>
-          </a>
-        </li>
-        
-        <li
-        class="menu-item"
-        aria-haspopup="true"
-        routerLinkActive="menu-item-active"
-      >
-        <a
-          class="menu-link"
-          routerLink="/material/form-controls/formfield"
-          routerLinkActive="active"
-        >
-          <i class="menu-bullet menu-bullet-dot">
-            <span></span>
-          </i>
-          <span class="menu-text">Administrador CFC</span>
+      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
+        <a class="menu-link" routerLink="/partner" routerLinkActive="active">
+          <span [inlineSVG]="'./assets/media/svg/icons/Communication/Group.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
+          <span class="menu-text">Parceiros</span>
         </a>
       </li>
-      
+      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
+        <a class="menu-link" routerLink="/cfc" routerLinkActive="active">
+          <span [inlineSVG]="'./assets/media/svg/icons/Communication/Group.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
+          <span class="menu-text">C.F.C</span>
+        </a>
+      </li>
+      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
+        <a class="menu-link" (click)="logout()" routerLinkActive="active">
+          <span [inlineSVG]="'./assets/media/svg/icons/Communication/Group.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
+          <span class="menu-text">Logout</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
