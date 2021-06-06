@@ -73,7 +73,7 @@ export const DefaultLayoutConfig = {
   // Header
   header: {
     self: {
-      display: true,
+      display: false,
       width: 'fluid', // fixed|fluid,
       theme: 'light', // light|dark
       fixed: {
@@ -92,7 +92,7 @@ export const DefaultLayoutConfig = {
       },
 
       desktop: {
-        arrow: true,
+        arrow: false,
         toggle: 'click',
         submenu: {
           theme: 'light',
@@ -212,7 +212,7 @@ export const DefaultLayoutConfig = {
     // User
     user: {
       display: true,
-      layout: 'offcanvas', // offcanvas, dropdown,
+      layout: 'dropdown', // offcanvas, dropdown,
       dropdown: {
         style: 'dark', // light|dark
       },

@@ -13,8 +13,6 @@ import { LoginComponent } from './login.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Observable, of } from 'rxjs';
 import { UserModel } from '../_models/user.model';
-import { LogoutComponent } from '../logout/logout.component';
-import { TranslationModule } from '../../i18n/translation.module';
 import { TranslateModule } from '@ngx-translate/core';
 
 const fakeAuth = {
@@ -31,7 +29,6 @@ const mockActivatedRoute = {
 
 const fakeRoutes: Routes = [
   { path: 'auth/login', component: LoginComponent },
-  { path: 'auth/logout', component: LogoutComponent },
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
 ];
 
