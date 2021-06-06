@@ -27,7 +27,6 @@ import { EdrivingComponent } from './manegement/edriving/edriving.component';
 import { PartnerComponent } from './manegement/partner/partner.component';
 import { CfcComponent } from './manegement/cfc/cfc.component';
 import { EditCustomerModalComponent } from './manegement/edriving/components/edit-customer-modal/edit-customer-modal.component';
-import { LanguageSelectorComponent } from './_layout/components/topbar/language-selector/language-selector.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +38,6 @@ import { LanguageSelectorComponent } from './_layout/components/topbar/language-
     HeaderComponent,
     HeaderMenuComponent,
     TopbarComponent,
-    LanguageSelectorComponent,
     AsideDynamicComponent,
     HeaderMenuDynamicComponent,
     HomeComponent,
