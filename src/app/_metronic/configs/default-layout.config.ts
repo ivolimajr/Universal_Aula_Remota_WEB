@@ -60,7 +60,7 @@ export const DefaultLayoutConfig = {
     fontFamily: 'Poppins',
   },
 
-  // Base Settins
+  // Base Settings
   self: {
     layout: 'default', // blank/default page mode
   },

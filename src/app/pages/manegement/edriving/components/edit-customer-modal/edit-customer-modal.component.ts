@@ -60,7 +60,6 @@ export class EditCustomerModalComponent implements OnInit, OnDestroy {
     }
   }
 
-
   /**
    * 
    */
@@ -87,16 +86,14 @@ export class EditCustomerModalComponent implements OnInit, OnDestroy {
     console.log("Edit do modal");
   }
 
-  /**
-   * 
-   */
   create() {
     /**
-     * 1° valida/tratar os dados
+     * 1° validar/tratar os dados
      * 2° insere os dados na API
      * 3° trata o retorno da API
      * 4° continua...
      */
+    console.log(this.customer)
     this.modal.close(true)
     this.modal.dismiss("false");
     return of(this.customer);
