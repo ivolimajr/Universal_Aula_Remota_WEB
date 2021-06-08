@@ -27,6 +27,7 @@ import { EdrivingComponent } from './manegement/edriving/edriving.component';
 import { PartnerComponent } from './manegement/partner/partner.component';
 import { CfcComponent } from './manegement/cfc/cfc.component';
 import { EditCustomerModalComponent } from './manegement/edriving/components/edit-customer-modal/edit-customer-modal.component';
+import { EditPartnerModalComponent } from './manegement/partner/components/edit-customer-modal/edit-partner-modal.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { EditCustomerModalComponent } from './manegement/edriving/components/edi
     EdrivingComponent,
     PartnerComponent,
     CfcComponent,
-    EditCustomerModalComponent
+    EditCustomerModalComponent,
+    EditPartnerModalComponent
   ],
   imports: [
     CommonModule,

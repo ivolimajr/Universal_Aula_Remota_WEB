@@ -2,31 +2,34 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
-import { EdrivingModel } from '../../../../../models/edriving/edrivingModel.model';
+import { PartnerModel } from '../../../../../models/partner/partnerModel.model';
 import { CustomAdapter, CustomDateParserFormatter, getDateFromString } from '../../../../../_metronic/core';
 
-const EMPTY_CUSTOMER: EdrivingModel = {
+const EMPTY_PARTNER: PartnerModel = {
   id: undefined,
   fullName: '',
   email: '',
   status: 2,
-  dob: undefined,
-  dateOfBbirth: '',
-  telefone: ''
+  dataAbertura: new Date,
+  telefone:'',
+  cpf:'',
+  cep:'',
+  dateOfBbirth:'',
+
 };
 
 
 @Component({
-  selector: 'app-edit-customer-modal',
-  templateUrl: './edit-customer-modal.component.html',
-  styleUrls: ['./edit-customer-modal.component.scss'],
+  selector: 'app-edit-partner-modal',
+  templateUrl: './edit-partner-modal.component.html',
+  styleUrls: ['./edit-partner-modal.component.scss'],
 
   providers: [
     { provide: NgbDateAdapter, useClass: CustomAdapter },
     { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter }
   ]
 })
-export class EditCustomerModalComponent implements OnInit, OnDestroy {
+export class EditPartnerModalComponent implements OnInit, OnDestroy {
 
   emailFormControl = new FormControl('', [
     Validators.required,
@@ -35,7 +38,7 @@ export class EditCustomerModalComponent implements OnInit, OnDestroy {
   @Input() id: number;
 
   isLoading$;
-  customer: EdrivingModel;
+  customer: PartnerModel;
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
 
@@ -54,10 +57,10 @@ export class EditCustomerModalComponent implements OnInit, OnDestroy {
    */
   loadCustomer() {
     if (!this.id) {
-      this.customer = EMPTY_CUSTOMER;
+      this.customer = EMPTY_PARTNER;
       this.loadForm(null);
     } else {
-      this.customer = EMPTY_CUSTOMER;
+      this.customer = EMPTY_PARTNER;
       this.loadForm(this.id);
     }
   }
@@ -76,7 +79,7 @@ export class EditCustomerModalComponent implements OnInit, OnDestroy {
    */
   private prepareCustomer() {
     const formData = this.createForm.value;
-    this.customer.dob = new Date(formData.dob);
+    this.customer.dataAbertura = new Date(formData.dataAbertura);
     this.customer.email = formData.email;
     this.customer.fullName = formData.fullName;
   }
@@ -102,22 +105,20 @@ export class EditCustomerModalComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *  MÉTODO PARA CARREGAR ( INICIAR ) O FORMULÁRIO
+   * 
    */
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
         fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-        dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
-        telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        dob: [this.customer.dataAbertura, Validators.compose([Validators.nullValidator])]
       });
     } else {
       this.createForm = this.fb.group({
         fullName: ["Ivo", Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: ["email@universal.com.br", Validators.compose([Validators.required, Validators.email])],
-        dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
-        telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        dob: [this.customer.dataAbertura, Validators.compose([Validators.nullValidator])]
       });
     }
 

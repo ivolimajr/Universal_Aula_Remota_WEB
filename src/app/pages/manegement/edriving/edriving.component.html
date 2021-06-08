@@ -5,7 +5,7 @@
         <h3 class="card-label">Usuários E-Driving</h3>
       </div>
       <div class="card-toolbar">
-        <button type="button" class="btn btn-primary" (click)="create(null)">Usuário E-Driving</button>
+        <button type="button" class="btn btn-primary" (click)="create(null)">Adicionar usuário</button>
       </div>
     </div>
     <div class="card-body">
@@ -24,6 +24,38 @@
               <td>Ivo</td>
               <td>Lima@email.com</td>
               <td>037.464.571-06</td>
+              <td>Ativo</td>
+              <td>
+                <a title="Edit customer" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3" (click)="create(1)">
+                  <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                  </span>
+                </a>
+                <a title="Delete customer" class="btn btn-icon btn-light btn-hover-danger btn-sm">
+                  <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                  </span>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>Yuri</td>
+              <td>freitas@email.com</td>
+              <td>145.818.697-06</td>
+              <td>Ativo</td>
+              <td>
+                <a title="Edit customer" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3" (click)="create(1)">
+                  <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                  </span>
+                </a>
+                <a title="Delete customer" class="btn btn-icon btn-light btn-hover-danger btn-sm">
+                  <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                  </span>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>Ricardo</td>
+              <td>ricardo@email.com</td>
+              <td>026.469.543-07</td>
               <td>Ativo</td>
               <td>
                 <a title="Edit customer" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3" (click)="create(1)">
