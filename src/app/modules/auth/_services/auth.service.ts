@@ -44,6 +44,12 @@ export class AuthService implements OnDestroy {
 
   // public methods
   login(email: string, password: string): Observable<UserModel> {
+    /*
+    if (this.authHttpService.getJwtToken() === null) {
+      this.authHttpService.getToken();
+    }
+    */
+
     this.isLoadingSubject.next(true);
     return this.authHttpService.login(email, password).pipe(
       map((auth: AuthModel) => {

@@ -7,7 +7,17 @@ export const environment = {
   appVersion: 'v726demo1',
   USERDATA_KEY: 'authf649fc9a5f55',
   isMockEnabled: true,
-  apiUrl: 'https://your-domain.com/api'
+  apiUrl: 'https://your-domain.com/api',
+  url: 'https://localhost:44372/api',
+  auth: {
+    clientId: 'leandro',
+    clientSecret: 'admin123'
+  },
+  serviceUrl: {
+    cookieName: 'access-token-hom',
+    cookieNameClientCredentials: 'access-token-client-hom',
+    domain: 'localhost'
+  }
 };
 
 /*
