@@ -4,12 +4,16 @@
 import { BaseModel } from '../base.model';
 
 export interface CfcModel extends BaseModel {
-  id: number;
-  fullName: string;
-  email: string;
-  cpf: string;
+  cargo: any;
+  dob: any;
+  cnpj: string;
+  InscricaoEstadual: string;
+  dataAbertura: Date; //
   cep: string;
   endereco: string;
-  dataAbertura: Date;
-  status: number;
+  status: number; //
+  RazaoSocial: string;
+  NomeFantasia: string;
+  site:string;
+  detran:string;
 }

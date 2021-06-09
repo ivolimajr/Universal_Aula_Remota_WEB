@@ -46,7 +46,21 @@ export class AuthService implements OnDestroy {
 
   // public methods
   login(email: string, password: string): Observable<UserModel> {
+    this.isLoadingSubject.next(true);
+    return this.authHttpService.login(email, password).pipe(
+      map((auth: AuthModel) => {
+        const result = this.setAuthFromLocalStorage(auth);
+        return result;
+      }),
+      switchMap(() => this.getUserByToken()),
+      catchError((err) => {
+        console.error('err', err);
+        return of(undefined);
+      }),
+      finalize(() => this.isLoadingSubject.next(false))
+    );
     
+    /*
     console.log(this.tokenService.getTokenCookie());    
     if(this.tokenService.anyTokenCookie()){
       this.isLoadingSubject.next(true);
@@ -66,6 +80,7 @@ export class AuthService implements OnDestroy {
     else{
       this.tokenService.generateToken().then(()=>this.login(email,password));
     }
+    */
   }
 
   logout() {

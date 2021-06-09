@@ -14,7 +14,13 @@ const EMPTY_PARTNER: PartnerModel = {
   telefone:'',
   cep:'',
   cnpj: '',
-  endereco: ''
+  endereco: '',
+  RazaoSocial: '',
+  NomeFantasia:'',
+  InscricaoEstadual:'',
+  site:'',
+  detran:'',
+  cargo:''
 
 };
 
@@ -48,8 +54,6 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadCustomer();
-    console.log("ATRIBUTO ID NO MODAL: " + this.id);
-
   }
 
   /**
@@ -112,13 +116,39 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
       this.createForm = this.fb.group({
         fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-        dob: [this.customer.dataAbertura, Validators.compose([Validators.nullValidator])]
+        dob: [this.customer.dataAbertura, Validators.compose([Validators.nullValidator])],
+        RazaoSocial: [this.customer.RazaoSocial, Validators.compose([Validators.nullValidator])],
+        NomeFantasia: [this.customer.NomeFantasia, Validators.compose([Validators.nullValidator])],
+        InscricaoEstadual: [this.customer.InscricaoEstadual, Validators.compose([Validators.nullValidator])],
+        site: [this.customer.site, Validators.compose([Validators.nullValidator])],
+        detran: [this.customer.detran, Validators.compose([Validators.nullValidator])],
+        id: [this.customer.id, Validators.compose([Validators.nullValidator])],
+        status: [this.customer.status, Validators.compose([Validators.nullValidator])],
+        telefone: [this.customer.telefone, Validators.compose([Validators.nullValidator])],
+        cnpj: [this.customer.cnpj, Validators.compose([Validators.nullValidator])],
+        dataAbertura: [this.customer.dataAbertura, Validators.compose([Validators.nullValidator])],  
+        cep: [this.customer.cep, Validators.compose([Validators.nullValidator])],
+        cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
+
       });
     } else {
       this.createForm = this.fb.group({
         fullName: ["Ivo", Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: ["email@universal.com.br", Validators.compose([Validators.required, Validators.email])],
-        dob: [this.customer.dataAbertura, Validators.compose([Validators.nullValidator])]
+        dob: [this.customer.dataAbertura, Validators.compose([Validators.nullValidator])],
+        RazaoSocial: [this.customer.RazaoSocial, Validators.compose([Validators.nullValidator])],
+        NomeFantasia: [this.customer.NomeFantasia, Validators.compose([Validators.nullValidator])],
+        InscricaoEstadual: [this.customer.InscricaoEstadual, Validators.compose([Validators.nullValidator])],
+        site: [this.customer.site, Validators.compose([Validators.nullValidator])],
+        detran: [this.customer.detran, Validators.compose([Validators.nullValidator])],
+        id: [this.customer.id, Validators.compose([Validators.nullValidator])],
+        status: [this.customer.status, Validators.compose([Validators.nullValidator])],
+        telefone: [this.customer.telefone, Validators.compose([Validators.nullValidator])],
+        cnpj: [this.customer.cnpj, Validators.compose([Validators.nullValidator])],
+        dataAbertura: [this.customer.dataAbertura, Validators.compose([Validators.nullValidator])],
+        cep: [this.customer.cep, Validators.compose([Validators.nullValidator])],
+        cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
+
       });
     }
 
@@ -129,5 +159,25 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
+  }
+  //VALIDADORES
+  isControlValid(controlName: string): boolean {
+    const control = this.createForm.controls[controlName];
+    return control.valid && (control.dirty || control.touched);
+  }
+
+  isControlInvalid(controlName: string): boolean {
+    const control = this.createForm.controls[controlName];
+    return control.invalid && (control.dirty || control.touched);
+  }
+
+  controlHasError(validation, controlName): boolean {
+    const control = this.createForm.controls[controlName];
+    return control.hasError(validation) && (control.dirty || control.touched);
+  }
+
+  isControlTouched(controlName): boolean {
+    const control = this.createForm.controls[controlName];
+    return control.dirty || control.touched;
   }
 }

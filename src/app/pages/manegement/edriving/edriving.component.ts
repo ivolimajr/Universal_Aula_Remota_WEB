@@ -19,7 +19,6 @@ export class EdrivingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const modalRef = this.modalService.open(EditCustomerModalComponent);
   }
 
   /**

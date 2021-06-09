@@ -4,13 +4,15 @@
 import { BaseModel } from '../base.model';
 
 export interface PartnerModel extends BaseModel {
-  id: number; //
-  fullName: string; //
-  email: string; //
-  telefone: string;
+  cargo: any;
   dataAbertura: Date; //
   cnpj: string;
   cep: string;
   endereco: string;
   status: number; //
+  RazaoSocial: string;
+  NomeFantasia: string;
+  InscricaoEstadual: string;
+  site:string;
+  detran:string;
 }

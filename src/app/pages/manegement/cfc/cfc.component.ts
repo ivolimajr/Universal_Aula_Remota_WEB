@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EditCustomerModalComponent } from '../edriving/components/edit-customer-modal/edit-customer-modal.component';
+import { EditCfcModalComponent } from './components/edit-cfc-modal/edit-cfc-modal-component';
 
 @Component({
   selector: 'app-cfc',
@@ -10,7 +11,9 @@ import { EditCustomerModalComponent } from '../edriving/components/edit-customer
 export class CfcComponent implements OnInit {
 
   constructor(
-    private modalService: NgbModal,) {
+    private fb: FormBuilder,
+    private modalService: NgbModal,
+    ) {
 
    }
 
@@ -21,7 +24,7 @@ export class CfcComponent implements OnInit {
     if(!id){
       //CRIAR NOVO USUÁRIO
       console.log("Criar o usuário");      
-      const modalRef = this.modalService.open(EditCustomerModalComponent);
+      const modalRef = this.modalService.open(EditCfcModalComponent);
       modalRef.componentInstance.id = 0;
       modalRef.result.then((res) => {
         if(res){
@@ -34,7 +37,7 @@ export class CfcComponent implements OnInit {
       });
     } else{
       //EDITAR UM USUARIO
-      const modalRef = this.modalService.open(EditCustomerModalComponent);
+      const modalRef = this.modalService.open(EditCfcModalComponent);
       modalRef.componentInstance.id = id;
       console.log("Editar o id: "+ id);
     }

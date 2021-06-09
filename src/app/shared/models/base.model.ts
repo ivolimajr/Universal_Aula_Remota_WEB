@@ -7,4 +7,5 @@ export interface BaseModel {
   email: string; // Esse atributo será o email de contato e o Email de acesso a plataforma.
   status: number; // Active = 1 | Suspended = 2 | Pending = 3
   telefone: string ;
+  
 }

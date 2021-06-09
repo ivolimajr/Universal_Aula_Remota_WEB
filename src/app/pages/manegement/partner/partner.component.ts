@@ -19,7 +19,7 @@ export class PartnerComponent implements OnInit {
  }
 
   ngOnInit(): void {
-    
+
   }
 
   create(id: number) {    
