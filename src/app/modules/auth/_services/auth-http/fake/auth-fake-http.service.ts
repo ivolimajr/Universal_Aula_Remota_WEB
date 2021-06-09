@@ -7,59 +7,15 @@ import { UserModel } from '../../../_models/user.model';
 import { AuthModel } from '../../../_models/auth.model';
 import { UsersTable } from '../../../../../_fake/fake-db/users.table';
 import { environment } from '../../../../../../environments/environment';
-import { Token } from '../../../../../models/auth/token.model';
 
 const API_USERS_URL = `${environment.apiUrl}/users`;
-const API_AUTH_URL = `${environment.url}/auth/v1/signin`;
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthHTTPService {
-
-  private readonly JWT_TOKEN = 'JWT_TOKEN';
-  private readonly REFRESH_TOKEN = 'REFRESH_TOKEN';
-  private readonly EXPIRATION = 'REFRESH_TOKEN';
-  private token: Token
-
+  
   constructor(private http: HttpClient) { }
-
-
-  //get Token
-  getToken() {
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-
-    const body = JSON.stringify({
-      "userName": "leandro",
-      "password": "admin123"
-    });
-
-    var requestOptions = {
-      method: 'POST',
-      headers: headers,
-      body: body
-    };
-
-    fetch(API_AUTH_URL, requestOptions)
-      .then(response => response.text())
-      .then(result => {
-        this.token = JSON.parse(result),
-          this.setJwtToken(this.token.accessToken, this.token.refreshToken, this.token.expiration.toString())
-      }
-      )
-      .catch(error => console.log('error', error));
-  }
-
-  getJwtToken() {
-    return localStorage.getItem(this.JWT_TOKEN);
-  }
-
-  private setJwtToken(accessToken: string, refreshToken: string, expiration: string) {
-    localStorage.setItem(this.JWT_TOKEN, accessToken);
-    localStorage.setItem(this.REFRESH_TOKEN, refreshToken);
-    localStorage.setItem(this.EXPIRATION, expiration);
-  }
 
   // public methods
   login(email: string, password: string): Observable<any> {

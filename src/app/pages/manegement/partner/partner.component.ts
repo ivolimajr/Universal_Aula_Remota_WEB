@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EditPartnerModalComponent } from '../partner/components/edit-customer-modal/edit-partner-modal.component';
+import { EditPartnerModalComponent } from './components/edit-partner-modal/edit-partner-modal.component';
 
 @Component({
   selector: 'app-partner',

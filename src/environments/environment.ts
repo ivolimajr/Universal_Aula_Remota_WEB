@@ -8,14 +8,15 @@ export const environment = {
   USERDATA_KEY: 'authf649fc9a5f55',
   isMockEnabled: true,
   apiUrl: 'https://your-domain.com/api',
-  url: 'https://localhost:44372/api',
   auth: {
+    url: 'https://localhost:44319/api/auth/v1/signin',
     clientId: 'leandro',
-    clientSecret: 'admin123'
+    clientSecret: 'admin123',
+    cookieNameClientCredentials: 'access-token-client-hom',
+    cookieName: 'access-token-hom',
+    last_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2OGM5MjMwOTFjZjc0OGI1YTE4OWUxYjIxYWI0NGIxNiIsInVuaXF1ZV9uYW1lIjoibGVhbmRybyIsImV4cCI6MTY1NDcxMzQ1OCwiaXNzIjoiRXhlbXBsZUlzc3VlciIsImF1ZCI6IkV4ZW1wbGVBdWRpZW5jZSJ9.dcQ1LxhQSltFjyJBV2tcMdUTvnaK4ssb67C6aw0KEzo'
   },
   serviceUrl: {
-    cookieName: 'access-token-hom',
-    cookieNameClientCredentials: 'access-token-client-hom',
     domain: 'localhost'
   }
 };

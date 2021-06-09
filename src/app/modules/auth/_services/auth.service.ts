@@ -6,6 +6,7 @@ import { AuthModel } from '../_models/auth.model';
 import { AuthHTTPService } from './auth-http';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
+import { TokenService } from '../../../shared/services/auth/token-service.service';
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +33,8 @@ export class AuthService implements OnDestroy {
 
   constructor(
     private authHttpService: AuthHTTPService,
-    private router: Router
+    private router: Router,
+    private tokenService: TokenService
   ) {
     this.isLoadingSubject = new BehaviorSubject<boolean>(false);
     this.currentUserSubject = new BehaviorSubject<UserModel>(undefined);
@@ -44,25 +46,26 @@ export class AuthService implements OnDestroy {
 
   // public methods
   login(email: string, password: string): Observable<UserModel> {
-    /*
-    if (this.authHttpService.getJwtToken() === null) {
-      this.authHttpService.getToken();
+    
+    console.log(this.tokenService.getTokenCookie());    
+    if(this.tokenService.anyTokenCookie()){
+      this.isLoadingSubject.next(true);
+      return this.authHttpService.login(email, password).pipe(
+        map((auth: AuthModel) => {
+          const result = this.setAuthFromLocalStorage(auth);
+          return result;
+        }),
+        switchMap(() => this.getUserByToken()),
+        catchError((err) => {
+          console.error('err', err);
+          return of(undefined);
+        }),
+        finalize(() => this.isLoadingSubject.next(false))
+      );
     }
-    */
-
-    this.isLoadingSubject.next(true);
-    return this.authHttpService.login(email, password).pipe(
-      map((auth: AuthModel) => {
-        const result = this.setAuthFromLocalStorage(auth);
-        return result;
-      }),
-      switchMap(() => this.getUserByToken()),
-      catchError((err) => {
-        console.error('err', err);
-        return of(undefined);
-      }),
-      finalize(() => this.isLoadingSubject.next(false))
-    );
+    else{
+      this.tokenService.generateToken().then(()=>this.login(email,password));
+    }
   }
 
   logout() {

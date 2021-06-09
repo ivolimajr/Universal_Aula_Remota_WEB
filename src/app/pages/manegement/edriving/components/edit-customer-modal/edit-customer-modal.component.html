@@ -7,67 +7,117 @@
   <div class="overlay overlay-block cursor-default modal-body" style="min-height: 404px">
     <ng-container>
       <form action="#" class="form form-label-right" [formGroup]="createForm">
+
+        <!-- start: FullName -->
         <div class="form-group row">
           <div class="col-lg">
             <label class="form-label">Nome Completo</label>
-            <input type="text" class="form-control form-control-lg form-control-solid" name="fullName" placeholder="Nome Completo" autocomplete="off" formControlName="fullName" />
+            <input type="text" class="form-control form-control-lg form-control-solid" name="fullName" placeholder="Nome Completo" autocomplete="off" formControlName="fullName" [class.is-invalid]="isControlInvalid('fullName')" [class.is-valid]="isControlValid('fullName')" />
+            <div class="valid-feedback" *ngIf="isControlValid('fullName')">
+              Ok!
+            </div>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'fullName')">
+              Campo necessário
+            </div>
+            <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'fullName')">
+              Muito curto
+            </div>
+            <div class="invalid-feedback" *ngIf="controlHasError('maxlength', 'fullName')">
+              Limite de caracteres excedido
+            </div>
           </div>
         </div>
+        <!-- end: FullName -->
+
+        <!-- start: Email -->
         <div class="form-group row">
-          <!-- start: Email de acesso -->
-          <div class="col-lg-8">
+          <div class="col-lg">
             <label class="form-label">E-mail</label>
-            <input type="text" class="form-control form-control-lg form-control-solid" name="fullName" placeholder="e-mail" autocomplete="off" formControlName="email" />
+            <input type="text" class="form-control form-control-lg form-control-solid" name="email" placeholder="e-mail" autocomplete="off" formControlName="email" />
           </div>
-          <!-- end: Email de acesso -->
+        </div>
+        <!-- end: Email -->
 
-          <!-- start: CPF do usuário -->
-          <div class="col-lg-8">
+        <!-- start: CPF -->
+        <div class="form-group row">
+          <div class="col-lg">
             <label class="form-label">CPF</label>
-            <input type="cpf" class="form-control form-control-lg form-control-solid" name="fullName" placeholder="cpf" autocomplete="off" formControlName="fullName" />
-          </div>       
+            <input type="text" class="form-control form-control-lg form-control-solid" name="cpf" placeholder="cpf" autocomplete="off" formControlName="cpf" />
+          </div>
+        </div>
+        <!-- end: CPF -->
 
-          <!-- end: CPF do usuário -->   
-
-          <!-- start: Telefone -->
-          <div class="col-lg-8">
+        <!-- start: Telefone -->
+        <div class="form-group row">
+          <div class="col-lg">
             <label class="form-label">Telefone</label>
-            <input type="text" class="form-control form-control-lg form-control-solid" name="fullName" placeholder="telefone" autocomplete="off" formControlName="fullName" />
+            <input type="text" class="form-control form-control-lg form-control-solid" name="telefone" placeholder="telefone" autocomplete="off" formControlName="telefone" />
           </div>
-          <!-- end: Telefone -->
+        </div>
+        <!-- end: Telefone -->
 
-          <!-- start: CEP -->
-          <div class="col-lg-8">
-            <label class="form-label">CEP</label>
-            <input type="text" class="form-control form-control-solid form-control-solid" name="fullName" placeholder="CEP" autocomplete="off" formControlName="fullName" />
+        <!-- start: Data de Aniversário DOB-->
+
+        <div class="form-group row">
+          <div class="col-lg">
+            <label>Data de Nascimento</label>
+            <div class="input-group input-group-solid">
+              <input type="date" name="dob" class="form-control form-control-lg form-control-solid" autocomplete="off" [class.is-invalid]="isControlInvalid('dob')" [class.is-valid]="isControlValid('dob')" formControlName="dob" required />
+            </div>
+            <span class="valid-feedback" *ngIf="isControlValid('dob')">
+              Ok!
+            </span>
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'dob')">
+              Formato da data incorreta
+            </div>
           </div>
-          <!-- end: CEP -->
-        
-         <!-- start: Status --> 
-         <div class="col-lg-8">
-          <label class="form-label">Ativo?</label>
-            <input type="checkbox" class="" name="fullName" placeholder="telefone" autocomplete="off" formControlName="fullName" />
-          </div>  
-         <!-- end: Status -->     
-  
-             <!-- start: Cargo do usuário -->
-             <p>Selecione o cargo do usuário:</p>
-             <select name="status" id="status">
-               <option value="cargo1">Gerente</option>
-               <option value="cargo2">Desenvolvedor</option>
-             </select>
-            </div> 
-         </form>
-       </ng-container>
-            <!-- end: Cargo do usuário -->
+        </div>
+        <!-- end: Data de Aniversario DOB-->
 
+        <!-- start: Status -->
+        <div class="form-group row">
+          <div class="col-4"></div>
+          <div class="col-lg">
+            <div class="form-group row">
+                  <div class="radio-inline">
+                      <label class="radio radio-success">
+                          <input type="radio" name="status"  checked="checked" value="1" formControlName="status" />
+                          <span></span>
+                          Ativo
+                      </label>
+                      <label class="radio radio-danger">
+                          <input type="radio" name="status" value="0" formControlName="status"/>
+                          <span></span>
+                          Inativo
+                      </label>
+                  </div>
+            </div>
+          </div>
+        </div>
+        <!-- end: Status -->
+
+        <!-- start: Cargo do usuário -->
+        <div class="form-group row">
+          <div class="col-lg">
+            <label>Cargo</label>
+            <select class="form-control form-control-lg form-control-solid" name="cargo" formControlName="cargo" required>
+              <option value="1">Administrador</option>
+              <option value="2">Convidado</option>
+            </select>
+          </div>
+        </div>
+        <!-- end: Cargo do usuário -->
+
+      </form>
+    </ng-container>
+  </div>
 
   <div class="modal-footer">
     <button type="button" class="btn btn-light btn-elevate mr-2" (click)="modal.dismiss()">
-      Sair
+      Cancelar
     </button>
     <ng-container>
-      <button type="submit" class="btn btn-primary btn-elevate" (click)="save()">
+      <button type="submit" class="btn btn-primary btn-elevate" (click)="save()" [disabled]="createForm.invalid">
         Salvar
       </button>
     </ng-container>

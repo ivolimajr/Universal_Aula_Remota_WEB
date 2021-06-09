@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
-import { PartnerModel } from '../../../../../models/partner/partnerModel.model';
+import { PartnerModel } from '../../../../../shared/models/partner/partnerModel.model';
 import { CustomAdapter, CustomDateParserFormatter, getDateFromString } from '../../../../../_metronic/core';
 
 const EMPTY_PARTNER: PartnerModel = {
@@ -12,9 +12,9 @@ const EMPTY_PARTNER: PartnerModel = {
   status: 2,
   dataAbertura: new Date,
   telefone:'',
-  cpf:'',
   cep:'',
-  dateOfBbirth:'',
+  cnpj: '',
+  endereco: ''
 
 };
 

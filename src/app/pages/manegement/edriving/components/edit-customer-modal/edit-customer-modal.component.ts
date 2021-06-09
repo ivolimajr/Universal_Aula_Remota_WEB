@@ -2,17 +2,19 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
-import { EdrivingModel } from '../../../../../models/edriving/edrivingModel.model';
+import { EdrivingModel } from '../../../../../shared/models/edriving/edrivingModel.model';
 import { CustomAdapter, CustomDateParserFormatter, getDateFromString } from '../../../../../_metronic/core';
 
 const EMPTY_CUSTOMER: EdrivingModel = {
   id: undefined,
   fullName: '',
   email: '',
-  status: 2,
+  cpf: '',
+  telefone: '',
+  status: 1, // STATUS ATIVO
   dob: undefined,
   dateOfBbirth: '',
-  telefone: ''
+  cargo: ''
 };
 
 
@@ -46,7 +48,6 @@ export class EditCustomerModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadCustomer();
     console.log("ATRIBUTO ID NO MODAL: " + this.id);
-
   }
 
   /**
@@ -76,9 +77,15 @@ export class EditCustomerModalComponent implements OnInit, OnDestroy {
    */
   private prepareCustomer() {
     const formData = this.createForm.value;
-    this.customer.dob = new Date(formData.dob);
-    this.customer.email = formData.email;
     this.customer.fullName = formData.fullName;
+    this.customer.email = formData.email;
+    this.customer.cpf = formData.cpf;
+    this.customer.telefone = formData.telefone;
+    this.customer.cargo = formData.cargo;
+    this.customer.dob = new Date(formData.dob);
+    this.customer.dateOfBbirth = formData.dob;
+    this.customer.status = formData.status;
+    
   }
 
   /**
@@ -111,13 +118,19 @@ export class EditCustomerModalComponent implements OnInit, OnDestroy {
         email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
         dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
         telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
+        status: [this.customer.status, Validators.compose([Validators.nullValidator])],
       });
     } else {
       this.createForm = this.fb.group({
-        fullName: ["Ivo", Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        email: ["email@universal.com.br", Validators.compose([Validators.required, Validators.email])],
+        fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(100)])],
+        email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
         dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
         telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
+        status: [this.customer.status, Validators.compose([Validators.nullValidator])],
       });
     }
 
@@ -128,5 +141,27 @@ export class EditCustomerModalComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
+  }
+
+
+  //VALIDADORES
+  isControlValid(controlName: string): boolean {
+    const control = this.createForm.controls[controlName];
+    return control.valid && (control.dirty || control.touched);
+  }
+
+  isControlInvalid(controlName: string): boolean {
+    const control = this.createForm.controls[controlName];
+    return control.invalid && (control.dirty || control.touched);
+  }
+
+  controlHasError(validation, controlName): boolean {
+    const control = this.createForm.controls[controlName];
+    return control.hasError(validation) && (control.dirty || control.touched);
+  }
+
+  isControlTouched(controlName): boolean {
+    const control = this.createForm.controls[controlName];
+    return control.dirty || control.touched;
   }
 }
