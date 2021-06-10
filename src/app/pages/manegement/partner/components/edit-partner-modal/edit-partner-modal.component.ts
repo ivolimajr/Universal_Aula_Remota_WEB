@@ -21,7 +21,6 @@ const EMPTY_PARTNER: PartnerModel = {
   site:'',
   detran:'',
   cargo:'',
-  dateOfBbirth:'',
   cpf:''
 
 };
@@ -118,7 +117,6 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
       this.createForm = this.fb.group({
           fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
           email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-          dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
           telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
           cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
           cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
@@ -131,7 +129,6 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
       this.createForm = this.fb.group({
           fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
           email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-          dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
           telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
           cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
           cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
