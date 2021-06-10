@@ -4,7 +4,7 @@
 import { BaseModel } from '../base.model';
 
 export interface PartnerModel extends BaseModel {
-  cargo: any;
+  cargo: string;
   dataAbertura: Date; //
   cnpj: string;
   cep: string;
@@ -15,4 +15,5 @@ export interface PartnerModel extends BaseModel {
   InscricaoEstadual: string;
   site:string;
   detran:string;
+  cpf:string;
 }

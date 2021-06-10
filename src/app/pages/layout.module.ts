@@ -34,7 +34,7 @@ import { InstructorComponent } from './manegement/instructor/instructor.componen
 import { AdministrativeComponent } from './manegement/administrative/administrative.component';
 import { EditStudentModalComponentComponent } from './manegement/student/components/edit-student-modal-component/edit-student-modal-component.component';
 import { EditInstructorModalComponentComponent } from './manegement/instructor/components/edit-instructor-modal-component/edit-instructor-modal-component.component';
-import { EditAdministrativeModalComponentComponent } from './manegement/administrative/components/edit-administrative-modal-component/edit-administrative-modal-component.component';
+import { EditAdministrativeModalComponent,} from './manegement/administrative/components/edit-administrative-modal-component/edit-administrative-modal-component.component';
 import { AccountComponentCfc } from './manegement/cfc/components/account/account.component';
 import { AccountComponentAdministrative } from './manegement/administrative/components/account/account.component';
 import { AccountComponentEdriving } from './manegement/edriving/components/account/account.component';
@@ -66,7 +66,7 @@ import { AccountComponentStudent } from './manegement/student/components/account
     AdministrativeComponent,
     EditStudentModalComponentComponent,
     EditInstructorModalComponentComponent,
-    EditAdministrativeModalComponentComponent,
+    EditAdministrativeModalComponent,
     AccountComponentCfc,
     AccountComponentAdministrative,
     AccountComponentEdriving,

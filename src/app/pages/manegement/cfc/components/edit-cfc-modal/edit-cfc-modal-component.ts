@@ -18,10 +18,15 @@ const EMPTY_CFC: CfcModel = {
   RazaoSocial: '',
   NomeFantasia:'',
   InscricaoEstadual:'',
-  site:'',
+  site:'',  
   detran:'',
   cargo:'',
-  dob:''
+  dob:'',
+  cpf:'',
+  dateOfBbirth:'',
+  senha:'',
+  confirmarSenha:'',
+  sobrenome:'',
 };
 
 

@@ -20,7 +20,9 @@ const EMPTY_PARTNER: PartnerModel = {
   InscricaoEstadual:'',
   site:'',
   detran:'',
-  cargo:''
+  cargo:'',
+  dateOfBbirth:'',
+  cpf:''
 
 };
 
@@ -114,41 +116,29 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
-        fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-        dob: [this.customer.dataAbertura, Validators.compose([Validators.nullValidator])],
-        RazaoSocial: [this.customer.RazaoSocial, Validators.compose([Validators.nullValidator])],
-        NomeFantasia: [this.customer.NomeFantasia, Validators.compose([Validators.nullValidator])],
-        InscricaoEstadual: [this.customer.InscricaoEstadual, Validators.compose([Validators.nullValidator])],
-        site: [this.customer.site, Validators.compose([Validators.nullValidator])],
-        detran: [this.customer.detran, Validators.compose([Validators.nullValidator])],
-        id: [this.customer.id, Validators.compose([Validators.nullValidator])],
-        status: [this.customer.status, Validators.compose([Validators.nullValidator])],
-        telefone: [this.customer.telefone, Validators.compose([Validators.nullValidator])],
-        cnpj: [this.customer.cnpj, Validators.compose([Validators.nullValidator])],
-        dataAbertura: [this.customer.dataAbertura, Validators.compose([Validators.nullValidator])],  
-        cep: [this.customer.cep, Validators.compose([Validators.nullValidator])],
-        cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
-
+          fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+          email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
+          dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
+          telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+          cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+          cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
+          status: [this.customer.status, Validators.compose([Validators.nullValidator])],
+          cep: [this.customer.cep, Validators.compose([Validators.nullValidator])],
+          endereco: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
+          cnpj: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
       });
     } else {
       this.createForm = this.fb.group({
-        fullName: ["Ivo", Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        email: ["email@universal.com.br", Validators.compose([Validators.required, Validators.email])],
-        dob: [this.customer.dataAbertura, Validators.compose([Validators.nullValidator])],
-        RazaoSocial: [this.customer.RazaoSocial, Validators.compose([Validators.nullValidator])],
-        NomeFantasia: [this.customer.NomeFantasia, Validators.compose([Validators.nullValidator])],
-        InscricaoEstadual: [this.customer.InscricaoEstadual, Validators.compose([Validators.nullValidator])],
-        site: [this.customer.site, Validators.compose([Validators.nullValidator])],
-        detran: [this.customer.detran, Validators.compose([Validators.nullValidator])],
-        id: [this.customer.id, Validators.compose([Validators.nullValidator])],
-        status: [this.customer.status, Validators.compose([Validators.nullValidator])],
-        telefone: [this.customer.telefone, Validators.compose([Validators.nullValidator])],
-        cnpj: [this.customer.cnpj, Validators.compose([Validators.nullValidator])],
-        dataAbertura: [this.customer.dataAbertura, Validators.compose([Validators.nullValidator])],
-        cep: [this.customer.cep, Validators.compose([Validators.nullValidator])],
-        cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
-
+          fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+          email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
+          dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
+          telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+          cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+          cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
+          status: [this.customer.status, Validators.compose([Validators.nullValidator])],
+          cep: [this.customer.cep, Validators.compose([Validators.nullValidator])],
+          endereco: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
+          cnpj: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
       });
     }
 

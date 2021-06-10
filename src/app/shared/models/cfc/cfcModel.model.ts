@@ -16,4 +16,12 @@ export interface CfcModel extends BaseModel {
   NomeFantasia: string;
   site:string;
   detran:string;
+  cpf: string;
+  dateOfBbirth: string;
+  email: string;
+  fullName: string;
+  telefone:string;
+  senha:string;
+  confirmarSenha:string;
+  sobrenome:string;
 }

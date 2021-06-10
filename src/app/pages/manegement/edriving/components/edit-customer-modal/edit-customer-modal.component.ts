@@ -14,7 +14,12 @@ const EMPTY_CUSTOMER: EdrivingModel = {
   status: 1, // STATUS ATIVO
   dob: undefined,
   dateOfBbirth: '',
-  cargo: ''
+  cargo: '',
+  cep: '',
+  endereco:'',
+  senha:'',
+  confirmarSenha:'',
+  sobrenome:'',
 };
 
 
@@ -34,7 +39,7 @@ export class EditCustomerModalComponent implements OnInit, OnDestroy {
     Validators.required,
     Validators.email,
   ]);
-  @Input() id: number;
+  @Input() id: number; // ID QUE VAMOS RECEBER PELA ROTA PARA PODER EDITAR
 
   isLoading$;
   customer: EdrivingModel;
@@ -115,12 +120,14 @@ export class EditCustomerModalComponent implements OnInit, OnDestroy {
     if (!id) {
       this.createForm = this.fb.group({
         fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-        dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
-        telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
-        status: [this.customer.status, Validators.compose([Validators.nullValidator])],
+          email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
+          dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
+          telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+          cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+          cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
+          status: [this.customer.status, Validators.compose([Validators.nullValidator])],
+          cep: [this.customer.cep, Validators.compose([Validators.nullValidator])],
+          endereco: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
       });
     } else {
       this.createForm = this.fb.group({
