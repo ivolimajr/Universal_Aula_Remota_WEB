@@ -53,7 +53,7 @@ const routes: Routes = [
         component: AccountComponentStudent
       },
       {
-        path: 'cfc/administrative/',
+        path: 'cfc/administrative',
         component: AdministrativeComponent
       },
       {
@@ -69,7 +69,7 @@ const routes: Routes = [
         component: AccountComponentInstructor
       },
       {
-        path: 'cfc/student/',
+        path: 'cfc/student',
         component: StudentComponent
       },
       {
