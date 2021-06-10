@@ -9,9 +9,9 @@ export class UsersTable {
       refreshToken: 'auth-token-f8c137a2c98743f48b643e71161d90aa',
       roles: [1], // Administrator
       pic: './assets/media/users/300_25.jpg',
-      fullname: 'Sean S',
-      firstname: 'Sean',
-      lastname: 'Stark',
+      fullname: 'E-Driving',
+      firstname: 'E-Driving',
+      lastname: 'UniversalPay',
       occupation: 'CEO',
       companyName: 'Keenthemes',
       phone: '456669067890',

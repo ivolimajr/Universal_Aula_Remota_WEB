@@ -29,6 +29,18 @@ import { CfcComponent } from './manegement/cfc/cfc.component';
 import { EditCustomerModalComponent } from './manegement/edriving/components/edit-customer-modal/edit-customer-modal.component';
 import { EditPartnerModalComponent } from './manegement/partner/components/edit-partner-modal/edit-partner-modal.component';
 import { EditCfcModalComponent } from './manegement/cfc/components/edit-cfc-modal/edit-cfc-modal-component';
+import { StudentComponent } from './manegement/student/student.component';
+import { InstructorComponent } from './manegement/instructor/instructor.component';
+import { AdministrativeComponent } from './manegement/administrative/administrative.component';
+import { EditStudentModalComponentComponent } from './manegement/student/components/edit-student-modal-component/edit-student-modal-component.component';
+import { EditInstructorModalComponentComponent } from './manegement/instructor/components/edit-instructor-modal-component/edit-instructor-modal-component.component';
+import { EditAdministrativeModalComponentComponent } from './manegement/administrative/components/edit-administrative-modal-component/edit-administrative-modal-component.component';
+import { AccountComponentCfc } from './manegement/cfc/components/account/account.component';
+import { AccountComponentAdministrative } from './manegement/administrative/components/account/account.component';
+import { AccountComponentEdriving } from './manegement/edriving/components/account/account.component';
+import { AccountComponentInstructor } from './manegement/instructor/components/account/account.component';
+import { AccountComponentPartner } from './manegement/partner/components/account/account.component';
+import { AccountComponentStudent } from './manegement/student/components/account/account.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +60,19 @@ import { EditCfcModalComponent } from './manegement/cfc/components/edit-cfc-moda
     CfcComponent,
     EditCustomerModalComponent,
     EditPartnerModalComponent,
-    EditCfcModalComponent
+    EditCfcModalComponent,
+    StudentComponent,
+    InstructorComponent,
+    AdministrativeComponent,
+    EditStudentModalComponentComponent,
+    EditInstructorModalComponentComponent,
+    EditAdministrativeModalComponentComponent,
+    AccountComponentCfc,
+    AccountComponentAdministrative,
+    AccountComponentEdriving,
+    AccountComponentInstructor,
+    AccountComponentPartner,
+    AccountComponentStudent
   ],
   imports: [
     CommonModule,

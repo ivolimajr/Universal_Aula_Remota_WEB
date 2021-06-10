@@ -9,6 +9,7 @@ export const environment = {
   isMockEnabled: true,
   apiUrl: 'https://your-domain.com/api',
   auth: {
+    api: false,
     url: 'https://localhost:44319/api/auth/v1/signin',
     clientId: 'leandro',
     clientSecret: 'admin123',
