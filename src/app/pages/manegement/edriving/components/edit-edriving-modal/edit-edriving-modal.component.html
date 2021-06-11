@@ -32,7 +32,7 @@
         <!-- start: email -->
         <div class="form-group row">
           <div class="col-lg">
-            <label class="form-label" for="email" >E-mail</label>
+            <label class="form-label" for="email">E-mail</label>
             <input type="text" id="email" class="form-control form-control-lg form-control-solid" name="email" placeholder="email" autocomplete="off" formControlName="email" [class.is-invalid]="isControlInvalid('email')" [class.is-valid]="isControlValid('email')" />
             <div class="valid-feedback" *ngIf="isControlValid('email')">
               Ok!
@@ -48,7 +48,7 @@
         <div class="form-group row">
           <div class="col-lg">
             <label class="form-label" for="cpf">CPF</label>
-            <input type="text" id="cpf" class="form-control form-control-lg form-control-solid" name="cpf" placeholder="cpf" autocomplete="off" formControlName="cpf" [class.is-invalid]="isControlInvalid('cpf')" [class.is-valid]="isControlValid('cpf')"/>
+            <input type="text" id="cpf" class="form-control form-control-lg form-control-solid" name="cpf" placeholder="cpf" autocomplete="off" formControlName="cpf" [class.is-invalid]="isControlInvalid('cpf')" [class.is-valid]="isControlValid('cpf')" />
             <div class="valid-feedback" *ngIf="isControlValid('cpf')">
               Ok!
             </div>
@@ -60,7 +60,7 @@
 
           <!-- start: Telefone -->
           <div class="col-lg">
-            <label class="form-label" for="telefone" >Telefone</label>
+            <label class="form-label" for="telefone">Telefone</label>
             <input type="text" id="telefone" class="form-control form-control-lg form-control-solid" name="telefone" placeholder="telefone" autocomplete="off" formControlName="telefone" [class.is-invalid]="isControlInvalid('telefone')" [class.is-valid]="isControlValid('telefone')" />
             <div class="valid-feedback" *ngIf="isControlValid('telefone')">
               Ok!
@@ -77,18 +77,18 @@
           <div class="col-4"></div>
           <div class="col-lg">
             <div class="form-group row">
-                  <div class="radio-inline">
-                      <label class="radio radio-success">
-                          <input type="radio" name="status"  checked="checked" value="1" formControlName="status" />
-                          <span></span>
-                          Ativo
-                      </label>
-                      <label class="radio radio-danger">
-                          <input type="radio" name="status" value="0" formControlName="status"/>
-                          <span></span>
-                          Inativo
-                      </label>
-                  </div>
+              <div class="radio-inline">
+                <label class="radio radio-success">
+                  <input type="radio" name="status" checked="checked" value="1" formControlName="status" />
+                  <span></span>
+                  Ativo
+                </label>
+                <label class="radio radio-danger">
+                  <input type="radio" name="status" value="0" formControlName="status" />
+                  <span></span>
+                  Inativo
+                </label>
+              </div>
             </div>
           </div>
         </div>

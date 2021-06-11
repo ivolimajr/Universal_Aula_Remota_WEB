@@ -1,24 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
 import { EdrivingModel } from 'src/app/shared/models/edriving/edrivingModel.model';
 
-const EMPTY_CUSTOMER: EdrivingModel = {
+const EMPTY_EDRIVING: EdrivingModel = {
   id: undefined,
   fullName: '',
   email: '',
   cpf: '',
   telefone: '',
   status: 1, // STATUS ATIVO
-  dob: undefined,
-  dateOfBbirth: '',
   cargo: '',
-  cep: '',
-  endereco:'',
-  senha:'',
-  confirmarSenha:'',
-  sobrenome:''
+  senha: '',
+  confirmarSenha: ''
 };
 @Component({
   selector: 'app-account',
@@ -32,29 +26,28 @@ export class AccountComponentEdriving implements OnInit {
   @Input() id: number; // ID QUE VAMOS RECEBER PELA ROTA PARA PODER EDITAR
 
   isLoading$;
-  customer: EdrivingModel;
+  edriving: EdrivingModel;
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
   modal: any;
 
- constructor(
-  private fb: FormBuilder,
-  private modalService: NgbModal,
- ) {  }
+  constructor(
+    private fb: FormBuilder,
+  ) { }
 
   ngOnInit(): void {
-    this.loadCustomer();
+    this.loadEdriving();
     console.log("ATRIBUTO ID NO MODAL: " + this.id);
   }
   /**
    * 
    */
-   loadCustomer() {
+  loadEdriving() {
     if (!this.id) {
-      this.customer = EMPTY_CUSTOMER;
+      this.edriving = EMPTY_EDRIVING;
       this.loadForm(null);
     } else {
-      this.customer = EMPTY_CUSTOMER;
+      this.edriving = EMPTY_EDRIVING;
       this.loadForm(this.id);
     }
   }
@@ -63,7 +56,7 @@ export class AccountComponentEdriving implements OnInit {
    * 
    */
   save() {
-    this.prepareCustomer();
+    this.prepareEdriving();
     this.create();
   }
 
@@ -71,17 +64,14 @@ export class AccountComponentEdriving implements OnInit {
   /**
    * 
    */
-  private prepareCustomer() {
+  private prepareEdriving() {
     const formData = this.createForm.value;
-    this.customer.fullName = formData.fullName;
-    this.customer.email = formData.email;
-    this.customer.cpf = formData.cpf;
-    this.customer.telefone = formData.telefone;
-    this.customer.cargo = formData.cargo;
-    this.customer.dob = new Date(formData.dob);
-    this.customer.dateOfBbirth = formData.dob;
-    this.customer.status = formData.status;
-    
+    this.edriving.fullName = formData.fullName;
+    this.edriving.email = formData.email;
+    this.edriving.cpf = formData.cpf;
+    this.edriving.telefone = formData.telefone;
+    this.edriving.cargo = formData.cargo;
+    this.edriving.status = formData.status;
   }
 
   /**
@@ -102,12 +92,12 @@ export class AccountComponentEdriving implements OnInit {
      * 3° trata o retorno da API
      * 4° continua...
      */
-    console.log(this.customer)
+    console.log(this.edriving)
     this.modal.close(true)
     this.modal.dismiss("false");
-    return of(this.customer);
+    return of(this.edriving);
   }
-  
+
 
   /**
    *  MÉTODO PARA CARREGAR ( INICIAR ) O FORMULÁRIO
@@ -115,35 +105,26 @@ export class AccountComponentEdriving implements OnInit {
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
-          fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-          dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
-          telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
-          status: [this.customer.status, Validators.compose([Validators.nullValidator])],
-          cep: [this.customer.cep, Validators.compose([Validators.nullValidator])],
-          endereco: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
-          dateOfBbirth: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
-          senha: [this.customer.cep, Validators.compose([Validators.nullValidator])],
-          confirmarSenha: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
-          sobrenome: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
+        fullName: [this.edriving.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
+        telefone: [this.edriving.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cpf: [this.edriving.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
+        status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
+        senha: [this.edriving.senha, Validators.compose([Validators.nullValidator])],
+        confirmarSenha: [this.edriving.confirmarSenha, Validators.compose([Validators.nullValidator])],
 
       });
     } else {
       this.createForm = this.fb.group({
-        fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(100)])],
-        email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-        dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
-        telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
-        status: [this.customer.status, Validators.compose([Validators.nullValidator])],
-        dateOfBbirth: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
-        senha: [this.customer.cep, Validators.compose([Validators.nullValidator])],
-        confirmarSenha: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
-        sobrenome: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
-
+        fullName: [this.edriving.fullName, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(100)])],
+        email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
+        telefone: [this.edriving.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cpf: [this.edriving.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
+        status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
+        senha: [this.edriving.senha, Validators.compose([Validators.nullValidator])],
+        confirmarSenha: [this.edriving.confirmarSenha, Validators.compose([Validators.nullValidator])],
       });
     }
 

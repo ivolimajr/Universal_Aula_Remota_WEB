@@ -26,7 +26,7 @@ import { HomeComponent } from './home/home.component';
 import { EdrivingComponent } from './manegement/edriving/edriving.component';
 import { PartnerComponent } from './manegement/partner/partner.component';
 import { CfcComponent } from './manegement/cfc/cfc.component';
-import { EditCustomerModalComponent } from './manegement/edriving/components/edit-customer-modal/edit-customer-modal.component';
+import { EditEdrivingModalComponent } from './manegement/edriving/components/edit-edriving-modal/edit-edriving-modal.component';
 import { EditPartnerModalComponent } from './manegement/partner/components/edit-partner-modal/edit-partner-modal.component';
 import { EditCfcModalComponent } from './manegement/cfc/components/edit-cfc-modal/edit-cfc-modal-component';
 import { StudentComponent } from './manegement/student/student.component';
@@ -34,7 +34,7 @@ import { InstructorComponent } from './manegement/instructor/instructor.componen
 import { AdministrativeComponent } from './manegement/administrative/administrative.component';
 import { EditStudentModalComponentComponent } from './manegement/student/components/edit-student-modal-component/edit-student-modal-component.component';
 import { EditInstructorModalComponentComponent } from './manegement/instructor/components/edit-instructor-modal-component/edit-instructor-modal-component.component';
-import { EditAdministrativeModalComponent,} from './manegement/administrative/components/edit-administrative-modal-component/edit-administrative-modal-component.component';
+import { EditAdministrativeModalComponent, } from './manegement/administrative/components/edit-administrative-modal-component/edit-administrative-modal-component.component';
 import { AccountComponentCfc } from './manegement/cfc/components/account/account.component';
 import { AccountComponentAdministrative } from './manegement/administrative/components/account/account.component';
 import { AccountComponentEdriving } from './manegement/edriving/components/account/account.component';
@@ -58,7 +58,7 @@ import { AccountComponentStudent } from './manegement/student/components/account
     EdrivingComponent,
     PartnerComponent,
     CfcComponent,
-    EditCustomerModalComponent,
+    EditEdrivingModalComponent,
     EditPartnerModalComponent,
     EditCfcModalComponent,
     StudentComponent,

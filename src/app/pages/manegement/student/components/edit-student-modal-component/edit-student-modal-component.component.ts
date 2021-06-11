@@ -12,14 +12,9 @@ const EMPTY_CUSTOMER: EdrivingModel = {
   cpf: '',
   telefone: '',
   status: 1, // STATUS ATIVO
-  dob: undefined,
-  dateOfBbirth: '',
   cargo: '',
-  cep: '',
-  endereco:'',
-  senha:'',
-  confirmarSenha:'',
-  sobrenome:'',
+  senha: '',
+  confirmarSenha: ''
 };
 
 @Component({
@@ -37,11 +32,11 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
   emailFormControl = new FormControl('', [
     Validators.required,
     Validators.email,
- ]);
- 
- @Input() id: number;
+  ]);
 
- isLoading$;
+  @Input() id: number;
+
+  isLoading$;
   customer: EdrivingModel;
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
@@ -49,8 +44,8 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder, public modal: NgbActiveModal
   ) {
-    
-   }
+
+  }
 
   ngOnInit(): void {
     this.loadCustomer();
@@ -86,10 +81,8 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
     this.customer.cpf = formData.cpf;
     this.customer.telefone = formData.telefone;
     this.customer.cargo = formData.cargo;
-    this.customer.dob = new Date(formData.dob);
-    this.customer.dateOfBbirth = formData.dob;
     this.customer.status = formData.status;
-    
+
   }
 
   /**
@@ -118,27 +111,21 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
-          fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-          dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
-          telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
-          status: [this.customer.status, Validators.compose([Validators.nullValidator])],
-          cep: [this.customer.cep, Validators.compose([Validators.nullValidator])],
-          endereco: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
+        fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
+        telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
+        status: [this.customer.status, Validators.compose([Validators.nullValidator])],
       });
     } else {
       this.createForm = this.fb.group({
-          fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-          dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
-          telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
-          status: [this.customer.status, Validators.compose([Validators.nullValidator])],
-          cep: [this.customer.cep, Validators.compose([Validators.nullValidator])],
-          endereco: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
+        fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
+        telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
+        status: [this.customer.status, Validators.compose([Validators.nullValidator])],
       });
     }
 

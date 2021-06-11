@@ -11,14 +11,9 @@ const EMPTY_CUSTOMER: EdrivingModel = {
   cpf: '',
   telefone: '',
   status: 1, // STATUS ATIVO
-  dob: undefined,
-  dateOfBbirth: '',
   cargo: '',
-  cep: '',
-  endereco:'',
-  senha:'',
-  confirmarSenha:'',
-  sobrenome:''
+  senha: '',
+  confirmarSenha: '',
 };
 
 @Component({
@@ -77,10 +72,8 @@ export class AccountComponentStudent implements OnInit {
     this.customer.cpf = formData.cpf;
     this.customer.telefone = formData.telefone;
     this.customer.cargo = formData.cargo;
-    this.customer.dob = new Date(formData.dob);
-    this.customer.dateOfBbirth = formData.dob;
     this.customer.status = formData.status;
-    
+
   }
 
   /**
@@ -114,30 +107,20 @@ export class AccountComponentStudent implements OnInit {
     if (!id) {
       this.createForm = this.fb.group({
         fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-          dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
-          telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
-          status: [this.customer.status, Validators.compose([Validators.nullValidator])],
-          cep: [this.customer.cep, Validators.compose([Validators.nullValidator])],
-          endereco: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
-          senha: [this.customer.cep, Validators.compose([Validators.nullValidator])],
-          confirmarSenha: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
-          sobrenome: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
+        email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
+        telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
+        status: [this.customer.status, Validators.compose([Validators.nullValidator])],
       });
     } else {
       this.createForm = this.fb.group({
         fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(100)])],
         email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-        dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
         telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.customer.status, Validators.compose([Validators.nullValidator])],
-        senha: [this.customer.cep, Validators.compose([Validators.nullValidator])],
-        confirmarSenha: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
-        sobrenome: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
       });
     }
 

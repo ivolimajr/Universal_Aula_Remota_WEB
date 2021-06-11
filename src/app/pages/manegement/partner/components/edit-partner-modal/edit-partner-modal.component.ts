@@ -10,19 +10,18 @@ const EMPTY_PARTNER: PartnerModel = {
   fullName: '',
   email: '',
   status: 2,
-  dataAbertura: new Date,
-  telefone:'',
-  cep:'',
+  telefone: '',
+  cep: '',
   cnpj: '',
-  endereco: '',
-  RazaoSocial: '',
-  NomeFantasia:'',
-  InscricaoEstadual:'',
-  site:'',
-  detran:'',
-  cargo:'',
-  cpf:''
-
+  cargo: '',
+  bairro: '',
+  cidade: '',
+  confirmarSenha: '',
+  descricao: '',
+  enderecoLogradouro: '',
+  numero: '',
+  senha: '',
+  uf: '',
 };
 
 
@@ -45,7 +44,7 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
   @Input() id: number;
 
   isLoading$;
-  customer: PartnerModel;
+  partner: PartnerModel;
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
 
@@ -62,10 +61,10 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
    */
   loadCustomer() {
     if (!this.id) {
-      this.customer = EMPTY_PARTNER;
+      this.partner = EMPTY_PARTNER;
       this.loadForm(null);
     } else {
-      this.customer = EMPTY_PARTNER;
+      this.partner = EMPTY_PARTNER;
       this.loadForm(this.id);
     }
   }
@@ -84,9 +83,11 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
    */
   private prepareCustomer() {
     const formData = this.createForm.value;
-    this.customer.dataAbertura = new Date(formData.dataAbertura);
-    this.customer.email = formData.email;
-    this.customer.fullName = formData.fullName;
+    this.partner.fullName = formData.fullName;
+    this.partner.email = formData.email;
+    this.partner.telefone = formData.telefone;
+    this.partner.cargo = formData.cargo;
+    this.partner.status = formData.status;
   }
 
   /**
@@ -103,10 +104,10 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
      * 3° trata o retorno da API
      * 4° continua...
      */
-    console.log(this.customer)
+    console.log(this.partner)
     this.modal.close(true)
     this.modal.dismiss("false");
-    return of(this.customer);
+    return of(this.partner);
   }
 
   /**
@@ -115,27 +116,23 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
-          fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-          telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
-          status: [this.customer.status, Validators.compose([Validators.nullValidator])],
-          cep: [this.customer.cep, Validators.compose([Validators.nullValidator])],
-          endereco: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
-          cnpj: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
+        fullName: [this.partner.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        email: [this.partner.email, Validators.compose([Validators.required, Validators.email])],
+        telefone: [this.partner.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cargo: [this.partner.cargo, Validators.compose([Validators.nullValidator])],
+        status: [this.partner.status, Validators.compose([Validators.nullValidator])],
+        cep: [this.partner.cep, Validators.compose([Validators.nullValidator])],
+        //TODO: ADICIONAR TODOS OS ATRIBUTOS DO MODAL
       });
     } else {
       this.createForm = this.fb.group({
-          fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-          telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
-          status: [this.customer.status, Validators.compose([Validators.nullValidator])],
-          cep: [this.customer.cep, Validators.compose([Validators.nullValidator])],
-          endereco: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
-          cnpj: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
+        fullName: [this.partner.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        email: [this.partner.email, Validators.compose([Validators.required, Validators.email])],
+        telefone: [this.partner.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cargo: [this.partner.cargo, Validators.compose([Validators.nullValidator])],
+        status: [this.partner.status, Validators.compose([Validators.nullValidator])],
+        cep: [this.partner.cep, Validators.compose([Validators.nullValidator])],
+        //TODO: ADICIONAR TODOS OS ATRIBUTOS DO MODAL
       });
     }
 

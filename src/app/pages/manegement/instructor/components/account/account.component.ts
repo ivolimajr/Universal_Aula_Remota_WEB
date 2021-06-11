@@ -2,23 +2,16 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
-import { EdrivingModel } from 'src/app/shared/models/edriving/edrivingModel.model';
+import { InstrutorBaseModel } from 'src/app/shared/models/cfc/instrutorModel.model';
 
-const EMPTY_CUSTOMER: EdrivingModel = {
+const EMPTY_INSTRUTOR: InstrutorBaseModel = {
   id: undefined,
   fullName: '',
   email: '',
-  cpf: '',
   telefone: '',
   status: 1, // STATUS ATIVO
-  dob: undefined,
-  dateOfBbirth: '',
-  cargo: '',
-  cep: '',
-  endereco:'',
-  senha:'',
-  confirmarSenha:'',
-  sobrenome:''
+  senha: '',
+  confirmarSenha: ''
 };
 
 @Component({
@@ -27,13 +20,13 @@ const EMPTY_CUSTOMER: EdrivingModel = {
   styleUrls: ['./account.component.scss']
 })
 export class AccountComponentInstructor implements OnInit {
-  
+
   email = new FormControl('', [Validators.required, Validators.email]);
 
   @Input() id: number; // ID QUE VAMOS RECEBER PELA ROTA PARA PODER EDITAR
 
   isLoading$;
-  customer: EdrivingModel;
+  instrutor: InstrutorBaseModel;
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
   modal: any;
@@ -50,10 +43,10 @@ export class AccountComponentInstructor implements OnInit {
 
   loadCustomer() {
     if (!this.id) {
-      this.customer = EMPTY_CUSTOMER;
+      this.instrutor = EMPTY_INSTRUTOR;
       this.loadForm(null);
     } else {
-      this.customer = EMPTY_CUSTOMER;
+      this.instrutor = EMPTY_INSTRUTOR;
       this.loadForm(this.id);
     }
   }
@@ -72,15 +65,10 @@ export class AccountComponentInstructor implements OnInit {
    */
   private prepareCustomer() {
     const formData = this.createForm.value;
-    this.customer.fullName = formData.fullName;
-    this.customer.email = formData.email;
-    this.customer.cpf = formData.cpf;
-    this.customer.telefone = formData.telefone;
-    this.customer.cargo = formData.cargo;
-    this.customer.dob = new Date(formData.dob);
-    this.customer.dateOfBbirth = formData.dob;
-    this.customer.status = formData.status;
-    
+    this.instrutor.fullName = formData.fullName;
+    this.instrutor.email = formData.email;
+    this.instrutor.telefone = formData.telefone;
+    this.instrutor.status = formData.status;
   }
 
   /**
@@ -101,10 +89,10 @@ export class AccountComponentInstructor implements OnInit {
      * 3° trata o retorno da API
      * 4° continua...
      */
-    console.log(this.customer)
+    console.log(this.instrutor)
     this.modal.close(true)
     this.modal.dismiss("false");
-    return of(this.customer);
+    return of(this.instrutor);
   }
 
   /**
@@ -113,34 +101,19 @@ export class AccountComponentInstructor implements OnInit {
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
-        fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-          dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
-          telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
-          status: [this.customer.status, Validators.compose([Validators.nullValidator])],
-          cep: [this.customer.cep, Validators.compose([Validators.nullValidator])],
-          endereco: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
-          senha: [this.customer.cep, Validators.compose([Validators.nullValidator])],
-          confirmarSenha: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
-          sobrenome: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
+        fullName: [this.instrutor.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        email: [this.instrutor.email, Validators.compose([Validators.required, Validators.email])],
+        telefone: [this.instrutor.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        status: [this.instrutor.status, Validators.compose([Validators.nullValidator])],
       });
     } else {
       this.createForm = this.fb.group({
-        fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(100)])],
-        email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-        dob: [this.customer.dateOfBbirth, Validators.compose([Validators.nullValidator])],
-        telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
-        status: [this.customer.status, Validators.compose([Validators.nullValidator])],
-        senha: [this.customer.cep, Validators.compose([Validators.nullValidator])],
-        confirmarSenha: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
-        sobrenome: [this.customer.endereco, Validators.compose([Validators.nullValidator])],
+        fullName: [this.instrutor.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        email: [this.instrutor.email, Validators.compose([Validators.required, Validators.email])],
+        telefone: [this.instrutor.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        status: [this.instrutor.status, Validators.compose([Validators.nullValidator])],
       });
     }
-
   }
 
   /**

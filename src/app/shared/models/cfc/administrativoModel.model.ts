@@ -3,12 +3,12 @@
  */
 import { BaseModel } from '../baseModels/base.model';
 
-export interface CfcModel extends BaseModel {
-  razaoSocial: string;
-  nomeFantasia: string;
-  cnpj: string;
-  inscricaoEstadual: string;
-  datadaFundacao: Date; //
+export interface AdministrativoModel extends BaseModel {
+  cargo: string;
+  cpf: string;
+  identidade: string;
+  orgaoExpedidor: string;
+  dataNascimento: Date;
   cep: string;
   bairro: string;
   cidade: string;
