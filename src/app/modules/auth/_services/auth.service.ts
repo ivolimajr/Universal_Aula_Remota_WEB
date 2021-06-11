@@ -47,7 +47,7 @@ export class AuthService implements OnDestroy {
   // public methods
   login(email: string, password: string): Observable<UserModel> {
 
-    if (environment.auth.api) {
+    if (environment.auth.apiAtiva) {
       console.log(this.tokenService.getTokenCookie());
       if (this.tokenService.anyTokenCookie()) {
         this.isLoadingSubject.next(true);

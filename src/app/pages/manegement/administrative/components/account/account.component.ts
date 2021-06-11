@@ -121,8 +121,6 @@ export class AccountComponentAdministrative implements OnInit {
      * 4° continua...
      */
     console.log(this.administrativo)
-    this.modal.close(true)
-    this.modal.dismiss("false");
     return of(this.administrativo);
   }
 

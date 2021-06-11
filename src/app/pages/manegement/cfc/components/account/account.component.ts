@@ -123,8 +123,6 @@ export class AccountComponentCfc implements OnInit {
      * 4° continua...
      */
     console.log(this.cfc)
-    this.modal.close(true)
-    this.modal.dismiss("false");
     return of(this.cfc);
   }
 

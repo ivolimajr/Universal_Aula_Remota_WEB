@@ -9,8 +9,8 @@ export const environment = {
   isMockEnabled: true,
   apiUrl: 'https://your-domain.com/api',
   auth: {
-    api: false,
-    url: 'https://localhost:44319/api/auth/v1/signin',
+    apiAtiva: false,
+    url: 'http://127.0.0.1:8000',
     clientId: 'leandro',
     clientSecret: 'admin123',
     cookieNameClientCredentials: 'access-token-client-hom',
