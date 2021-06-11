@@ -82,6 +82,8 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
     this.customer.telefone = formData.telefone;
     this.customer.cargo = formData.cargo;
     this.customer.status = formData.status;
+    this.customer.senha = formData.senha;
+    this.customer.confirmarSenha = formData.confirmarSenha;
 
   }
 
@@ -117,6 +119,9 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
         cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.customer.status, Validators.compose([Validators.nullValidator])],
+        senha: [this.customer.senha, Validators.compose([Validators.nullValidator])],
+        confirmarSenha: [this.customer.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        
       });
     } else {
       this.createForm = this.fb.group({
@@ -126,6 +131,8 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
         cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.customer.status, Validators.compose([Validators.nullValidator])],
+        senha: [this.customer.senha, Validators.compose([Validators.nullValidator])],
+        confirmarSenha: [this.customer.confirmarSenha, Validators.compose([Validators.nullValidator])],
       });
     }
 

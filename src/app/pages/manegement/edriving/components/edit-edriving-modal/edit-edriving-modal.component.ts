@@ -48,7 +48,6 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadEdriving();
     console.log("ATRIBUTO ID NO MODAL: " + this.id);
-    console.log("Inicou a pagina que tem o modal");
   }
 
   /**
@@ -85,6 +84,9 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
     this.edriving.telefone = formData.telefone;
     this.edriving.cargo = formData.cargo;
     this.edriving.status = formData.status;
+    this.edriving.senha = formData.senha;
+    this.edriving.confirmarSenha = formData.confirmarSenha;
+
   }
 
   /**
@@ -118,6 +120,8 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
         cpf: [this.edriving.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
+        senha: [this.edriving.senha, Validators.compose([Validators.nullValidator])],
+        confirmarSenha: [this.edriving.confirmarSenha, Validators.compose([Validators.nullValidator])],
       });
     } else {
       this.createForm = this.fb.group({
@@ -127,6 +131,8 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
         cpf: [this.edriving.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
+        senha: [this.edriving.senha, Validators.compose([Validators.nullValidator])],
+        confirmarSenha: [this.edriving.confirmarSenha, Validators.compose([Validators.nullValidator])],
       });
     }
 

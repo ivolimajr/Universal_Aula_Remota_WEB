@@ -41,7 +41,7 @@ export class AccountComponentAdministrative implements OnInit {
   @Input() id: number; // ID QUE VAMOS RECEBER PELA ROTA PARA PODER EDITAR
 
   isLoading$;
-  edriving: AdministrativoModel;
+  administrativo: AdministrativoModel;
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
   modal: any;
@@ -57,10 +57,10 @@ export class AccountComponentAdministrative implements OnInit {
   }
   loadCustomer() {
     if (!this.id) {
-      this.edriving = EMPTY_ADMINISTRATIVO;
+      this.administrativo = EMPTY_ADMINISTRATIVO;
       this.loadForm(null);
     } else {
-      this.edriving = EMPTY_ADMINISTRATIVO;
+      this.administrativo = EMPTY_ADMINISTRATIVO;
       this.loadForm(this.id);
     }
   }
@@ -79,13 +79,27 @@ export class AccountComponentAdministrative implements OnInit {
    */
   private prepareCustomer() {
     const formData = this.createForm.value;
-    this.edriving.fullName = formData.fullName;
-    this.edriving.email = formData.email;
-    this.edriving.cpf = formData.cpf;
-    this.edriving.telefone = formData.telefone;
-    this.edriving.cargo = formData.cargo;
-    this.edriving.dataNascimento = new Date(formData.dob);
-    this.edriving.status = formData.status;
+    this.administrativo.fullName = formData.fullName;
+    this.administrativo.email = formData.email;
+    this.administrativo.cpf = formData.cpf;
+    this.administrativo.telefone = formData.telefone;
+    this.administrativo.cargo = formData.cargo;
+    this.administrativo.dataNascimento = new Date(formData.dob);
+    this.administrativo.status = formData.status;
+    this.administrativo.senha = formData.senha;
+    this.administrativo.confirmarSenha = formData.confirmarSenha;
+    this.administrativo.identidade = formData.identidade;
+    this.administrativo.telefone2 = formData.telefone2;
+    this.administrativo.cep = formData.cep;
+    this.administrativo.bairro = formData.bairro;
+    this.administrativo.cidade = formData.cidade;
+    this.administrativo.uf = formData.uf;
+    this.administrativo.numero = formData.numero;
+    this.administrativo.enderecoLogradouro = formData.enderecoLogradouro;
+    this.administrativo.localizacaoLatitude = formData.localizacaoLatitude;
+    this.administrativo.longitude = formData.longitude;
+    this.administrativo.orgaoExpedidor = formData.orgaoExpedidor;
+    this.administrativo.site = formData.site;
   }
 
   /**
@@ -106,10 +120,10 @@ export class AccountComponentAdministrative implements OnInit {
      * 3° trata o retorno da API
      * 4° continua...
      */
-    console.log(this.edriving)
+    console.log(this.administrativo)
     this.modal.close(true)
     this.modal.dismiss("false");
-    return of(this.edriving);
+    return of(this.administrativo);
   }
 
   /**
@@ -118,25 +132,51 @@ export class AccountComponentAdministrative implements OnInit {
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
-        fullName: [this.edriving.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.edriving.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.edriving.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
-        status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
-        cep: [this.edriving.cep, Validators.compose([Validators.nullValidator])],
-        senha: [this.edriving.cep, Validators.compose([Validators.nullValidator])],
+        fullName: [this.administrativo.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        email: [this.administrativo.email, Validators.compose([Validators.required, Validators.email])],
+        telefone: [this.administrativo.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cpf: [this.administrativo.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
+        status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
+        cep: [this.administrativo.cep, Validators.compose([Validators.nullValidator])],
+        senha: [this.administrativo.senha, Validators.compose([Validators.nullValidator])],
+        confirmarSenha: [this.administrativo.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        identidade: [this.administrativo.identidade, Validators.compose([Validators.nullValidator])],
+        telefone2: [this.administrativo.telefone2, Validators.compose([Validators.nullValidator])],
+        bairro: [this.administrativo.bairro, Validators.compose([Validators.nullValidator])],
+        cidade: [this.administrativo.cidade, Validators.compose([Validators.nullValidator])],
+        uf: [this.administrativo.uf, Validators.compose([Validators.nullValidator])],
+        numero: [this.administrativo.numero, Validators.compose([Validators.nullValidator])],
+        dataNascimento: [this.administrativo.dataNascimento, Validators.compose([Validators.nullValidator])],
+        enderecoLogradouro: [this.administrativo.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
+        localizacaoLatitude: [this.administrativo.localizacaoLatitude, Validators.compose([Validators.nullValidator])],
+        longitude: [this.administrativo.longitude, Validators.compose([Validators.nullValidator])],
+        orgaoExpedidor: [this.administrativo.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
+        site: [this.administrativo.site, Validators.compose([Validators.nullValidator])],
       });
     } else {
       this.createForm = this.fb.group({
-        fullName: [this.edriving.fullName, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(100)])],
-        email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.edriving.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.edriving.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
-        status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
-        cep: [this.edriving.cep, Validators.compose([Validators.nullValidator])],
-        senha: [this.edriving.cep, Validators.compose([Validators.nullValidator])],
+        fullName: [this.administrativo.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        email: [this.administrativo.email, Validators.compose([Validators.required, Validators.email])],
+        telefone: [this.administrativo.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cpf: [this.administrativo.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
+        status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
+        cep: [this.administrativo.cep, Validators.compose([Validators.nullValidator])],
+        senha: [this.administrativo.senha, Validators.compose([Validators.nullValidator])],
+        confirmarSenha: [this.administrativo.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        identidade: [this.administrativo.identidade, Validators.compose([Validators.nullValidator])],
+        telefone2: [this.administrativo.telefone2, Validators.compose([Validators.nullValidator])],
+        bairro: [this.administrativo.bairro, Validators.compose([Validators.nullValidator])],
+        cidade: [this.administrativo.cidade, Validators.compose([Validators.nullValidator])],
+        uf: [this.administrativo.uf, Validators.compose([Validators.nullValidator])],
+        numero: [this.administrativo.numero, Validators.compose([Validators.nullValidator])],
+        dataNascimento: [this.administrativo.dataNascimento, Validators.compose([Validators.nullValidator])],
+        enderecoLogradouro: [this.administrativo.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
+        localizacaoLatitude: [this.administrativo.localizacaoLatitude, Validators.compose([Validators.nullValidator])],
+        longitude: [this.administrativo.longitude, Validators.compose([Validators.nullValidator])],
+        orgaoExpedidor: [this.administrativo.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
+        site: [this.administrativo.site, Validators.compose([Validators.nullValidator])],
       });
     }
 

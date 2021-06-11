@@ -9,4 +9,5 @@ export class BaseModel {
   telefone: string;
   senha: string;
   confirmarSenha: string;
+
 }

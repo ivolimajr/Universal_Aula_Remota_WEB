@@ -77,12 +77,12 @@
           <div class="col-lg">
             <label>Data de Parceria</label>
             <div class="input-group input-group-solid">
-              <input type="date" name="dob" class="form-control form-control-lg form-control-solid" autocomplete="off" [class.is-invalid]="isControlInvalid('dob')" [class.is-valid]="isControlValid('dob')" formControlName="dob" required />
+              <input type="date" name="descricao" class="form-control form-control-lg form-control-solid" autocomplete="off" [class.is-invalid]="isControlInvalid('descricao')" [class.is-valid]="isControlValid('descricao')" formControlName="descricao" required />
             </div>
-            <span class="valid-feedback" *ngIf="isControlValid('dob')">
+            <span class="valid-feedback" *ngIf="isControlValid('descricao')">
               Ok!
             </span>
-            <div class="invalid-feedback" *ngIf="controlHasError('required', 'dob')">
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'descricao')">
               Formato da data incorreta
             </div>
           </div>
@@ -91,12 +91,12 @@
         <!-- start: Endereço -->
         <div class="form-group row">
           <div class="col-lg">
-            <label class="form-label" for="endereco">Endereço</label>
-            <input type="text" id="endereco" class="form-control form-control-lg form-control-solid" name="endereco" placeholder="Endereço com número" autocomplete="off" formControlName="endereco" [class.is-invalid]="isControlInvalid('endereco')" [class.is-valid]="isControlValid('endereco')"/>
-            <div class="valid-feedback" *ngIf="isControlValid('endereco')">
+            <label class="form-label" for="enderecoLogradouro">Endereço</label>
+            <input type="text" id="enderecoLogradouro" class="form-control form-control-lg form-control-solid" name="enderecoLogradouro" placeholder="Endereço com número" autocomplete="off" formControlName="enderecoLogradouro" [class.is-invalid]="isControlInvalid('enderecoLogradouro')" [class.is-valid]="isControlValid('enderecoLogradouro')"/>
+            <div class="valid-feedback" *ngIf="isControlValid('enderecoLogradouro')">
               Ok!
             </div>
-            <div class="invalid-feedback" *ngIf="controlHasError('required', 'endereco')">
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'enderecoLogradouro')">
               Campo necessário
             </div>
           </div>
@@ -104,12 +104,12 @@
 
           <!-- start: Bairro -->
           <div class="col-lg">
-            <label class="form-label" for="endereco" >Bairro</label>
-            <input type="text" id="endereco" class="form-control form-control-lg form-control-solid" name="endereco" placeholder="Bairro" autocomplete="off" formControlName="telefone" [class.is-invalid]="isControlInvalid('endereco')" [class.is-valid]="isControlValid('endereco')" />
-            <div class="valid-feedback" *ngIf="isControlValid('endereco')">
+            <label class="form-label" for="bairro" >Bairro</label>
+            <input type="text" id="bairro" class="form-control form-control-lg form-control-solid" name="bairro" placeholder="Bairro" autocomplete="off" formControlName="bairro" [class.is-invalid]="isControlInvalid('bairro')" [class.is-valid]="isControlValid('bairro')" />
+            <div class="valid-feedback" *ngIf="isControlValid('bairro')">
               Ok!
             </div>
-            <div class="invalid-feedback" *ngIf="controlHasError('required', 'endereco')">
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'bairro')">
               Campo necessário
             </div>
           </div>
@@ -118,12 +118,12 @@
         <!-- start: Cidade -->
         <div class="form-group row">
           <div class="col-lg">
-            <label class="form-label" for="endereco">Cidade</label>
-            <input type="text" id="endereco" class="form-control form-control-lg form-control-solid" name="endereco" placeholder="Cidade" autocomplete="off" formControlName="endereco" [class.is-invalid]="isControlInvalid('endereco')" [class.is-valid]="isControlValid('endereco')"/>
-            <div class="valid-feedback" *ngIf="isControlValid('endereco')">
+            <label class="form-label" for="cidade">Cidade</label>
+            <input type="text" id="cidade" class="form-control form-control-lg form-control-solid" name="cidade" placeholder="Cidade" autocomplete="off" formControlName="cidade" [class.is-invalid]="isControlInvalid('cidade')" [class.is-valid]="isControlValid('cidade')"/>
+            <div class="valid-feedback" *ngIf="isControlValid('cidade')">
               Ok!
             </div>
-            <div class="invalid-feedback" *ngIf="controlHasError('required', 'endereco')">
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'cidade')">
               Campo necessário
             </div>
           </div>

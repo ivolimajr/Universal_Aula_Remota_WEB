@@ -77,6 +77,16 @@ export class AccountComponentPartner implements OnInit {
     this.partner.telefone = formData.telefone;
     this.partner.cargo = formData.cargo;
     this.partner.status = formData.status;
+    this.partner.cep = formData.cep;
+    this.partner.cnpj = formData.cnpj;
+    this.partner.bairro = formData.bairro;
+    this.partner.cidade = formData.cidade;
+    this.partner.confirmarSenha = formData.confirmarSenha;
+    this.partner.descricao = formData.descricao;
+    this.partner.enderecoLogradouro = formData.enderecoLogradouro;
+    this.partner.numero = formData.numero;
+    this.partner.senha = formData.senha;
+    this.partner.uf = formData.uf;
 
     //TODO: ADICIONAR OS OUTROS ATRIBUTOS
   }
@@ -117,7 +127,15 @@ export class AccountComponentPartner implements OnInit {
         cargo: [this.partner.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.partner.status, Validators.compose([Validators.nullValidator])],
         cep: [this.partner.cep, Validators.compose([Validators.nullValidator])],
-        //TODO: ADICIONAR TODOS OS ATRIBUTOS DO MODAL
+        cnpj: [this.partner.cnpj, Validators.compose([Validators.nullValidator])],
+        bairro: [this.partner.bairro, Validators.compose([Validators.nullValidator])],
+        cidade: [this.partner.cidade, Validators.compose([Validators.nullValidator])],
+        confirmarSenha: [this.partner.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        descricao: [this.partner.descricao, Validators.compose([Validators.nullValidator])],
+        enderecoLogradouro: [this.partner.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
+        numero: [this.partner.numero, Validators.compose([Validators.nullValidator])],
+        senha: [this.partner.senha, Validators.compose([Validators.nullValidator])],
+        uf: [this.partner.uf, Validators.compose([Validators.nullValidator])],
       });
     } else {
       this.createForm = this.fb.group({
@@ -127,7 +145,15 @@ export class AccountComponentPartner implements OnInit {
         cargo: [this.partner.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.partner.status, Validators.compose([Validators.nullValidator])],
         cep: [this.partner.cep, Validators.compose([Validators.nullValidator])],
-        //TODO: ADICIONAR TODOS OS ATRIBUTOS DO MODAL
+        cnpj: [this.partner.cnpj, Validators.compose([Validators.nullValidator])],
+        bairro: [this.partner.bairro, Validators.compose([Validators.nullValidator])],
+        cidade: [this.partner.cidade, Validators.compose([Validators.nullValidator])],
+        confirmarSenha: [this.partner.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        descricao: [this.partner.descricao, Validators.compose([Validators.nullValidator])],
+        enderecoLogradouro: [this.partner.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
+        numero: [this.partner.numero, Validators.compose([Validators.nullValidator])],
+        senha: [this.partner.senha, Validators.compose([Validators.nullValidator])],
+        uf: [this.partner.uf, Validators.compose([Validators.nullValidator])],
       });
     }
 

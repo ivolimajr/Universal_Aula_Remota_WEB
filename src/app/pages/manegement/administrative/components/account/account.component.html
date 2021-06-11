@@ -20,12 +20,12 @@
         <div class="row">
           <label class="col-xl-3"></label>
           <div class="col-lg-9 col-xl-6">
-            <h5 class="font-weight-bold mb-6">Informações do usuário</h5>
+            <h5 class="font-weight-bold mb-6">Meus Dados</h5>
           </div>
         </div>
 
         <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label">Nome</label>
+          <label class="col-xl-3 col-lg-3 col-form-label">Nome Completo</label>
           <div class="col-lg-9 col-xl-6">
             <input class="form-control form-control-lg form-control-solid"
               type="text"
@@ -36,35 +36,33 @@
           </div>
         </div>
         <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label">Sobrenome</label>
+          <label class="col-xl-3 col-lg-3 col-form-label">Endereço de e-mail</label>
+          <div class="col-lg-9 col-xl-6">
+            <div class="input-group input-group-lg input-group-solid">
+              <div class="input-group-prepend">
+                <span class="input-group-text">
+                  <i class="fa fa-at"></i>
+                </span>
+              </div>
+              <input type="email"
+                class="form-control form-control-lg form-control-solid"
+                placeholder="Email"
+                formControlName="email"
+                [class.is-invalid]="isControlInvalid('email')"
+                [class.is-valid]="isControlValid('email')"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-xl-3 col-lg-3 col-form-label">CPF</label>
           <div class="col-lg-9 col-xl-6">
             <input class="form-control form-control-lg form-control-solid"
               type="text"
-              formControlName="sobrenome"
-              [class.is-invalid]="isControlInvalid('sobrenome')"
-              [class.is-valid]="isControlValid('sobrenome')"
-            />
-          </div>
-        </div>
-        <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label">Senha</label>
-          <div class="col-lg-9 col-xl-6">
-            <input class="form-control form-control-lg form-control-solid"
-              type="password"
-              formControlName="senha"
-              [class.is-invalid]="isControlInvalid('senha')"
-              [class.is-valid]="isControlValid('senha')"
-            />
-          </div>
-        </div>
-        <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label"> Confirme a Senha</label>
-          <div class="col-lg-9 col-xl-6">
-            <input class="form-control form-control-lg form-control-solid"
-              type="password"
-              formControlName="confirmarSenha"
-              [class.is-invalid]="isControlInvalid('confirmarSenha')"
-              [class.is-valid]="isControlValid('confirmarSenha')"
+              formControlName="cpf"
+              [class.is-invalid]="isControlInvalid('cpf')"
+              [class.is-valid]="isControlValid('cpf')"
             />
           </div>
         </div>
@@ -94,25 +92,20 @@
             </div>
           </div>
         </div>
+
         <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label">Endereço de e-mail</label>
+          <label class="col-xl-3 col-lg-3 col-form-label">Site (opcional)</label>
           <div class="col-lg-9 col-xl-6">
-            <div class="input-group input-group-lg input-group-solid">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="fa fa-at"></i>
-                </span>
-              </div>
-              <input type="email"
-                class="form-control form-control-lg form-control-solid"
-                placeholder="Email"
-                formControlName="email"
-                [class.is-invalid]="isControlInvalid('email')"
-                [class.is-valid]="isControlValid('email')"
-              />
-            </div>
+            <input class="form-control form-control-lg form-control-solid"
+              type="text"
+              formControlName="site"
+              [class.is-invalid]="isControlInvalid('site')"
+              [class.is-valid]="isControlValid('site')"
+            />
           </div>
         </div>
+
+        
       </div>
       <!--end::Body-->
     </div>

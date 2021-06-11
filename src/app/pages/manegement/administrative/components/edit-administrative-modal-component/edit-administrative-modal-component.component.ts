@@ -95,7 +95,22 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
     this.administrativo.cpf = formData.cpf;
     this.administrativo.telefone = formData.telefone;
     this.administrativo.cargo = formData.cargo;
+    this.administrativo.dataNascimento = new Date(formData.dob);
     this.administrativo.status = formData.status;
+    this.administrativo.senha = formData.senha;
+    this.administrativo.confirmarSenha = formData.confirmarSenha;
+    this.administrativo.identidade = formData.identidade;
+    this.administrativo.telefone2 = formData.telefone2;
+    this.administrativo.cep = formData.cep;
+    this.administrativo.bairro = formData.bairro;
+    this.administrativo.cidade = formData.cidade;
+    this.administrativo.uf = formData.uf;
+    this.administrativo.numero = formData.numero;
+    this.administrativo.enderecoLogradouro = formData.enderecoLogradouro;
+    this.administrativo.localizacaoLatitude = formData.localizacaoLatitude;
+    this.administrativo.longitude = formData.longitude;
+    this.administrativo.orgaoExpedidor = formData.orgaoExpedidor;
+    this.administrativo.site = formData.site;
   }
 
   /**
@@ -124,21 +139,51 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
-        fullName: [this.administrativo.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        email: [this.administrativo.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.administrativo.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.administrativo.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
-        status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
+          fullName: [this.administrativo.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+          email: [this.administrativo.email, Validators.compose([Validators.required, Validators.email])],
+          telefone: [this.administrativo.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+          cpf: [this.administrativo.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+          cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
+          status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
+          cep: [this.administrativo.cep, Validators.compose([Validators.nullValidator])],
+          senha: [this.administrativo.senha, Validators.compose([Validators.nullValidator])],
+          confirmarSenha: [this.administrativo.confirmarSenha, Validators.compose([Validators.nullValidator])],
+          identidade: [this.administrativo.identidade, Validators.compose([Validators.nullValidator])],
+          telefone2: [this.administrativo.telefone2, Validators.compose([Validators.nullValidator])],
+          bairro: [this.administrativo.bairro, Validators.compose([Validators.nullValidator])],
+          cidade: [this.administrativo.cidade, Validators.compose([Validators.nullValidator])],
+          uf: [this.administrativo.uf, Validators.compose([Validators.nullValidator])],
+          numero: [this.administrativo.numero, Validators.compose([Validators.nullValidator])],
+          dataNascimento: [this.administrativo.dataNascimento, Validators.compose([Validators.nullValidator])],
+          enderecoLogradouro: [this.administrativo.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
+          localizacaoLatitude: [this.administrativo.localizacaoLatitude, Validators.compose([Validators.nullValidator])],
+          longitude: [this.administrativo.longitude, Validators.compose([Validators.nullValidator])],
+          orgaoExpedidor: [this.administrativo.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
+          site: [this.administrativo.site, Validators.compose([Validators.nullValidator])],
       });
     } else {
       this.createForm = this.fb.group({
-        fullName: [this.administrativo.fullName, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(100)])],
-        email: [this.administrativo.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.administrativo.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.administrativo.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
-        status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
+          fullName: [this.administrativo.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+          email: [this.administrativo.email, Validators.compose([Validators.required, Validators.email])],
+          telefone: [this.administrativo.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+          cpf: [this.administrativo.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+          cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
+          status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
+          cep: [this.administrativo.cep, Validators.compose([Validators.nullValidator])],
+          senha: [this.administrativo.senha, Validators.compose([Validators.nullValidator])],
+          confirmarSenha: [this.administrativo.confirmarSenha, Validators.compose([Validators.nullValidator])],
+          identidade: [this.administrativo.identidade, Validators.compose([Validators.nullValidator])],
+          telefone2: [this.administrativo.telefone2, Validators.compose([Validators.nullValidator])],
+          bairro: [this.administrativo.bairro, Validators.compose([Validators.nullValidator])],
+          cidade: [this.administrativo.cidade, Validators.compose([Validators.nullValidator])],
+          uf: [this.administrativo.uf, Validators.compose([Validators.nullValidator])],
+          numero: [this.administrativo.numero, Validators.compose([Validators.nullValidator])],
+          dataNascimento: [this.administrativo.dataNascimento, Validators.compose([Validators.nullValidator])],
+          enderecoLogradouro: [this.administrativo.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
+          localizacaoLatitude: [this.administrativo.localizacaoLatitude, Validators.compose([Validators.nullValidator])],
+          longitude: [this.administrativo.longitude, Validators.compose([Validators.nullValidator])],
+          orgaoExpedidor: [this.administrativo.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
+          site: [this.administrativo.site, Validators.compose([Validators.nullValidator])],
       });
     }
 

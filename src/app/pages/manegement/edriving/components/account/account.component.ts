@@ -72,6 +72,8 @@ export class AccountComponentEdriving implements OnInit {
     this.edriving.telefone = formData.telefone;
     this.edriving.cargo = formData.cargo;
     this.edriving.status = formData.status;
+    this.edriving.senha = formData.senha;
+    this.edriving.confirmarSenha = formData.confirmarSenha;
   }
 
   /**
