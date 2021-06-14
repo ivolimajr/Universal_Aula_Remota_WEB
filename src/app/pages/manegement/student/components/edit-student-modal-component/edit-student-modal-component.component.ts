@@ -2,19 +2,31 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
-import { EdrivingModel } from 'src/app/shared/models/edriving/edrivingModel.model';
+import { StudentBaseModel } from 'src/app/shared/models/student/studentModel.model';
 import { CustomAdapter, CustomDateParserFormatter } from 'src/app/_metronic/core';
 
-const EMPTY_CUSTOMER: EdrivingModel = {
+const EMPTY_STUDENT: StudentBaseModel = {
   id: undefined,
   fullName: '',
   email: '',
   cpf: '',
   telefone: '',
   status: 1, // STATUS ATIVO
-  cargo: '',
   senha: '',
-  confirmarSenha: ''
+  confirmarSenha: '',
+  cep:'',
+  cidade:'',
+  bairro:'',
+  uf:'',
+  enderecoLogradouro:'',
+  numero:'',
+  curso:[],
+  dataNascimento:new Date,
+  identidade:'',
+  orgaoExpedidor:'',
+  turno:'',
+  turma:'',
+
 };
 
 @Component({
@@ -37,7 +49,7 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
   @Input() id: number;
 
   isLoading$;
-  customer: EdrivingModel;
+  student: StudentBaseModel;
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
 
@@ -48,16 +60,16 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadCustomer();
+    this.loadstudent();
     console.log("ATRIBUTO ID NO MODAL: " + this.id);
   }
 
-  loadCustomer() {
+  loadstudent() {
     if (!this.id) {
-      this.customer = EMPTY_CUSTOMER;
+      this.student = EMPTY_STUDENT;
       this.loadForm(null);
     } else {
-      this.customer = EMPTY_CUSTOMER;
+      this.student = EMPTY_STUDENT;
       this.loadForm(this.id);
     }
   }
@@ -66,7 +78,7 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
    * 
    */
   save() {
-    this.prepareCustomer();
+    this.preparestudent();
     this.create();
   }
 
@@ -74,16 +86,27 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
   /**
    * 
    */
-  private prepareCustomer() {
+  private preparestudent() {
     const formData = this.createForm.value;
-    this.customer.fullName = formData.fullName;
-    this.customer.email = formData.email;
-    this.customer.cpf = formData.cpf;
-    this.customer.telefone = formData.telefone;
-    this.customer.cargo = formData.cargo;
-    this.customer.status = formData.status;
-    this.customer.senha = formData.senha;
-    this.customer.confirmarSenha = formData.confirmarSenha;
+    this.student.fullName = formData.fullName;
+    this.student.email = formData.email;
+    this.student.cpf = formData.cpf;
+    this.student.telefone = formData.telefone;
+    this.student.status = formData.status;
+    this.student.senha = formData.senha;
+    this.student.confirmarSenha = formData.confirmarSenha;
+    this.student.cep = formData.cep;
+    this.student.cidade = formData.cidade;
+    this.student.bairro = formData.bairro;
+    this.student.enderecoLogradouro = formData.enderecoLogradouro;
+    this.student.uf = formData.uf;
+    this.student.numero = formData.numero;
+    this.student.curso = formData.curso;
+    this.student.dataNascimento = formData.dataNascimento;
+    this.student.identidade = formData.identidade;
+    this.student.orgaoExpedidor = formData.orgaoExpedidor;
+    this.student.turno = formData.turno;
+    this.student.turma = formData.turma;
 
   }
 
@@ -101,10 +124,10 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
      * 3° trata o retorno da API
      * 4° continua...
      */
-    console.log(this.customer)
+    console.log(this.student)
     this.modal.close(true)
     this.modal.dismiss("false");
-    return of(this.customer);
+    return of(this.student);
   }
 
   /**
@@ -113,26 +136,48 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
-        fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
-        status: [this.customer.status, Validators.compose([Validators.nullValidator])],
-        senha: [this.customer.senha, Validators.compose([Validators.nullValidator])],
-        confirmarSenha: [this.customer.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        fullName: [this.student.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        email: [this.student.email, Validators.compose([Validators.required, Validators.email])],
+        telefone: [this.student.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cpf: [this.student.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        status: [this.student.status, Validators.compose([Validators.nullValidator])],
+        senha: [this.student.senha, Validators.compose([Validators.nullValidator])],
+        confirmarSenha: [this.student.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        cep: [this.student.cep, Validators.compose([Validators.nullValidator])],
+        cidade: [this.student.cidade, Validators.compose([Validators.nullValidator])],
+        bairro: [this.student.bairro, Validators.compose([Validators.nullValidator])],
+        uf: [this.student.uf, Validators.compose([Validators.nullValidator])],
+        enderecoLogradouro: [this.student.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
+        numero: [this.student.numero, Validators.compose([Validators.nullValidator])],
+        curso: [this.student.curso, Validators.compose([Validators.nullValidator])],
+        dataNascimento: [this.student.dataNascimento, Validators.compose([Validators.nullValidator])],
+        identidade: [this.student.identidade, Validators.compose([Validators.nullValidator])],
+        orgaoExpedidor: [this.student.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
+        turno: [this.student.turno, Validators.compose([Validators.nullValidator])],
+        turma: [this.student.turma, Validators.compose([Validators.nullValidator])],
         
       });
     } else {
       this.createForm = this.fb.group({
-        fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
-        status: [this.customer.status, Validators.compose([Validators.nullValidator])],
-        senha: [this.customer.senha, Validators.compose([Validators.nullValidator])],
-        confirmarSenha: [this.customer.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        fullName: [this.student.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        email: [this.student.email, Validators.compose([Validators.required, Validators.email])],
+        telefone: [this.student.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cpf: [this.student.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        status: [this.student.status, Validators.compose([Validators.nullValidator])],
+        senha: [this.student.senha, Validators.compose([Validators.nullValidator])],
+        confirmarSenha: [this.student.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        cep: [this.student.cep, Validators.compose([Validators.nullValidator])],
+        cidade: [this.student.cidade, Validators.compose([Validators.nullValidator])],
+        bairro: [this.student.bairro, Validators.compose([Validators.nullValidator])],
+        uf: [this.student.uf, Validators.compose([Validators.nullValidator])],
+        enderecoLogradouro: [this.student.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
+        numero: [this.student.numero, Validators.compose([Validators.nullValidator])],
+        curso: [this.student.curso, Validators.compose([Validators.nullValidator])],
+        dataNascimento: [this.student.dataNascimento, Validators.compose([Validators.nullValidator])],
+        identidade: [this.student.identidade, Validators.compose([Validators.nullValidator])],
+        orgaoExpedidor: [this.student.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
+        turno: [this.student.turno, Validators.compose([Validators.nullValidator])],
+        turma: [this.student.turma, Validators.compose([Validators.nullValidator])],
       });
     }
 

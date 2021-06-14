@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
-import { InstrutorBaseModel } from 'src/app/shared/models/cfc/instrutorModel.model';
+import { InstrutorBaseModel } from 'src/app/shared/models/instructor/instrutorModel.model';
 import { CustomAdapter, CustomDateParserFormatter } from 'src/app/_metronic/core';
 
 const EMPTY_INSTRUTOR: InstrutorBaseModel = {
@@ -14,7 +14,6 @@ const EMPTY_INSTRUTOR: InstrutorBaseModel = {
   cpf: '',
   identidade: '',
   telefone: '',
-  telefone2: '',
   status: 1, // STATUS ATIVO
   cargo: '',
   cep: '',
@@ -24,10 +23,10 @@ const EMPTY_INSTRUTOR: InstrutorBaseModel = {
   numero: '',
   dataNascimento: new Date,
   enderecoLogradouro: '',
-  localizacaoLatitude: '',
-  longitude: '',
   orgaoExpedidor: '',
   site: '',
+  cursos:[],
+  uploadDOC:'',
 };
 
 @Component({
@@ -101,15 +100,12 @@ export class EditInstructorModalComponentComponent implements OnInit, OnDestroy 
     this.instrutor.senha = formData.senha;
     this.instrutor.confirmarSenha = formData.confirmarSenha;
     this.instrutor.identidade = formData.identidade;
-    this.instrutor.telefone2 = formData.telefone2;
     this.instrutor.cep = formData.cep;
     this.instrutor.bairro = formData.bairro;
     this.instrutor.cidade = formData.cidade;
     this.instrutor.uf = formData.uf;
     this.instrutor.numero = formData.numero;
     this.instrutor.enderecoLogradouro = formData.enderecoLogradouro;
-    this.instrutor.localizacaoLatitude = formData.localizacaoLatitude;
-    this.instrutor.longitude = formData.longitude;
     this.instrutor.orgaoExpedidor = formData.orgaoExpedidor;
     this.instrutor.site = formData.site;
   }
@@ -150,15 +146,12 @@ export class EditInstructorModalComponentComponent implements OnInit, OnDestroy 
         senha: [this.instrutor.senha, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.instrutor.confirmarSenha, Validators.compose([Validators.nullValidator])],
         identidade: [this.instrutor.identidade, Validators.compose([Validators.nullValidator])],
-        telefone2: [this.instrutor.telefone2, Validators.compose([Validators.nullValidator])],
         bairro: [this.instrutor.bairro, Validators.compose([Validators.nullValidator])],
         cidade: [this.instrutor.cidade, Validators.compose([Validators.nullValidator])],
         uf: [this.instrutor.uf, Validators.compose([Validators.nullValidator])],
         numero: [this.instrutor.numero, Validators.compose([Validators.nullValidator])],
         dataNascimento: [this.instrutor.dataNascimento, Validators.compose([Validators.nullValidator])],
         enderecoLogradouro: [this.instrutor.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
-        localizacaoLatitude: [this.instrutor.localizacaoLatitude, Validators.compose([Validators.nullValidator])],
-        longitude: [this.instrutor.longitude, Validators.compose([Validators.nullValidator])],
         orgaoExpedidor: [this.instrutor.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
         site: [this.instrutor.site, Validators.compose([Validators.nullValidator])],
       });
@@ -174,15 +167,12 @@ export class EditInstructorModalComponentComponent implements OnInit, OnDestroy 
         senha: [this.instrutor.senha, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.instrutor.confirmarSenha, Validators.compose([Validators.nullValidator])],
         identidade: [this.instrutor.identidade, Validators.compose([Validators.nullValidator])],
-        telefone2: [this.instrutor.telefone2, Validators.compose([Validators.nullValidator])],
         bairro: [this.instrutor.bairro, Validators.compose([Validators.nullValidator])],
         cidade: [this.instrutor.cidade, Validators.compose([Validators.nullValidator])],
         uf: [this.instrutor.uf, Validators.compose([Validators.nullValidator])],
         numero: [this.instrutor.numero, Validators.compose([Validators.nullValidator])],
         dataNascimento: [this.instrutor.dataNascimento, Validators.compose([Validators.nullValidator])],
         enderecoLogradouro: [this.instrutor.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
-        localizacaoLatitude: [this.instrutor.localizacaoLatitude, Validators.compose([Validators.nullValidator])],
-        longitude: [this.instrutor.longitude, Validators.compose([Validators.nullValidator])],
         orgaoExpedidor: [this.instrutor.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
         site: [this.instrutor.site, Validators.compose([Validators.nullValidator])],
 

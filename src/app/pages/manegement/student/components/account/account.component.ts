@@ -2,18 +2,29 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
-import { EdrivingModel } from 'src/app/shared/models/edriving/edrivingModel.model';
+import { StudentBaseModel } from 'src/app/shared/models/student/studentModel.model';
 
-const EMPTY_CUSTOMER: EdrivingModel = {
+const EMPTY_CUSTOMER: StudentBaseModel = {
   id: undefined,
   fullName: '',
   email: '',
   cpf: '',
   telefone: '',
   status: 1, // STATUS ATIVO
-  cargo: '',
   senha: '',
   confirmarSenha: '',
+  cep:'',
+  cidade:'',
+  bairro:'',
+  uf:'',
+  enderecoLogradouro:'',
+  numero:'',
+  curso:[],
+  dataNascimento:new Date,
+  identidade:'',
+  orgaoExpedidor:'',
+  turno:'',
+  turma:'',
 };
 
 @Component({
@@ -28,7 +39,7 @@ export class AccountComponentStudent implements OnInit {
   @Input() id: number; // ID QUE VAMOS RECEBER PELA ROTA PARA PODER EDITAR
 
   isLoading$;
-  customer: EdrivingModel;
+  customer: StudentBaseModel;
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
   modal: any;
@@ -71,7 +82,6 @@ export class AccountComponentStudent implements OnInit {
     this.customer.email = formData.email;
     this.customer.cpf = formData.cpf;
     this.customer.telefone = formData.telefone;
-    this.customer.cargo = formData.cargo;
     this.customer.status = formData.status;
     this.customer.senha = formData.senha;
     this.customer.confirmarSenha = formData.confirmarSenha;
@@ -112,7 +122,6 @@ export class AccountComponentStudent implements OnInit {
         email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.customer.status, Validators.compose([Validators.nullValidator])],
         senha: [this.customer.senha, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.customer.confirmarSenha, Validators.compose([Validators.nullValidator])],
@@ -123,7 +132,6 @@ export class AccountComponentStudent implements OnInit {
         email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cargo: [this.customer.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.customer.status, Validators.compose([Validators.nullValidator])],
         senha: [this.customer.senha, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.customer.confirmarSenha, Validators.compose([Validators.nullValidator])],

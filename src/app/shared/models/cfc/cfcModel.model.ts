@@ -17,7 +17,8 @@ export interface CfcModel extends BaseModel {
   numero: string;
   localizacaoLatitude: string;
   longitude: string;
-  telefone2: string;
+  telefone: string;
   site: string;
+  email: string;
 
 }

@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
-import { AdministrativoModel } from '../../../../../shared/models/cfc/administrativoModel.model';
+import { AdministrativoModel } from '../../../../../shared/models/administrative/administrativoModel.model';
 import { CustomAdapter, CustomDateParserFormatter } from 'src/app/_metronic/core';
 
 const EMPTY_ADMINISTRATIVO: AdministrativoModel = {
@@ -14,7 +14,6 @@ const EMPTY_ADMINISTRATIVO: AdministrativoModel = {
   cpf: '',
   identidade: '',
   telefone: '',
-  telefone2: '',
   status: 1, // STATUS ATIVO
   cargo: '',
   cep: '',
@@ -100,7 +99,7 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
     this.administrativo.senha = formData.senha;
     this.administrativo.confirmarSenha = formData.confirmarSenha;
     this.administrativo.identidade = formData.identidade;
-    this.administrativo.telefone2 = formData.telefone2;
+    this.administrativo.telefone = formData.telefone2;
     this.administrativo.cep = formData.cep;
     this.administrativo.bairro = formData.bairro;
     this.administrativo.cidade = formData.cidade;
@@ -149,7 +148,7 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
           senha: [this.administrativo.senha, Validators.compose([Validators.nullValidator])],
           confirmarSenha: [this.administrativo.confirmarSenha, Validators.compose([Validators.nullValidator])],
           identidade: [this.administrativo.identidade, Validators.compose([Validators.nullValidator])],
-          telefone2: [this.administrativo.telefone2, Validators.compose([Validators.nullValidator])],
+          telefone2: [this.administrativo.telefone, Validators.compose([Validators.nullValidator])],
           bairro: [this.administrativo.bairro, Validators.compose([Validators.nullValidator])],
           cidade: [this.administrativo.cidade, Validators.compose([Validators.nullValidator])],
           uf: [this.administrativo.uf, Validators.compose([Validators.nullValidator])],
@@ -173,7 +172,7 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
           senha: [this.administrativo.senha, Validators.compose([Validators.nullValidator])],
           confirmarSenha: [this.administrativo.confirmarSenha, Validators.compose([Validators.nullValidator])],
           identidade: [this.administrativo.identidade, Validators.compose([Validators.nullValidator])],
-          telefone2: [this.administrativo.telefone2, Validators.compose([Validators.nullValidator])],
+          telefone2: [this.administrativo.telefone, Validators.compose([Validators.nullValidator])],
           bairro: [this.administrativo.bairro, Validators.compose([Validators.nullValidator])],
           cidade: [this.administrativo.cidade, Validators.compose([Validators.nullValidator])],
           uf: [this.administrativo.uf, Validators.compose([Validators.nullValidator])],

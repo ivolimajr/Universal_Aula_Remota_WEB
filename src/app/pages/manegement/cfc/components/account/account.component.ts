@@ -25,8 +25,7 @@ const EMPTY_CFC: CfcModel = {
   numero: '',
   razaoSocial: '',
   site: '',
-  telefone2: '',
-  uf: ''
+  uf: '',
 };
 
 @Component({
@@ -99,7 +98,7 @@ export class AccountComponentCfc implements OnInit {
     this.cfc.numero = formData.numero;
     this.cfc.razaoSocial = formData.razaoSocial;
     this.cfc.site = formData.site;
-    this.cfc.telefone2 = formData.telefone2;
+    this.cfc.telefone = formData.telefone2;
     this.cfc.uf = formData.uf;
 
   }
@@ -151,7 +150,7 @@ export class AccountComponentCfc implements OnInit {
         numero: [this.cfc.numero, Validators.compose([Validators.nullValidator])],
         razaoSocial: [this.cfc.razaoSocial, Validators.compose([Validators.nullValidator])],
         site: [this.cfc.site, Validators.compose([Validators.nullValidator])],
-        telefone2: [this.cfc.telefone2, Validators.compose([Validators.nullValidator])],
+        telefone2: [this.cfc.telefone, Validators.compose([Validators.nullValidator])],
         uf: [this.cfc.uf, Validators.compose([Validators.nullValidator])],
       });
     } else {
@@ -175,7 +174,7 @@ export class AccountComponentCfc implements OnInit {
         numero: [this.cfc.numero, Validators.compose([Validators.nullValidator])],
         razaoSocial: [this.cfc.razaoSocial, Validators.compose([Validators.nullValidator])],
         site: [this.cfc.site, Validators.compose([Validators.nullValidator])],
-        telefone2: [this.cfc.telefone2, Validators.compose([Validators.nullValidator])],
+        telefone2: [this.cfc.telefone, Validators.compose([Validators.nullValidator])],
         uf: [this.cfc.uf, Validators.compose([Validators.nullValidator])],
       });
     }

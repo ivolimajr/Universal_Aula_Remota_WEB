@@ -3,9 +3,8 @@
  */
 import { BaseModel } from '../baseModels/base.model';
 
-export interface InstrutorBaseModel extends BaseModel {
+export interface StudentBaseModel extends BaseModel {
 
-    cargo: string;
     cpf: string;
     identidade: string;
     orgaoExpedidor: string;
@@ -16,8 +15,9 @@ export interface InstrutorBaseModel extends BaseModel {
     uf: string;
     enderecoLogradouro: string;
     numero: string;
-    localizacaoLatitude: string;
-    longitude: string;
-    telefone2: string;
-    site: string;
+    telefone: string;
+    curso: [];
+    turno:string;
+    turma:string;
+    
 }
