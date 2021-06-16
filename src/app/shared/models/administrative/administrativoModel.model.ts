@@ -18,5 +18,6 @@ export interface AdministrativoModel extends BaseModel {
   localizacaoLatitude: string;
   longitude: string;
   site: string;
+  uploadDOC: string;
 
 }

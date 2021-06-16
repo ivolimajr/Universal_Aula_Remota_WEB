@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { CursosComponent } from './cursos/cursos.component';
 import { HomeComponent } from './home/home.component';
 import { AdministrativeComponent } from './manegement/administrative/administrative.component';
 import { AccountComponentAdministrative } from './manegement/administrative/components/account/account.component';
@@ -12,6 +13,7 @@ import { AccountComponentPartner } from './manegement/partner/components/account
 import { PartnerComponent } from './manegement/partner/partner.component';
 import { AccountComponentStudent } from './manegement/student/components/account/account.component';
 import { StudentComponent } from './manegement/student/student.component';
+import { TurmasComponent } from './turmas/turmas.component';
 import { LayoutComponent } from './_layout/layout.component';
 
 const routes: Routes = [
@@ -29,8 +31,17 @@ const routes: Routes = [
         pathMatch: 'full',
       },
       {
+        
         path: 'edriving',
         component: EdrivingComponent
+      },
+      {
+        path: 'cursos',
+        component: CursosComponent
+      },
+      {        
+        path: 'turmas',
+        component: TurmasComponent
       },
       {
         path: 'edriving/account',

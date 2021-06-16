@@ -26,6 +26,8 @@ const EMPTY_CFC: CfcModel = {
   razaoSocial: '',
   site: '',
   uf: '',
+  uploadDOC:'',
+
 };
 
 @Component({
@@ -100,6 +102,8 @@ export class AccountComponentCfc implements OnInit {
     this.cfc.site = formData.site;
     this.cfc.telefone = formData.telefone2;
     this.cfc.uf = formData.uf;
+    this.cfc.uploadDOC = formData.uploadDOC;
+
 
   }
 
@@ -152,6 +156,8 @@ export class AccountComponentCfc implements OnInit {
         site: [this.cfc.site, Validators.compose([Validators.nullValidator])],
         telefone2: [this.cfc.telefone, Validators.compose([Validators.nullValidator])],
         uf: [this.cfc.uf, Validators.compose([Validators.nullValidator])],
+        uploadDOC: [this.cfc.uploadDOC, Validators.compose([Validators.nullValidator])],
+
       });
     } else {
       this.createForm = this.fb.group({
@@ -176,6 +182,8 @@ export class AccountComponentCfc implements OnInit {
         site: [this.cfc.site, Validators.compose([Validators.nullValidator])],
         telefone2: [this.cfc.telefone, Validators.compose([Validators.nullValidator])],
         uf: [this.cfc.uf, Validators.compose([Validators.nullValidator])],
+        uploadDOC: [this.cfc.uploadDOC, Validators.compose([Validators.nullValidator])],
+
       });
     }
 

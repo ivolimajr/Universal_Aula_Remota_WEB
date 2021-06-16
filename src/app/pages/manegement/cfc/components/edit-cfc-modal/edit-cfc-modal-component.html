@@ -182,7 +182,15 @@
             </div>
           </div>
           <!-- end: site -->
-  
+          <!-- start: Arquivo -->
+          <div class="custom-file">
+               <label class="form-label" accept="PDF,DOC" #fileinput for="uploadDOC">Documentação</label>
+                <input type="file" id="uploadDOC" class="form-control form-control-lg form-control-solid" name="uploadDOC" placeholder="documento" autocomplete="off" formControlName="uploadDOC" [class.is-invalid]="isControlInvalid('uploadDOC')" />
+               <div class="invalid-feedback" *ngIf="controlHasError('required', 'uploadDOC')">
+              Campo necessário
+              </div>
+               </div>
+         <!-- end: Arquivo -->
           <!-- start: Status -->
           <div class="form-group row">
             <div class="col-4"></div>
@@ -204,7 +212,6 @@
             </div>
           </div>
           <!-- end: Status -->
-  
           <!-- start: Cargo do usuário -->
           <div class="form-group row">
             <div class="col-lg">

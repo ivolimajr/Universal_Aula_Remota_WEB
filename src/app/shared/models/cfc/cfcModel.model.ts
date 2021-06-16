@@ -20,5 +20,6 @@ export interface CfcModel extends BaseModel {
   telefone: string;
   site: string;
   email: string;
+  uploadDOC:string;
 
 }

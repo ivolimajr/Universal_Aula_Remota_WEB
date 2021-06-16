@@ -27,6 +27,7 @@ const EMPTY_ADMINISTRATIVO: AdministrativoModel = {
   longitude: '',
   orgaoExpedidor: '',
   site: '',
+  uploadDOC:'',
 };
 
 @Component({
@@ -110,6 +111,7 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
     this.administrativo.longitude = formData.longitude;
     this.administrativo.orgaoExpedidor = formData.orgaoExpedidor;
     this.administrativo.site = formData.site;
+    this.administrativo.uploadDOC = formData.uploadDOC;
   }
 
   /**
@@ -159,6 +161,7 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
           longitude: [this.administrativo.longitude, Validators.compose([Validators.nullValidator])],
           orgaoExpedidor: [this.administrativo.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
           site: [this.administrativo.site, Validators.compose([Validators.nullValidator])],
+          uploadDOC: [this.administrativo.uploadDOC, Validators.compose([Validators.nullValidator])],
       });
     } else {
       this.createForm = this.fb.group({
@@ -183,7 +186,10 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
           longitude: [this.administrativo.longitude, Validators.compose([Validators.nullValidator])],
           orgaoExpedidor: [this.administrativo.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
           site: [this.administrativo.site, Validators.compose([Validators.nullValidator])],
+          uploadDOC: [this.administrativo.uploadDOC, Validators.compose([Validators.nullValidator])],
+
       });
+
     }
 
   }
@@ -211,3 +217,4 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
     return control.dirty || control.touched;
   }
 }
+

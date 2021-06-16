@@ -1,0 +1,90 @@
+<div class="container">
+    <div class="card card-custom gutter-b">
+      <div class="card-header">
+        <div class="card-title">
+          <h3 class="card-label">Cursos Disponíveis</h3>
+        </div>
+        <div class="card-toolbar">
+          <button type="button" class="btn btn-primary" (click)="create(null)">Adicionar curso</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <!-- begin:Table -->
+        <div class="table-responsive angular-bootstrap-table">
+          <table class="table table-head-custom table-vertical-center overflow-hidden">
+            <thead>
+              <th>Curso</th>
+              <th>Turma</th>
+              <th>Status</th>
+              <th>ACTIONS</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Primeira Habilitação</td>
+                <td>T-101, T-102</td>
+                <td>Ativo</td>
+                <td>
+                  <a title="Edit customer" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3" (click)="create(1)">
+                    <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                    </span>
+                  </a>
+                  <a title="Delete customer" class="btn btn-icon btn-light btn-hover-danger btn-sm">
+                    <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                    </span>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>Renovação</td>
+                <td>T-201</td>
+                <td>Ativo</td>
+                <td>
+                  <a title="Edit customer" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3" (click)="create(1)">
+                    <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                    </span>
+                  </a>
+                  <a title="Delete customer" class="btn btn-icon btn-light btn-hover-danger btn-sm">
+                    <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                    </span>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>Reciclagem Infrator</td>
+                <td>T-301</td>
+                <td>Ativo</td>
+                <td>
+                  <a title="Edit customer" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3" (click)="create(1)">
+                    <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                    </span>
+                  </a>
+                  <a title="Delete customer" class="btn btn-icon btn-light btn-hover-danger btn-sm">
+                    <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                    </span>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>Formação Mototaxista</td>
+                <td>T-401, T-403</td>
+                <td>Ativo</td>
+                <td>
+                  <a title="Edit customer" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3" (click)="create(1)">
+                    <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                    </span>
+                  </a>
+                  <a title="Delete customer" class="btn btn-icon btn-light btn-hover-danger btn-sm">
+                    <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                    </span>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- end: Table -->
+  
+      </div>
+    </div>
+  </div>

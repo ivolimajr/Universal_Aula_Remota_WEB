@@ -26,7 +26,8 @@ const EMPTY_CFC: CfcModel = {
   numero: '',
   razaoSocial: '',
   site: '',
-  uf: ''
+  uf: '',
+  uploadDOC:'',
 };
 
 
@@ -108,6 +109,7 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
     this.cfc.razaoSocial = formData.razaoSocial;
     this.cfc.site = formData.site;
     this.cfc.uf = formData.uf;
+    this.cfc.uploadDOC = formData.uploadDOC;
 
   }
 
@@ -157,6 +159,8 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
         razaoSocial: [this.cfc.razaoSocial, Validators.compose([Validators.nullValidator])],
         site: [this.cfc.site, Validators.compose([Validators.nullValidator])],
         uf: [this.cfc.uf, Validators.compose([Validators.nullValidator])],
+        uploadDOC: [this.cfc.uploadDOC, Validators.compose([Validators.nullValidator])],
+
 
       });
     } else {
@@ -181,6 +185,8 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
           razaoSocial: [this.cfc.razaoSocial, Validators.compose([Validators.nullValidator])],
           site: [this.cfc.site, Validators.compose([Validators.nullValidator])],
           uf: [this.cfc.uf, Validators.compose([Validators.nullValidator])],
+          uploadDOC: [this.cfc.uploadDOC, Validators.compose([Validators.nullValidator])],
+
       });
     }
 

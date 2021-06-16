@@ -1,0 +1,93 @@
+<div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title h4" id="example-modal-sizes-title-lg">
+        Cadastro de cursos
+      </div>
+    </div>
+    <div class="overlay overlay-block cursor-default modal-body" style="min-height: 404px">
+      <ng-container>
+        <form action="#" class="form form-label-right" [formGroup]="createForm">
+  
+          <!-- start: Nome -->
+          <div class="form-group row">
+            <div class="col-lg">
+              <label class="form-label" for="fullName">Nome do curso</label>
+              <input type="text" id="fullName" class="form-control form-control-lg form-control-solid" name="fullName" placeholder="nome" autocomplete="off" formControlName="fullName" [class.is-invalid]="isControlInvalid('fullName')" [class.is-valid]="isControlValid('fullName')" />
+              <div class="valid-feedback" *ngIf="isControlValid('fullName')">
+                Ok!
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'fullName')">
+                Campo necessário
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'fullName')">
+                Muito curto
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('maxlength', 'fullName')">
+                Limite de caracteres excedido
+              </div>
+            </div>
+          </div>
+          <!-- end: Nome -->
+
+           <!-- start: codigo -->
+           <div class="form-group row">
+            <div class="col-lg">
+              <label class="form-label" for="code">Código do curso</label>
+              <input type="text" id="code" class="form-control form-control-lg form-control-solid" name="code" placeholder="Código" autocomplete="off" formControlName="code" [class.is-invalid]="isControlInvalid('code')" [class.is-valid]="isControlValid('code')" />
+              <div class="valid-feedback" *ngIf="isControlValid('code')">
+                Ok!
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'code')">
+                Campo necessário
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'code')">
+                Muito curto
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('maxlength', 'code')">
+                Limite de caracteres excedido
+              </div>
+            </div>
+          </div>
+          <!-- end: codigo -->
+
+            <!-- start: carga -->
+            <div class="form-group row">
+                <div class="col-lg">
+                  <label class="form-label" for="cargaHoraria">Carga Horária</label>
+                  <input type="number" id="cargaHoraria" class="form-control form-control-lg form-control-solid" name="cargaHoraria" placeholder="Carga" autocomplete="off" formControlName="cargaHoraria" [class.is-invalid]="isControlInvalid('cargaHoraria')" [class.is-valid]="isControlValid('cargaHoraria')" />
+                  <div class="valid-feedback" *ngIf="isControlValid('cargaHoraria')">
+                    Ok!
+                  </div>
+                  <div class="invalid-feedback" *ngIf="controlHasError('required', 'cargaHoraria')">
+                    Campo necessário
+                  </div>
+                  <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'cargaHoraria')">
+                    Muito curto
+                  </div>
+                  <div class="invalid-feedback" *ngIf="controlHasError('maxlength', 'cargaHoraria')">
+                    Limite de caracteres excedido
+                  </div>
+                </div>
+              </div>
+              <!-- end: carga -->  
+
+           <!-- start: descrição -->
+           <label>Descrição do Curso:</label>
+           <textarea rows="10" cols="60" maxlength="500"></textarea>
+          <!-- end: descrição -->
+  
+        </form>
+      </ng-container>
+    </div>
+  
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light btn-elevate mr-2" (click)="modal.dismiss()">
+        Cancelar
+      </button>
+      <ng-container>
+        <button type="submit" class="btn btn-primary btn-elevate" (click)="save()" [disabled]="createForm.invalid">
+          Salvar
+        </button>
+      </ng-container>
+    </div>
+  </div>

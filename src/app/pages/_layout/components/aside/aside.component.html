@@ -37,6 +37,7 @@
         <i class="menu-icon flaticon-more-v2"></i>
       </li>
       <!-- end:: section -->
+      
       <!-- Edriving Management -->
       <!-- begin::1 Level -->
       <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
@@ -60,20 +61,47 @@
           <span class="menu-text">Usuários E-Driving</span>
         </a>
       </li>
-
+      <!-- Partner Management -->
+      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
+        <a class="menu-link" routerLink="/partner" routerLinkActive="active">
+          <span [inlineSVG]="'./assets/media/svg/icons/Communication/Group.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
+          <span class="menu-text">Parceiros</span>
+        </a>
+      </li>
 
       <!-- CFC Management -->
       <!-- begin::1 Level -->
       <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover" routerLinkActive="menu-item-open">
         <a class="menu-link menu-toggle" routerLinkActive="active" href="/cfc">
           <span [inlineSVG]="'./assets/media/svg/icons/Home/Commode2.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
-          <span class="menu-text">Centros de Formação</span>
+          <span class="menu-text">Cadastros gerais</span>
           <i class="menu-arrow"></i>
         </a>
         <div class="menu-submenu">
           <i class="menu-arrow"></i>
           <ul class="menu-subnav">
+            <!-- end::1 Level -->
             <!-- begin::2 Level -->
+            <li class="menu-item" routerLinkActive="menu-item-active" aria-haspopup="true" data-menu-toggle="hover">
+              <a class="menu-link" routerLink="/cursos" routerLinkActive="active">
+                <i class="menu-bullet menu-bullet-dot">
+                  <span></span> 
+                </i>
+                <span class="menu-text">Cursos</span>
+              </a>
+            </li>
+            <!-- end::2 Level -->
+            <!-- begin::3 Level -->
+            <li class="menu-item" routerLinkActive="menu-item-active" aria-haspopup="true" data-menu-toggle="hover">
+              <a class="menu-link" routerLink="/turmas" routerLinkActive="active">
+                <i class="menu-bullet menu-bullet-dot">
+                  <span></span>
+                </i>
+                <span class="menu-text">Turmas</span>
+              </a>
+            </li>
+            <!-- end::3 Level -->            
+            <!-- begin::4 Level -->
             <li class="menu-item" routerLinkActive="menu-item-active" aria-haspopup="true" data-menu-toggle="hover">
               <a class="menu-link" routerLink="/cfc" routerLinkActive="active">
                 <i class="menu-bullet menu-bullet-dot">
@@ -82,8 +110,8 @@
                 <span class="menu-text">C.F.C</span>
               </a>
             </li>
-            <!-- end::2 Level -->
-            <!-- begin::2 Level -->
+            <!-- end::4 Level -->
+            <!-- begin::5 Level -->
             <li class="menu-item" routerLinkActive="menu-item-active" aria-haspopup="true" data-menu-toggle="hover">
               <a class="menu-link" routerLink="/cfc/administrative" routerLinkActive="active">
                 <i class="menu-bullet menu-bullet-dot">
@@ -92,8 +120,8 @@
                 <span class="menu-text">Administrativos</span>
               </a>
             </li>
-            <!-- end::2 Level -->
-            <!-- begin::2 Level -->
+            <!-- end::5 Level -->
+            <!-- begin::6 Level -->
             <li class="menu-item" routerLinkActive="menu-item-active" aria-haspopup="true" data-menu-toggle="hover">
               <a class="menu-link" routerLink="/cfc/instructor" routerLinkActive="active">
                 <i class="menu-bullet menu-bullet-dot">
@@ -102,8 +130,8 @@
                 <span class="menu-text">Instrutores</span>
               </a>
             </li>
-            <!-- end::2 Level -->
-            <!-- begin::2 Level -->
+            <!-- end::6 Level -->
+            <!-- begin::7 Level -->
             <li class="menu-item" routerLinkActive="menu-item-active" aria-haspopup="true" data-menu-toggle="hover">
               <a class="menu-link" routerLink="/cfc/student" routerLinkActive="active">
                 <i class="menu-bullet menu-bullet-dot">
@@ -112,18 +140,9 @@
                 <span class="menu-text">Alunos</span>
               </a>
             </li>
-            <!-- end::2 Level -->
+            <!-- end::7 Level -->
           </ul>
         </div>
-      </li>
-      <!-- end::1 Level -->
-
-      <!-- Partner Management -->
-      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
-        <a class="menu-link" routerLink="/partner" routerLinkActive="active">
-          <span [inlineSVG]="'./assets/media/svg/icons/Communication/Group.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
-          <span class="menu-text">Parceiros</span>
-        </a>
       </li>
 
       <!-- begin::section -->

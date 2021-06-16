@@ -1,0 +1,95 @@
+<div class="container">
+    <div class="card card-custom gutter-b">
+      <div class="card-header">
+        <div class="card-title">
+          <h3 class="card-label">Turmas</h3>
+        </div>
+        <div class="card-toolbar">
+          <button type="button" class="btn btn-primary" (click)="create(null)" >Adicionar turma</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <!-- begin:Table -->
+        <div class="table-responsive angular-bootstrap-table">
+          <table class="table table-head-custom table-vertical-center overflow-hidden">
+            <thead>
+              <th>Turmas Disponíveis</th>
+              <th>Curso referente</th>
+              <th>Numero de vagas</th>
+              <th>Status</th>
+              <th>ACTIONS</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Turma 102 (T-102)</td>
+                <td>Primeira Habilitação</td>
+                <td>12 vagas</td>
+                <td>Ativo</td>
+                <td>
+                  <a title="Edit customer" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3" (click)="create(null)">
+                    <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                    </span>
+                  </a>
+                  <a title="Delete customer" class="btn btn-icon btn-light btn-hover-danger btn-sm">
+                    <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                    </span>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>Turma 202 (T-202)</td>
+                <td>Renovação</td>
+                <td>30 vagas (turma nova)</td>
+                <td>Ativo</td>
+                <td>
+                  <a title="Edit customer" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3" (click)="create(null)">
+                    <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                    </span>
+                  </a>
+                  <a title="Delete customer" class="btn btn-icon btn-light btn-hover-danger btn-sm">
+                    <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                    </span>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>Turma 301 (T-301)</td>
+                <td>Reciclagem Infrator</td>
+                <td>5 vagas</td>
+                <td>Ativo</td>
+                <td>
+                  <a title="Edit customer" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3" (click)="create(null)">
+                    <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                    </span>
+                  </a>
+                  <a title="Delete customer" class="btn btn-icon btn-light btn-hover-danger btn-sm">
+                    <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                    </span>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>Turma 403 (T-403)</td>
+                <td>Formação Mototaxista</td>
+                <td>5 vagas</td>
+                <td>Ativo</td>
+                <td>
+                  <a title="Edit customer" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3" (click)="create(null)">
+                    <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
+                    </span>
+                  </a>
+                  <a title="Delete customer" class="btn btn-icon btn-light btn-hover-danger btn-sm">
+                    <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-danger">
+                    </span>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- end: Table -->
+  
+      </div>
+    </div>
+  </div>

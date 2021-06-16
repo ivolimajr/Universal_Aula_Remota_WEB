@@ -41,6 +41,10 @@ import { AccountComponentEdriving } from './manegement/edriving/components/accou
 import { AccountComponentInstructor } from './manegement/instructor/components/account/account.component';
 import { AccountComponentPartner } from './manegement/partner/components/account/account.component';
 import { AccountComponentStudent } from './manegement/student/components/account/account.component';
+import { EditTurmasModalComponent } from './turmas/edit-turmas-modal/edit-turmas-modal.component';
+import { CursosComponent } from './cursos/cursos.component';
+import { TurmasComponent } from './turmas/turmas.component';
+import { EditCursoModalComponent } from './cursos/edit-curso-modal/edit-curso-modal.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +76,11 @@ import { AccountComponentStudent } from './manegement/student/components/account
     AccountComponentEdriving,
     AccountComponentInstructor,
     AccountComponentPartner,
-    AccountComponentStudent
+    AccountComponentStudent,
+    CursosComponent,
+    TurmasComponent,
+    EditTurmasModalComponent,
+    EditCursoModalComponent
   ],
   imports: [
     CommonModule,
