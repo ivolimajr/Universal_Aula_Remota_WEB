@@ -16,7 +16,7 @@ export const routes: Routes = [
   {
     path: 'error',
     loadChildren: () =>
-      import('./modules/errors/errors.module').then((m) => m.ErrorsModule),
+      import('./pages/errors/errors.module').then((m) => m.ErrorsModule),
   },
   {
     path: '',

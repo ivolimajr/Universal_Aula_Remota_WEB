@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 
 import { BaseModel } from '../../../shared/models/baseModels/base.model'
-import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { AuthService } from '../../../shared/services/auth/auth.service';
 
 const EMPTY_USER: BaseModel = {
   id: undefined,
@@ -24,10 +24,6 @@ const EMPTY_USER: BaseModel = {
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  defaultAuth: any = {
-    email: 'admin@edriving.com',
-    senha: 'universalPay',
-  };
 
   loginForm: FormGroup;
   user: BaseModel;
@@ -83,19 +79,12 @@ export class LoginComponent implements OnInit {
     });
   }
 
-
   submit() {
-    this.hasError = false;
-    const loginSubscr = this.authService
-      .login(this.loginForm.value.email, this.loginForm.value.senha)
-      .pipe(first())
-      .subscribe((user: BaseModel) => {
-        if (user) {
-          this.router.navigate([this.returnUrl]);
-        } else {
-          this.hasError = true;
-        }
-      });
-    this.unsubscribe.push(loginSubscr);
+    return this.authService.loginuser(this.user.email, this.user.senha)
+      .subscribe(data => {
+        console.log(data);
+      },
+        error => console.log(error)
+      )
   }
 }
