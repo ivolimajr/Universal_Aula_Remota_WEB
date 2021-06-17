@@ -4,6 +4,8 @@ import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-boot
 import { of, Subscription } from 'rxjs';
 import { AdministrativoModel } from '../../../../../shared/models/administrative/administrativoModel.model';
 import { CustomAdapter, CustomDateParserFormatter } from 'src/app/_metronic/core';
+import { NgBrazilValidators, NgBrazil, MASKS } from 'ng-brazil';
+import { utilsBr } from 'js-brasil';
 
 const EMPTY_ADMINISTRATIVO: AdministrativoModel = {
   id: undefined,
@@ -53,6 +55,7 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
   administrativo: AdministrativoModel;
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
+  MASKS = utilsBr.MASKS;
 
   constructor(
     private fb: FormBuilder, public modal: NgbActiveModal
@@ -143,20 +146,20 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
           fullName: [this.administrativo.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
           email: [this.administrativo.email, Validators.compose([Validators.required, Validators.email])],
           telefone: [this.administrativo.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cpf: [this.administrativo.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+          cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
           cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
           status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
-          cep: [this.administrativo.cep, Validators.compose([Validators.nullValidator])],
+          cep: ['',[Validators.required, NgBrazilValidators.cep]],
           senha: [this.administrativo.senha, Validators.compose([Validators.nullValidator])],
           confirmarSenha: [this.administrativo.confirmarSenha, Validators.compose([Validators.nullValidator])],
-          identidade: [this.administrativo.identidade, Validators.compose([Validators.nullValidator])],
+          identidade: [this.administrativo.identidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
           telefone2: [this.administrativo.telefone, Validators.compose([Validators.nullValidator])],
-          bairro: [this.administrativo.bairro, Validators.compose([Validators.nullValidator])],
-          cidade: [this.administrativo.cidade, Validators.compose([Validators.nullValidator])],
+          bairro: [this.administrativo.bairro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+          cidade: [this.administrativo.cidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
           uf: [this.administrativo.uf, Validators.compose([Validators.nullValidator])],
           numero: [this.administrativo.numero, Validators.compose([Validators.nullValidator])],
           dataNascimento: [this.administrativo.dataNascimento, Validators.compose([Validators.nullValidator])],
-          enderecoLogradouro: [this.administrativo.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
+          enderecoLogradouro: [this.administrativo.enderecoLogradouro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
           localizacaoLatitude: [this.administrativo.localizacaoLatitude, Validators.compose([Validators.nullValidator])],
           longitude: [this.administrativo.longitude, Validators.compose([Validators.nullValidator])],
           orgaoExpedidor: [this.administrativo.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
@@ -165,28 +168,28 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
       });
     } else {
       this.createForm = this.fb.group({
-          fullName: [this.administrativo.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          email: [this.administrativo.email, Validators.compose([Validators.required, Validators.email])],
-          telefone: [this.administrativo.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cpf: [this.administrativo.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
-          status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
-          cep: [this.administrativo.cep, Validators.compose([Validators.nullValidator])],
-          senha: [this.administrativo.senha, Validators.compose([Validators.nullValidator])],
-          confirmarSenha: [this.administrativo.confirmarSenha, Validators.compose([Validators.nullValidator])],
-          identidade: [this.administrativo.identidade, Validators.compose([Validators.nullValidator])],
-          telefone2: [this.administrativo.telefone, Validators.compose([Validators.nullValidator])],
-          bairro: [this.administrativo.bairro, Validators.compose([Validators.nullValidator])],
-          cidade: [this.administrativo.cidade, Validators.compose([Validators.nullValidator])],
-          uf: [this.administrativo.uf, Validators.compose([Validators.nullValidator])],
-          numero: [this.administrativo.numero, Validators.compose([Validators.nullValidator])],
-          dataNascimento: [this.administrativo.dataNascimento, Validators.compose([Validators.nullValidator])],
-          enderecoLogradouro: [this.administrativo.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
-          localizacaoLatitude: [this.administrativo.localizacaoLatitude, Validators.compose([Validators.nullValidator])],
-          longitude: [this.administrativo.longitude, Validators.compose([Validators.nullValidator])],
-          orgaoExpedidor: [this.administrativo.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
-          site: [this.administrativo.site, Validators.compose([Validators.nullValidator])],
-          uploadDOC: [this.administrativo.uploadDOC, Validators.compose([Validators.nullValidator])],
+        fullName: [this.administrativo.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        email: [this.administrativo.email, Validators.compose([Validators.required, Validators.email])],
+        telefone: [this.administrativo.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
+        cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
+        status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
+        cep: ['',[Validators.required, NgBrazilValidators.cep]],
+        senha: [this.administrativo.senha, Validators.compose([Validators.nullValidator])],
+        confirmarSenha: [this.administrativo.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        identidade: [this.administrativo.identidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone2: [this.administrativo.telefone, Validators.compose([Validators.nullValidator])],
+        bairro: [this.administrativo.bairro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cidade: [this.administrativo.cidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        uf: [this.administrativo.uf, Validators.compose([Validators.nullValidator])],
+        numero: [this.administrativo.numero, Validators.compose([Validators.nullValidator])],
+        dataNascimento: [this.administrativo.dataNascimento, Validators.compose([Validators.nullValidator])],
+        enderecoLogradouro: [this.administrativo.enderecoLogradouro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        localizacaoLatitude: [this.administrativo.localizacaoLatitude, Validators.compose([Validators.nullValidator])],
+        longitude: [this.administrativo.longitude, Validators.compose([Validators.nullValidator])],
+        orgaoExpedidor: [this.administrativo.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
+        site: [this.administrativo.site, Validators.compose([Validators.nullValidator])],
+        uploadDOC: [this.administrativo.uploadDOC, Validators.compose([Validators.nullValidator])],
 
       });
 

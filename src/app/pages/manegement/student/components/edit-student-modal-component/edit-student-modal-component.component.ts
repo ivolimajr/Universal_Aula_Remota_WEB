@@ -4,6 +4,8 @@ import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-boot
 import { of, Subscription } from 'rxjs';
 import { StudentBaseModel } from 'src/app/shared/models/student/studentModel.model';
 import { CustomAdapter, CustomDateParserFormatter } from 'src/app/_metronic/core';
+import { NgBrazilValidators, NgBrazil, MASKS } from 'ng-brazil';
+import { utilsBr } from 'js-brasil';
 
 const EMPTY_STUDENT: StudentBaseModel = {
   id: undefined,
@@ -52,6 +54,7 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
   student: StudentBaseModel;
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
+  MASKS = utilsBr.MASKS;
 
   constructor(
     private fb: FormBuilder, public modal: NgbActiveModal
@@ -139,19 +142,19 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
         fullName: [this.student.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.student.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.student.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.student.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        status: [this.student.status, Validators.compose([Validators.nullValidator])],
+        cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
         senha: [this.student.senha, Validators.compose([Validators.nullValidator])],
+        status: [this.student.status, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.student.confirmarSenha, Validators.compose([Validators.nullValidator])],
-        cep: [this.student.cep, Validators.compose([Validators.nullValidator])],
-        cidade: [this.student.cidade, Validators.compose([Validators.nullValidator])],
-        bairro: [this.student.bairro, Validators.compose([Validators.nullValidator])],
+        cep: ['',[Validators.required, NgBrazilValidators.cep]],
+        cidade: [this.student.cidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        bairro: [this.student.bairro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         uf: [this.student.uf, Validators.compose([Validators.nullValidator])],
-        enderecoLogradouro: [this.student.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
+        enderecoLogradouro: [this.student.enderecoLogradouro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         numero: [this.student.numero, Validators.compose([Validators.nullValidator])],
         curso: [this.student.curso, Validators.compose([Validators.nullValidator])],
         dataNascimento: [this.student.dataNascimento, Validators.compose([Validators.nullValidator])],
-        identidade: [this.student.identidade, Validators.compose([Validators.nullValidator])],
+        identidade: [this.student.identidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         orgaoExpedidor: [this.student.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
         turno: [this.student.turno, Validators.compose([Validators.nullValidator])],
         turma: [this.student.turma, Validators.compose([Validators.nullValidator])],
@@ -162,19 +165,19 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
         fullName: [this.student.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.student.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.student.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.student.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        status: [this.student.status, Validators.compose([Validators.nullValidator])],
+        cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
         senha: [this.student.senha, Validators.compose([Validators.nullValidator])],
+        status: [this.student.status, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.student.confirmarSenha, Validators.compose([Validators.nullValidator])],
-        cep: [this.student.cep, Validators.compose([Validators.nullValidator])],
-        cidade: [this.student.cidade, Validators.compose([Validators.nullValidator])],
-        bairro: [this.student.bairro, Validators.compose([Validators.nullValidator])],
+        cep: ['',[Validators.required, NgBrazilValidators.cep]],
+        cidade: [this.student.cidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        bairro: [this.student.bairro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         uf: [this.student.uf, Validators.compose([Validators.nullValidator])],
-        enderecoLogradouro: [this.student.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
+        enderecoLogradouro: [this.student.enderecoLogradouro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         numero: [this.student.numero, Validators.compose([Validators.nullValidator])],
         curso: [this.student.curso, Validators.compose([Validators.nullValidator])],
         dataNascimento: [this.student.dataNascimento, Validators.compose([Validators.nullValidator])],
-        identidade: [this.student.identidade, Validators.compose([Validators.nullValidator])],
+        identidade: [this.student.identidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         orgaoExpedidor: [this.student.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
         turno: [this.student.turno, Validators.compose([Validators.nullValidator])],
         turma: [this.student.turma, Validators.compose([Validators.nullValidator])],

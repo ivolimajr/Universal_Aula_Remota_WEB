@@ -4,6 +4,8 @@ import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-boot
 import { of, Subscription } from 'rxjs';
 import { InstrutorBaseModel } from 'src/app/shared/models/instructor/instrutorModel.model';
 import { CustomAdapter, CustomDateParserFormatter } from 'src/app/_metronic/core';
+import { utilsBr } from 'js-brasil';
+import { NgBrazilValidators, NgBrazil, MASKS } from 'ng-brazil';
 
 const EMPTY_INSTRUTOR: InstrutorBaseModel = {
   id: undefined,
@@ -53,6 +55,7 @@ export class EditInstructorModalComponentComponent implements OnInit, OnDestroy 
   instrutor: InstrutorBaseModel;
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
+  MASKS = utilsBr.MASKS;
 
 
   constructor(
@@ -139,19 +142,19 @@ export class EditInstructorModalComponentComponent implements OnInit, OnDestroy 
         fullName: [this.instrutor.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.instrutor.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.instrutor.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.instrutor.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cargo: [this.instrutor.cargo, Validators.compose([Validators.nullValidator])],
+        cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
+        cargo: [this.instrutor.cargo, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         status: [this.instrutor.status, Validators.compose([Validators.nullValidator])],
-        cep: [this.instrutor.cep, Validators.compose([Validators.nullValidator])],
+        cep: ['',[Validators.required, NgBrazilValidators.cep]],
         senha: [this.instrutor.senha, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.instrutor.confirmarSenha, Validators.compose([Validators.nullValidator])],
-        identidade: [this.instrutor.identidade, Validators.compose([Validators.nullValidator])],
-        bairro: [this.instrutor.bairro, Validators.compose([Validators.nullValidator])],
-        cidade: [this.instrutor.cidade, Validators.compose([Validators.nullValidator])],
+        identidade: [this.instrutor.identidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        bairro: [this.instrutor.bairro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cidade: [this.instrutor.cidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         uf: [this.instrutor.uf, Validators.compose([Validators.nullValidator])],
         numero: [this.instrutor.numero, Validators.compose([Validators.nullValidator])],
         dataNascimento: [this.instrutor.dataNascimento, Validators.compose([Validators.nullValidator])],
-        enderecoLogradouro: [this.instrutor.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
+        enderecoLogradouro: [this.instrutor.enderecoLogradouro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         orgaoExpedidor: [this.instrutor.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
         site: [this.instrutor.site, Validators.compose([Validators.nullValidator])],
       });
@@ -160,19 +163,19 @@ export class EditInstructorModalComponentComponent implements OnInit, OnDestroy 
         fullName: [this.instrutor.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.instrutor.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.instrutor.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.instrutor.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cargo: [this.instrutor.cargo, Validators.compose([Validators.nullValidator])],
+        cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
+        cargo: [this.instrutor.cargo, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         status: [this.instrutor.status, Validators.compose([Validators.nullValidator])],
-        cep: [this.instrutor.cep, Validators.compose([Validators.nullValidator])],
+        cep: ['',[Validators.required, NgBrazilValidators.cep]],
         senha: [this.instrutor.senha, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.instrutor.confirmarSenha, Validators.compose([Validators.nullValidator])],
-        identidade: [this.instrutor.identidade, Validators.compose([Validators.nullValidator])],
-        bairro: [this.instrutor.bairro, Validators.compose([Validators.nullValidator])],
-        cidade: [this.instrutor.cidade, Validators.compose([Validators.nullValidator])],
+        identidade: [this.instrutor.identidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        bairro: [this.instrutor.bairro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cidade: [this.instrutor.cidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         uf: [this.instrutor.uf, Validators.compose([Validators.nullValidator])],
         numero: [this.instrutor.numero, Validators.compose([Validators.nullValidator])],
         dataNascimento: [this.instrutor.dataNascimento, Validators.compose([Validators.nullValidator])],
-        enderecoLogradouro: [this.instrutor.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
+        enderecoLogradouro: [this.instrutor.enderecoLogradouro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         orgaoExpedidor: [this.instrutor.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
         site: [this.instrutor.site, Validators.compose([Validators.nullValidator])],
 

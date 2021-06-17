@@ -1,9 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { utilsBr } from 'js-brasil';
 import { of, Subscription } from 'rxjs';
 import { CfcModel } from '../../../../../shared/models/cfc/cfcModel.model';
 import { CustomAdapter, CustomDateParserFormatter, getDateFromString } from '../../../../../_metronic/core';
+import { NgBrazilValidators, NgBrazil, MASKS } from 'ng-brazil';
 
 const EMPTY_CFC: CfcModel = {
   id: undefined,
@@ -53,6 +55,7 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
   cfc: CfcModel;
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
+  MASKS = utilsBr.MASKS;
 
   constructor(
     private fb: FormBuilder, public modal: NgbActiveModal
@@ -143,20 +146,20 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
         email: [this.cfc.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.cfc.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         status: [this.cfc.status, Validators.compose([Validators.nullValidator])],
-        cep: [this.cfc.cep, Validators.compose([Validators.nullValidator])],
+        cep: ['',[Validators.required, NgBrazilValidators.cep]],
         senha: [this.cfc.senha, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.cfc.confirmarSenha, Validators.compose([Validators.nullValidator])],
-        bairro: [this.cfc.bairro, Validators.compose([Validators.nullValidator])],
-        cidade: [this.cfc.cidade, Validators.compose([Validators.nullValidator])],
-        cnpj: [this.cfc.cnpj, Validators.compose([Validators.nullValidator])],
+        bairro: [this.cfc.bairro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cidade: [this.cfc.cidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cnpj: ['',[Validators.required, NgBrazilValidators.cnpj]],
         datadaFundacao: [this.cfc.datadaFundacao, Validators.compose([Validators.nullValidator])],
-        enderecoLogradouro: [this.cfc.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
-        inscricaoEstadual: [this.cfc.inscricaoEstadual, Validators.compose([Validators.nullValidator])],
+        enderecoLogradouro: [this.cfc.enderecoLogradouro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        inscricaoEstadual: [this.cfc.inscricaoEstadual, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         localizacaoLatitude: [this.cfc.localizacaoLatitude, Validators.compose([Validators.nullValidator])],
         longitude: [this.cfc.longitude, Validators.compose([Validators.nullValidator])],
-        nomeFantasia: [this.cfc.nomeFantasia, Validators.compose([Validators.nullValidator])],
+        nomeFantasia: [this.cfc.nomeFantasia, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         numero: [this.cfc.numero, Validators.compose([Validators.nullValidator])],
-        razaoSocial: [this.cfc.razaoSocial, Validators.compose([Validators.nullValidator])],
+        razaoSocial: [this.cfc.razaoSocial, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         site: [this.cfc.site, Validators.compose([Validators.nullValidator])],
         uf: [this.cfc.uf, Validators.compose([Validators.nullValidator])],
         uploadDOC: [this.cfc.uploadDOC, Validators.compose([Validators.nullValidator])],
@@ -165,27 +168,27 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
       });
     } else {
       this.createForm = this.fb.group({
-          fullName: [this.cfc.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          email: [this.cfc.email, Validators.compose([Validators.required, Validators.email])],
-          telefone: [this.cfc.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-          status: [this.cfc.status, Validators.compose([Validators.nullValidator])],
-          cep: [this.cfc.cep, Validators.compose([Validators.nullValidator])],
-          senha: [this.cfc.senha, Validators.compose([Validators.nullValidator])],
-          confirmarSenha: [this.cfc.confirmarSenha, Validators.compose([Validators.nullValidator])],
-          bairro: [this.cfc.bairro, Validators.compose([Validators.nullValidator])],
-          cidade: [this.cfc.cidade, Validators.compose([Validators.nullValidator])],
-          cnpj: [this.cfc.cnpj, Validators.compose([Validators.nullValidator])],
-          datadaFundacao: [this.cfc.datadaFundacao, Validators.compose([Validators.nullValidator])],
-          enderecoLogradouro: [this.cfc.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
-          inscricaoEstadual: [this.cfc.inscricaoEstadual, Validators.compose([Validators.nullValidator])],
-          localizacaoLatitude: [this.cfc.localizacaoLatitude, Validators.compose([Validators.nullValidator])],
-          longitude: [this.cfc.longitude, Validators.compose([Validators.nullValidator])],
-          nomeFantasia: [this.cfc.nomeFantasia, Validators.compose([Validators.nullValidator])],
-          numero: [this.cfc.numero, Validators.compose([Validators.nullValidator])],
-          razaoSocial: [this.cfc.razaoSocial, Validators.compose([Validators.nullValidator])],
-          site: [this.cfc.site, Validators.compose([Validators.nullValidator])],
-          uf: [this.cfc.uf, Validators.compose([Validators.nullValidator])],
-          uploadDOC: [this.cfc.uploadDOC, Validators.compose([Validators.nullValidator])],
+        fullName: [this.cfc.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        email: [this.cfc.email, Validators.compose([Validators.required, Validators.email])],
+        telefone: [this.cfc.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        status: [this.cfc.status, Validators.compose([Validators.nullValidator])],
+        cep: ['',[Validators.required, NgBrazilValidators.cep]],
+        senha: [this.cfc.senha, Validators.compose([Validators.nullValidator])],
+        confirmarSenha: [this.cfc.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        bairro: [this.cfc.bairro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cidade: [this.cfc.cidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cnpj: ['',[Validators.required, NgBrazilValidators.cnpj]],
+        datadaFundacao: [this.cfc.datadaFundacao, Validators.compose([Validators.nullValidator])],
+        enderecoLogradouro: [this.cfc.enderecoLogradouro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        inscricaoEstadual: [this.cfc.inscricaoEstadual, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        localizacaoLatitude: [this.cfc.localizacaoLatitude, Validators.compose([Validators.nullValidator])],
+        longitude: [this.cfc.longitude, Validators.compose([Validators.nullValidator])],
+        nomeFantasia: [this.cfc.nomeFantasia, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        numero: [this.cfc.numero, Validators.compose([Validators.nullValidator])],
+        razaoSocial: [this.cfc.razaoSocial, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        site: [this.cfc.site, Validators.compose([Validators.nullValidator])],
+        uf: [this.cfc.uf, Validators.compose([Validators.nullValidator])],
+        uploadDOC: [this.cfc.uploadDOC, Validators.compose([Validators.nullValidator])],
 
       });
     }

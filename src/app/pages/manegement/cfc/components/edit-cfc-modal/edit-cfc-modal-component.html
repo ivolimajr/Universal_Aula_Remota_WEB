@@ -48,12 +48,18 @@
           <div class="form-group row">
             <div class="col-lg">
               <label class="form-label" for="cnpj">CNPJ</label>
-              <input type="text" id="cnpj" class="form-control form-control-lg form-control-solid" name="cnpj" placeholder="cnpj" autocomplete="off" formControlName="cnpj" [class.is-invalid]="isControlInvalid('cnpj')" [class.is-valid]="isControlValid('cnpj')"/>
+              <input type="text" id="cnpj" class="form-control form-control-lg form-control-solid" name="cnpj" placeholder="cnpj" autocomplete="off" formControlName="cnpj" [class.is-invalid]="isControlInvalid('cnpj')" [class.is-valid]="isControlValid('cnpj')" cnpj [textMask]="{mask: MASKS.cnpj.textMask}"/>
               <div class="valid-feedback" *ngIf="isControlValid('cnpj')">
                 Ok!
               </div>
               <div class="invalid-feedback" *ngIf="controlHasError('required', 'cnpj')">
                 Campo necessário
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'cnpj')">
+                Muito curto
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('maxlength', 'cnpj')">
+                Limite de caracteres excedido
               </div>
             </div>
             <!-- end: CNPJ -->
@@ -100,19 +106,25 @@
             </div>
           </div>
           <!-- end: Inscrição Estadual -->
-          <!-- start: Endereço -->
+          <!-- start: CEP -->
           <div class="form-group row">
             <div class="col-lg">
-              <label class="form-label" for="enderecoLogradouro">Endereço</label>
-              <input type="text" id="enderecoLogradouro" class="form-control form-control-lg form-control-solid" name="enderecoLogradouro" placeholder="Endereço com número" autocomplete="off" formControlName="enderecoLogradouro" [class.is-invalid]="isControlInvalid('enderecoLogradouro')" [class.is-valid]="isControlValid('enderecoLogradouro')"/>
-              <div class="valid-feedback" *ngIf="isControlValid('enderecoLogradouro')">
+              <label class="form-label" for="cep">CEP</label>
+              <input type="text" id="cep" class="form-control form-control-lg form-control-solid" name="cep" placeholder="CEP" autocomplete="off" formControlName="cep" [class.is-invalid]="isControlInvalid('cep')" [class.is-valid]="isControlValid('cep')" cep [textMask]="{mask: MASKS.cep.textMask}"/>
+              <div class="valid-feedback" *ngIf="isControlValid('cep')">
                 Ok!
               </div>
-              <div class="invalid-feedback" *ngIf="controlHasError('required', 'enderecoLogradouro')">
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'cep')">
                 Campo necessário
               </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'cep')">
+                Muito curto
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('maxlength', 'cep')">
+                Limite de caracteres excedido
+              </div>
             </div>
-            <!-- end: Endereço -->
+            <!-- end: CEP -->
   
             <!-- start: Bairro -->
             <div class="col-lg">
@@ -141,19 +153,19 @@
             </div>
             <!-- end: Cidade -->
   
-            <!-- start: CEP -->
+            <!-- start: Endereço -->
             <div class="col-lg">
-              <label class="form-label" for="cep" >CEP</label>
-              <input type="text" id="cep" class="form-control form-control-lg form-control-solid" name="cep" placeholder="CEP" autocomplete="off" formControlName="cep" [class.is-invalid]="isControlInvalid('cep')" [class.is-valid]="isControlValid('cep')" />
-              <div class="valid-feedback" *ngIf="isControlValid('cep')">
+              <label class="form-label" for="enderecoLogradouro">Endereço</label>
+              <input type="text" id="enderecoLogradouro" class="form-control form-control-lg form-control-solid" name="enderecoLogradouro" placeholder="Endereço com número" autocomplete="off" formControlName="enderecoLogradouro" [class.is-invalid]="isControlInvalid('enderecoLogradouro')" [class.is-valid]="isControlValid('enderecoLogradouro')" />
+              <div class="valid-feedback" *ngIf="isControlValid('enderecoLogradouro')">
                 Ok!
               </div>
-              <div class="invalid-feedback" *ngIf="controlHasError('required', 'cep')">
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'enderecoLogradouro')">
                 Campo necessário
               </div>
             </div>
           </div>
-          <!-- end: CEP -->
+          <!-- end: Endereço -->
           <!-- start: email -->
           <div class="form-group row">
             <div class="col-lg">
@@ -171,7 +183,7 @@
           <!-- start: site -->
           <div class="form-group row">
             <div class="col-lg">
-              <label class="form-label" for="site" >Site</label>
+              <label class="form-label" for="site" >Site (opcional)</label>
               <input type="text" id="site" class="form-control form-control-lg form-control-solid" name="site" placeholder="url" autocomplete="off" formControlName="site" [class.is-invalid]="isControlInvalid('site')" [class.is-valid]="isControlValid('site')" />
               <div class="valid-feedback" *ngIf="isControlValid('site')">
                 Ok!

@@ -4,6 +4,8 @@ import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-boot
 import { of, Subscription } from 'rxjs';
 import { EdrivingModel } from '../../../../../shared/models/edriving/edrivingModel.model';
 import { CustomAdapter, CustomDateParserFormatter, getDateFromString } from '../../../../../_metronic/core';
+import { NgBrazil, MASKS, NgBrazilValidators } from 'ng-brazil';
+import { utilsBr } from 'js-brasil';
 
 const EMPTY_EDRIVING: EdrivingModel = {
   id: undefined,
@@ -40,6 +42,7 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
   edriving: EdrivingModel;
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
+  MASKS = utilsBr.MASKS;
 
   constructor(
     private fb: FormBuilder, public modal: NgbActiveModal
@@ -117,7 +120,7 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
         fullName: [this.edriving.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.edriving.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.edriving.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
         senha: [this.edriving.senha, Validators.compose([Validators.nullValidator])],
@@ -128,7 +131,7 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
         fullName: [this.edriving.fullName, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(100)])],
         email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.edriving.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.edriving.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
         senha: [this.edriving.senha, Validators.compose([Validators.nullValidator])],

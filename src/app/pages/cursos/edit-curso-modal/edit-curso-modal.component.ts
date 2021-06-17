@@ -85,17 +85,17 @@ export class EditCursoModalComponent implements OnInit, OnDestroy {
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
-        fullName: [this.cursos.fullName, Validators.compose([Validators.nullValidator])],
-        code: [this.cursos.code, Validators.compose([Validators.nullValidator])],
-        cargaHoraria: [this.cursos.cargaHoraria, Validators.compose([Validators.nullValidator])],
-        descricao: [this.cursos.descricao, Validators.compose([Validators.nullValidator])],
+        fullName: [this.cursos.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        code: [this.cursos.code, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cargaHoraria: [this.cursos.cargaHoraria, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        descricao: [this.cursos.descricao, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
       });
     } else {
       this.createForm = this.fb.group({
-        fullName: [this.cursos.fullName, Validators.compose([Validators.nullValidator])],
-        code: [this.cursos.code, Validators.compose([Validators.nullValidator])],
-        cargaHoraria: [this.cursos.cargaHoraria, Validators.compose([Validators.nullValidator])],
-        descricao: [this.cursos.descricao, Validators.compose([Validators.nullValidator])],
+        fullName: [this.cursos.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        code: [this.cursos.code, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cargaHoraria: [this.cursos.cargaHoraria, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        descricao: [this.cursos.descricao, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
       });
       
     }

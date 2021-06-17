@@ -26,28 +26,38 @@
         <div class="form-group row">
           <label class="col-xl-3 col-lg-3 col-form-label">Nome</label>
           <div class="col-lg-9 col-xl-6">
-            <input class="form-control form-control-lg form-control-solid" type="text" formControlName="fullName" [class.is-invalid]="isControlInvalid('fullName')" [class.is-valid]="isControlValid('fullName')" />
+            <input class="form-control form-control-lg form-control-solid" type="text" formControlName="fullName" [ngClass]="{'is-invalid': displayMessage.fullName}" />
+            <span class="text-danger" *ngIf="displayMessage.fullName">
+              <p [innerHTML]="displayMessage.fullName"></p>
+          </span>
           </div>
         </div>
         <div class="form-group row">
           <label class="col-xl-3 col-lg-3 col-form-label">Senha</label>
           <div class="col-lg-9 col-xl-6">
-            <input class="form-control form-control-lg form-control-solid" type="password" formControlName="senha" [class.is-invalid]="isControlInvalid('senha')" [class.is-valid]="isControlValid('senha')" />
+            <input class="form-control form-control-lg form-control-solid" type="password" formControlName="senha" [ngClass]="{'is-invalid': displayMessage.senha}" [class.is-invalid]="isControlInvalid('senha')" [class.is-valid]="isControlValid('senha')" />
+            <span class="text-danger" *ngIf="displayMessage.senha">
+              <p [innerHTML]="displayMessage.senha"></p>
+          </span>
           </div>
         </div>
         <div class="form-group row">
           <label class="col-xl-3 col-lg-3 col-form-label"> Confirme a Senha</label>
           <div class="col-lg-9 col-xl-6">
-            <input class="form-control form-control-lg form-control-solid" type="password" formControlName="confirmarSenha" [class.is-invalid]="isControlInvalid('confirmarSenha')" [class.is-valid]="isControlValid('confirmarSenha')" />
+            <input class="form-control form-control-lg form-control-solid" type="password" formControlName="confirmarSenha" [ngClass]="{'is-invalid': displayMessage.confirmarSenha}" [class.is-invalid]="isControlInvalid('confirmarSenha')" [class.is-valid]="isControlValid('confirmarSenha')" />
+            <span class="text-danger" *ngIf="displayMessage.confirmarSenha">
+              <p [innerHTML]="displayMessage.confirmarSenha"></p>
+          </span>
           </div>
         </div>
-
+          
         <div class="row">
           <label class="col-xl-3"></label>
           <div class="col-lg-9 col-xl-6">
             <h5 class="font-weight-bold mt-10 mb-6">Informações de contato</h5>
           </div>
         </div>
+        
         <div class="form-group row">
           <label class="col-xl-3 col-lg-3 col-form-label">Telefone</label>
           <div class="col-lg-9 col-xl-6">

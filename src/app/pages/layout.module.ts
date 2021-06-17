@@ -45,6 +45,11 @@ import { EditTurmasModalComponent } from './turmas/edit-turmas-modal/edit-turmas
 import { CursosComponent } from './cursos/cursos.component';
 import { TurmasComponent } from './turmas/turmas.component';
 import { EditCursoModalComponent } from './cursos/edit-curso-modal/edit-curso-modal.component';
+import { NgBrazil } from 'ng-brazil';
+import { TextMaskModule } from 'angular2-text-mask';
+import { TextMask } from 'ng-brazil';
+import { CustomFormsModule } from 'ng2-validation'
+
 
 @NgModule({
   declarations: [
@@ -80,7 +85,7 @@ import { EditCursoModalComponent } from './cursos/edit-curso-modal/edit-curso-mo
     CursosComponent,
     TurmasComponent,
     EditTurmasModalComponent,
-    EditCursoModalComponent
+    EditCursoModalComponent,
   ],
   imports: [
     CommonModule,
@@ -95,6 +100,9 @@ import { EditCursoModalComponent } from './cursos/edit-curso-modal/edit-curso-mo
     NgbModule,
     ReactiveFormsModule,
     NgbDatepickerModule,
+    NgBrazil,
+    TextMaskModule,
+    CustomFormsModule
   ],
   providers: [NgbAlertConfig]
 })

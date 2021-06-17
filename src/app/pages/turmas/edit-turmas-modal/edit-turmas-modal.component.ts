@@ -92,27 +92,27 @@ export class EditTurmasModalComponent implements OnInit, OnDestroy {
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
-        id: [this.turmas.id, Validators.compose([Validators.nullValidator])],
-        cursoId: [this.turmas.cursoId, Validators.compose([Validators.nullValidator])],
-        instrutorId: [this.turmas.instrutorId, Validators.compose([Validators.nullValidator])],
-        turma: [this.turmas.turma, Validators.compose([Validators.nullValidator])],
-        alunos: [this.turmas.alunos, Validators.compose([Validators.nullValidator])],
-        link: [this.turmas.link, Validators.compose([Validators.nullValidator])],
-        dataInicio: [this.turmas.dataInicio, Validators.compose([Validators.nullValidator])],
-        dataFim: [this.turmas.dataFim, Validators.compose([Validators.nullValidator])],
-        matricula: [this.turmas.matricula, Validators.compose([Validators.nullValidator])],
+        id: [this.turmas.id, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cursoId: [this.turmas.cursoId, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        instrutorId: [this.turmas.instrutorId, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        turma: [this.turmas.turma, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        alunos: [this.turmas.alunos, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        link: [this.turmas.link, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        dataInicio: [this.turmas.dataInicio, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        dataFim: [this.turmas.dataFim, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        matricula: [this.turmas.matricula, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
       });
     } else {
       this.createForm = this.fb.group({
-        id: [this.turmas.id, Validators.compose([Validators.nullValidator])],
-        cursoId: [this.turmas.cursoId, Validators.compose([Validators.nullValidator])],
-        instrutorId: [this.turmas.instrutorId, Validators.compose([Validators.nullValidator])],
-        turma: [this.turmas.turma, Validators.compose([Validators.nullValidator])],
-        alunos: [this.turmas.alunos, Validators.compose([Validators.nullValidator])],
-        link: [this.turmas.link, Validators.compose([Validators.nullValidator])],
-        dataInicio: [this.turmas.dataInicio, Validators.compose([Validators.nullValidator])],
-        dataFim: [this.turmas.dataFim, Validators.compose([Validators.nullValidator])],
-        matricula: [this.turmas.matricula, Validators.compose([Validators.nullValidator])],
+        id: [this.turmas.id, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cursoId: [this.turmas.cursoId, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        instrutorId: [this.turmas.instrutorId, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        turma: [this.turmas.turma, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        alunos: [this.turmas.alunos, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        link: [this.turmas.link, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        dataInicio: [this.turmas.dataInicio, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        dataFim: [this.turmas.dataFim, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        matricula: [this.turmas.matricula, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
 
       });
       

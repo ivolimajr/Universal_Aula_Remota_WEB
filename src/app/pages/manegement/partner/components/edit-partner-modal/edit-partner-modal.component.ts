@@ -1,9 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { NgBrazilValidators, NgBrazil, MASKS } from 'ng-brazil';
 import { of, Subscription } from 'rxjs';
 import { PartnerModel } from '../../../../../shared/models/partner/partnerModel.model';
 import { CustomAdapter, CustomDateParserFormatter, getDateFromString } from '../../../../../_metronic/core';
+import { utilsBr } from 'js-brasil';
 
 const EMPTY_PARTNER: PartnerModel = {
   id: undefined,
@@ -47,6 +49,7 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
   partner: PartnerModel;
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
+  MASKS = utilsBr.MASKS;
 
   constructor(
     private fb: FormBuilder, public modal: NgbActiveModal
@@ -132,13 +135,13 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
         telefone: [this.partner.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cargo: [this.partner.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.partner.status, Validators.compose([Validators.nullValidator])],
-        cep: [this.partner.cep, Validators.compose([Validators.nullValidator])],
-        cnpj: [this.partner.cnpj, Validators.compose([Validators.nullValidator])],
-        bairro: [this.partner.bairro, Validators.compose([Validators.nullValidator])],
-        cidade: [this.partner.cidade, Validators.compose([Validators.nullValidator])],
+        cep: ['',[Validators.required, NgBrazilValidators.cep]],
+        cnpj: ['',[Validators.required, NgBrazilValidators.cnpj]],
+        bairro: [this.partner.bairro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cidade: [this.partner.cidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         confirmarSenha: [this.partner.confirmarSenha, Validators.compose([Validators.nullValidator])],
         descricao: [this.partner.descricao, Validators.compose([Validators.nullValidator])],
-        enderecoLogradouro: [this.partner.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
+        enderecoLogradouro: [this.partner.enderecoLogradouro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         numero: [this.partner.numero, Validators.compose([Validators.nullValidator])],
         senha: [this.partner.senha, Validators.compose([Validators.nullValidator])],
         uf: [this.partner.uf, Validators.compose([Validators.nullValidator])],
@@ -151,13 +154,13 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
         telefone: [this.partner.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cargo: [this.partner.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.partner.status, Validators.compose([Validators.nullValidator])],
-        cep: [this.partner.cep, Validators.compose([Validators.nullValidator])],
-        cnpj: [this.partner.cnpj, Validators.compose([Validators.nullValidator])],
-        bairro: [this.partner.bairro, Validators.compose([Validators.nullValidator])],
-        cidade: [this.partner.cidade, Validators.compose([Validators.nullValidator])],
+        cep: ['',[Validators.required, NgBrazilValidators.cep]],
+        cnpj: ['',[Validators.required, NgBrazilValidators.cnpj]],
+        bairro: [this.partner.bairro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cidade: [this.partner.cidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         confirmarSenha: [this.partner.confirmarSenha, Validators.compose([Validators.nullValidator])],
         descricao: [this.partner.descricao, Validators.compose([Validators.nullValidator])],
-        enderecoLogradouro: [this.partner.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
+        enderecoLogradouro: [this.partner.enderecoLogradouro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         numero: [this.partner.numero, Validators.compose([Validators.nullValidator])],
         senha: [this.partner.senha, Validators.compose([Validators.nullValidator])],
         uf: [this.partner.uf, Validators.compose([Validators.nullValidator])],

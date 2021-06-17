@@ -19,5 +19,5 @@ export interface StudentBaseModel extends BaseModel {
     curso: [];
     turno:string;
     turma:string;
-    
+    status:number;
 }
