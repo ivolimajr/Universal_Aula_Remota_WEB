@@ -6,6 +6,7 @@ import { AdministrativoModel } from '../../../../../shared/models/administrative
 import { CustomAdapter, CustomDateParserFormatter } from 'src/app/_metronic/core';
 import { NgBrazilValidators, NgBrazil, MASKS } from 'ng-brazil';
 import { utilsBr } from 'js-brasil';
+import { ToastrService } from 'ngx-toastr';
 
 const EMPTY_ADMINISTRATIVO: AdministrativoModel = {
   id: undefined,
@@ -58,7 +59,10 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
   MASKS = utilsBr.MASKS;
 
   constructor(
-    private fb: FormBuilder, public modal: NgbActiveModal
+    private fb: FormBuilder,
+    public modal: NgbActiveModal,
+    private toastr: ToastrService,
+
   ) { }
 
   ngOnDestroy(): void {
@@ -85,6 +89,7 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
   save() {
     this.prepareCustomer();
     this.create();
+    this.toastr.success('Usuário adicionado com sucesso', 'Bem vindo!!');
   }
 
 

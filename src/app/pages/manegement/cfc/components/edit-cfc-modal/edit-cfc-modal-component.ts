@@ -6,6 +6,7 @@ import { of, Subscription } from 'rxjs';
 import { CfcModel } from '../../../../../shared/models/cfc/cfcModel.model';
 import { CustomAdapter, CustomDateParserFormatter, getDateFromString } from '../../../../../_metronic/core';
 import { NgBrazilValidators, NgBrazil, MASKS } from 'ng-brazil';
+import { ToastrService } from 'ngx-toastr';
 
 const EMPTY_CFC: CfcModel = {
   id: undefined,
@@ -58,7 +59,9 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
   MASKS = utilsBr.MASKS;
 
   constructor(
-    private fb: FormBuilder, public modal: NgbActiveModal
+    private fb: FormBuilder,
+    public modal: NgbActiveModal,
+    private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void {
@@ -84,6 +87,7 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
   save() {
     this.prepareCustomer();
     this.create();
+    this.toastr.success('Usuário adicionado com sucesso', 'Bem vindo!!');
   }
 
 

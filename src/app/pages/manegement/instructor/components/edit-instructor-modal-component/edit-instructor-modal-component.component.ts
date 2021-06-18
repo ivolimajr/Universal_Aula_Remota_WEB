@@ -6,6 +6,7 @@ import { InstrutorBaseModel } from 'src/app/shared/models/instructor/instrutorMo
 import { CustomAdapter, CustomDateParserFormatter } from 'src/app/_metronic/core';
 import { utilsBr } from 'js-brasil';
 import { NgBrazilValidators, NgBrazil, MASKS } from 'ng-brazil';
+import { ToastrService } from 'ngx-toastr';
 
 const EMPTY_INSTRUTOR: InstrutorBaseModel = {
   id: undefined,
@@ -59,7 +60,9 @@ export class EditInstructorModalComponentComponent implements OnInit, OnDestroy 
 
 
   constructor(
-    private fb: FormBuilder, public modal: NgbActiveModal
+    private fb: FormBuilder,
+    public modal: NgbActiveModal,
+    private toastr: ToastrService,
   ) {
 
   }
@@ -85,6 +88,7 @@ export class EditInstructorModalComponentComponent implements OnInit, OnDestroy 
   save() {
     this.prepareCustomer();
     this.create();
+    this.toastr.success('Usuário adicionado com sucesso', 'Bem vindo!!');
   }
 
 

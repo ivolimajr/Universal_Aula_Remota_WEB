@@ -6,6 +6,7 @@ import { of, Subscription } from 'rxjs';
 import { PartnerModel } from '../../../../../shared/models/partner/partnerModel.model';
 import { CustomAdapter, CustomDateParserFormatter, getDateFromString } from '../../../../../_metronic/core';
 import { utilsBr } from 'js-brasil';
+import { ToastrService } from 'ngx-toastr';
 
 const EMPTY_PARTNER: PartnerModel = {
   id: undefined,
@@ -52,7 +53,9 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
   MASKS = utilsBr.MASKS;
 
   constructor(
-    private fb: FormBuilder, public modal: NgbActiveModal
+    private fb: FormBuilder,
+    public modal: NgbActiveModal,
+    private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void {
@@ -78,6 +81,7 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
   save() {
     this.prepareCustomer();
     this.create();
+    this.toastr.success('Usuário adicionado com sucesso', 'Bem vindo!!');
   }
 
 

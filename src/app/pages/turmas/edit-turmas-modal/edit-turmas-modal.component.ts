@@ -4,6 +4,7 @@ import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-boot
 import { of, Subscription } from 'rxjs';
 import { TurmasModel } from 'src/app/shared/models/turmas/turmasModel.model';
 import { CustomAdapter, CustomDateParserFormatter } from 'src/app/_metronic/core';
+import { ToastrService } from 'ngx-toastr';
 
 const EMPTY_TURMAS: TurmasModel = {
   id:undefined,
@@ -38,7 +39,9 @@ export class EditTurmasModalComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private fb: FormBuilder, public modal: NgbActiveModal
+    private fb: FormBuilder,
+    public modal: NgbActiveModal,
+    private toastr: ToastrService,
   ) { }
 
   ngOnDestroy(): void {
@@ -61,6 +64,7 @@ export class EditTurmasModalComponent implements OnInit, OnDestroy {
   save() {
     this.prepareCustomer();
     this.create();
+    this.toastr.success('Turma criada com sucesso', 'Concluído!!');
   }
   private prepareCustomer() {
     const formData = this.createForm.value;

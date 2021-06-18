@@ -6,6 +6,7 @@ import { EdrivingModel } from '../../../../../shared/models/edriving/edrivingMod
 import { CustomAdapter, CustomDateParserFormatter, getDateFromString } from '../../../../../_metronic/core';
 import { NgBrazil, MASKS, NgBrazilValidators } from 'ng-brazil';
 import { utilsBr } from 'js-brasil';
+import { ToastrService } from 'ngx-toastr';
 
 const EMPTY_EDRIVING: EdrivingModel = {
   id: undefined,
@@ -45,7 +46,9 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
   MASKS = utilsBr.MASKS;
 
   constructor(
-    private fb: FormBuilder, public modal: NgbActiveModal
+    private fb: FormBuilder,
+    public modal: NgbActiveModal,
+    private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void {
@@ -72,6 +75,7 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
   save() {
     this.prepareEdriving();
     this.create();
+    this.toastr.success('Usuário adicionado com sucesso', 'Bem vindo!!');
   }
 
 

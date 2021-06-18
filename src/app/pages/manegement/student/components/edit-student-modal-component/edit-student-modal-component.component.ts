@@ -6,6 +6,7 @@ import { StudentBaseModel } from 'src/app/shared/models/student/studentModel.mod
 import { CustomAdapter, CustomDateParserFormatter } from 'src/app/_metronic/core';
 import { NgBrazilValidators, NgBrazil, MASKS } from 'ng-brazil';
 import { utilsBr } from 'js-brasil';
+import { ToastrService } from 'ngx-toastr';
 
 const EMPTY_STUDENT: StudentBaseModel = {
   id: undefined,
@@ -57,7 +58,9 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
   MASKS = utilsBr.MASKS;
 
   constructor(
-    private fb: FormBuilder, public modal: NgbActiveModal
+    private fb: FormBuilder,
+    public modal: NgbActiveModal,
+    private toastr: ToastrService,
   ) {
 
   }
@@ -83,6 +86,7 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
   save() {
     this.preparestudent();
     this.create();
+    this.toastr.success('Usuário adicionado com sucesso', 'Bem vindo!!');
   }
 
 

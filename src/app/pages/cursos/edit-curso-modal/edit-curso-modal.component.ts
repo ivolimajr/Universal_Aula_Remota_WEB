@@ -4,6 +4,7 @@ import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-boot
 import { of, Subscription } from 'rxjs';
 import { CursosModel } from 'src/app/shared/models/cursos/cursosModel.model';
 import { CustomAdapter, CustomDateParserFormatter } from 'src/app/_metronic/core';
+import { ToastrService } from 'ngx-toastr';
 
 const EMPTY_CURSOS: CursosModel = {
   id: null,
@@ -34,7 +35,9 @@ export class EditCursoModalComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private fb: FormBuilder, public modal: NgbActiveModal
+    private fb: FormBuilder,
+    public modal: NgbActiveModal,
+    private toastr: ToastrService,
   ) { }
 
   ngOnDestroy(): void {
@@ -58,6 +61,7 @@ export class EditCursoModalComponent implements OnInit, OnDestroy {
   save() {
     this.prepareCustomer();
     this.create();
+    this.toastr.success('Curso adicionado com sucesso', 'Concluído!!');
   }
   private prepareCustomer() {
     const formData = this.createForm.value;
@@ -77,7 +81,6 @@ export class EditCursoModalComponent implements OnInit, OnDestroy {
      * 3° trata o retorno da API
      * 4° continua...
      */
-    console.log(this.cursos)
     this.modal.close(true)
     this.modal.dismiss("false");
     return of(this.cursos);
