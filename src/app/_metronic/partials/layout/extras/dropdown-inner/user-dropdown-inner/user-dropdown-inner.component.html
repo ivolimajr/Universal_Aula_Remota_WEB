@@ -12,10 +12,6 @@
       <div class="text-dark m-0 flex-grow-1 mr-3 font-size-h5">
         {{ _user.firstname }} {{ _user.lastname }}
       </div>
-      <span
-        class="label label-light-success label-lg font-weight-bold label-inline"
-        >3 messages</span
-      >
       <!--end::Text-->
     </div>
     <div class="separator separator-solid"></div>
@@ -32,13 +28,11 @@
         </div>
         <div class="navi-text">
           <div class="font-weight-bold">
-            Meus Dados
+            Meus Dados {{ _user.id }}
           </div>
           <div class="text-muted">
             Editar minhas informações
-            <span class="label label-light-danger label-inline font-weight-bold"
-              >editar</span
-            >
+            <span class="label label-light-danger label-inline font-weight-bold">editar</span>
           </div>
         </div>
       </div>
@@ -66,11 +60,7 @@
     <!--begin::Footer-->
     <div class="navi-separator mt-3"></div>
     <div class="navi-footer px-8 py-5">
-      <a
-      class="btn btn-light-primary font-weight-bold cursor-pointer"
-      (click)="logout()"
-      >Sair</a
-    >
+      <a class="btn btn-light-primary font-weight-bold cursor-pointer" (click)="logout()">Sair</a>
     </div>
     <!--end::Footer-->
   </div>
