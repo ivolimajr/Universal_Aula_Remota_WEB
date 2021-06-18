@@ -3,6 +3,9 @@ import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
 import { AdministrativoModel } from '../../../../../shared/models/administrative/administrativoModel.model';
+import { utilsBr } from 'js-brasil';
+import { ToastrService } from 'ngx-toastr';
+import { NgBrazilValidators, NgBrazil, MASKS } from 'ng-brazil';
 
 const EMPTY_ADMINISTRATIVO: AdministrativoModel = {
   id: undefined,
@@ -45,10 +48,12 @@ export class AccountComponentAdministrative implements OnInit {
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
   modal: any;
+  MASKS = utilsBr.MASKS;
 
   constructor(
     private fb: FormBuilder,
     private modalService: NgbModal,
+    private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void {
@@ -71,6 +76,7 @@ export class AccountComponentAdministrative implements OnInit {
   save() {
     this.prepareCustomer();
     this.create();
+    this.toastr.success('Usuário adicionado com sucesso', 'Bem vindo!!');
   }
 
 
@@ -135,10 +141,10 @@ export class AccountComponentAdministrative implements OnInit {
         fullName: [this.administrativo.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.administrativo.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.administrativo.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.administrativo.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
-        cep: [this.administrativo.cep, Validators.compose([Validators.nullValidator])],
+        cep: ['',[Validators.required, NgBrazilValidators.cep]],
         senha: [this.administrativo.senha, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.administrativo.confirmarSenha, Validators.compose([Validators.nullValidator])],
         identidade: [this.administrativo.identidade, Validators.compose([Validators.nullValidator])],
@@ -161,10 +167,10 @@ export class AccountComponentAdministrative implements OnInit {
         fullName: [this.administrativo.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.administrativo.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.administrativo.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: [this.administrativo.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
-        cep: [this.administrativo.cep, Validators.compose([Validators.nullValidator])],
+        cep: ['',[Validators.required, NgBrazilValidators.cep]],
         senha: [this.administrativo.senha, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.administrativo.confirmarSenha, Validators.compose([Validators.nullValidator])],
         identidade: [this.administrativo.identidade, Validators.compose([Validators.nullValidator])],

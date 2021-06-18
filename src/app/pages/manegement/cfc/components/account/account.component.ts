@@ -3,6 +3,9 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
 import { CfcModel } from 'src/app/shared/models/cfc/cfcModel.model';
+import { utilsBr } from 'js-brasil';
+import { ToastrService } from 'ngx-toastr';
+import { NgBrazilValidators } from 'ng-brazil';
 
 const EMPTY_CFC: CfcModel = {
   id: undefined,
@@ -46,10 +49,12 @@ export class AccountComponentCfc implements OnInit {
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
   modal: any;
+  MASKS = utilsBr.MASKS;
 
   constructor(
     private fb: FormBuilder,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void {
@@ -73,6 +78,7 @@ export class AccountComponentCfc implements OnInit {
   save() {
     this.prepareCustomer();
     this.create();
+    this.toastr.success('Alterações concluídas');
   }
 
 
@@ -139,12 +145,12 @@ export class AccountComponentCfc implements OnInit {
         email: [this.cfc.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.cfc.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         status: [this.cfc.status, Validators.compose([Validators.nullValidator])],
-        cep: [this.cfc.cep, Validators.compose([Validators.nullValidator])],
+        cep: ['',[Validators.required, NgBrazilValidators.cep]],
         senha: [this.cfc.senha, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         confirmarSenha: [this.cfc.confirmarSenha, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         bairro: [this.cfc.bairro, Validators.compose([Validators.nullValidator])],
         cidade: [this.cfc.cidade, Validators.compose([Validators.nullValidator])],
-        cnpj: [this.cfc.cnpj, Validators.compose([Validators.nullValidator])],
+        cnpj: ['',[Validators.required, NgBrazilValidators.cnpj]],
         datadaFundacao: [this.cfc.datadaFundacao, Validators.compose([Validators.nullValidator])],
         enderecoLogradouro: [this.cfc.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
         inscricaoEstadual: [this.cfc.inscricaoEstadual, Validators.compose([Validators.nullValidator])],
@@ -165,12 +171,12 @@ export class AccountComponentCfc implements OnInit {
         email: [this.cfc.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.cfc.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         status: [this.cfc.status, Validators.compose([Validators.nullValidator])],
-        cep: [this.cfc.cep, Validators.compose([Validators.nullValidator])],
+        cep: ['',[Validators.required, NgBrazilValidators.cep]],
         senha: [this.cfc.senha, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         confirmarSenha: [this.cfc.confirmarSenha, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         bairro: [this.cfc.bairro, Validators.compose([Validators.nullValidator])],
         cidade: [this.cfc.cidade, Validators.compose([Validators.nullValidator])],
-        cnpj: [this.cfc.cnpj, Validators.compose([Validators.nullValidator])],
+        cnpj: ['',[Validators.required, NgBrazilValidators.cnpj]],
         datadaFundacao: [this.cfc.datadaFundacao, Validators.compose([Validators.nullValidator])],
         enderecoLogradouro: [this.cfc.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
         inscricaoEstadual: [this.cfc.inscricaoEstadual, Validators.compose([Validators.nullValidator])],

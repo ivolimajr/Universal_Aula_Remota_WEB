@@ -3,6 +3,9 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
 import { PartnerModel } from '../../../../../shared/models/partner/partnerModel.model';
+import { utilsBr } from 'js-brasil';
+import { ToastrService } from 'ngx-toastr';
+import { NgBrazilValidators } from 'ng-brazil';
 
 const EMPTY_PARTNER: PartnerModel = {
   id: undefined,
@@ -38,9 +41,11 @@ export class AccountComponentPartner implements OnInit {
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
   modal: any;
+  MASKS = utilsBr.MASKS;
 
   constructor(
     private fb: FormBuilder,
+    private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void {
@@ -64,6 +69,8 @@ export class AccountComponentPartner implements OnInit {
   save() {
     this.prepareCustomer();
     this.create();
+    this.toastr.success('Alterações concluídas');
+
   }
 
 
@@ -126,8 +133,8 @@ export class AccountComponentPartner implements OnInit {
         telefone: [this.partner.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cargo: [this.partner.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.partner.status, Validators.compose([Validators.nullValidator])],
-        cep: [this.partner.cep, Validators.compose([Validators.nullValidator])],
-        cnpj: [this.partner.cnpj, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cep: ['',[Validators.required, NgBrazilValidators.cep]],
+        cnpj: ['',Validators.required, NgBrazilValidators.cnpj],
         bairro: [this.partner.bairro, Validators.compose([Validators.nullValidator])],
         cidade: [this.partner.cidade, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.partner.confirmarSenha, Validators.compose([Validators.nullValidator])],
@@ -144,8 +151,8 @@ export class AccountComponentPartner implements OnInit {
         telefone: [this.partner.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cargo: [this.partner.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.partner.status, Validators.compose([Validators.nullValidator])],
-        cep: [this.partner.cep, Validators.compose([Validators.nullValidator])],
-        cnpj: [this.partner.cnpj, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        cep: ['',[Validators.required, NgBrazilValidators.cep]],
+        cnpj: ['',Validators.required, NgBrazilValidators.cnpj],
         bairro: [this.partner.bairro, Validators.compose([Validators.nullValidator])],
         cidade: [this.partner.cidade, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.partner.confirmarSenha, Validators.compose([Validators.nullValidator])],

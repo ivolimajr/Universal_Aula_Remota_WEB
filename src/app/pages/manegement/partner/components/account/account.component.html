@@ -63,6 +63,7 @@
               formControlName="cnpj"
               [class.is-invalid]="isControlInvalid('cnpj')"
               [class.is-valid]="isControlValid('cnpj')"
+              cpf [textMask]="{mask: MASKS.cpf.textMask}"
             />
           </div>
         </div>

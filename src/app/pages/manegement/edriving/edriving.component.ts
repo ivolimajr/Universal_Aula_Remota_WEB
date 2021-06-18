@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { EditEdrivingModalComponent } from './components/edit-edriving-modal/edit-edriving-modal.component';
-
 @Component({
   selector: 'app-edriving',
   templateUrl: './edriving.component.html',
@@ -11,14 +10,16 @@ import { EditEdrivingModalComponent } from './components/edit-edriving-modal/edi
 export class EdrivingComponent implements OnInit {
 
   email = new FormControl('', [Validators.required, Validators.email]);
+  services: any;
+
 
   constructor(
     private modalService: NgbModal,
   ) {
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
+
 
   /**
    * PARAMS = Id do usuário para ser editado
