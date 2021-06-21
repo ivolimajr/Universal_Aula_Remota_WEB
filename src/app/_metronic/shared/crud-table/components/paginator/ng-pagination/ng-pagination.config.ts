@@ -1,4 +1,4 @@
-// Fork of https://github.com/ng-bootstrap/ng-bootstrap/blob/master/src/pagination/pagination-config.ts
+  // Fork of https://github.com/ng-bootstrap/ng-bootstrap/blob/master/src/pagination/pagination-config.ts
 import { Injectable } from '@angular/core';
 import { PageSizes } from '../../../models/paginator.model';
 
