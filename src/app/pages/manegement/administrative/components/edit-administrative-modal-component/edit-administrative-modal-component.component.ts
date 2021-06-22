@@ -84,19 +84,13 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
       this.loadForm(this.id);
     }
   }
-  /**
-  * 
-  */
+
   save() {
     this.prepareCustomer();
     this.create();
     this.toastr.success('Usuário adicionado com sucesso', 'Bem vindo!!');
   }
 
-
-  /**
-   * 
-   */
   private prepareCustomer() {
     const formData = this.createForm.value;
     this.administrativo.fullName = formData.fullName;
@@ -123,9 +117,6 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
     this.administrativo.uploadDOC = formData.uploadDOC;
   }
 
-  /**
-   * 
-   */
   edit() {
     console.log("Edit do modal");
   }
@@ -151,7 +142,7 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
       this.createForm = this.fb.group({
         fullName: [this.administrativo.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.administrativo.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.administrativo.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
@@ -176,7 +167,7 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
       this.createForm = this.fb.group({
         fullName: [this.administrativo.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.administrativo.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.administrativo.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],

@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { utilsBr } from 'js-brasil';
+import { NgBrazilValidators } from 'ng-brazil';
 import { of, Subscription } from 'rxjs';
 import { StudentBaseModel } from 'src/app/shared/models/student/studentModel.model';
 
@@ -44,6 +46,7 @@ export class AccountComponentStudent implements OnInit {
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
   modal: any;
+  MASKS = utilsBr.MASKS;
 
   constructor(
     private fb: FormBuilder,
@@ -65,18 +68,11 @@ export class AccountComponentStudent implements OnInit {
     }
   }
 
-  /**
-   * 
-   */
   save() {
     this.prepareCustomer();
     this.create();
   }
 
-
-  /**
-   * 
-   */
   private prepareCustomer() {
     const formData = this.createForm.value;
     this.customer.fullName = formData.fullName;
@@ -89,9 +85,6 @@ export class AccountComponentStudent implements OnInit {
 
   }
 
-  /**
-   * 
-   */
   edit() {
     console.log("Edit do modal");
   }
@@ -121,7 +114,7 @@ export class AccountComponentStudent implements OnInit {
       this.createForm = this.fb.group({
         fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         status: [this.customer.status, Validators.compose([Validators.nullValidator])],
         senha: [this.customer.senha, Validators.compose([Validators.nullValidator])],
@@ -131,7 +124,7 @@ export class AccountComponentStudent implements OnInit {
       this.createForm = this.fb.group({
         fullName: [this.customer.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.customer.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.customer.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         status: [this.customer.status, Validators.compose([Validators.nullValidator])],
         senha: [this.customer.senha, Validators.compose([Validators.nullValidator])],

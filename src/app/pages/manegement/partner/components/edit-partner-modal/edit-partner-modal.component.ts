@@ -137,7 +137,7 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
       this.createForm = this.fb.group({
         fullName: [this.partner.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.partner.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.partner.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cargo: [this.partner.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.partner.status, Validators.compose([Validators.nullValidator])],
         cep: ['', [Validators.required, NgBrazilValidators.cep]],
@@ -156,7 +156,7 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
       this.createForm = this.fb.group({
         fullName: [this.partner.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.partner.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.partner.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cargo: [this.partner.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.partner.status, Validators.compose([Validators.nullValidator])],
         cep: ['', [Validators.required, NgBrazilValidators.cep]],

@@ -71,19 +71,12 @@ export class AccountComponentAdministrative implements OnInit {
     }
   }
 
-  /**
-   * 
-   */
   save() {
     this.prepareCustomer();
     this.create();
-    this.toastr.success('Usuário adicionado com sucesso', 'Bem vindo!!');
+    this.toastr.success('Alterações feitas com sucesso!');
   }
 
-
-  /**
-   * 
-   */
   private prepareCustomer() {
     const formData = this.createForm.value;
     this.administrativo.fullName = formData.fullName;
@@ -108,12 +101,8 @@ export class AccountComponentAdministrative implements OnInit {
     this.administrativo.orgaoExpedidor = formData.orgaoExpedidor;
     this.administrativo.site = formData.site;
     this.administrativo.uploadDOC = formData.uploadDOC;
-
   }
 
-  /**
-   * 
-   */
   edit() {
     console.log("Edit do modal");
   }
@@ -133,15 +122,12 @@ export class AccountComponentAdministrative implements OnInit {
     return of(this.administrativo);
   }
 
-  /**
-   *  MÉTODO PARA CARREGAR ( INICIAR ) O FORMULÁRIO
-   */
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
         fullName: [this.administrativo.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.administrativo.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.administrativo.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
@@ -167,7 +153,7 @@ export class AccountComponentAdministrative implements OnInit {
       this.createForm = this.fb.group({
         fullName: [this.administrativo.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.administrativo.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.administrativo.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
@@ -190,16 +176,11 @@ export class AccountComponentAdministrative implements OnInit {
 
       });
     }
-
   }
 
-  /**
-   * 
-   */
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
-
 
   //VALIDADORES
   isControlValid(controlName: string): boolean {

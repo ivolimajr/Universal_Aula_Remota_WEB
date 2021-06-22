@@ -146,7 +146,7 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
       this.createForm = this.fb.group({
         fullName: [this.student.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.student.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.student.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         senha: [this.student.senha, Validators.compose([Validators.nullValidator])],
         status: [this.student.status, Validators.compose([Validators.nullValidator])],
@@ -169,7 +169,7 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
       this.createForm = this.fb.group({
         fullName: [this.student.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.student.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.student.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         senha: [this.student.senha, Validators.compose([Validators.nullValidator])],
         status: [this.student.status, Validators.compose([Validators.nullValidator])],

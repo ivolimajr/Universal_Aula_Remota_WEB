@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { utilsBr } from 'js-brasil';
+import { NgBrazilValidators } from 'ng-brazil';
 import { of, Subscription } from 'rxjs';
 import { InstrutorBaseModel } from 'src/app/shared/models/instructor/instrutorModel.model';
 
@@ -45,7 +47,8 @@ export class AccountComponentInstructor implements OnInit {
   createForm: FormGroup;
   private subscriptions: Subscription[] = [];
   modal: any;
-
+  MASKS = utilsBr.MASKS;
+  
   constructor(
     private fb: FormBuilder,
     private modalService: NgbModal,
@@ -66,18 +69,11 @@ export class AccountComponentInstructor implements OnInit {
     }
   }
 
-  /**
-   * 
-   */
   save() {
     this.prepareCustomer();
     this.create();
   }
 
-
-  /**
-   * 
-   */
   private prepareCustomer() {
     const formData = this.createForm.value;
     this.instrutor.fullName = formData.fullName;
@@ -132,7 +128,7 @@ export class AccountComponentInstructor implements OnInit {
       this.createForm = this.fb.group({
         fullName: [this.instrutor.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.instrutor.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.instrutor.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: [this.instrutor.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cargo: [this.instrutor.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.instrutor.status, Validators.compose([Validators.nullValidator])],
@@ -153,7 +149,7 @@ export class AccountComponentInstructor implements OnInit {
       this.createForm = this.fb.group({
         fullName: [this.instrutor.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.instrutor.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.instrutor.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: [this.instrutor.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cargo: [this.instrutor.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.instrutor.status, Validators.compose([Validators.nullValidator])],

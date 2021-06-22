@@ -61,7 +61,7 @@
           <!-- start: Telefone -->
           <div class="col-lg">
             <label class="form-label" for="telefone" >Telefone</label>
-            <input type="text" id="telefone" class="form-control form-control-lg form-control-solid" name="telefone" placeholder="telefone" autocomplete="off" formControlName="telefone" [class.is-invalid]="isControlInvalid('telefone')" [class.is-valid]="isControlValid('telefone')" />
+            <input type="text" id="telefone" class="form-control form-control-lg form-control-solid" name="telefone" placeholder="telefone" autocomplete="off" formControlName="telefone" [class.is-invalid]="isControlInvalid('telefone')" [class.is-valid]="isControlValid('telefone')" telefone [textMask]="{mask: MASKS.telefone.textMask}" />
             <div class="valid-feedback" *ngIf="isControlValid('telefone')">
               Ok!
             </div>

@@ -1,18 +1,5 @@
-
 <ng-container>
   <div class="card card-custom card-stretch">
-    <!--begin::Header-->
-    <div class="card-header py-3">
-      <div class="card-title align-items-start flex-column">
-        <h3 class="card-label font-weight-bolder text-dark">Informação Pessoal</h3>
-        <span class="text-muted font-weight-bold font-size-sm mt-1">Altere suas informações</span>
-      </div>
-      <div class="card-toolbar">
-        <button type="submit" class="btn btn-success mr-2" (click)="save()">Salvar mudanças</button>
-        <button type="reset" class="btn btn-secondary" (click)="cancel()">Cancelar</button>
-      </div>
-    </div>
-    <!--end::Header-->
     <!--begin::Form-->
     <div class="form" [formGroup]="createForm">
       <!--begin::Body-->
@@ -89,6 +76,7 @@
                 formControlName="telefone"
                 [class.is-invalid]="isControlInvalid('telefone')"
                 [class.is-valid]="isControlValid('telefone')"
+                telefone [textMask]="{mask: MASKS.telefone.textMask}"
               />
             </div>
           </div>
@@ -103,13 +91,19 @@
               [class.is-invalid]="isControlInvalid('site')"
               [class.is-valid]="isControlValid('site')"
             />
+            <div class="modal-footer">
+              <button type="button" class="btn btn-light btn-elevate mr-2" (click)="modal.dismiss()">
+                Cancelar
+              </button>
+              <ng-container>
+                <button type="submit" class="btn btn-primary btn-elevate" (click)="save()">
+                  Alterar
+                </button>
+              </ng-container>
+            </div>
           </div>
-        </div>
-
-        
+          </div>
+        </div>    
       </div>
-      <!--end::Body-->
     </div>
-    <!--end::Form-->
-  </div>
 </ng-container>

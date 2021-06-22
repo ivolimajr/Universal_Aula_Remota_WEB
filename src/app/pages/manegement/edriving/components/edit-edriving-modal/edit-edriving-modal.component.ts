@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
 import { EdrivingModel } from '../../../../../shared/models/edriving/edrivingModel.model';
-import { CustomAdapter, CustomDateParserFormatter, getDateFromString } from '../../../../../_metronic/core';
+import { CustomAdapter, CustomDateParserFormatter} from '../../../../../_metronic/core';
 import { NgBrazil, MASKS, NgBrazilValidators } from 'ng-brazil';
 import { utilsBr } from 'js-brasil';
 import { ToastrService } from 'ngx-toastr';
@@ -21,7 +21,6 @@ const EMPTY_EDRIVING: EdrivingModel = {
   nivelAcesso: null
 };
 
-
 @Component({
   selector: 'app-edit-edriving-modal',
   templateUrl: './edit-edriving-modal.component.html',
@@ -38,7 +37,7 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
     Validators.required,
     Validators.email,
   ]);
-  @Input() id: number; // ID QUE VAMOS RECEBER PELA ROTA PARA PODER EDITAR
+  @Input() id: number;
 
   isLoading$;
   edriving: EdrivingModel;
@@ -57,9 +56,6 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
     console.log("ATRIBUTO ID NO MODAL: " + this.id);
   }
 
-  /**
-   * 
-   */
   loadEdriving() {
     if (!this.id) {
       this.edriving = EMPTY_EDRIVING;
@@ -70,19 +66,12 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * 
-   */
   save() {
     this.prepareEdriving();
     this.create();
     this.toastr.success('Usuário adicionado com sucesso', 'Bem vindo!!');
   }
 
-
-  /**
-   * 
-   */
   private prepareEdriving() {
     const formData = this.createForm.value;
 
@@ -97,9 +86,6 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
 
   }
 
-  /**
-   * 
-   */
   edit() {
     console.log("Edit do modal");
   }
@@ -116,15 +102,12 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
     return of(this.edriving);
   }
 
-  /**
-   *  MÉTODO PARA CARREGAR ( INICIAR ) O FORMULÁRIO
-   */
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
         fullName: [this.edriving.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.edriving.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
@@ -135,7 +118,7 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
       this.createForm = this.fb.group({
         fullName: [this.edriving.fullName, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(100)])],
         email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.edriving.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
@@ -146,15 +129,10 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
 
   }
 
-  /**
-   * 
-   */
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
 
-
-  //VALIDADORES
   isControlValid(controlName: string): boolean {
     const control = this.createForm.controls[controlName];
     return control.valid && (control.dirty || control.touched);

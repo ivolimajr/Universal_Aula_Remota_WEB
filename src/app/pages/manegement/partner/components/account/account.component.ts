@@ -64,9 +64,6 @@ export class AccountComponentPartner implements OnInit {
     }
   }
 
-  /**
-   * 
-   */
   save() {
     this.prepareCustomer();
     this.create();
@@ -74,10 +71,6 @@ export class AccountComponentPartner implements OnInit {
 
   }
 
-
-  /**
-   * 
-   */
   private prepareCustomer() {
     const formData = this.createForm.value;
     this.partner.fullName = formData.fullName;
@@ -95,13 +88,8 @@ export class AccountComponentPartner implements OnInit {
     this.partner.numero = formData.numero;
     this.partner.senha = formData.senha;
     this.partner.uf = formData.uf;
-
-    //TODO: ADICIONAR OS OUTROS ATRIBUTOS
   }
 
-  /**
-   * 
-   */
   edit() {
     console.log("Edit do modal");
   }
@@ -131,7 +119,7 @@ export class AccountComponentPartner implements OnInit {
       this.createForm = this.fb.group({
         fullName: [this.partner.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.partner.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.partner.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cargo: [this.partner.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.partner.status, Validators.compose([Validators.nullValidator])],
         cep: ['', [Validators.required, NgBrazilValidators.cep]],
@@ -149,7 +137,7 @@ export class AccountComponentPartner implements OnInit {
       this.createForm = this.fb.group({
         fullName: [this.partner.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.partner.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.partner.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cargo: [this.partner.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.partner.status, Validators.compose([Validators.nullValidator])],
         cep: ['', [Validators.required, NgBrazilValidators.cep]],

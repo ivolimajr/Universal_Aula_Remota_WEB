@@ -5,6 +5,8 @@ import { CustomValidators } from 'ng2-validation';
 import { fromEvent, merge, Observable, of, Subscription } from 'rxjs';
 import { DisplayMessage, GenericValidator, ValidationMessages } from '../../../../../shared/validators/generic-form-validation';
 import { EdrivingModel } from '../../../../../shared/models/edriving/edrivingModel.model';
+import { utilsBr } from 'js-brasil';
+import { ToastrService } from 'ngx-toastr';
 
 const EMPTY_EDRIVING: EdrivingModel = {
   id: undefined,
@@ -37,36 +39,13 @@ export class AccountComponentEdriving implements OnInit, AfterViewInit {
   displayMessage: DisplayMessage = {};
   genericValidator: GenericValidator;
   validationMessages: ValidationMessages;
+  MASKS = utilsBr.MASKS;
 
-  constructor(private fb: FormBuilder) {
-    this.validationMessages = {
-      fullName: {
-        required: 'O nome é requerido',
-        minLength: 'O nome precisa ter no mínimo 3 caracteres',
-        maxLength: 'O nome precisa ter no máximo 100 caracteres'
-      },
-      cpf: {
-        required: 'Informe o CPF',
-        cpf: 'CPF em formato inválido'
-      },
-      email: {
-        required: 'Informe o e-mail',
-        email: 'Email inválido'
-      },
-      senha: {
-        required: 'Informe a senha',
-        rangeLength: 'A senha deve possuir entre 6 e 15 caracteres'
-      },
-      confirmarSenha: {
-        required: 'Informe a senha novamente',
-        rangeLength: 'A senha deve possuir entre 6 e 15 caracteres',
-        equalTo: 'As senhas não conferem'
-      }
-    };
+  constructor(
+    private fb: FormBuilder,
+    private toastr: ToastrService,
 
-    this.genericValidator = new GenericValidator(this.validationMessages);
-
-
+    ){
   }
 
   ngOnInit(): void {
@@ -83,9 +62,7 @@ export class AccountComponentEdriving implements OnInit, AfterViewInit {
     this.loadEdriving();
     console.log("ATRIBUTO ID NO MODAL: " + this.id);
   }
-  /**
-   * 
-   */
+
   loadEdriving() {
     if (!this.id) {
       this.edriving = EMPTY_EDRIVING;
@@ -99,6 +76,7 @@ export class AccountComponentEdriving implements OnInit, AfterViewInit {
   save() {
     this.prepareEdriving();
     this.create();
+    this.toastr.success('Usuário adicionado com sucesso', 'Bem vindo!!');
   }
 
   private prepareEdriving() {
@@ -134,50 +112,36 @@ export class AccountComponentEdriving implements OnInit, AfterViewInit {
     return of(this.edriving);
   }
 
-
-  /**
-   *  MÉTODO PARA CARREGAR ( INICIAR ) O FORMULÁRIO
-   */
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
         fullName: [this.edriving.fullName, Validators.compose([Validators.required])],
         email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.edriving.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
-        senha: [this.edriving.senha, Validators.compose([Validators.nullValidator])],
-        confirmarSenha: [this.edriving.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        senha: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
+        confirmarSenha: ['', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo()]],
       });
 
     } else {
       this.createForm = this.fb.group({
         fullName: [this.edriving.fullName, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(100)])],
         email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.edriving.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
-        senha: [this.edriving.senha, Validators.compose([Validators.nullValidator])],
-        confirmarSenha: [this.edriving.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        senha: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
+        confirmarSenha: ['', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo()]],
       });
     }
 
   }
 
-  ngAfterViewInit(): void {
-    let controlBlurs: Observable<any>[] = this.formInputElements
-      .map((FormControl: ElementRef) => fromEvent(FormControl.nativeElement, 'blur'));
+  ngAfterViewInit(): void {}
 
-    merge(...controlBlurs).subscribe(() => {
-      this.displayMessage = this.genericValidator.processarMensagens(this.createForm);
-    });
-  }
-
-  /**
-   * 
-   */
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }

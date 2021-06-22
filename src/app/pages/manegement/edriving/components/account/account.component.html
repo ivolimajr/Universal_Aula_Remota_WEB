@@ -8,7 +8,7 @@
       </div>
       <div class="card-toolbar">
         <button type="submit" class="btn btn-success mr-2" (click)="save()">Salvar mudanças</button>
-        <button type="reset" class="btn btn-secondary" (click)="cancel()">Cancelar</button>
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancelar</button>
       </div>
     </div>
     <!--end::Header-->
@@ -67,7 +67,7 @@
                   <i class="fa fa-phone"></i>
                 </span>
               </div>
-              <input type="text" class="form-control form-control-lg form-control-solid" placeholder="telefone" formControlName="telefone" [class.is-invalid]="isControlInvalid('telefone')" [class.is-valid]="isControlValid('telefone')" />
+              <input type="text" class="form-control form-control-lg form-control-solid" placeholder="telefone" formControlName="telefone" [class.is-invalid]="isControlInvalid('telefone')" [class.is-valid]="isControlValid('telefone')" telefone [textMask]="{mask: MASKS.telefone.textMask}" />
             </div>
           </div>
         </div>

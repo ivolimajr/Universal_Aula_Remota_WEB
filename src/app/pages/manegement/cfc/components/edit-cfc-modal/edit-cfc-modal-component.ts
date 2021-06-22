@@ -149,7 +149,7 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
       this.createForm = this.fb.group({
         fullName: [this.cfc.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.cfc.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.cfc.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         status: [this.cfc.status, Validators.compose([Validators.nullValidator])],
         cep: ['', [Validators.required, NgBrazilValidators.cep]],
         senha: [this.cfc.senha, Validators.compose([Validators.nullValidator])],
@@ -175,7 +175,7 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
       this.createForm = this.fb.group({
         fullName: [this.cfc.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.cfc.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: [this.cfc.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         status: [this.cfc.status, Validators.compose([Validators.nullValidator])],
         cep: ['', [Validators.required, NgBrazilValidators.cep]],
         senha: [this.cfc.senha, Validators.compose([Validators.nullValidator])],
