@@ -25,7 +25,7 @@ const EMPTY_EDRIVING: EdrivingModel = {
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss']
 })
-export class AccountComponentEdriving implements OnInit, AfterViewInit {
+export class AccountComponentEdriving implements OnInit {
 
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements: ElementRef[];
 
@@ -45,8 +45,7 @@ export class AccountComponentEdriving implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private toastr: ToastrService,
 
-    ){
-  }
+    ) { }
 
   ngOnInit(): void {
     let senha = new FormControl('', [Validators.required, CustomValidators.rangeLength([6, 15])]);
@@ -137,10 +136,7 @@ export class AccountComponentEdriving implements OnInit, AfterViewInit {
         confirmarSenha: ['', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo()]],
       });
     }
-
   }
-
-  ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());

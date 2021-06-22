@@ -1,10 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { Component, ElementRef, Input, OnInit, ViewChildren } from '@angular/core';
+import { FormControl, Validators, FormGroup, FormBuilder, FormControlName } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { utilsBr } from 'js-brasil';
 import { NgBrazilValidators } from 'ng-brazil';
+import { CustomValidators } from 'ng2-validation';
 import { of, Subscription } from 'rxjs';
 import { InstrutorBaseModel } from 'src/app/shared/models/instructor/instrutorModel.model';
+import { DisplayMessage, GenericValidator, ValidationMessages } from 'src/app/shared/validators/generic-form-validation';
 
 const EMPTY_INSTRUTOR: InstrutorBaseModel = {
   id: undefined,
@@ -38,6 +40,8 @@ const EMPTY_INSTRUTOR: InstrutorBaseModel = {
 })
 export class AccountComponentInstructor implements OnInit {
 
+  @ViewChildren(FormControlName, { read: ElementRef }) formInputElements: ElementRef[];
+
   email = new FormControl('', [Validators.required, Validators.email]);
 
   @Input() id: number; // ID QUE VAMOS RECEBER PELA ROTA PARA PODER EDITAR
@@ -48,7 +52,10 @@ export class AccountComponentInstructor implements OnInit {
   private subscriptions: Subscription[] = [];
   modal: any;
   MASKS = utilsBr.MASKS;
-  
+  displayMessage: DisplayMessage = {};
+  validationMessages: ValidationMessages;
+  genericValidator: GenericValidator;
+
   constructor(
     private fb: FormBuilder,
     private modalService: NgbModal,
@@ -133,8 +140,8 @@ export class AccountComponentInstructor implements OnInit {
         cargo: [this.instrutor.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.instrutor.status, Validators.compose([Validators.nullValidator])],
         cep: [this.instrutor.cep, Validators.compose([Validators.nullValidator])],
-        senha: [this.instrutor.senha, Validators.compose([Validators.nullValidator])],
-        confirmarSenha: [this.instrutor.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        senha: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
+        confirmarSenha: ['', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo()]],
         identidade: [this.instrutor.identidade, Validators.compose([Validators.nullValidator])],
         bairro: [this.instrutor.bairro, Validators.compose([Validators.nullValidator])],
         cidade: [this.instrutor.cidade, Validators.compose([Validators.nullValidator])],
@@ -154,8 +161,8 @@ export class AccountComponentInstructor implements OnInit {
         cargo: [this.instrutor.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.instrutor.status, Validators.compose([Validators.nullValidator])],
         cep: [this.instrutor.cep, Validators.compose([Validators.nullValidator])],
-        senha: [this.instrutor.senha, Validators.compose([Validators.nullValidator])],
-        confirmarSenha: [this.instrutor.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        senha: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
+        confirmarSenha: ['', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo()]],
         identidade: [this.instrutor.identidade, Validators.compose([Validators.nullValidator])],
         bairro: [this.instrutor.bairro, Validators.compose([Validators.nullValidator])],
         cidade: [this.instrutor.cidade, Validators.compose([Validators.nullValidator])],

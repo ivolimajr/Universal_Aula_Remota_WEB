@@ -1,10 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { Component, ElementRef, Input, OnInit, ViewChildren } from '@angular/core';
+import { FormControl, Validators, FormGroup, FormBuilder, FormControlName } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { utilsBr } from 'js-brasil';
 import { NgBrazilValidators } from 'ng-brazil';
+import { CustomValidators } from 'ng2-validation';
 import { of, Subscription } from 'rxjs';
 import { StudentBaseModel } from 'src/app/shared/models/student/studentModel.model';
+import { DisplayMessage, GenericValidator, ValidationMessages } from 'src/app/shared/validators/generic-form-validation';
 
 const EMPTY_CUSTOMER: StudentBaseModel = {
   id: undefined,
@@ -37,6 +39,8 @@ const EMPTY_CUSTOMER: StudentBaseModel = {
 })
 export class AccountComponentStudent implements OnInit {
 
+  @ViewChildren(FormControlName, { read: ElementRef }) formInputElements: ElementRef[];
+
   email = new FormControl('', [Validators.required, Validators.email]);
 
   @Input() id: number; // ID QUE VAMOS RECEBER PELA ROTA PARA PODER EDITAR
@@ -47,6 +51,9 @@ export class AccountComponentStudent implements OnInit {
   private subscriptions: Subscription[] = [];
   modal: any;
   MASKS = utilsBr.MASKS;
+  displayMessage: DisplayMessage = {};
+  genericValidator: GenericValidator;
+  validationMessages: ValidationMessages;
 
   constructor(
     private fb: FormBuilder,
@@ -54,6 +61,16 @@ export class AccountComponentStudent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    let senha = new FormControl('', [Validators.required, CustomValidators.rangeLength([6, 15])]);
+    let confirmarSenha = new FormControl('', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo(senha)]);
+
+    this.createForm = this.fb.group({
+      cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
+      email: ['', [Validators.required, Validators.email]],
+      senha: senha,
+      confirmarSenha: confirmarSenha
+    });
+
     this.loadCustomer();
     console.log("ATRIBUTO ID NO MODAL: " + this.id);
   }
@@ -117,8 +134,8 @@ export class AccountComponentStudent implements OnInit {
         telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         status: [this.customer.status, Validators.compose([Validators.nullValidator])],
-        senha: [this.customer.senha, Validators.compose([Validators.nullValidator])],
-        confirmarSenha: [this.customer.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        senha: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
+        confirmarSenha: ['', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo()]],
       });
     } else {
       this.createForm = this.fb.group({
@@ -127,20 +144,16 @@ export class AccountComponentStudent implements OnInit {
         telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         status: [this.customer.status, Validators.compose([Validators.nullValidator])],
-        senha: [this.customer.senha, Validators.compose([Validators.nullValidator])],
-        confirmarSenha: [this.customer.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        senha: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
+        confirmarSenha: ['', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo()]],
       });
     }
 
   }
 
-  /**
-   * 
-   */
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
-
 
   //VALIDADORES
   isControlValid(controlName: string): boolean {
