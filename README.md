@@ -1,27 +1,25 @@
-# Demo1App
+# E-Driving
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.9.
+Versão 1.0
 
-## Development server
+## Preparando o projeto.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Utilize git clone para clonar o projeto na pasta de sua preferência, após isso, abra o projeto, e insira no terminal o comando "npm install" para adicionar os dependentes
 
-## Code scaffolding
+## Instalando angular
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Caso não saiba a versão do angular instalada na máquina, digite o comando "ng version" no seu terminal para identificar a versão, caso esteja desatualizado, execute o comando
+"npm install -g @angular/cli" para obter a ultima versão.
 
-## Build
+## Iniciando o projeto
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Abra o terminal, e digite o comando "npm start" para iniciar o projeto, após a compilação, navegue pela rota "http://localhost:4200/". Caso você altere algum arquivo e salve, o projeto irá atualizar automaticamente.
 
-## Running unit tests
+## Testes unitários
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Rode o comando `ng test` para executar testes de unidade via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+## Testes end-to-end
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Rode o comando `ng e2e` para executar testes e2e via [Protractor](http://www.protractortest.org/).
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
