@@ -48,7 +48,9 @@ import { EditCursoModalComponent } from './cursos/edit-curso-modal/edit-curso-mo
 import { NgBrazil } from 'ng-brazil';
 import { TextMaskModule } from 'angular2-text-mask';
 import { TextMask } from 'ng-brazil';
-import { CustomFormsModule } from 'ng2-validation'
+import { CustomFormsModule } from 'ng2-validation';
+import { NgxPaginationModule } from 'ngx-pagination';
+
 
 
 @NgModule({
@@ -86,6 +88,7 @@ import { CustomFormsModule } from 'ng2-validation'
     TurmasComponent,
     EditTurmasModalComponent,
     EditCursoModalComponent,
+    
   ],
   imports: [
     CommonModule,
@@ -102,7 +105,8 @@ import { CustomFormsModule } from 'ng2-validation'
     NgbDatepickerModule,
     NgBrazil,
     TextMaskModule,
-    CustomFormsModule
+    CustomFormsModule,
+    NgxPaginationModule
   ],
   providers: [NgbAlertConfig]
 })

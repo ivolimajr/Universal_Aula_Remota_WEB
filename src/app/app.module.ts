@@ -12,6 +12,7 @@ import { AppComponent } from './app.component';
 import { AuthService } from './modules/auth/_services/auth.service';
 import { environment } from 'src/environments/environment';
 import { APP_BASE_HREF } from '@angular/common';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 // Highlight JS
@@ -20,12 +21,6 @@ import { SplashScreenModule } from './_metronic/partials/layout/splash-screen/sp
 // #fake-start#
 import { FakeAPIService } from './_fake/fake-api.service';
 // #fake-end#
-
-function appInitializer() {
-
-}
-
-
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -40,6 +35,7 @@ function appInitializer() {
     ReactiveFormsModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
+    NgxPaginationModule,
     // #fake-start#
     environment.isMockEnabled
       ? HttpClientInMemoryWebApiModule.forRoot(FakeAPIService, {
