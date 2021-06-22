@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/modules/auth';
+import { AuthService } from '../../../../shared/services/auth/auth.service';
 import { LayoutService } from '../../../../_metronic/core';
 
 @Component({
@@ -44,7 +44,7 @@ export class AsideComponent implements OnInit {
   }
 
   private getLogo() {
-      return './assets/media/logos/logo-edriving-sm.png';
+    return './assets/media/logos/logo-edriving-sm.png';
   }
   logout() {
     this.auth.logout();

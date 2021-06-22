@@ -29,7 +29,8 @@ const EMPTY_ADMINISTRATIVO: AdministrativoModel = {
   longitude: '',
   orgaoExpedidor: '',
   site: '',
-  uploadDOC:'',
+  uploadDOC: '',
+  nivelAcesso: null
 };
 
 @Component({
@@ -144,7 +145,7 @@ export class AccountComponentAdministrative implements OnInit {
         cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
-        cep: ['',[Validators.required, NgBrazilValidators.cep]],
+        cep: ['', [Validators.required, NgBrazilValidators.cep]],
         senha: [this.administrativo.senha, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.administrativo.confirmarSenha, Validators.compose([Validators.nullValidator])],
         identidade: [this.administrativo.identidade, Validators.compose([Validators.nullValidator])],
@@ -170,7 +171,7 @@ export class AccountComponentAdministrative implements OnInit {
         cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.administrativo.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
-        cep: ['',[Validators.required, NgBrazilValidators.cep]],
+        cep: ['', [Validators.required, NgBrazilValidators.cep]],
         senha: [this.administrativo.senha, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.administrativo.confirmarSenha, Validators.compose([Validators.nullValidator])],
         identidade: [this.administrativo.identidade, Validators.compose([Validators.nullValidator])],

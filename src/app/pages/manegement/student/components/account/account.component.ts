@@ -13,18 +13,19 @@ const EMPTY_CUSTOMER: StudentBaseModel = {
   status: 1, // STATUS ATIVO
   senha: '',
   confirmarSenha: '',
-  cep:'',
-  cidade:'',
-  bairro:'',
-  uf:'',
-  enderecoLogradouro:'',
-  numero:'',
-  curso:[],
-  dataNascimento:new Date,
-  identidade:'',
-  orgaoExpedidor:'',
-  turno:'',
-  turma:'',
+  cep: '',
+  cidade: '',
+  bairro: '',
+  uf: '',
+  enderecoLogradouro: '',
+  numero: '',
+  curso: [],
+  dataNascimento: new Date,
+  identidade: '',
+  orgaoExpedidor: '',
+  turno: '',
+  turma: '',
+  nivelAcesso: null
 };
 
 @Component({

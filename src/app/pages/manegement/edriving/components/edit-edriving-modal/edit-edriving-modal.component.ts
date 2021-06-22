@@ -18,6 +18,7 @@ const EMPTY_EDRIVING: EdrivingModel = {
   cargo: '',
   senha: '',
   confirmarSenha: '',
+  nivelAcesso: null
 };
 
 
@@ -124,7 +125,7 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
         fullName: [this.edriving.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.edriving.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
+        cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
         senha: [this.edriving.senha, Validators.compose([Validators.nullValidator])],
@@ -135,7 +136,7 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
         fullName: [this.edriving.fullName, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(100)])],
         email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.edriving.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
+        cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
         senha: [this.edriving.senha, Validators.compose([Validators.nullValidator])],

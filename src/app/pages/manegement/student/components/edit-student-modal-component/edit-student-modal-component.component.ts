@@ -17,18 +17,19 @@ const EMPTY_STUDENT: StudentBaseModel = {
   status: 1, // STATUS ATIVO
   senha: '',
   confirmarSenha: '',
-  cep:'',
-  cidade:'',
-  bairro:'',
-  uf:'',
-  enderecoLogradouro:'',
-  numero:'',
-  curso:[],
-  dataNascimento:new Date,
-  identidade:'',
-  orgaoExpedidor:'',
-  turno:'',
-  turma:'',
+  cep: '',
+  cidade: '',
+  bairro: '',
+  uf: '',
+  enderecoLogradouro: '',
+  numero: '',
+  curso: [],
+  dataNascimento: new Date,
+  identidade: '',
+  orgaoExpedidor: '',
+  turno: '',
+  turma: '',
+  nivelAcesso: null
 
 };
 
@@ -146,11 +147,11 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
         fullName: [this.student.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.student.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.student.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
+        cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         senha: [this.student.senha, Validators.compose([Validators.nullValidator])],
         status: [this.student.status, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.student.confirmarSenha, Validators.compose([Validators.nullValidator])],
-        cep: ['',[Validators.required, NgBrazilValidators.cep]],
+        cep: ['', [Validators.required, NgBrazilValidators.cep]],
         cidade: [this.student.cidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         bairro: [this.student.bairro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         uf: [this.student.uf, Validators.compose([Validators.nullValidator])],
@@ -162,18 +163,18 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
         orgaoExpedidor: [this.student.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
         turno: [this.student.turno, Validators.compose([Validators.nullValidator])],
         turma: [this.student.turma, Validators.compose([Validators.nullValidator])],
-        
+
       });
     } else {
       this.createForm = this.fb.group({
         fullName: [this.student.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.student.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.student.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
+        cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         senha: [this.student.senha, Validators.compose([Validators.nullValidator])],
         status: [this.student.status, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.student.confirmarSenha, Validators.compose([Validators.nullValidator])],
-        cep: ['',[Validators.required, NgBrazilValidators.cep]],
+        cep: ['', [Validators.required, NgBrazilValidators.cep]],
         cidade: [this.student.cidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         bairro: [this.student.bairro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         uf: [this.student.uf, Validators.compose([Validators.nullValidator])],

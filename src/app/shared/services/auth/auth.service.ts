@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
 import { map } from "rxjs/operators";
 import { Router } from "@angular/router";
@@ -12,11 +12,10 @@ import { AuthHTTPService } from './authHttpService.service';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
 
   private unsubscribe: Subscription[] = [];
   private authLocalStorageToken = `${environment.appVersion}-${environment.USERDATA_KEY}`;
-  private user: BaseModel;
 
   currentUser$: Observable<BaseModel>;
   isLoading$: Observable<boolean>;
@@ -26,11 +25,10 @@ export class AuthService {
   /**
    *
    */
-  constructor(private http: HttpClient,
-    private router: Router,
-    private tokenService: TokenService,
-    private authHttpService: AuthHTTPService,
-    private htttp: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {
     this.isLoadingSubject = new BehaviorSubject<boolean>(false);
     this.currentUserSubject = new BehaviorSubject<BaseModel>(undefined);
     this.currentUser$ = this.currentUserSubject.asObservable();
@@ -41,15 +39,23 @@ export class AuthService {
     "Content-Type": "application/json"
   });
 
-  loginuser(email: string, senha: string): Observable<any> {
-    const url_api = environment.auth.url + '/usuario';
-    return this.htttp
+  login(email: string, senha: string): Observable<any> {
+    const url_api = environment.auth.url + '/usuario/login';
+    return this.http
       .post<BaseModel>(
         url_api,
         { email, senha },
         { headers: this.headers }
       )
       .pipe(map(data => data));
+  }
+  // private methods
+  public setAuthFromLocalStorage(user: BaseModel) {
+    localStorage.setItem(this.authLocalStorageToken, JSON.stringify(user));
+  }
+
+  public getAuthFromLocalStorage(): BaseModel {
+    return JSON.parse(localStorage.getItem(this.authLocalStorageToken));
   }
 
   get currentUserValue(): BaseModel {
@@ -60,25 +66,11 @@ export class AuthService {
     this.currentUserSubject.next(user);
   }
 
-  // private methods
-  private setAuthFromLocalStorage(user: BaseModel): boolean {
-    if (user && user.email) {
-      localStorage.setItem(this.authLocalStorageToken, JSON.stringify(user));
-      return true;
-    }
-    return false;
-  }
-
-  private getAuthFromLocalStorage(): BaseModel {
-    try {
-      const authData = JSON.parse(
-        localStorage.getItem(this.authLocalStorageToken)
-      );
-      return authData;
-    } catch (error) {
-      console.error(error);
-      return undefined;
-    }
+  logout() {
+    localStorage.removeItem(this.authLocalStorageToken);
+    this.router.navigate(['/auth/login'], {
+      queryParams: {},
+    });
   }
 
   ngOnDestroy() {

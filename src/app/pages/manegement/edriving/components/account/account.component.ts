@@ -15,7 +15,8 @@ const EMPTY_EDRIVING: EdrivingModel = {
   status: 1, // STATUS ATIVO
   cargo: '',
   senha: '',
-  confirmarSenha: ''
+  confirmarSenha: '',
+  nivelAcesso: null
 };
 @Component({
   selector: 'app-account',
@@ -38,14 +39,14 @@ export class AccountComponentEdriving implements OnInit, AfterViewInit {
   validationMessages: ValidationMessages;
 
   constructor(private fb: FormBuilder) {
-    this.validationMessages ={
+    this.validationMessages = {
       fullName: {
         required: 'O nome é requerido',
         minLength: 'O nome precisa ter no mínimo 3 caracteres',
         maxLength: 'O nome precisa ter no máximo 100 caracteres'
       },
-      cpf:{
-        required:'Informe o CPF',
+      cpf: {
+        required: 'Informe o CPF',
         cpf: 'CPF em formato inválido'
       },
       email: {
@@ -66,19 +67,19 @@ export class AccountComponentEdriving implements OnInit, AfterViewInit {
     this.genericValidator = new GenericValidator(this.validationMessages);
 
 
-   }
+  }
 
   ngOnInit(): void {
     let senha = new FormControl('', [Validators.required, CustomValidators.rangeLength([6, 15])]);
     let confirmarSenha = new FormControl('', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo(senha)]);
 
     this.createForm = this.fb.group({
-      cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
+      cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
       email: ['', [Validators.required, Validators.email]],
       senha: senha,
       confirmarSenha: confirmarSenha
     });
-    
+
     this.loadEdriving();
     console.log("ATRIBUTO ID NO MODAL: " + this.id);
   }
@@ -143,7 +144,7 @@ export class AccountComponentEdriving implements OnInit, AfterViewInit {
         fullName: [this.edriving.fullName, Validators.compose([Validators.required])],
         email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.edriving.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
+        cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
         senha: [this.edriving.senha, Validators.compose([Validators.nullValidator])],
@@ -155,7 +156,7 @@ export class AccountComponentEdriving implements OnInit, AfterViewInit {
         fullName: [this.edriving.fullName, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(100)])],
         email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.edriving.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
+        cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
         senha: [this.edriving.senha, Validators.compose([Validators.nullValidator])],
@@ -167,7 +168,7 @@ export class AccountComponentEdriving implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     let controlBlurs: Observable<any>[] = this.formInputElements
-    .map((FormControl: ElementRef) => fromEvent(FormControl.nativeElement, 'blur'));
+      .map((FormControl: ElementRef) => fromEvent(FormControl.nativeElement, 'blur'));
 
     merge(...controlBlurs).subscribe(() => {
       this.displayMessage = this.genericValidator.processarMensagens(this.createForm);
@@ -179,25 +180,25 @@ export class AccountComponentEdriving implements OnInit, AfterViewInit {
    */
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
-  }   
-    //VALIDADORES
-    isControlValid(controlName: string): boolean {
-      const control = this.createForm.controls[controlName];
-      return control.valid && (control.dirty || control.touched);
-    }
-  
-    isControlInvalid(controlName: string): boolean {
-      const control = this.createForm.controls[controlName];
-      return control.invalid && (control.dirty || control.touched);
-    }
-  
-    controlHasError(validation, controlName): boolean {
-      const control = this.createForm.controls[controlName];
-      return control.hasError(validation) && (control.dirty || control.touched);
-    }
-  
-    isControlTouched(controlName): boolean {
-      const control = this.createForm.controls[controlName];
-      return control.dirty || control.touched;
-    }
+  }
+  //VALIDADORES
+  isControlValid(controlName: string): boolean {
+    const control = this.createForm.controls[controlName];
+    return control.valid && (control.dirty || control.touched);
+  }
+
+  isControlInvalid(controlName: string): boolean {
+    const control = this.createForm.controls[controlName];
+    return control.invalid && (control.dirty || control.touched);
+  }
+
+  controlHasError(validation, controlName): boolean {
+    const control = this.createForm.controls[controlName];
+    return control.hasError(validation) && (control.dirty || control.touched);
+  }
+
+  isControlTouched(controlName): boolean {
+    const control = this.createForm.controls[controlName];
+    return control.dirty || control.touched;
+  }
 }

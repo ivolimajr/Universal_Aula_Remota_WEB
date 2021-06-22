@@ -15,7 +15,8 @@ const EMPTY_USER: BaseModel = {
   senha: '',
   confirmarSenha: '',
   status: 0,
-  telefone: ''
+  telefone: '',
+  nivelAcesso: null
 };
 
 @Component({
@@ -37,7 +38,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
   ) {
-    if (this.authService.currentUserValue) {
+    if (this.authService.getAuthFromLocalStorage()) {
       this.router.navigate(['/']);
     }
   }
@@ -54,7 +55,7 @@ export class LoginComponent implements OnInit {
   }
 
   loadForm() {
-    this.user.fullName = "E-Driving"
+    this.user.fullName = ""
     this.user.email = "admin@edriving.com";
     this.user.senha = "universalPay";
 
@@ -80,11 +81,24 @@ export class LoginComponent implements OnInit {
   }
 
   submit() {
-    return this.authService.loginuser(this.user.email, this.user.senha)
-      .subscribe(data => {
-        console.log(data);
-      },
-        error => console.log(error)
-      )
+    const loginSbscr = this.authService.login(this.loginForm.value.email, this.loginForm.value.senha)
+      .subscribe(
+        sucesso => {
+          this.processarSucesso(sucesso), console.log(sucesso);
+        },
+        falha => {
+          console.log(falha);
+        }
+      );
+    this.unsubscribe.push(loginSbscr);
   }
+
+  processarSucesso(response: any) {
+    this.authService.setAuthFromLocalStorage(response);
+    this.router.navigate([this.returnUrl]);
+  }
+  ngOnDestroy() {
+    this.unsubscribe.forEach((sb) => sb.unsubscribe());
+  }
+
 }

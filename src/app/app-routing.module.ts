@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from './modules/auth/_services/auth.guard';
+import { AuthGuard } from './shared/services/auth/auth.guard';
 
 export const routes: Routes = [
-  {
-    path: 'auth',
-    loadChildren: () =>
-      import('./modules/auth/auth.module').then((m) => m.AuthModule),
-  },
   // {
   //   path: 'auth',
   //   loadChildren: () =>
-  //     import('./pages/auth/auth.module').then((m) => m.AuthModule),
+  //     import('./modules/auth/auth.module').then((m) => m.AuthModule),
   // },
+  {
+    path: 'auth',
+    loadChildren: () =>
+      import('./pages/auth/auth.module').then((m) => m.AuthModule),
+  },
   {
     path: 'error',
     loadChildren: () =>

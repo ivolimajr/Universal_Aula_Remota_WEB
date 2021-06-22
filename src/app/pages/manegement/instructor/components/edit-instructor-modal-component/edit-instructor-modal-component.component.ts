@@ -28,8 +28,9 @@ const EMPTY_INSTRUTOR: InstrutorBaseModel = {
   enderecoLogradouro: '',
   orgaoExpedidor: '',
   site: '',
-  cursos:[],
-  uploadDOC:'',
+  cursos: [],
+  uploadDOC: '',
+  nivelAcesso: null
 };
 
 @Component({
@@ -146,10 +147,10 @@ export class EditInstructorModalComponentComponent implements OnInit, OnDestroy 
         fullName: [this.instrutor.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.instrutor.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.instrutor.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
+        cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.instrutor.cargo, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         status: [this.instrutor.status, Validators.compose([Validators.nullValidator])],
-        cep: ['',[Validators.required, NgBrazilValidators.cep]],
+        cep: ['', [Validators.required, NgBrazilValidators.cep]],
         senha: [this.instrutor.senha, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.instrutor.confirmarSenha, Validators.compose([Validators.nullValidator])],
         identidade: [this.instrutor.identidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
@@ -167,10 +168,10 @@ export class EditInstructorModalComponentComponent implements OnInit, OnDestroy 
         fullName: [this.instrutor.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         email: [this.instrutor.email, Validators.compose([Validators.required, Validators.email])],
         telefone: [this.instrutor.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        cpf: ['',[Validators.required, NgBrazilValidators.cpf]],
+        cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.instrutor.cargo, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         status: [this.instrutor.status, Validators.compose([Validators.nullValidator])],
-        cep: ['',[Validators.required, NgBrazilValidators.cep]],
+        cep: ['', [Validators.required, NgBrazilValidators.cep]],
         senha: [this.instrutor.senha, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.instrutor.confirmarSenha, Validators.compose([Validators.nullValidator])],
         identidade: [this.instrutor.identidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],

@@ -25,6 +25,7 @@ const EMPTY_PARTNER: PartnerModel = {
   numero: '',
   senha: '',
   uf: '',
+  nivelAcesso: null
 };
 
 
@@ -139,8 +140,8 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
         telefone: [this.partner.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cargo: [this.partner.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.partner.status, Validators.compose([Validators.nullValidator])],
-        cep: ['',[Validators.required, NgBrazilValidators.cep]],
-        cnpj: ['',[Validators.required, NgBrazilValidators.cnpj]],
+        cep: ['', [Validators.required, NgBrazilValidators.cep]],
+        cnpj: ['', [Validators.required, NgBrazilValidators.cnpj]],
         bairro: [this.partner.bairro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cidade: [this.partner.cidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         confirmarSenha: [this.partner.confirmarSenha, Validators.compose([Validators.nullValidator])],
@@ -158,8 +159,8 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
         telefone: [this.partner.telefone, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cargo: [this.partner.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.partner.status, Validators.compose([Validators.nullValidator])],
-        cep: ['',[Validators.required, NgBrazilValidators.cep]],
-        cnpj: ['',[Validators.required, NgBrazilValidators.cnpj]],
+        cep: ['', [Validators.required, NgBrazilValidators.cep]],
+        cnpj: ['', [Validators.required, NgBrazilValidators.cnpj]],
         bairro: [this.partner.bairro, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         cidade: [this.partner.cidade, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         confirmarSenha: [this.partner.confirmarSenha, Validators.compose([Validators.nullValidator])],

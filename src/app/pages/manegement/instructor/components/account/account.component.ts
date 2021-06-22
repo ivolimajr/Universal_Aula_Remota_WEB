@@ -24,8 +24,9 @@ const EMPTY_INSTRUTOR: InstrutorBaseModel = {
   enderecoLogradouro: '',
   orgaoExpedidor: '',
   site: '',
-  uploadDOC:'',
-  cursos:[]
+  uploadDOC: '',
+  cursos: [],
+  nivelAcesso: null
 };
 
 @Component({
