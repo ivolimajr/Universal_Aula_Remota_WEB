@@ -22,9 +22,15 @@ export class AuthService implements OnDestroy {
   currentUserSubject: BehaviorSubject<BaseModel>;
   isLoadingSubject: BehaviorSubject<boolean>;
 
-  /**
-   *
-   */
+
+  get currentUserValue(): BaseModel {
+    return this.currentUserSubject.value;
+  }
+
+  set currentUserValue(user: BaseModel) {
+    this.currentUserSubject.next(user);
+  }
+
   constructor(
     private http: HttpClient,
     private router: Router
@@ -40,6 +46,8 @@ export class AuthService implements OnDestroy {
   });
 
   login(email: string, senha: string): Observable<any> {
+
+    this.isLoadingSubject.next(true);
     const url_api = environment.auth.url + '/usuario/login';
     return this.http
       .post<BaseModel>(
@@ -47,7 +55,10 @@ export class AuthService implements OnDestroy {
         { email, senha },
         { headers: this.headers }
       )
-      .pipe(map(data => data));
+      .pipe(map(data => {
+        this.currentUserSubject = new BehaviorSubject<BaseModel>(data)
+        return data
+      }));
   }
   // private methods
   public setAuthFromLocalStorage(user: BaseModel) {
@@ -58,13 +69,6 @@ export class AuthService implements OnDestroy {
     return JSON.parse(localStorage.getItem(this.authLocalStorageToken));
   }
 
-  get currentUserValue(): BaseModel {
-    return this.currentUserSubject.value;
-  }
-
-  set currentUserValue(user: BaseModel) {
-    this.currentUserSubject.next(user);
-  }
 
   logout() {
     localStorage.removeItem(this.authLocalStorageToken);

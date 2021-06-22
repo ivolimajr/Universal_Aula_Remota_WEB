@@ -84,7 +84,7 @@ export class LoginComponent implements OnInit {
     const loginSbscr = this.authService.login(this.loginForm.value.email, this.loginForm.value.senha)
       .subscribe(
         sucesso => {
-          this.processarSucesso(sucesso), console.log(sucesso);
+          this.processarSucesso(sucesso);
         },
         falha => {
           console.log(falha);
