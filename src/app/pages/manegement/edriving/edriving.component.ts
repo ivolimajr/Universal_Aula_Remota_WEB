@@ -17,7 +17,9 @@ export class EdrivingComponent implements OnInit {
   ) {
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const modalRef = this.modalService.open(EditEdrivingModalComponent);
+  }
 
 
   /**
@@ -26,7 +28,6 @@ export class EdrivingComponent implements OnInit {
    */
   create(id: number) {
     if (!id) {
-      console.log("Criar o usuário");
       const modalRef = this.modalService.open(EditEdrivingModalComponent);
       modalRef.componentInstance.id = 0;
       modalRef.result.then((res) => {

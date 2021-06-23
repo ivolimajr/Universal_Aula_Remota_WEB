@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
 import { EdrivingModel } from '../../../../../shared/models/edriving/edrivingModel.model';
-import { CustomAdapter, CustomDateParserFormatter} from '../../../../../_metronic/core';
+import { CustomAdapter, CustomDateParserFormatter } from '../../../../../_metronic/core';
 import { NgBrazil, MASKS, NgBrazilValidators } from 'ng-brazil';
 import { utilsBr } from 'js-brasil';
 import { ToastrService } from 'ngx-toastr';
@@ -33,15 +33,11 @@ const EMPTY_EDRIVING: EdrivingModel = {
 })
 export class EditEdrivingModalComponent implements OnInit, OnDestroy {
 
-  emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.email,
-  ]);
   @Input() id: number;
 
   isLoading$;
   edriving: EdrivingModel;
-  createForm: FormGroup;
+  createForm: FormGroup; // AGRUPADOR DE CONTROLES
   private subscriptions: Subscription[] = [];
   MASKS = utilsBr.MASKS;
 
@@ -53,7 +49,6 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadEdriving();
-    console.log("ATRIBUTO ID NO MODAL: " + this.id);
   }
 
   loadEdriving() {
@@ -75,15 +70,14 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
   private prepareEdriving() {
     const formData = this.createForm.value;
 
-    this.edriving.fullName = formData.fullName;
-    this.edriving.email = formData.email;
-    this.edriving.cpf = formData.cpf;
-    this.edriving.telefone = formData.telefone;
-    this.edriving.cargo = formData.cargo;
-    this.edriving.status = formData.status;
-    this.edriving.senha = formData.senha;
-    this.edriving.confirmarSenha = formData.confirmarSenha;
-
+    this.edriving.fullName = formData.fullName.toUpperCase();
+    this.edriving.email = formData.email.toUpperCase();
+    this.edriving.cpf = formData.cpf.replaceAll(".", "").replaceAll("-", "");
+    this.edriving.telefone = formData.telefone.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "").replaceAll(" ", "");
+    this.edriving.cargo = formData.cargo.toUpperCase();
+    this.edriving.status = formData.status.toUpperCase();
+    this.edriving.senha = "";
+    this.edriving.confirmarSenha = "";
   }
 
   edit() {
@@ -91,12 +85,7 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
   }
 
   create() {
-    /**
-     * 1° validar/tratar os dados
-     * 2° insere os dados na API
-     * 3° trata o retorno da API
-     * 4° continua...
-     */
+    this.loadForm(null);
     this.modal.close(true)
     this.modal.dismiss("false");
     return of(this.edriving);
@@ -105,14 +94,12 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
-        fullName: [this.edriving.fullName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
+        fullName: ["", Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+        email: ["", Validators.compose([Validators.required, Validators.email])],
         telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
-        cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
-        cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
-        status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
-        senha: [this.edriving.senha, Validators.compose([Validators.nullValidator])],
-        confirmarSenha: [this.edriving.confirmarSenha, Validators.compose([Validators.nullValidator])],
+        cpf: ["''", [Validators.required, NgBrazilValidators.cpf]],
+        cargo: ["", Validators.compose([Validators.nullValidator])],
+        status: [1, Validators.compose([Validators.nullValidator])],
       });
     } else {
       this.createForm = this.fb.group({
@@ -122,8 +109,6 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
         cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
         cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
-        senha: [this.edriving.senha, Validators.compose([Validators.nullValidator])],
-        confirmarSenha: [this.edriving.confirmarSenha, Validators.compose([Validators.nullValidator])],
       });
     }
 

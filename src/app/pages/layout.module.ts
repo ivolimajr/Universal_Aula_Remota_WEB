@@ -50,8 +50,7 @@ import { TextMaskModule } from 'angular2-text-mask';
 import { TextMask } from 'ng-brazil';
 import { CustomFormsModule } from 'ng2-validation';
 import { NgxPaginationModule } from 'ngx-pagination';
-
-
+import { EdrivingServices } from '../shared/services/http/edriving.services';
 
 @NgModule({
   declarations: [
@@ -88,7 +87,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     TurmasComponent,
     EditTurmasModalComponent,
     EditCursoModalComponent,
-    
+
   ],
   imports: [
     CommonModule,
@@ -108,6 +107,6 @@ import { NgxPaginationModule } from 'ngx-pagination';
     CustomFormsModule,
     NgxPaginationModule
   ],
-  providers: [NgbAlertConfig]
+  providers: [NgbAlertConfig, EdrivingServices]
 })
 export class LayoutModule { }

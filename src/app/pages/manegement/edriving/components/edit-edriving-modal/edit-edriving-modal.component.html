@@ -48,7 +48,7 @@
         <div class="form-group row">
           <div class="col-lg">
             <label class="form-label" for="cpf">CPF</label>
-            <input type="text" id="cpf" class="form-control form-control-lg form-control-solid" name="cpf" placeholder="cpf" autocomplete="off" formControlName="cpf" [class.is-invalid]="isControlInvalid('cpf')" [class.is-valid]="isControlValid('cpf')" cpf [textMask]="{mask: MASKS.cpf.textMask}"/>
+            <input type="text" id="cpf" class="form-control form-control-lg form-control-solid" name="cpf" placeholder="cpf" autocomplete="off" formControlName="cpf" [class.is-invalid]="isControlInvalid('cpf')" [class.is-valid]="isControlValid('cpf')" cpf [textMask]="{mask: MASKS.cpf.textMask}" />
             <div class="valid-feedback" *ngIf="isControlValid('cpf')">
               Ok!
             </div>
