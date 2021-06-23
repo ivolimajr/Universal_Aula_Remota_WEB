@@ -155,9 +155,6 @@ export class AccountComponentPartner implements OnInit {
 
   }
 
-  /**
-   * 
-   */
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
