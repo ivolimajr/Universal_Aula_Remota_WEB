@@ -18,9 +18,7 @@ export class EdrivingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const modalRef = this.modalService.open(EditEdrivingModalComponent);
   }
-
 
   /**
    * PARAMS = Id do usuário para ser editado

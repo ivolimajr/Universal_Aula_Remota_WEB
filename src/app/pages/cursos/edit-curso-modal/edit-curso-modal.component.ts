@@ -12,9 +12,7 @@ const EMPTY_CURSOS: CursosModel = {
   code:'',
   cargaHoraria:null,
   descricao:''
-  
 };
-
 @Component({
   selector: 'app-edit-curso-modal',
   templateUrl: './edit-curso-modal.component.html',
@@ -69,11 +67,12 @@ export class EditCursoModalComponent implements OnInit, OnDestroy {
     this.cursos.code = formData.code;
     this.cursos.cargaHoraria = formData.cargaHoraria;
     this.cursos.descricao = formData.descricao;
-
   }
+
   edit() {
     console.log("Edit do modal");
   }
+
   create() {
     /**
      * 1° validar/tratar os dados
@@ -85,6 +84,7 @@ export class EditCursoModalComponent implements OnInit, OnDestroy {
     this.modal.dismiss("false");
     return of(this.cursos);
   }
+  
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({

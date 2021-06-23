@@ -13,6 +13,9 @@ import { AuthHTTPService } from './authHttpService.service';
   providedIn: 'root',
 })
 export class AuthService implements OnDestroy {
+  forgotPassword(value: any) {
+    throw new Error('Method not implemented.');
+  }
 
   private unsubscribe: Subscription[] = [];
   private authLocalStorageToken = `${environment.appVersion}-${environment.USERDATA_KEY}`;
