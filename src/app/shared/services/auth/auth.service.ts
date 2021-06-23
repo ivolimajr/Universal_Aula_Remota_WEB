@@ -56,7 +56,7 @@ export class AuthService implements OnDestroy {
         { headers: this.headers }
       )
       .pipe(map(data => {
-        this.currentUserSubject = new BehaviorSubject<BaseModel>(data)
+        this.currentUserSubject = new BehaviorSubject<BaseModel>(data);
         return data
       }));
   }
