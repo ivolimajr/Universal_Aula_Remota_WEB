@@ -81,46 +81,36 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * 
-   */
   save() {
     this.preparestudent();
     this.create();
     this.toastr.success('Usuário adicionado com sucesso', 'Bem vindo!!');
   }
 
-
-  /**
-   * 
-   */
   private preparestudent() {
     const formData = this.createForm.value;
-    this.student.fullName = formData.fullName;
-    this.student.email = formData.email;
-    this.student.cpf = formData.cpf;
-    this.student.telefone = formData.telefone;
+    this.student.fullName = formData.fullName.toUpperCase();
+    this.student.email = formData.email.toUpperCase();
+    this.student.cpf = formData.cpf.replaceAll(".", "").replaceAll("-", "")
+    this.student.telefone = formData.telefone.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "").replaceAll(" ", "");
     this.student.status = formData.status;
     this.student.senha = formData.senha;
     this.student.confirmarSenha = formData.confirmarSenha;
-    this.student.cep = formData.cep;
-    this.student.cidade = formData.cidade;
-    this.student.bairro = formData.bairro;
-    this.student.enderecoLogradouro = formData.enderecoLogradouro;
-    this.student.uf = formData.uf;
+    this.student.cep = formData.cep.replaceAll("-", "").replaceAll(".", "");
+    this.student.cidade = formData.cidade.toUpperCase();
+    this.student.bairro = formData.bairro.toUpperCase();
+    this.student.enderecoLogradouro = formData.enderecoLogradouro.toUpperCase();
+    this.student.uf = formData.uf.toUpperCase();
     this.student.numero = formData.numero;
-    this.student.curso = formData.curso;
+    this.student.curso = formData.curso.toUpperCase();
     this.student.dataNascimento = formData.dataNascimento;
-    this.student.identidade = formData.identidade;
-    this.student.orgaoExpedidor = formData.orgaoExpedidor;
-    this.student.turno = formData.turno;
-    this.student.turma = formData.turma;
+    this.student.identidade = formData.identidade.replaceAll("-", "").replaceAll(".", "");
+    this.student.orgaoExpedidor = formData.orgaoExpedidor.toUpperCase();
+    this.student.turno = formData.turno.toUpperCase();
+    this.student.turma = formData.turma.toUpperCase();
 
   }
 
-  /**
-   * 
-   */
   edit() {
     console.log("Edit do modal");
   }
@@ -191,9 +181,6 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
 
   }
 
-  /**
-   * 
-   */
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }

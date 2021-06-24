@@ -33,8 +33,6 @@ const EMPTY_CFC: CfcModel = {
   uploadDOC: '',
   nivelAcesso: null
 };
-
-
 @Component({
   selector: 'app-edit-cfc-modal',
   templateUrl: './edit-cfc-modal-component.html',
@@ -69,9 +67,6 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
     this.loadCustomer();
   }
 
-  /**
-   * 
-   */
   loadCustomer() {
     if (!this.id) {
       this.cfc = EMPTY_CFC;
@@ -82,48 +77,37 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * 
-   */
   save() {
     this.prepareCustomer();
     this.create();
     this.toastr.success('Usuário adicionado com sucesso', 'Bem vindo!!');
   }
 
-
-  /**
-   * 
-   */
   private prepareCustomer() {
     const formData = this.createForm.value;
-    this.cfc.fullName = formData.fullName;
-    this.cfc.email = formData.email;
-    this.cfc.telefone = formData.telefone;
+    this.cfc.fullName = formData.fullName.toUpperCase();
+    this.cfc.email = formData.email.toUpperCase();
+    this.cfc.telefone = formData.telefone.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "").replaceAll(" ", "");
     this.cfc.status = formData.status;
     this.cfc.senha = formData.senha;
     this.cfc.confirmarSenha = formData.confirmarSenha;
-    this.cfc.bairro = formData.bairro;
-    this.cfc.cep = formData.cep;
-    this.cfc.cidade = formData.cidade;
-    this.cfc.cnpj = formData.cnpj;
-    this.cfc.datadaFundacao = formData.datadaFundacao;
-    this.cfc.enderecoLogradouro = formData.enderecoLogradouro;
-    this.cfc.inscricaoEstadual = formData.inscricaoEstadual;
+    this.cfc.bairro = formData.bairro.toUpperCase();
+    this.cfc.cep = formData.cep.replaceAll("-", "").replaceAll(".", "");
+    this.cfc.cidade = formData.cidade.toUpperCase();
+    this.cfc.cnpj = formData.cnpj.replaceAll(".", "").replaceAll("-", "").replaceAll("/", "");
+    this.cfc.datadaFundacao = formData.datadaFundacao.toUpperCase()
+    this.cfc.enderecoLogradouro = formData.enderecoLogradouro.toUpperCase();
+    this.cfc.inscricaoEstadual = formData.inscricaoEstadual.replaceAll(".", "").replaceAll("-", "").replaceAll("/", "");
     this.cfc.localizacaoLatitude = formData.localizacaoLatitude;
     this.cfc.longitude = formData.longitude;
-    this.cfc.nomeFantasia = formData.nomeFantasia;
+    this.cfc.nomeFantasia = formData.nomeFantasia.toUpperCase();
     this.cfc.numero = formData.numero;
-    this.cfc.razaoSocial = formData.razaoSocial;
+    this.cfc.razaoSocial = formData.razaoSocial.toUpperCase();
     this.cfc.site = formData.site;
-    this.cfc.uf = formData.uf;
+    this.cfc.uf = formData.uf.toUpperCase();
     this.cfc.uploadDOC = formData.uploadDOC;
-
   }
 
-  /**
-   * 
-   */
   edit() {
     console.log("Edit do modal");
   }
@@ -141,9 +125,6 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
     return of(this.cfc);
   }
 
-  /**
-   *
-   */
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
@@ -194,19 +175,15 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
         site: [this.cfc.site, Validators.compose([Validators.nullValidator])],
         uf: [this.cfc.uf, Validators.compose([Validators.nullValidator])],
         uploadDOC: [this.cfc.uploadDOC, Validators.compose([Validators.nullValidator])],
-
       });
     }
 
   }
 
-  /**
-   * 
-   */
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
-  //VALIDADORES
+
   isControlValid(controlName: string): boolean {
     const control = this.createForm.controls[controlName];
     return control.valid && (control.dirty || control.touched);

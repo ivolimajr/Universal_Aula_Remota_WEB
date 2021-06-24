@@ -93,26 +93,26 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
 
   private prepareCustomer() {
     const formData = this.createForm.value;
-    this.administrativo.fullName = formData.fullName;
-    this.administrativo.email = formData.email;
-    this.administrativo.cpf = formData.cpf;
-    this.administrativo.telefone = formData.telefone;
-    this.administrativo.cargo = formData.cargo;
+    this.administrativo.fullName = formData.fullName.toUpperCase();
+    this.administrativo.email = formData.email.toUpperCase();
+    this.administrativo.cpf = formData.cpf.replaceAll(".", "").replaceAll("-", "");
+    this.administrativo.telefone = formData.telefone.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "").replaceAll(" ", "");
+    this.administrativo.cargo = formData.cargo.toUpperCase();
     this.administrativo.dataNascimento = new Date(formData.dob);
     this.administrativo.status = formData.status;
     this.administrativo.senha = formData.senha;
     this.administrativo.confirmarSenha = formData.confirmarSenha;
-    this.administrativo.identidade = formData.identidade;
-    this.administrativo.telefone = formData.telefone2;
-    this.administrativo.cep = formData.cep;
-    this.administrativo.bairro = formData.bairro;
-    this.administrativo.cidade = formData.cidade;
-    this.administrativo.uf = formData.uf;
+    this.administrativo.identidade = formData.identidade.replaceAll(".", "").replaceAll("-", "");
+    this.administrativo.telefone = formData.telefone2.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "").replaceAll(" ", "");
+    this.administrativo.cep = formData.cep.replaceAll("-", "").replaceAll(".", "");
+    this.administrativo.bairro = formData.bairro.toUpperCase();
+    this.administrativo.cidade = formData.cidade.toUpperCase();
+    this.administrativo.uf = formData.uf.toUpperCase();
     this.administrativo.numero = formData.numero;
-    this.administrativo.enderecoLogradouro = formData.enderecoLogradouro;
+    this.administrativo.enderecoLogradouro = formData.enderecoLogradouro.toUpperCase();
     this.administrativo.localizacaoLatitude = formData.localizacaoLatitude;
     this.administrativo.longitude = formData.longitude;
-    this.administrativo.orgaoExpedidor = formData.orgaoExpedidor;
+    this.administrativo.orgaoExpedidor = formData.orgaoExpedidor.toUpperCase();
     this.administrativo.site = formData.site;
     this.administrativo.uploadDOC = formData.uploadDOC;
   }

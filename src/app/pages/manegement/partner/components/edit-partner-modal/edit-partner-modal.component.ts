@@ -85,33 +85,26 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
     this.toastr.success('Usuário adicionado com sucesso', 'Bem vindo!!');
   }
 
-
-  /**
-   * 
-   */
   private prepareCustomer() {
     const formData = this.createForm.value;
-    this.partner.fullName = formData.fullName;
-    this.partner.email = formData.email;
-    this.partner.telefone = formData.telefone;
-    this.partner.cargo = formData.cargo;
+    this.partner.fullName = formData.fullName.toUpperCase();
+    this.partner.email = formData.email.toUpperCase();
+    this.partner.telefone = formData.telefone.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "").replaceAll(" ", "");
+    this.partner.cargo = formData.cargo.toUpperCase();
     this.partner.status = formData.status;
     this.partner.cep = formData.cep;
-    this.partner.cnpj = formData.cnpj;
-    this.partner.bairro = formData.bairro;
-    this.partner.cidade = formData.cidade;
+    this.partner.cnpj = formData.cnpj.replaceAll(".", "").replaceAll("-", "").replaceAll("/", "");
+    this.partner.bairro = formData.bairro.toUpperCase();
+    this.partner.cidade = formData.cidade.toUpperCase();
     this.partner.confirmarSenha = formData.confirmarSenha;
-    this.partner.descricao = formData.descricao;
-    this.partner.enderecoLogradouro = formData.enderecoLogradouro;
+    this.partner.descricao = formData.descricao.replaceAll("-", "")
+    this.partner.enderecoLogradouro = formData.enderecoLogradouro.toUpperCase();
     this.partner.numero = formData.numero;
     this.partner.senha = formData.senha;
-    this.partner.uf = formData.uf;
+    this.partner.uf = formData.uf.toUpperCase();
 
   }
 
-  /**
-   * 
-   */
   edit() {
     console.log("Edit do modal");
   }
@@ -129,9 +122,6 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
     return of(this.partner);
   }
 
-  /**
-   * 
-   */
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({

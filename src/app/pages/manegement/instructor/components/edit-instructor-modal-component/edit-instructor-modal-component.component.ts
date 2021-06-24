@@ -83,44 +83,34 @@ export class EditInstructorModalComponentComponent implements OnInit, OnDestroy 
     }
   }
 
-  /**
-   * 
-   */
   save() {
     this.prepareCustomer();
     this.create();
     this.toastr.success('Usuário adicionado com sucesso', 'Bem vindo!!');
   }
 
-
-  /**
-   * 
-   */
   private prepareCustomer() {
     const formData = this.createForm.value;
-    this.instrutor.fullName = formData.fullName;
-    this.instrutor.email = formData.email;
-    this.instrutor.cpf = formData.cpf;
-    this.instrutor.telefone = formData.telefone;
-    this.instrutor.cargo = formData.cargo;
+    this.instrutor.fullName = formData.fullName.toUpperCase();
+    this.instrutor.email = formData.email.toUpperCase();
+    this.instrutor.cpf = formData.cpf.replaceAll(".", "").replaceAll("-", "");
+    this.instrutor.telefone = formData.telefone.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "").replaceAll(" ", "");
+    this.instrutor.cargo = formData.cargo.toUpperCase();
     this.instrutor.dataNascimento = new Date(formData.dob);
     this.instrutor.status = formData.status;
     this.instrutor.senha = formData.senha;
     this.instrutor.confirmarSenha = formData.confirmarSenha;
-    this.instrutor.identidade = formData.identidade;
-    this.instrutor.cep = formData.cep;
-    this.instrutor.bairro = formData.bairro;
-    this.instrutor.cidade = formData.cidade;
-    this.instrutor.uf = formData.uf;
+    this.instrutor.identidade = formData.identidade.replaceAll(".", "").replaceAll("-", "");
+    this.instrutor.cep = formData.cep.replaceAll("-", "").replaceAll(".", "");
+    this.instrutor.bairro = formData.bairro.toUpperCase();
+    this.instrutor.cidade = formData.cidade.toUpperCase();
+    this.instrutor.uf = formData.uf.toUpperCase();
     this.instrutor.numero = formData.numero;
-    this.instrutor.enderecoLogradouro = formData.enderecoLogradouro;
-    this.instrutor.orgaoExpedidor = formData.orgaoExpedidor;
+    this.instrutor.enderecoLogradouro = formData.enderecoLogradouro.toUpperCase();
+    this.instrutor.orgaoExpedidor = formData.orgaoExpedidor.toUpperCase();
     this.instrutor.site = formData.site;
   }
 
-  /**
-   * 
-   */
   edit() {
     console.log("Edit do modal");
   }
@@ -189,15 +179,10 @@ export class EditInstructorModalComponentComponent implements OnInit, OnDestroy 
 
   }
 
-  /**
-   * 
-   */
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
 
-
-  //VALIDADORES
   isControlValid(controlName: string): boolean {
     const control = this.createForm.controls[controlName];
     return control.valid && (control.dirty || control.touched);
