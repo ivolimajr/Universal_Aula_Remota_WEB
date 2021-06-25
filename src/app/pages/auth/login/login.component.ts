@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
-
 import { BaseModel } from '../../../shared/models/baseModels/base.model'
 import { AuthService } from '../../../shared/services/auth/auth.service';
 
@@ -80,9 +79,11 @@ export class LoginComponent implements OnInit {
   }
 
   submit() {
+    console.log(this.loginForm.value.email)
     const loginSbscr = this.authService.login(this.loginForm.value.email, this.loginForm.value.senha)
       .subscribe(
         sucesso => {
+          console.log(sucesso)
           this.processarSucesso(sucesso);
         },
         falha => {
@@ -92,12 +93,11 @@ export class LoginComponent implements OnInit {
     this.unsubscribe.push(loginSbscr);
   }
 
-  processarSucesso(response: any) {
+  processarSucesso(response: BaseModel) {
     this.authService.setAuthFromLocalStorage(response);
     this.router.navigate([this.returnUrl]);
   }
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
   }
-
 }

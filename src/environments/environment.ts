@@ -10,7 +10,7 @@ export const environment = {
   apiUrl: 'https://your-domain.com/api',
   auth: {
     apiAtiva: false,
-    url: 'http://127.0.0.1:8000/api',
+    url: 'https://localhost:44341/api',
     clientId: '',
     clientSecret: '',
     cookieNameClientCredentials: 'access-token-client-hom',

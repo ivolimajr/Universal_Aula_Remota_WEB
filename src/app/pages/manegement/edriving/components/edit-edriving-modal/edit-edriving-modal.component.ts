@@ -7,6 +7,7 @@ import { CustomAdapter, CustomDateParserFormatter } from '../../../../../_metron
 import { NgBrazil, MASKS, NgBrazilValidators } from 'ng-brazil';
 import { utilsBr } from 'js-brasil';
 import { ToastrService } from 'ngx-toastr';
+import { EdrivingCargoService } from '../../../../../shared/services/http/edrivingCargo.service';
 
 const EMPTY_EDRIVING: EdrivingModel = {
   id: undefined,
@@ -45,10 +46,13 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public modal: NgbActiveModal,
     private toastr: ToastrService,
+    private edrivingCargoService: EdrivingCargoService,
   ) { }
 
   ngOnInit(): void {
     this.loadEdriving();
+    console.log("No Modal")
+    console.log(this.edrivingCargoService.buscarCargo())
   }
 
   loadEdriving() {

@@ -51,7 +51,7 @@ export class AuthService implements OnDestroy {
   login(email: string, senha: string): Observable<any> {
 
     this.isLoadingSubject.next(true);
-    const url_api = environment.auth.url + '/usuario/login';
+    const url_api = environment.auth.url + '/usuario/login?email='+email+'&senha='+senha;
     return this.http
       .post<BaseModel>(
         url_api,

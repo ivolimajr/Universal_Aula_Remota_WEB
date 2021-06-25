@@ -20,6 +20,8 @@ export class AsideComponent implements OnInit {
   brandClasses: string;
   asideMenuScroll = 1;
   asideSelfMinimizeToggle = false;
+  localStorage: any;
+  router: any;
 
   constructor(private layout: LayoutService, private loc: Location, private auth: AuthService) { }
 
@@ -38,8 +40,6 @@ export class AsideComponent implements OnInit {
       'aside.self.minimize.toggle'
     );
     this.asideMenuScroll = this.layout.getProp('aside.menu.scroll') ? 1 : 0;
-    // this.asideMenuCSSClasses = `${this.asideMenuCSSClasses} ${this.asideMenuScroll === 1 ? 'scroll my-4 ps ps--active-y' : ''}`;
-    // Routing
     this.location = this.loc;
   }
 
@@ -49,5 +49,7 @@ export class AsideComponent implements OnInit {
   logout() {
     this.auth.logout();
     document.location.reload();
+    this.localStorage.limparDadosLocaisUsuario();
+    this.router.navigate(['/dashboard']);
   }
 }
