@@ -4,6 +4,9 @@ import { FormControl, Validators } from '@angular/forms';
 import { EditEdrivingModalComponent } from './components/edit-edriving-modal/edit-edriving-modal.component';
 import { EdrivingServices } from '../../../shared/services/http/Edriving/Edriving.service';
 import { EdrivingModel } from 'src/app/shared/models/edriving/edrivingModel.model';
+import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-edriving',
   templateUrl: './edriving.component.html',
@@ -14,18 +17,26 @@ export class EdrivingComponent implements OnInit {
   email = new FormControl('', [Validators.required, Validators.email]);
   services: any;
   usuarios: EdrivingModel[];
+  returnUrl: string;
 
   constructor(
+    private _location: Location,
+    private router: Router,
+    private route: ActivatedRoute,
     private _edrivingServices: EdrivingServices,
     private modalService: NgbModal,
   ) {
   }
 
   ngOnInit(): void {
+    this.returnUrl = this.route.snapshot.routeConfig.path || '/';
+    console.log(this._location.path());
+    console.log(this.route.snapshot.routeConfig.path);
+
     this.getUsuariosEdriving();
   }
   private getUsuariosEdriving() {
-    this._edrivingServices.getUsuariosEdriving().subscribe(data => {
+    this._edrivingServices.getUsuarios().subscribe(data => {
       this.usuarios = data;
     }, error => {
       console.log(error);
@@ -40,12 +51,14 @@ export class EdrivingComponent implements OnInit {
       const modalRef = this.modalService.open(EditEdrivingModalComponent);
       modalRef.componentInstance.id = 0;
       modalRef.result.then((res) => {
-        if (res) {
-          return console.log("Salvo na API")
+        if (res != null) {
+          return location.reload();
         }
+        console.log("2");
         console.log("Erro na API");
       }
       ).catch((res) => {
+        console.log("3");
         console.log("Error: " + res);
       });
     } else {

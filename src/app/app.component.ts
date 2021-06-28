@@ -16,7 +16,7 @@ import { AuthService } from './shared/services/auth/auth.service';
 })
 export class AppComponent implements OnInit {
   private unsubscribe: Subscription[] = [];
-  
+
   title = 'RXJS';
 
   constructor(
@@ -30,46 +30,7 @@ export class AppComponent implements OnInit {
     }
   }
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
-  
-/*   usuarioObservable(nome: string, email: string) : Observable<Usuario>{
-    return new Observable(subscriber => {
-      if(nome === 'Yuri'){
-        let usuario = new Usuario(nome, email);
-
-        setTimeout(() => {
-          subscriber.next(usuario);
-        }, 1000); 
-      }
-      else{
-        subscriber.error('Ops! Deu erro!');
-      }     
-    });
   }
 
-  ngOnInit(): void {
-    const observer = {
-      next: valor => console.log('Next: ', valor),
-      error: erro => console.log('Erro: ', erro),
-      complete: () => console.log('FIM!')
-    }
+}
 
-    const obs = this.usuarioObservable('Yuri','edrivingyuri@edriving.com');
-    const subs = obs.subscribe(observer);
-
-  }
-
-  } *//* 
-export class Usuario {
-
-  constructor(nome: string, email: string) {
-    this.nome = nome;
-    this.email = email;
-  }
-
-  nome: string;
-  email: string;*/
-} 
-
-  

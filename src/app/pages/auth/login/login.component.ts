@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { BaseModel } from '../../../shared/models/baseModels/base.model'
 import { AuthService } from '../../../shared/services/auth/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 const EMPTY_USER: BaseModel = {
   id: undefined,
@@ -35,6 +36,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
+    private toastr: ToastrService,
   ) {
     if (this.authService.getAuthFromLocalStorage()) {
       this.router.navigate(['/']);
@@ -53,8 +55,7 @@ export class LoginComponent implements OnInit {
   }
 
   loadForm() {
-    this.user.fullName = ""
-    this.user.email = "edrivingyuri@edriving.com";
+    this.user.email = "";
     this.user.senha = "universalPay";
 
     this.loginForm = this.fb.group({
@@ -79,15 +80,16 @@ export class LoginComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.loginForm.value.email)
     const loginSbscr = this.authService.login(this.loginForm.value.email, this.loginForm.value.senha)
       .subscribe(
         sucesso => {
           console.log(sucesso)
           this.processarSucesso(sucesso);
         },
-        falha => {
-          console.log(falha);
+        error => {
+          this.toastr.warning(error.error.error);
+          console.log(error);
+
         }
       );
     this.unsubscribe.push(loginSbscr);

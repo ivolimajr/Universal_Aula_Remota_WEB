@@ -1,20 +1,32 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { catchError, map } from "rxjs/operators";
+import { EdrivingModel } from '../../../models/edriving/edrivingModel.model';
+import { BaseServices } from "../base.services";
 
 @Injectable({
   providedIn: 'root'
 })
-export class EdrivingServices {
+export class EdrivingServices extends BaseServices {
 
-  private readonly URL_EDRIVING = '/Edriving';
+  private readonly URL_EDRIVING = this.UrlService + '/Edriving';
 
   constructor(private http: HttpClient) {
+    super();
   }
 
-  public getUsuariosEdriving(): Observable<any> {
-    return this.http.get(environment.auth.url + this.URL_EDRIVING);
+  public getUsuarios(): Observable<any> {
+    return this.http.get(this.URL_EDRIVING);
   }
 
+  public setUsuario(edrivingModel: EdrivingModel): Observable<EdrivingModel> {
+    let response = this.http
+      .post(this.URL_EDRIVING, edrivingModel, this.ObterHeaderJson())
+      .pipe(
+        map(this.extractData),
+        catchError(this.serviceError))
+
+    return response;
+  }
 }

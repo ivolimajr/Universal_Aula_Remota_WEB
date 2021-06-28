@@ -1,30 +1,32 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
-import { map } from "rxjs/operators";
+import { catchError, map } from "rxjs/operators";
 import { Router } from "@angular/router";
 
 import { BaseModel } from "../../models/baseModels/base.model";
 import { environment } from '../../../../environments/environment';
 import { TokenService } from "./token-service.service";
 import { AuthHTTPService } from './authHttpService.service';
+import { BaseServices } from "../http/base.services";
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService implements OnDestroy {
+export class AuthService extends BaseServices {
+
+  private readonly URL_USUARIO = this.UrlService + '/Usuario';
+
   forgotPassword(value: any) {
     throw new Error('Method not implemented.');
   }
 
-  private unsubscribe: Subscription[] = [];
   private authLocalStorageToken = `${environment.appVersion}-${environment.USERDATA_KEY}`;
 
   currentUser$: Observable<BaseModel>;
   isLoading$: Observable<boolean>;
   currentUserSubject: BehaviorSubject<BaseModel>;
   isLoadingSubject: BehaviorSubject<boolean>;
-
 
   get currentUserValue(): BaseModel {
     return this.currentUserSubject.value;
@@ -38,6 +40,7 @@ export class AuthService implements OnDestroy {
     private http: HttpClient,
     private router: Router
   ) {
+    super();
     this.isLoadingSubject = new BehaviorSubject<boolean>(false);
     this.currentUserSubject = new BehaviorSubject<BaseModel>(undefined);
     this.currentUser$ = this.currentUserSubject.asObservable();
@@ -51,17 +54,17 @@ export class AuthService implements OnDestroy {
   login(email: string, senha: string): Observable<any> {
 
     this.isLoadingSubject.next(true);
-    const url_api = environment.auth.url + '/usuario/login?email='+email+'&senha='+senha;
     return this.http
       .post<BaseModel>(
-        url_api,
+        this.URL_USUARIO + '/login?email=' + email + '&senha=' + senha,
         { email, senha },
-        { headers: this.headers }
+        this.ObterHeaderJson()
       )
       .pipe(map(data => {
         this.currentUserSubject = new BehaviorSubject<BaseModel>(data);
         return data
-      }));
+      }),
+        catchError(this.serviceError));
   }
   // private methods
   public setAuthFromLocalStorage(user: BaseModel) {
@@ -80,8 +83,5 @@ export class AuthService implements OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    this.unsubscribe.forEach((sb) => sb.unsubscribe());
-  }
 
 }

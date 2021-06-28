@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { PagesRoutingModule } from './pages-routing.module';
-import { NgbDropdownModule, NgbProgressbarModule,} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbProgressbarModule, } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbDatepickerModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbAlertConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -24,7 +24,6 @@ import { HomeComponent } from './home/home.component';
 import { EdrivingComponent } from './manegement/edriving/edriving.component';
 import { EditEdrivingModalComponent } from './manegement/edriving/components/edit-edriving-modal/edit-edriving-modal.component';
 import { AccountComponentEdriving } from './manegement/edriving/components/account/account.component';
-import { EdrivingServices } from '../shared/services/http/edriving.services';
 
 import { PartnerComponent } from './manegement/partner/partner.component';
 import { EditPartnerModalComponent } from './manegement/partner/components/edit-partner-modal/edit-partner-modal.component';
@@ -113,6 +112,6 @@ import { MenuLoginComponent } from '../menu-login/menu-login.component';
     CustomFormsModule,
     NgxPaginationModule
   ],
-  providers: [NgbAlertConfig, EdrivingServices]
+  providers: [NgbAlertConfig]
 })
 export class LayoutModule { }
