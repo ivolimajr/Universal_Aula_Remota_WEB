@@ -30,7 +30,8 @@ const EMPTY_INSTRUTOR: InstrutorBaseModel = {
   site: '',
   uploadDOC: '',
   cursos: [],
-  nivelAcesso: null
+  nivelAcesso: null,
+  senhaAntiga:''
 };
 
 @Component({
@@ -91,6 +92,7 @@ export class AccountComponentInstructor implements OnInit {
     this.instrutor.dataNascimento = new Date(formData.dob);
     this.instrutor.status = formData.status;
     this.instrutor.senha = formData.senha;
+    this.instrutor.senhaAntiga = formData.senhaAntiga;
     this.instrutor.confirmarSenha = formData.confirmarSenha;
     this.instrutor.identidade = formData.identidade;
     this.instrutor.cep = formData.cep;
@@ -141,6 +143,7 @@ export class AccountComponentInstructor implements OnInit {
         status: [this.instrutor.status, Validators.compose([Validators.nullValidator])],
         cep: [this.instrutor.cep, Validators.compose([Validators.nullValidator])],
         senha: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
+        senhaAntiga: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
         confirmarSenha: ['', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo()]],
         identidade: [this.instrutor.identidade, Validators.compose([Validators.nullValidator])],
         bairro: [this.instrutor.bairro, Validators.compose([Validators.nullValidator])],
@@ -162,6 +165,7 @@ export class AccountComponentInstructor implements OnInit {
         status: [this.instrutor.status, Validators.compose([Validators.nullValidator])],
         cep: [this.instrutor.cep, Validators.compose([Validators.nullValidator])],
         senha: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
+        senhaAntiga: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
         confirmarSenha: ['', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo()]],
         identidade: [this.instrutor.identidade, Validators.compose([Validators.nullValidator])],
         bairro: [this.instrutor.bairro, Validators.compose([Validators.nullValidator])],

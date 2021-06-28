@@ -1,28 +1,18 @@
-<ng-container>
   <div class="card card-custom card-stretch">
     <!--begin::Header-->
     <div class="card-header py-3">
       <div class="card-title align-items-start flex-column">
         <h3 class="card-label font-weight-bolder text-dark">Informação Pessoal</h3>
-        <span class="text-muted font-weight-bold font-size-sm mt-1">Altere suas informações</span>
+        <span class="text-muted font-weight-bold font-size-sm mt-1">Altere seus dados</span>
       </div>
       <div class="card-toolbar">
         <button type="submit" class="btn btn-success mr-2" (click)="save()">Salvar mudanças</button>
-        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancelar</button>
       </div>
     </div>
     <!--end::Header-->
     <!--begin::Form-->
     <div class="form" [formGroup]="createForm">
-      <!--begin::Body-->
       <div class="card-body">
-        <div class="row">
-          <label class="col-xl-3"></label>
-          <div class="col-lg-9 col-xl-6">
-            <h5 class="font-weight-bold mb-6">Informações do usuário</h5>
-          </div>
-        </div>
-
         <div class="form-group row">
           <label class="col-xl-3 col-lg-3 col-form-label">Nome</label>
           <div class="col-lg-9 col-xl-6">
@@ -30,34 +20,9 @@
             <span class="text-danger" *ngIf="displayMessage.fullName">
               <p [innerHTML]="displayMessage.fullName"></p>
           </span>
-          </div>
+        </div> 
         </div>
-        <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label">Senha</label>
-          <div class="col-lg-9 col-xl-6">
-            <input class="form-control form-control-lg form-control-solid" type="password" formControlName="senha" [ngClass]="{'is-invalid': displayMessage.senha}" [class.is-invalid]="isControlInvalid('senha')" [class.is-valid]="isControlValid('senha')" />
-            <span class="text-danger" *ngIf="displayMessage.senha">
-              <p [innerHTML]="displayMessage.senha"></p>
-          </span>
-          </div>
-        </div>
-        <div class="form-group row">
-          <label class="col-xl-3 col-lg-3 col-form-label"> Confirme a Senha</label>
-          <div class="col-lg-9 col-xl-6">
-            <input class="form-control form-control-lg form-control-solid" type="password" formControlName="confirmarSenha" [ngClass]="{'is-invalid': displayMessage.confirmarSenha}" [class.is-invalid]="isControlInvalid('confirmarSenha')" [class.is-valid]="isControlValid('confirmarSenha')" />
-            <span class="text-danger" *ngIf="displayMessage.confirmarSenha">
-              <p [innerHTML]="displayMessage.confirmarSenha"></p>
-          </span>
-          </div>
-        </div>
-          
-        <div class="row">
-          <label class="col-xl-3"></label>
-          <div class="col-lg-9 col-xl-6">
-            <h5 class="font-weight-bold mt-10 mb-6">Informações de contato</h5>
-          </div>
-        </div>
-        
+
         <div class="form-group row">
           <label class="col-xl-3 col-lg-3 col-form-label">Telefone</label>
           <div class="col-lg-9 col-xl-6">
@@ -84,9 +49,49 @@
             </div>
           </div>
         </div>
+        </div>
+        <div class="card card-custom card-stretch">
+          <!--begin::Header-->
+          <div class="card-footer py-3">
+            <div class="card-title align-items-start flex-column">
+              <h3 class="card-label font-weight-bolder text-dark">Alteração de senha</h3>
+              <span class="text-muted font-weight-bold font-size-sm mt-1">Altere sua senha</span>
+            
+          <!--end::Header-->
+          <div class="card-body">
+          <div class="form-group row">
+            <label class="col-xl-3 col-lg-3 col-form-label">Senha antiga</label>
+            <div class="col-lg-9 col-xl-6">
+              <input class="form-control form-control-lg form-control-solid" type="password" formControlName="senha" [ngClass]="{'is-invalid': displayMessage.senha}" [class.is-invalid]="isControlInvalid('senha')" [class.is-valid]="isControlValid('senha')" />
+              <span class="text-danger" *ngIf="displayMessage.senha">
+                <p [innerHTML]="displayMessage.senha"></p>
+            </span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-xl-3 col-lg-3 col-form-label">Senha nova</label>
+            <div class="col-lg-9 col-xl-6">
+              <input class="form-control form-control-lg form-control-solid" type="password" formControlName="senha" [ngClass]="{'is-invalid': displayMessage.senha}" [class.is-invalid]="isControlInvalid('senha')" [class.is-valid]="isControlValid('senha')" />
+              <span class="text-danger" *ngIf="displayMessage.senha">
+                <p [innerHTML]="displayMessage.senha"></p>
+            </span>
+            </div>
+          </div>
+  
+          <div class="form-group row">
+            <label class="col-xl-3 col-lg-3 col-form-label">Confirme a senha nova</label>
+            <div class="col-lg-9 col-xl-6">
+              <input class="form-control form-control-lg form-control-solid" type="password" formControlName="confirmarSenha" [ngClass]="{'is-invalid': displayMessage.confirmarSenha}" [class.is-invalid]="isControlInvalid('confirmarSenha')" [class.is-valid]="isControlValid('confirmarSenha')" />
+              <span class="text-danger" *ngIf="displayMessage.confirmarSenha">
+                <p [innerHTML]="displayMessage.confirmarSenha"></p>
+            </span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button type="submit" class="btn btn-danger mr-2" (click)="save()">Alterar senha</button>
+          </div>
+        </div>
+          </div> 
+          <!--end::Header-->
       </div>
       <!--end::Body-->
-    </div>
-    <!--end::Form-->
-  </div>
-</ng-container>

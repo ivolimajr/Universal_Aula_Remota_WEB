@@ -15,7 +15,8 @@ const EMPTY_USER: BaseModel = {
   confirmarSenha: '',
   status: 0,
   telefone: '',
-  nivelAcesso: null
+  nivelAcesso: null,
+  senhaAntiga:''
 };
 
 @Component({

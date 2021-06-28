@@ -6,6 +6,7 @@ import { utilsBr } from 'js-brasil';
 import { ToastrService } from 'ngx-toastr';
 import { NgBrazilValidators } from 'ng-brazil';
 import { DisplayMessage } from 'src/app/shared/validators/generic-form-validation';
+import { CustomValidators } from 'ng2-validation';
 
 const EMPTY_PARTNER: PartnerModel = {
   id: undefined,
@@ -24,7 +25,8 @@ const EMPTY_PARTNER: PartnerModel = {
   numero: '',
   senha: '',
   uf: '',
-  nivelAcesso: null
+  nivelAcesso: null,
+  senhaAntiga:''
 };
 
 @Component({
@@ -88,6 +90,7 @@ export class AccountComponentPartner implements OnInit {
     this.partner.enderecoLogradouro = formData.enderecoLogradouro;
     this.partner.numero = formData.numero;
     this.partner.senha = formData.senha;
+    this.partner.senhaAntiga = formData.senhaAntiga;
     this.partner.uf = formData.uf;
   }
 
@@ -131,6 +134,7 @@ export class AccountComponentPartner implements OnInit {
         descricao: [this.partner.descricao, Validators.compose([Validators.nullValidator])],
         enderecoLogradouro: [this.partner.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
         numero: [this.partner.numero, Validators.compose([Validators.nullValidator])],
+        senhaAntiga: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
         senha: [this.partner.senha, Validators.compose([Validators.nullValidator])],
         uf: [this.partner.uf, Validators.compose([Validators.nullValidator])],
       });
@@ -149,6 +153,7 @@ export class AccountComponentPartner implements OnInit {
         descricao: [this.partner.descricao, Validators.compose([Validators.nullValidator])],
         enderecoLogradouro: [this.partner.enderecoLogradouro, Validators.compose([Validators.nullValidator])],
         numero: [this.partner.numero, Validators.compose([Validators.nullValidator])],
+        senhaAntiga: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
         senha: [this.partner.senha, Validators.compose([Validators.nullValidator])],
         uf: [this.partner.uf, Validators.compose([Validators.nullValidator])],
       });

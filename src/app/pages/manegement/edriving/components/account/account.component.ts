@@ -18,7 +18,8 @@ const EMPTY_EDRIVING: EdrivingModel = {
   cargo: '',
   senha: '',
   confirmarSenha: '',
-  nivelAcesso: null
+  nivelAcesso: null,
+  senhaAntiga:''
 };
 @Component({
   selector: 'app-account',
@@ -88,6 +89,7 @@ export class AccountComponentEdriving implements OnInit {
     this.edriving.status = formData.status;
     this.edriving.senha = formData.senha;
     this.edriving.confirmarSenha = formData.confirmarSenha;
+    this.edriving.senhaAntiga = formData.senhaAntiga;
   }
 
   edit() {
@@ -121,6 +123,7 @@ export class AccountComponentEdriving implements OnInit {
         cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
         senha: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
+        senhaAntiga: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
         confirmarSenha: ['', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo()]],
       });
 
@@ -133,6 +136,7 @@ export class AccountComponentEdriving implements OnInit {
         cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
         senha: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
+        senhaAntiga: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
         confirmarSenha: ['', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo()]],
       });
     }

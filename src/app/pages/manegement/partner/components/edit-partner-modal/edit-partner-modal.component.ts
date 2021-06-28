@@ -25,7 +25,8 @@ const EMPTY_PARTNER: PartnerModel = {
   numero: '',
   senha: '',
   uf: '',
-  nivelAcesso: null
+  nivelAcesso: null,
+  senhaAntiga:''
 };
 
 

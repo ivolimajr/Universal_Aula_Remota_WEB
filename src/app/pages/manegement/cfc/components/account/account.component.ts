@@ -7,6 +7,7 @@ import { utilsBr } from 'js-brasil';
 import { ToastrService } from 'ngx-toastr';
 import { NgBrazilValidators } from 'ng-brazil';
 import { CustomValidators } from 'ng2-validation';
+import { DisplayMessage } from 'src/app/shared/validators/generic-form-validation';
 
 const EMPTY_CFC: CfcModel = {
   id: undefined,
@@ -31,8 +32,8 @@ const EMPTY_CFC: CfcModel = {
   site: '',
   uf: '',
   uploadDOC: '',
-  nivelAcesso: null
-
+  nivelAcesso: null, 
+  senhaAntiga:''
 };
 
 @Component({
@@ -52,6 +53,7 @@ export class AccountComponentCfc implements OnInit {
   private subscriptions: Subscription[] = [];
   modal: any;
   MASKS = utilsBr.MASKS;
+  displayMessage: DisplayMessage = {};
 
   constructor(
     private fb: FormBuilder,
@@ -103,8 +105,7 @@ export class AccountComponentCfc implements OnInit {
     this.cfc.telefone = formData.telefone2;
     this.cfc.uf = formData.uf;
     this.cfc.uploadDOC = formData.uploadDOC;
-
-
+    this.cfc.senhaAntiga = formData.senhaAntiga;
   }
 
   /**
@@ -141,6 +142,7 @@ export class AccountComponentCfc implements OnInit {
         status: [this.cfc.status, Validators.compose([Validators.nullValidator])],
         cep: ['', [Validators.required, NgBrazilValidators.cep]],
         senha: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
+        senhaAntiga: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
         confirmarSenha: ['', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo()]],
         bairro: [this.cfc.bairro, Validators.compose([Validators.nullValidator])],
         cidade: [this.cfc.cidade, Validators.compose([Validators.nullValidator])],
@@ -157,7 +159,6 @@ export class AccountComponentCfc implements OnInit {
         telefone2: [this.cfc.telefone, Validators.compose([Validators.nullValidator])],
         uf: [this.cfc.uf, Validators.compose([Validators.nullValidator])],
         uploadDOC: [this.cfc.uploadDOC, Validators.compose([Validators.nullValidator])],
-
       });
     } else {
       this.createForm = this.fb.group({
@@ -167,6 +168,7 @@ export class AccountComponentCfc implements OnInit {
         status: [this.cfc.status, Validators.compose([Validators.nullValidator])],
         cep: ['', [Validators.required, NgBrazilValidators.cep]],
         senha: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
+        senhaAntiga: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
         confirmarSenha: ['', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo()]],
         bairro: [this.cfc.bairro, Validators.compose([Validators.nullValidator])],
         cidade: [this.cfc.cidade, Validators.compose([Validators.nullValidator])],
