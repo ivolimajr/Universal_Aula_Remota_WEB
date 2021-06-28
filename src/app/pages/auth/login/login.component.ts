@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
 
   loadForm() {
     this.user.fullName = ""
-    this.user.email = "admin@edriving.com";
+    this.user.email = "edrivingyuri@edriving.com";
     this.user.senha = "universalPay";
 
     this.loginForm = this.fb.group({
