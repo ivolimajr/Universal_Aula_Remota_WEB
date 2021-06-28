@@ -1,13 +1,14 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
 import { EdrivingModel } from '../../../../../shared/models/edriving/edrivingModel.model';
 import { CustomAdapter, CustomDateParserFormatter } from '../../../../../_metronic/core';
-import { NgBrazil, MASKS, NgBrazilValidators } from 'ng-brazil';
+import { NgBrazilValidators } from 'ng-brazil';
 import { utilsBr } from 'js-brasil';
 import { ToastrService } from 'ngx-toastr';
-import { EdrivingCargoService } from '../../../../../shared/services/http/edrivingCargo.service';
+import { EdrivingCargoServices } from '../../../../../shared/services/http/Edriving/edrivingCargo.service';
+import { EdrivingCargoModel } from '../../../../../shared/models/edriving/EdrivingCargo.model';
 
 const EMPTY_EDRIVING: EdrivingModel = {
   id: undefined,
@@ -41,18 +42,26 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
   createForm: FormGroup; // AGRUPADOR DE CONTROLES
   private subscriptions: Subscription[] = [];
   MASKS = utilsBr.MASKS;
+  cargos: EdrivingCargoModel[];
 
   constructor(
+    private _edrivingCargoServices: EdrivingCargoServices,
     private fb: FormBuilder,
     public modal: NgbActiveModal,
     private toastr: ToastrService,
-    private edrivingCargoService: EdrivingCargoService,
   ) { }
 
   ngOnInit(): void {
-    this.loadEdriving();
-    console.log("No Modal")
-    console.log(this.edrivingCargoService.buscarCargo())
+    this.getCargo();
+    this.loadEdriving()
+  }
+
+  private getCargo() {
+    this._edrivingCargoServices.getCargos().subscribe(data => {
+      this.cargos = data;
+    }, error => {
+      console.log(error);
+    })
   }
 
   loadEdriving() {

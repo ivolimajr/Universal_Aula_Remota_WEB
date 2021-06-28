@@ -96,14 +96,12 @@
           </div>
         </div>
         <!-- end: Status -->
-
         <!-- start:cargo -->
         <div class="form-group row">
           <div class="col-lg">
             <label>Cargo</label>
             <select class="form-control form-control-lg form-control-solid" name="cargo" formControlName="cargo" required>
-              <option value="1">Administrador</option>
-              <option value="2">Convidado</option>
+              <option *ngFor="let item of cargos" value="{{item.id}}">{{item.cargo}}</option>
             </select>
           </div>
         </div>
