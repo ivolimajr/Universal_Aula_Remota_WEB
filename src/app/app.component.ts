@@ -29,10 +29,13 @@ export class AppComponent implements OnInit {
       this.router.navigate(['/']);
     }
   }
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
   
-  usuarioObservable(nome: string, email: string) : Observable<Usuario>{
+/*   usuarioObservable(nome: string, email: string) : Observable<Usuario>{
     return new Observable(subscriber => {
-      if(nome === 'Admin'){
+      if(nome === 'Yuri'){
         let usuario = new Usuario(nome, email);
 
         setTimeout(() => {
@@ -52,16 +55,12 @@ export class AppComponent implements OnInit {
       complete: () => console.log('FIM!')
     }
 
-    const obs = this.usuarioObservable('Admin','admin@admin.com');
+    const obs = this.usuarioObservable('Yuri','edrivingyuri@edriving.com');
     const subs = obs.subscribe(observer);
 
-    setTimeout(() => {
-      subs.unsubscribe();
-      console.log('Conexão fechada: ' + subs.closed)
-    }, 3500);
   }
 
-  }
+  } *//* 
 export class Usuario {
 
   constructor(nome: string, email: string) {
@@ -70,7 +69,7 @@ export class Usuario {
   }
 
   nome: string;
-  email: string;
-}
+  email: string;*/
+} 
 
   

@@ -6,6 +6,7 @@ import { AdministrativoModel } from '../../../../../shared/models/administrative
 import { utilsBr } from 'js-brasil';
 import { ToastrService } from 'ngx-toastr';
 import { NgBrazilValidators, NgBrazil, MASKS } from 'ng-brazil';
+import { DisplayMessage } from 'src/app/shared/validators/generic-form-validation';
 
 const EMPTY_ADMINISTRATIVO: AdministrativoModel = {
   id: undefined,
@@ -50,6 +51,7 @@ export class AccountComponentAdministrative implements OnInit {
   private subscriptions: Subscription[] = [];
   modal: any;
   MASKS = utilsBr.MASKS;
+  displayMessage: DisplayMessage = {};
 
   constructor(
     private fb: FormBuilder,

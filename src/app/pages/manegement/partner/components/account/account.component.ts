@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
 import { PartnerModel } from '../../../../../shared/models/partner/partnerModel.model';
 import { utilsBr } from 'js-brasil';
 import { ToastrService } from 'ngx-toastr';
 import { NgBrazilValidators } from 'ng-brazil';
+import { DisplayMessage } from 'src/app/shared/validators/generic-form-validation';
 
 const EMPTY_PARTNER: PartnerModel = {
   id: undefined,
@@ -43,6 +43,7 @@ export class AccountComponentPartner implements OnInit {
   private subscriptions: Subscription[] = [];
   modal: any;
   MASKS = utilsBr.MASKS;
+  displayMessage: DisplayMessage = {};
 
   constructor(
     private fb: FormBuilder,
