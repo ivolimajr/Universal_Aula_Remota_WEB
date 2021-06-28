@@ -10,5 +10,5 @@ export class BaseModel {
   senha: string;
   confirmarSenha: string;
   nivelAcesso: number;
-
+  senhaAntiga: string;
 }

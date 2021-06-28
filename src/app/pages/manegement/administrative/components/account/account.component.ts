@@ -31,7 +31,8 @@ const EMPTY_ADMINISTRATIVO: AdministrativoModel = {
   orgaoExpedidor: '',
   site: '',
   uploadDOC: '',
-  nivelAcesso: null
+  nivelAcesso: null,
+  senhaAntiga:''
 };
 
 @Component({
@@ -89,6 +90,7 @@ export class AccountComponentAdministrative implements OnInit {
     this.administrativo.dataNascimento = new Date(formData.dob);
     this.administrativo.status = formData.status;
     this.administrativo.senha = formData.senha;
+    this.administrativo.senhaAntiga = formData.senhaAntiga;
     this.administrativo.confirmarSenha = formData.confirmarSenha;
     this.administrativo.identidade = formData.identidade;
     this.administrativo.telefone = formData.telefone2;
@@ -135,6 +137,7 @@ export class AccountComponentAdministrative implements OnInit {
         status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
         cep: ['', [Validators.required, NgBrazilValidators.cep]],
         senha: [this.administrativo.senha, Validators.compose([Validators.nullValidator])],
+        senhaAntiga: [this.administrativo.senhaAntiga, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.administrativo.confirmarSenha, Validators.compose([Validators.nullValidator])],
         identidade: [this.administrativo.identidade, Validators.compose([Validators.nullValidator])],
         telefone2: [this.administrativo.telefone, Validators.compose([Validators.nullValidator])],
@@ -161,6 +164,7 @@ export class AccountComponentAdministrative implements OnInit {
         status: [this.administrativo.status, Validators.compose([Validators.nullValidator])],
         cep: ['', [Validators.required, NgBrazilValidators.cep]],
         senha: [this.administrativo.senha, Validators.compose([Validators.nullValidator])],
+        senhaAntiga: [this.administrativo.senhaAntiga, Validators.compose([Validators.nullValidator])],
         confirmarSenha: [this.administrativo.confirmarSenha, Validators.compose([Validators.nullValidator])],
         identidade: [this.administrativo.identidade, Validators.compose([Validators.nullValidator])],
         telefone2: [this.administrativo.telefone, Validators.compose([Validators.nullValidator])],

@@ -31,7 +31,9 @@ const EMPTY_CFC: CfcModel = {
   site: '',
   uf: '',
   uploadDOC: '',
-  nivelAcesso: null
+  nivelAcesso: null,
+  senhaAntiga:''
+
 };
 @Component({
   selector: 'app-edit-cfc-modal',

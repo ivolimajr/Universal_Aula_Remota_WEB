@@ -22,7 +22,6 @@ const EMPTY_EDRIVING: EdrivingModel = {
   confirmarSenha: '',
   nivelAcesso: null,
   senhaAntiga:''
-
 };
 
 @Component({
@@ -92,7 +91,6 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
     this.edriving.cargo = formData.cargo.toUpperCase();
     this.edriving.status = formData.status.toUpperCase();
     this.edriving.senha = "";
-    this.edriving.senhaAntiga = formData.senhaAntiga;
     this.edriving.confirmarSenha = "";
   }
 

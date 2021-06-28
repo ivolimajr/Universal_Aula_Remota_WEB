@@ -30,7 +30,8 @@ const EMPTY_INSTRUTOR: InstrutorBaseModel = {
   site: '',
   cursos: [],
   uploadDOC: '',
-  nivelAcesso: null
+  nivelAcesso: null,
+  senhaAntiga:''
 };
 
 @Component({

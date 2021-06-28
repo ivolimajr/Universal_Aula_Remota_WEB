@@ -29,7 +29,8 @@ const EMPTY_CUSTOMER: StudentBaseModel = {
   orgaoExpedidor: '',
   turno: '',
   turma: '',
-  nivelAcesso: null
+  nivelAcesso: null,
+  senhaAntiga:''
 };
 
 @Component({
@@ -98,8 +99,8 @@ export class AccountComponentStudent implements OnInit {
     this.customer.telefone = formData.telefone;
     this.customer.status = formData.status;
     this.customer.senha = formData.senha;
+    this.customer.senhaAntiga = formData.senhaAntiga;
     this.customer.confirmarSenha = formData.confirmarSenha;
-
   }
 
   edit() {
@@ -135,6 +136,7 @@ export class AccountComponentStudent implements OnInit {
         cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         status: [this.customer.status, Validators.compose([Validators.nullValidator])],
         senha: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
+        senhaAntiga: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
         confirmarSenha: ['', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo()]],
       });
     } else {
@@ -145,6 +147,7 @@ export class AccountComponentStudent implements OnInit {
         cpf: [this.customer.cpf, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
         status: [this.customer.status, Validators.compose([Validators.nullValidator])],
         senha: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
+        senhaAntiga: ['', [Validators.required, CustomValidators.rangeLength([6, 15])]],
         confirmarSenha: ['', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo()]],
       });
     }
