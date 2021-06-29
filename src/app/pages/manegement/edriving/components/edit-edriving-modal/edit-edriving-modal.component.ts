@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
-import { EdrivingModel } from '../../../../../shared/models/edriving/edrivingModel.model';
+import { EdrivingPost } from '../../../../../shared/models/edriving/edrivingModel.model';
 import { CustomAdapter, CustomDateParserFormatter } from '../../../../../_metronic/core';
 import { NgBrazilValidators } from 'ng-brazil';
 import { utilsBr } from 'js-brasil';
@@ -11,19 +11,15 @@ import { EdrivingCargoServices } from '../../../../../shared/services/http/Edriv
 import { EdrivingCargoModel } from '../../../../../shared/models/edriving/EdrivingCargo.model';
 import { EdrivingServices } from '../../../../../shared/services/http/Edriving/Edriving.service';
 
-const EMPTY_EDRIVING: EdrivingModel = {
+const EMPTY_EDRIVING: EdrivingPost = {
   id: undefined,
   fullName: '',
   email: '',
   cpf: '',
   telefone: '',
   status: 1, // STATUS ATIVO
-  cargoId: null,
-  cargo: '',
   senha: '',
-  confirmarSenha: '',
-  nivelAcesso: null,
-  senhaAntiga: ''
+  cargoid: 1
 };
 
 @Component({
@@ -41,7 +37,7 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
   @Input() id: number;
 
   isLoading$;
-  edriving: EdrivingModel;
+  edriving: EdrivingPost;
   createForm: FormGroup; // AGRUPADOR DE CONTROLES
   private subscriptions: Subscription[] = [];
   MASKS = utilsBr.MASKS;
@@ -89,10 +85,9 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
     this.edriving.email = formData.email.toUpperCase();
     this.edriving.cpf = formData.cpf.replaceAll(".", "").replaceAll("-", "");
     this.edriving.telefone = formData.telefone.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "").replaceAll(" ", "");
-    this.edriving.cargoId = formData.cargo;
+    this.edriving.cargoid = formData.cargo;
     this.edriving.status = formData.status;
     this.edriving.senha = "";
-    this.edriving.confirmarSenha = "";
     this.create(this.edriving);
   }
 
@@ -100,7 +95,7 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
     console.log("Edit do modal");
   }
 
-  create(edriving: EdrivingModel) {
+  create(edriving: EdrivingPost) {
     this._edrivingServices.setUsuario(edriving).subscribe(
       success => {
         console.log(success);
@@ -126,13 +121,14 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
         cargo: ["", Validators.compose([Validators.nullValidator])],
         status: [1, Validators.compose([Validators.nullValidator])],
       });
+
     } else {
       this.createForm = this.fb.group({
         fullName: [this.edriving.fullName, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(100)])],
         email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
         telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
         cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
-        cargo: [this.edriving.cargo, Validators.compose([Validators.nullValidator])],
+        cargo: [this.edriving.cargoid, Validators.compose([Validators.nullValidator])],
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
       });
     }

@@ -16,7 +16,7 @@ export class EdrivingServices extends BaseServices {
     super();
   }
 
-  public getUsuarios(): Observable<any> {
+  public obterTodos(): Observable<any> {
     return this.http.get(this.URL_EDRIVING);
   }
 

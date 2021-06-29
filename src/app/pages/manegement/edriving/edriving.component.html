@@ -19,7 +19,7 @@
             <th>ACTIONS</th>
           </thead>
           <tbody>
-            <tr *ngFor="let item of usuarios">
+            <tr *ngFor="let item of usuarios | async;">
               <td>{{item.fullName}}</td>
               <td>{{item.email}}</td>
               <td *ngIf="item.usuario.status === 1;else templateName">Ativo</td>
