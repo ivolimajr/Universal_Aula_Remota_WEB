@@ -36,7 +36,6 @@ export class EdrivingComponent implements OnInit {
   private getUsuariosEdriving() {
     this._edrivingServices.getUsuarios().subscribe(data => {
       this.usuarios = data;
-      console.log(data);
     }, error => {
       console.log(error);
     })

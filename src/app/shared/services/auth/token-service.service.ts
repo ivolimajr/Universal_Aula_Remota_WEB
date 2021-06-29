@@ -36,7 +36,7 @@ export class TokenService {
     this.cookieService.deleteAll(environment.auth.cookieNameClientCredentials);
   }
 
-  generateToken() {    
+  generateToken() {
     let headers = new Headers();
     headers.append("Content-Type", "application/json");
 
@@ -51,11 +51,11 @@ export class TokenService {
       body: body
     };
 
-    return fetch(environment.auth.url, requestOptions)
+    return fetch(environment.apiUrl, requestOptions)
       .then(response => response.text())
       .then(result => {
         this.token = JSON.parse(result),
-        console.log(this.token.accessToken);        
+          console.log(this.token.accessToken);
         this.cookieService.set(environment.auth.cookieNameClientCredentials, this.token.accessToken);
       }
       )

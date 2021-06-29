@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { Token } from '../../models/auth/token.model';
 import { BaseModel } from '../../models/baseModels/base.model';
@@ -15,7 +15,7 @@ export class AuthHTTPService {
 
   // public methods
   login(email: string, password: string): Observable<any> {
-    let result = this.http.get<BaseModel>(`${environment.auth.url}/api/usuario`);
+    let result = this.http.get<BaseModel>(`${environment.apiUrl}/api/usuario`);
     return result;
   }
 }
