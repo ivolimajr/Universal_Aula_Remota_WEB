@@ -1,6 +1,8 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../../../shared/services/auth/auth.service';
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { environment } from 'src/environments/environment';
+import { StorageServices } from '../../../../shared/services/storage/localStorage.service';
 import { LayoutService } from '../../../../_metronic/core';
 
 @Component({
@@ -20,10 +22,11 @@ export class AsideComponent implements OnInit {
   brandClasses: string;
   asideMenuScroll = 1;
   asideSelfMinimizeToggle = false;
-  localStorage: any;
   router: any;
+  nivelAcesso: number;
 
-  constructor(private layout: LayoutService, private loc: Location, private auth: AuthService) { }
+  private authLocalStorageAuth = `${environment.appVersion}-${environment.AuthStorage}`;
+  constructor(private layout: LayoutService, private loc: Location, private storageService: StorageServices, private auth: AuthService) { }
 
   ngOnInit(): void {
     // load view settings
@@ -41,6 +44,11 @@ export class AsideComponent implements OnInit {
     );
     this.asideMenuScroll = this.layout.getProp('aside.menu.scroll') ? 1 : 0;
     this.location = this.loc;
+
+    if (this.storageService.getAuthFromLocalStorage(this.authLocalStorageAuth)) {
+      let result = this.storageService.getAuthFromLocalStorage(this.authLocalStorageAuth);
+      this.nivelAcesso = result.nivelAcesso;
+    }
   }
 
   private getLogo() {
@@ -49,7 +57,6 @@ export class AsideComponent implements OnInit {
   logout() {
     this.auth.logout();
     document.location.reload();
-    this.localStorage.limparDadosLocaisUsuario();
     this.router.navigate(['/dashboard']);
   }
 }

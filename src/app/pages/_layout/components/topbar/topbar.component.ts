@@ -11,6 +11,8 @@ import KTLayoutQuickPanel from '../../../../../assets/js/layout/extended/quick-p
 import KTLayoutQuickUser from '../../../../../assets/js/layout/extended/quick-user';
 import KTLayoutHeaderTopbar from '../../../../../assets/js/layout/base/header-topbar';
 import { KTUtil } from '../../../../../assets/js/components/util';
+import { environment } from '../../../../../environments/environment';
+import { StorageServices } from '../../../../shared/services/storage/localStorage.service';
 
 @Component({
   selector: 'app-topbar',
@@ -33,8 +35,10 @@ export class TopbarComponent implements OnInit, AfterViewInit {
   extrasUserDisplay: boolean;
   extrasUserLayout: 'offcanvas' | 'dropdown';
 
-  constructor(private layout: LayoutService, private auth: AuthService) {
-    this.user$ = this.auth.getAuthFromLocalStorage();
+  private authLocalStorageAuth = `${environment.appVersion}-${environment.AuthStorage}`;
+
+  constructor(private layout: LayoutService, private storageServices: StorageServices) {
+    this.user$ = this.storageServices.getAuthFromLocalStorage(this.authLocalStorageAuth);
   }
 
   ngOnInit(): void {

@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  appVersion: 'v726demo1',
-  USERDATA_KEY: 'authf649fc9a5f55',
+  appVersion: 'v1',
+  AuthStorage: 'auth29062021',
   isMockEnabled: false, //COLOCAR TRUE PARA ATIVAR O BACKEND DO TEMPLATE
   apiUrl: 'https://your-domain.com/api',
   auth: {

@@ -1,5 +1,5 @@
 <!--begin::Brand-->
-<div class="brand flex-column-auto" id="kt_brand" [ngClass]="brandClasses" >
+<div class="brand flex-column-auto" id="kt_brand" [ngClass]="brandClasses">
   <!--begin::Logo-->
   <a routerLink="" class="brand-logo">
     <img alt="headerLogo" [attr.src]="headerLogo" style="width: 90%;" />
@@ -18,7 +18,7 @@
 
 <!--begin::Aside Menu-->
 <div class="aside-menu-wrapper flex-column-fluid" id="kt_aside_menu_wrapper">
-  <ng-container *ngIf="disableAsideSelfDisplay" >
+  <ng-container *ngIf="disableAsideSelfDisplay">
     <!--begin::Header Logo-->
     <a routerLink="/">
       <img alt="Logo" [attr.src]="headerLogo" />
@@ -36,7 +36,7 @@
         <i class="menu-icon flaticon-more-v2"></i>
       </li>
       <!-- end:: section -->
-      
+
       <!-- Edriving Management -->
       <!-- begin::1 Level -->
       <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
@@ -84,7 +84,7 @@
             <li class="menu-item" routerLinkActive="menu-item-active" aria-haspopup="true" data-menu-toggle="hover">
               <a class="menu-link" routerLink="/cursos" routerLinkActive="active">
                 <i class="menu-bullet menu-bullet-dot">
-                  <span></span> 
+                  <span></span>
                 </i>
                 <span class="menu-text">Cursos</span>
               </a>
@@ -99,7 +99,7 @@
                 <span class="menu-text">Turmas</span>
               </a>
             </li>
-            <!-- end::3 Level -->            
+            <!-- end::3 Level -->
             <!-- begin::4 Level -->
             <li class="menu-item" routerLinkActive="menu-item-active" aria-haspopup="true" data-menu-toggle="hover">
               <a class="menu-link" routerLink="/cfc" routerLinkActive="active">
@@ -143,7 +143,7 @@
           </ul>
         </div>
       </li>
-
+      {{nivelAcesso}}
       <!-- begin::section -->
       <li class="menu-section">
         <h4 class="menu-text">Configurações</h4>
@@ -152,37 +152,41 @@
       <!-- end:: section -->
 
       <!-- Account Management -->
-      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
+      <li *ngIf="nivelAcesso >= 10 || nivelAcesso < 20" class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
         <a class="menu-link" routerLink="/edriving/account" routerLinkActive="active">
           <span [inlineSVG]="'./assets/media/svg/icons/General/Save.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
           <span class="menu-text">Meus Dados - eDriving</span>
         </a>
       </li>
-      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
+
+      <li *ngIf="nivelAcesso >= 20" class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
         <a class="menu-link" routerLink="/partner/account" routerLinkActive="active">
           <span [inlineSVG]="'./assets/media/svg/icons/General/Save.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
           <span class="menu-text">Meus Dados - Parceiro</span>
         </a>
       </li>
-      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
+
+      <li *ngIf="nivelAcesso >= 30" class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
         <a class="menu-link" routerLink="/cfc/account" routerLinkActive="active">
           <span [inlineSVG]="'./assets/media/svg/icons/General/Save.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
           <span class="menu-text">Meus Dados - C.F.C</span>
         </a>
       </li>
-      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
+
+      <li *ngIf="nivelAcesso >= 30" class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
         <a class="menu-link" routerLink="/cfc/administrative/account" routerLinkActive="active">
           <span [inlineSVG]="'./assets/media/svg/icons/General/Save.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
           <span class="menu-text">Meus Dados - Adm C.F.C</span>
         </a>
       </li>
-      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
+
+      <li *ngIf="nivelAcesso >= 30" class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
         <a class="menu-link" routerLink="/cfc/instructor/account" routerLinkActive="active">
           <span [inlineSVG]="'./assets/media/svg/icons/General/Save.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
           <span class="menu-text">Meus Dados - Instrutor C.F.C</span>
         </a>
       </li>
-      <li class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
+      <li *ngIf="nivelAcesso >= 30" class="menu-item" aria-haspopup="true" routerLinkActive="menu-item-active">
         <a class="menu-link" routerLink="/cfc/student/account" routerLinkActive="active">
           <span [inlineSVG]="'./assets/media/svg/icons/General/Save.svg'" cacheSVG="true" class="svg-icon menu-icon"></span>
           <span class="menu-text">Meus Dados - Aluno C.F.C</span>

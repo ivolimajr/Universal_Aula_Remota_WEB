@@ -18,9 +18,10 @@ export class EdrivingComponent implements OnInit {
   services: any;
   usuarios: EdrivingModel[];
   returnUrl: string;
+  location: Location;
 
   constructor(
-    private _location: Location,
+    private loc: Location,
     private router: Router,
     private route: ActivatedRoute,
     private _edrivingServices: EdrivingServices,
@@ -29,10 +30,7 @@ export class EdrivingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.routeConfig.path || '/';
-    console.log(this._location.path());
-    console.log(this.route.snapshot.routeConfig.path);
-
+    this.location = this.loc;
     this.getUsuariosEdriving();
   }
   private getUsuariosEdriving() {
@@ -53,7 +51,7 @@ export class EdrivingComponent implements OnInit {
       modalRef.componentInstance.id = 0;
       modalRef.result.then((res) => {
         if (res != null) {
-          return location.reload();
+          return this.router.navigate(['/edriving']);
         }
         console.log("2");
         console.log("Erro na API");
