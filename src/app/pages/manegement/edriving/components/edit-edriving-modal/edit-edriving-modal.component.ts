@@ -19,16 +19,9 @@ const EMPTY_EDRIVING: EdrivingPost = {
   telefone: '',
   status: 1, // STATUS ATIVO
   senha: '',
-<<<<<<< HEAD
-  confirmarSenha: '',
-  nivelAcesso: null,
-  senhaAntiga:''
-}
-=======
   cargoid: 1
 };
 
->>>>>>> news
 @Component({
   selector: 'app-edit-edriving-modal',
   templateUrl: './edit-edriving-modal.component.html',

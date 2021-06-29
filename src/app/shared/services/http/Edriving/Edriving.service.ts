@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError, map } from "rxjs/operators";
-import { EdrivingModel } from '../../../models/edriving/edrivingModel.model';
+import { EdrivingModel, EdrivingPost } from '../../../models/edriving/edrivingModel.model';
 import { BaseServices } from "../base.services";
 
 @Injectable({
@@ -20,7 +20,7 @@ export class EdrivingServices extends BaseServices {
     return this.http.get(this.URL_EDRIVING);
   }
 
-  public setUsuario(edrivingModel: EdrivingModel): Observable<EdrivingModel> {
+  public setUsuario(edrivingModel: EdrivingPost): Observable<EdrivingModel> {
     let response = this.http
       .post(this.URL_EDRIVING, edrivingModel, this.ObterHeaderJson())
       .pipe(
