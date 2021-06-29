@@ -6,7 +6,6 @@ import {
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Subscription } from 'rxjs';
 import { environment } from '../environments/environment';
 import { StorageServices } from './shared/services/storage/localStorage.service';
 @Component({
@@ -16,14 +15,10 @@ import { StorageServices } from './shared/services/storage/localStorage.service'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-  private unsubscribe: Subscription[] = [];
 
-  title = 'RXJS';
   private authLocalStorageAuth = `${environment.appVersion}-${environment.AuthStorage}`;
 
   constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
     private router: Router,
     private storageServices: StorageServices,
   ) {
