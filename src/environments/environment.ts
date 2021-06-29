@@ -4,21 +4,15 @@
 
 export const environment = {
   production: false,
-  appVersion: 'v726demo1',
-  USERDATA_KEY: 'authf649fc9a5f55',
-  isMockEnabled: false, //COLOCAR TRUE PARA ATIVAR O BACKEND DO TEMPLATE
-  apiUrl: 'https://your-domain.com/api',
+  appVersion: 'v1',
+  AuthStorage: 'auth29062021',
+  apiUrl: 'https://localhost:44341/api',
   auth: {
-    apiAtiva: false,
-    url: 'https://localhost:44341/api',
     clientId: '',
     clientSecret: '',
     cookieNameClientCredentials: 'access-token-client-hom',
     cookieName: 'access-token-hom',
-    last_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2OGM5MjMwOTFjZjc0OGI1YTE4OWUxYjIxYWI0NGIxNiIsInVuaXF1ZV9uYW1lIjoibGVhbmRybyIsImV4cCI6MTY1NDcxMzQ1OCwiaXNzIjoiRXhlbXBsZUlzc3VlciIsImF1ZCI6IkV4ZW1wbGVBdWRpZW5jZSJ9.dcQ1LxhQSltFjyJBV2tcMdUTvnaK4ssb67C6aw0KEzo'
-  },
-  serviceUrl: {
-    domain: 'localhost'
+    last_token: ''
   }
 };
 

@@ -14,7 +14,7 @@ export class EdrivingCargoServices {
   }
 
   public getCargos(): Observable<any> {
-    return this.http.get(environment.auth.url + this.URL_EDRIVING_CARGO);
+    return this.http.get(environment.apiUrl + this.URL_EDRIVING_CARGO);
   }
 
 }

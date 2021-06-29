@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BaseModel } from '../../../shared/models/baseModels/base.model'
 import { AuthService } from '../../../shared/services/auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { StorageServices } from '../../../shared/services/storage/localStorage.service';
+import { environment } from 'src/environments/environment';
 
 const EMPTY_USER: BaseModel = {
   id: undefined,
@@ -16,7 +18,7 @@ const EMPTY_USER: BaseModel = {
   status: 0,
   telefone: '',
   nivelAcesso: null,
-  senhaAntiga:''
+  senhaAntiga: ''
 };
 
 @Component({
@@ -32,14 +34,17 @@ export class LoginComponent implements OnInit {
   returnUrl: string;
   private unsubscribe: Subscription[] = [];
 
+  private authLocalStorageAuth = `${environment.appVersion}-${environment.AuthStorage}`;
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
+    private localStorage: StorageServices,
     private toastr: ToastrService,
   ) {
-    if (this.authService.getAuthFromLocalStorage()) {
+    if (this.localStorage.getAuthFromLocalStorage(this.authLocalStorageAuth)) {
       this.router.navigate(['/']);
     }
   }
@@ -96,7 +101,7 @@ export class LoginComponent implements OnInit {
   }
 
   processarSucesso(response: BaseModel) {
-    this.authService.setAuthFromLocalStorage(response);
+    this.localStorage.setAuthFromLocalStorage(this.authLocalStorageAuth, response);
     this.router.navigate([this.returnUrl]);
   }
   ngOnDestroy() {

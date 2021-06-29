@@ -1,13 +1,12 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, map } from "rxjs/operators";
 import { Router } from "@angular/router";
 
 import { BaseModel } from "../../models/baseModels/base.model";
 import { environment } from '../../../../environments/environment';
-import { TokenService } from "./token-service.service";
-import { AuthHTTPService } from './authHttpService.service';
+import { StorageServices } from '../storage/localStorage.service';
 import { BaseServices } from "../http/base.services";
 
 @Injectable({
@@ -21,7 +20,7 @@ export class AuthService extends BaseServices {
     throw new Error('Method not implemented.');
   }
 
-  private authLocalStorageToken = `${environment.appVersion}-${environment.USERDATA_KEY}`;
+  private authLocalStorageToken = `${environment.appVersion}-${environment.AuthStorage}`;
 
   currentUser$: Observable<BaseModel>;
   isLoading$: Observable<boolean>;
@@ -37,6 +36,7 @@ export class AuthService extends BaseServices {
   }
 
   constructor(
+    private localStorage: StorageServices,
     private http: HttpClient,
     private router: Router
   ) {
@@ -46,10 +46,6 @@ export class AuthService extends BaseServices {
     this.currentUser$ = this.currentUserSubject.asObservable();
     this.isLoading$ = this.isLoadingSubject.asObservable();
   }
-
-  headers: HttpHeaders = new HttpHeaders({
-    "Content-Type": "application/json"
-  });
 
   login(email: string, senha: string): Observable<any> {
 
@@ -66,17 +62,9 @@ export class AuthService extends BaseServices {
       }),
         catchError(this.serviceError));
   }
-  // private methods
-  public setAuthFromLocalStorage(user: BaseModel) {
-    localStorage.setItem(this.authLocalStorageToken, JSON.stringify(user));
-  }
-
-  public getAuthFromLocalStorage(): BaseModel {
-    return JSON.parse(localStorage.getItem(this.authLocalStorageToken));
-  }
 
   logout() {
-    localStorage.removeItem(this.authLocalStorageToken);
+    this.localStorage.removeFromStorage(this.authLocalStorageToken);
     this.router.navigate(['/auth/login'], {
       queryParams: {},
     });

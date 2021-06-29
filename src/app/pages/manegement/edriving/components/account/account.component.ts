@@ -47,7 +47,7 @@ export class AccountComponentEdriving implements OnInit {
     private fb: FormBuilder,
     private toastr: ToastrService,
 
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     let senha = new FormControl('', [Validators.required, CustomValidators.rangeLength([6, 15])]);

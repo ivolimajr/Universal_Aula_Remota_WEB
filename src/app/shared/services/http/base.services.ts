@@ -3,7 +3,7 @@ import { throwError } from "rxjs";
 import { environment } from "src/environments/environment";
 
 export abstract class BaseServices {
-  protected UrlService: string = environment.auth.url;
+  protected UrlService: string = environment.apiUrl;
 
   protected ObterHeaderJson() {
     return {
