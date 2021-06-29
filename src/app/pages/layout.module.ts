@@ -54,8 +54,6 @@ import { EditCursoModalComponent } from './cursos/edit-curso-modal/edit-curso-mo
 import { NgBrazil } from 'ng-brazil';
 import { TextMaskModule } from 'angular2-text-mask';
 import { CustomFormsModule } from 'ng2-validation';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { MenuLoginComponent } from '../menu-login/menu-login.component';
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -91,7 +89,6 @@ import { MenuLoginComponent } from '../menu-login/menu-login.component';
     TurmasComponent,
     EditTurmasModalComponent,
     EditCursoModalComponent,
-    MenuLoginComponent,
 
   ],
   imports: [
@@ -110,7 +107,6 @@ import { MenuLoginComponent } from '../menu-login/menu-login.component';
     NgBrazil,
     TextMaskModule,
     CustomFormsModule,
-    NgxPaginationModule
   ],
   providers: [NgbAlertConfig]
 })

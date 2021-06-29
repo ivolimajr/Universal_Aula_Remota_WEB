@@ -190,13 +190,8 @@ export class EditAdministrativeModalComponent implements OnInit, OnDestroy {
         uploadDOC: [this.administrativo.uploadDOC, Validators.compose([Validators.nullValidator])],
 
       });
-
     }
-
   }
-
-
-
   //VALIDADORES
   isControlValid(controlName: string): boolean {
     const control = this.createForm.controls[controlName];

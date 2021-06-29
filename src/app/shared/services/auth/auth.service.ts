@@ -75,13 +75,10 @@ export class AuthService extends BaseServices {
     return JSON.parse(localStorage.getItem(this.authLocalStorageToken));
   }
 
-
   logout() {
     localStorage.removeItem(this.authLocalStorageToken);
     this.router.navigate(['/auth/login'], {
       queryParams: {},
     });
   }
-
-
 }

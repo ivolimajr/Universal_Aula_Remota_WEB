@@ -19,7 +19,8 @@ const EMPTY_EDRIVING: EdrivingModel = {
   senha: '',
   confirmarSenha: '',
   nivelAcesso: null,
-  senhaAntiga:''
+  senhaAntiga:'',
+  cargoId: null,
 };
 @Component({
   selector: 'app-account',

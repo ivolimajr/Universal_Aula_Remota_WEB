@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { BaseModel } from '../../../shared/models/baseModels/base.model'
@@ -54,15 +54,14 @@ export class LoginComponent implements OnInit {
     this.user = EMPTY_USER;
     this.loadForm();
   }
-
+  
   loadForm() {
-    this.user.email = "";
+    this.user.email = "edrivingyuri@edriving.com";
     this.user.senha = "universalPay";
-
     this.loginForm = this.fb.group({
       email: [
         this.user.email,
-        Validators.compose([
+          Validators.compose([
           Validators.required,
           Validators.email,
           Validators.minLength(3),
@@ -85,7 +84,7 @@ export class LoginComponent implements OnInit {
       .subscribe(
         sucesso => {
           console.log(sucesso)
-          this.processarSucesso(sucesso);
+          this.processarSucesso(sucesso);         
         },
         error => {
           this.toastr.warning(error.error.error);

@@ -23,13 +23,8 @@ const EMPTY_EDRIVING: EdrivingModel = {
   senha: '',
   confirmarSenha: '',
   nivelAcesso: null,
-<<<<<<< HEAD
-
-=======
   senhaAntiga:''
->>>>>>> 3a048ea4b9a510bc926a642a756c1f6d6318077c
-};
-
+}
 @Component({
   selector: 'app-edit-edriving-modal',
   templateUrl: './edit-edriving-modal.component.html',

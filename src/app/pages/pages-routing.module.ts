@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { NgPagination, NgPaginationNext, NgPaginationNumber } from '../_metronic/shared/crud-table/components/paginator/ng-pagination/ng-pagination.component';
 import { CursosComponent } from './cursos/cursos.component';
 import { HomeComponent } from './home/home.component';
 import { AdministrativeComponent } from './manegement/administrative/administrative.component';
