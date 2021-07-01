@@ -89,7 +89,6 @@ import { CustomFormsModule } from 'ng2-validation';
     TurmasComponent,
     EditTurmasModalComponent,
     EditCursoModalComponent,
-
   ],
   imports: [
     CommonModule,

@@ -11,15 +11,14 @@ import { EditAdministrativeModalComponent } from './components/edit-administrati
 export class AdministrativeComponent implements OnInit {
 
   constructor(
-    private fb: FormBuilder,
-    private modalService: NgbModal,
+    public fb: FormBuilder,
+    public modalService: NgbModal,
   ) { }
 
   ngOnInit(): void {
   }
   create(id: number) {    
     if(!id){
-      //CRIAR NOVO USUÁRIO
       console.log("Criar o usuário");      
       const modalRef = this.modalService.open(EditAdministrativeModalComponent);
       modalRef.componentInstance.id = 0;
@@ -33,7 +32,6 @@ export class AdministrativeComponent implements OnInit {
         console.log("Error: "+res);
       });
     } else{
-      //EDITAR UM USUARIO
       const modalRef = this.modalService.open(EditAdministrativeModalComponent);
       modalRef.componentInstance.id = id;
       console.log("Editar o id: "+ id);

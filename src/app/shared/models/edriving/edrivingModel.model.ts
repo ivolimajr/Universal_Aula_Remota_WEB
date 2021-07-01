@@ -7,7 +7,6 @@ export interface EdrivingModel extends BaseModel {
   cargoId: number;
   cargo: string;
 }
-
 export class EdrivingPost {
   id: number;
   fullName: string;
@@ -18,8 +17,6 @@ export class EdrivingPost {
   status: number;
   cargoid: number;
 }
-
-
 export class EdrivingGetAll {
   id: number;
   fullName: string;

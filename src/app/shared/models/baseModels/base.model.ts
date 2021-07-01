@@ -1,6 +1,3 @@
-/**
- * Essa INTERFACE tem como base todos os atributos que todos os outros Models devem ter;
- */
 export class BaseModel {
   id: number; // ID de cada usuário
   fullName: string; // Esse atributo valerá tanto para o nome do usuário do sistema quanto para o nome do C.F.C

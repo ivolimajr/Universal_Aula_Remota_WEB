@@ -11,10 +11,9 @@ import { EditCfcModalComponent } from './components/edit-cfc-modal/edit-cfc-moda
 export class CfcComponent implements OnInit {
 
   constructor(
-    private fb: FormBuilder,
-    private modalService: NgbModal,
+    public fb: FormBuilder,
+    public modalService: NgbModal,
     ) {
-
    }
 
   ngOnInit(): void {
@@ -22,7 +21,6 @@ export class CfcComponent implements OnInit {
 
   create(id: number) {    
     if(!id){
-      //CRIAR NOVO USUÁRIO
       console.log("Criar o usuário");      
       const modalRef = this.modalService.open(EditCfcModalComponent);
       modalRef.componentInstance.id = 0;
@@ -36,7 +34,6 @@ export class CfcComponent implements OnInit {
         console.log("Error: "+res);
       });
     } else{
-      //EDITAR UM USUARIO
       const modalRef = this.modalService.open(EditCfcModalComponent);
       modalRef.componentInstance.id = id;
       console.log("Editar o id: "+ id);

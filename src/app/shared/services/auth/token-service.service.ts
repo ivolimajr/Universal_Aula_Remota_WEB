@@ -1,18 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import {
-  HttpClient,
-  HttpHeaders
-} from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import {
-  take,
-  tap
-} from 'rxjs/operators';
+import { HttpClient} from '@angular/common/http';
 
 import { environment } from 'src/environments/environment';
 import { Token } from '../../models/auth/token.model';
-
 @Injectable({
   providedIn: 'root'
 })

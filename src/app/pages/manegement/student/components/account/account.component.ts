@@ -1,12 +1,11 @@
 import { Component, ElementRef, Input, OnInit, ViewChildren } from '@angular/core';
-import { FormControl, Validators, FormGroup, FormBuilder, FormControlName } from '@angular/forms';
+import { FormControl, Validators, FormBuilder, FormControlName } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { utilsBr } from 'js-brasil';
 import { NgBrazilValidators } from 'ng-brazil';
 import { CustomValidators } from 'ng2-validation';
-import { of, Subscription } from 'rxjs';
+import { of } from 'rxjs';
+import { ManagementBaseComponent } from 'src/app/pages/management.base.component';
 import { StudentBaseModel } from 'src/app/shared/models/student/studentModel.model';
-import { DisplayMessage, GenericValidator, ValidationMessages } from 'src/app/shared/validators/generic-form-validation';
 
 const EMPTY_CUSTOMER: StudentBaseModel = {
   id: undefined,
@@ -14,7 +13,7 @@ const EMPTY_CUSTOMER: StudentBaseModel = {
   email: '',
   cpf: '',
   telefone: '',
-  status: 1, // STATUS ATIVO
+  status: 1,
   senha: '',
   confirmarSenha: '',
   cep: '',
@@ -38,28 +37,23 @@ const EMPTY_CUSTOMER: StudentBaseModel = {
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss']
 })
-export class AccountComponentStudent implements OnInit {
+export class AccountComponentStudent extends ManagementBaseComponent implements OnInit {
 
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements: ElementRef[];
 
   email = new FormControl('', [Validators.required, Validators.email]);
 
-  @Input() id: number; // ID QUE VAMOS RECEBER PELA ROTA PARA PODER EDITAR
+  @Input() id: number;
 
-  isLoading$;
   customer: StudentBaseModel;
-  createForm: FormGroup;
-  private subscriptions: Subscription[] = [];
   modal: any;
-  MASKS = utilsBr.MASKS;
-  displayMessage: DisplayMessage = {};
-  genericValidator: GenericValidator;
-  validationMessages: ValidationMessages;
-
+  
   constructor(
-    private fb: FormBuilder,
-    private modalService: NgbModal,
-  ) { }
+    public fb: FormBuilder,
+    public modalService: NgbModal,
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     let senha = new FormControl('', [Validators.required, CustomValidators.rangeLength([6, 15])]);
@@ -112,21 +106,12 @@ export class AccountComponentStudent implements OnInit {
   }
 
   create() {
-    /**
-     * 1° validar/tratar os dados
-     * 2° insere os dados na API
-     * 3° trata o retorno da API
-     * 4° continua...
-     */
     console.log(this.customer)
     this.modal.close(true)
     this.modal.dismiss("false");
     return of(this.customer);
   }
 
-  /**
-   *  MÉTODO PARA CARREGAR ( INICIAR ) O FORMULÁRIO
-   */
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
@@ -151,32 +136,9 @@ export class AccountComponentStudent implements OnInit {
         confirmarSenha: ['', [Validators.required, CustomValidators.rangeLength([6, 15]), CustomValidators.equalTo()]],
       });
     }
-
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
-
-  //VALIDADORES
-  isControlValid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.valid && (control.dirty || control.touched);
-  }
-
-  isControlInvalid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.invalid && (control.dirty || control.touched);
-  }
-
-  controlHasError(validation, controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.hasError(validation) && (control.dirty || control.touched);
-  }
-
-  isControlTouched(controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.dirty || control.touched;
-  }
-
 }

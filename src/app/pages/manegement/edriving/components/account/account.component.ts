@@ -1,12 +1,11 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChildren } from '@angular/core';
-import { FormBuilder, FormControl, FormControlName, FormGroup, Validators } from '@angular/forms';
+import { Component, ElementRef, Input, OnInit, ViewChildren } from '@angular/core';
+import { FormBuilder, FormControl, FormControlName, Validators } from '@angular/forms';
 import { NgBrazilValidators } from 'ng-brazil';
 import { CustomValidators } from 'ng2-validation';
-import { fromEvent, merge, Observable, of, Subscription } from 'rxjs';
-import { DisplayMessage, GenericValidator, ValidationMessages } from '../../../../../shared/validators/generic-form-validation';
+import { of } from 'rxjs';
 import { EdrivingModel } from '../../../../../shared/models/edriving/edrivingModel.model';
-import { utilsBr } from 'js-brasil';
 import { ToastrService } from 'ngx-toastr';
+import { ManagementBaseComponent } from 'src/app/pages/management.base.component';
 
 const EMPTY_EDRIVING: EdrivingModel = {
   id: undefined,
@@ -14,7 +13,7 @@ const EMPTY_EDRIVING: EdrivingModel = {
   email: '',
   cpf: '',
   telefone: '',
-  status: 1, // STATUS ATIVO
+  status: 1,
   cargo: '',
   senha: '',
   confirmarSenha: '',
@@ -27,27 +26,22 @@ const EMPTY_EDRIVING: EdrivingModel = {
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss']
 })
-export class AccountComponentEdriving implements OnInit {
+export class AccountComponentEdriving  extends ManagementBaseComponent implements OnInit {
 
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements: ElementRef[];
 
-  @Input() id: number; // ID QUE VAMOS RECEBER PELA ROTA PARA PODER EDITAR
+  @Input() id: number;
 
-  isLoading$;
   edriving: EdrivingModel;
-  createForm: FormGroup;
-  private subscriptions: Subscription[] = [];
   modal: any;
-  displayMessage: DisplayMessage = {};
-  genericValidator: GenericValidator;
-  validationMessages: ValidationMessages;
-  MASKS = utilsBr.MASKS;
 
   constructor(
-    private fb: FormBuilder,
-    private toastr: ToastrService,
+    public fb: FormBuilder,
+    public toastr: ToastrService,
 
-  ) { }
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     let senha = new FormControl('', [Validators.required, CustomValidators.rangeLength([6, 15])]);
@@ -102,12 +96,6 @@ export class AccountComponentEdriving implements OnInit {
   }
 
   create() {
-    /**
-     * 1° validar/tratar os dados
-     * 2° insere os dados na API
-     * 3° trata o retorno da API
-     * 4° continua...
-     */
     console.log(this.edriving)
     this.modal.close(true)
     this.modal.dismiss("false");
@@ -145,25 +133,5 @@ export class AccountComponentEdriving implements OnInit {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
-  }
-  //VALIDADORES
-  isControlValid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.valid && (control.dirty || control.touched);
-  }
-
-  isControlInvalid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.invalid && (control.dirty || control.touched);
-  }
-
-  controlHasError(validation, controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.hasError(validation) && (control.dirty || control.touched);
-  }
-
-  isControlTouched(controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.dirty || control.touched;
   }
 }

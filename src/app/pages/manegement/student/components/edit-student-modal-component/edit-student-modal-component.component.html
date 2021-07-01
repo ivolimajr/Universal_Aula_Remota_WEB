@@ -8,7 +8,6 @@
     <ng-container>
       <form action="#" class="form form-label-right" [formGroup]="createForm">
 
-        <!-- start: Nome -->
         <div class="form-group row">
           <div class="col-lg">
             <label class="form-label" for="fullName">Nome</label>
@@ -27,9 +26,7 @@
             </div>
           </div>
         </div>
-        <!-- end: Nome -->
 
-        <!-- start: email -->
         <div class="form-group row">
           <div class="col-lg">
             <label class="form-label" for="email" >E-mail</label>
@@ -42,9 +39,7 @@
             </div>
           </div>
         </div>
-        <!-- end: email -->
 
-        <!-- start: CPF -->
         <div class="form-group row">
           <div class="col-lg">
             <label class="form-label" for="cpf">CPF</label>
@@ -56,9 +51,7 @@
               Campo necessário
             </div>
           </div>
-          <!-- end: CPF -->
 
-          <!-- start: Telefone -->
           <div class="col-lg">
             <label class="form-label" for="telefone" >Telefone</label>
             <input type="text" id="telefone" class="form-control form-control-lg form-control-solid" name="telefone" placeholder="telefone" autocomplete="off" formControlName="telefone" [class.is-invalid]="isControlInvalid('telefone')" [class.is-valid]="isControlValid('telefone')" telefone [textMask]="{mask: MASKS.telefone.textMask}" />
@@ -70,9 +63,7 @@
             </div>
           </div>
         </div>
-        <!-- end: Telefone -->
         
-        <!-- start: Data de Nascimento -->
         <div class="form-group row">
           <div class="col-lg">
             <label>Data de Nascimento</label>
@@ -86,8 +77,7 @@
               Formato da data incorreta
             </div>
           </div>
-          <!-- end: Data de Nascimento -->
-          <!-- start: RG -->
+
           <div class="col-lg">
             <label class="form-label">RG</label>
             <input type="text" class="form-control form-control-lg form-control-solid" name="cpf" placeholder="RG" autocomplete="off" formControlName="identidade" [class.is-invalid]="isControlInvalid('identidade')" [class.is-valid]="isControlValid('identidade')" />
@@ -99,8 +89,7 @@
             </div>
           </div>
         </div>
-        <!-- end: RG -->
-        <!-- start: CEP -->
+
         <div class="form-group row">
           <div class="col-lg">
             <label class="form-label" for="cep">CEP</label>
@@ -112,9 +101,7 @@
               Campo necessário
             </div>
           </div>
-          <!-- end: CEP -->
 
-          <!-- start: Bairro -->
           <div class="col-lg">
             <label class="form-label" for="bairro" >Bairro</label>
             <input type="text" id="bairro" class="form-control form-control-lg form-control-solid" name="bairro" placeholder="Bairro" autocomplete="off" formControlName="bairro" [class.is-invalid]="isControlInvalid('bairro')" [class.is-valid]="isControlValid('bairro')" />
@@ -126,8 +113,7 @@
             </div>
           </div>
         </div>
-        <!-- end: Bairro -->
-        <!-- start: Cidade -->
+
         <div class="form-group row">
           <div class="col-lg">
             <label class="form-label" for="cidade">Cidade</label>
@@ -139,9 +125,7 @@
               Campo necessário
             </div>
           </div>
-          <!-- end: Cidade -->
 
-          <!-- start: CEP -->
           <div class="col-lg">
             <label class="form-label" for="enderecoLogradouro">Endereço</label>
             <input type="text" id="enderecoLogradouro" class="form-control form-control-lg form-control-solid" name="enderecoLogradouro" placeholder="Endereço com número" autocomplete="off" formControlName="enderecoLogradouro" [class.is-invalid]="isControlInvalid('enderecoLogradouro')" [class.is-valid]="isControlValid('enderecoLogradouro')" />
@@ -153,31 +137,27 @@
             </div>
           </div>
         </div>
-        <!-- end: CEP -->
 
-        <!-- start: Status -->
         <div class="form-group row">
           <div class="col-4"></div>
           <div class="col-lg">
             <div class="form-group row">
-                  <div class="radio-inline">
-                      <label class="radio radio-success">
-                          <input type="radio" name="status"  checked="checked" value="1" formControlName="status" />
-                          <span></span>
-                          Ativo
-                      </label>
-                      <label class="radio radio-danger">
-                          <input type="radio" name="status" value="0" formControlName="status"/>
-                          <span></span>
-                          Inativo
-                      </label>
-                  </div>
+               <div class="radio-inline">
+                  <label class="radio radio-success">
+                     <input type="radio" name="status"  checked="checked" value="1" formControlName="status" />
+                       <span></span>
+                         Ativo
+                    </label>
+                    <label class="radio radio-danger">
+                       <input type="radio" name="status" value="0" formControlName="status"/>
+                       <span></span>
+                        Inativo
+                     </label>
+               </div>
             </div>
           </div>
         </div>
-        <!-- end: Status -->
 
-        <!-- start: parceiro -->
         <div class="form-group row">
           <div class="col-lg">
             <label>CFC</label>
@@ -187,9 +167,7 @@
             </select>
           </div>
         </div>
-        <!-- end: parceiro -->
 
-        <!-- start: Formação-->
         <div class="form-group row">
           <div class="col-lg">
             <label>Cursos</label>
@@ -200,9 +178,7 @@
               <option value="4">Formação Mototaxi</option>
             </select>
           </div>
-        </div>
-        <!-- end: Formação -->
-        
+        </div>        
       </form>
     </ng-container>
   </div>

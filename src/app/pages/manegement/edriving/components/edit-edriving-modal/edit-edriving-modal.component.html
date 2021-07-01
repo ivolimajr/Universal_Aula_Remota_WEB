@@ -8,7 +8,6 @@
     <ng-container>
       <form action="#" class="form form-label-right" [formGroup]="createForm">
 
-        <!-- start: Nome -->
         <div class="form-group row">
           <div class="col-lg">
             <label class="form-label" for="fullName">Nome</label>
@@ -27,9 +26,7 @@
             </div>
           </div>
         </div>
-        <!-- end: Nome -->
 
-        <!-- start: email -->
         <div class="form-group row">
           <div class="col-lg">
             <label class="form-label" for="email">E-mail</label>
@@ -42,9 +39,7 @@
             </div>
           </div>
         </div>
-        <!-- end: email -->
 
-        <!-- start: CPF -->
         <div class="form-group row">
           <div class="col-lg">
             <label class="form-label" for="cpf">CPF</label>
@@ -59,9 +54,7 @@
               Limite de caracteres excedido
             </div>
           </div>
-          <!-- end: CPF -->
 
-          <!-- start: Telefone -->
           <div class="col-lg">
             <label class="form-label" for="telefone">Telefone</label>
             <input type="text" id="telefone" class="form-control form-control-lg form-control-solid" name="telefone" placeholder="telefone" autocomplete="off" formControlName="telefone" [class.is-invalid]="isControlInvalid('telefone')" [class.is-valid]="isControlValid('telefone')" telefone [textMask]="{mask: MASKS.telefone.textMask}" />
@@ -73,9 +66,7 @@
             </div>
           </div>
         </div>
-        <!-- end: Telefone -->
 
-        <!-- start: Status -->
         <div class="form-group row">
           <div class="col-4"></div>
           <div class="col-lg">
@@ -95,8 +86,7 @@
             </div>
           </div>
         </div>
-        <!-- end: Status -->
-        <!-- start:cargo -->
+
         <div class="form-group row">
           <div class="col-lg">
             <label>Cargo</label>
@@ -105,8 +95,6 @@
             </select>
           </div>
         </div>
-        <!-- end: cargo -->
-
       </form>
     </ng-container>
   </div>

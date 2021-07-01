@@ -13,8 +13,8 @@ export class PartnerComponent implements OnInit {
   email = new FormControl('', [Validators.required, Validators.email]);
 
   constructor(
-    private fb: FormBuilder,
-    private modalService: NgbModal,
+    public fb: FormBuilder,
+    public modalService: NgbModal,
   ) {
  }
 
@@ -24,7 +24,6 @@ export class PartnerComponent implements OnInit {
 
   create(id: number) {    
     if(!id){
-      //CRIAR NOVO USUÁRIO
       console.log("Criar o usuário");      
       const modalRef = this.modalService.open(EditPartnerModalComponent);
       modalRef.componentInstance.id = 0;
@@ -38,12 +37,9 @@ export class PartnerComponent implements OnInit {
         console.log("Error: "+res);
       });
     } else{
-      //EDITAR UM USUARIO
       const modalRef = this.modalService.open(EditPartnerModalComponent);
       modalRef.componentInstance.id = id;
       console.log("Editar o id: "+ id);
-    }
-    
-    
+    }  
   }
 }

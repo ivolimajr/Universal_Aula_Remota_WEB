@@ -1,12 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { of, Subscription } from 'rxjs';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { of } from 'rxjs';
 import { PartnerModel } from '../../../../../shared/models/partner/partnerModel.model';
-import { utilsBr } from 'js-brasil';
 import { ToastrService } from 'ngx-toastr';
 import { NgBrazilValidators } from 'ng-brazil';
-import { DisplayMessage } from 'src/app/shared/validators/generic-form-validation';
 import { CustomValidators } from 'ng2-validation';
+import { ManagementBaseComponent } from 'src/app/pages/management.base.component';
 
 const EMPTY_PARTNER: PartnerModel = {
   id: undefined,
@@ -34,23 +33,20 @@ const EMPTY_PARTNER: PartnerModel = {
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss']
 })
-export class AccountComponentPartner implements OnInit {
+export class AccountComponentPartner extends ManagementBaseComponent implements OnInit {
 
   email = new FormControl('', [Validators.required, Validators.email]);
-  @Input() id: number; // ID QUE VAMOS RECEBER PELA ROTA PARA PODER EDITAR
+  @Input() id: number;
 
-  isLoading$;
   partner: PartnerModel;
-  createForm: FormGroup;
-  private subscriptions: Subscription[] = [];
   modal: any;
-  MASKS = utilsBr.MASKS;
-  displayMessage: DisplayMessage = {};
 
   constructor(
-    private fb: FormBuilder,
-    private toastr: ToastrService,
-  ) { }
+    public fb: FormBuilder,
+    public toastr: ToastrService,
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.loadCustomer();
@@ -71,7 +67,6 @@ export class AccountComponentPartner implements OnInit {
     this.prepareCustomer();
     this.create();
     this.toastr.success('Alterações concluídas');
-
   }
 
   private prepareCustomer() {
@@ -103,21 +98,12 @@ export class AccountComponentPartner implements OnInit {
   }
 
   create() {
-    /**
-     * 1° validar/tratar os dados
-     * 2° insere os dados na API
-     * 3° trata o retorno da API
-     * 4° continua...
-     */
     console.log(this.partner)
     this.modal.close(true)
     this.modal.dismiss("false");
     return of(this.partner);
   }
 
-  /**
-   *  MÉTODO PARA CARREGAR ( INICIAR ) O FORMULÁRIO
-   */
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
@@ -158,34 +144,9 @@ export class AccountComponentPartner implements OnInit {
         uf: [this.partner.uf, Validators.compose([Validators.nullValidator])],
       });
     }
-
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
-
-
-  //VALIDADORES
-  isControlValid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.valid && (control.dirty || control.touched);
-  }
-
-  isControlInvalid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.invalid && (control.dirty || control.touched);
-  }
-
-  controlHasError(validation, controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.hasError(validation) && (control.dirty || control.touched);
-  }
-
-  isControlTouched(controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.dirty || control.touched;
-  }
-
-
 }

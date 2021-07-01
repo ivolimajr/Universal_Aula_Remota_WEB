@@ -1,6 +1,3 @@
-/**
- * Essa é a interface do Parceiro. EX: DetranDF, DetranGO....;
- */
 import { BaseModel } from '../baseModels/base.model';
 export interface PartnerModel extends BaseModel {
   cargo: string;

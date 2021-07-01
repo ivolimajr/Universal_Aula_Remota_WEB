@@ -7,7 +7,6 @@ import { EdrivingGetAll } from 'src/app/shared/models/edriving/edrivingModel.mod
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Observable, of } from 'rxjs';
-import { take } from 'rxjs/operators';
 @Component({
   selector: 'app-edriving',
   templateUrl: './edriving.component.html',
@@ -27,7 +26,7 @@ export class EdrivingComponent implements OnInit {
     private loc: Location,
     private router: Router,
     private _edrivingServices: EdrivingServices,
-    private modalService: NgbModal,
+    public modalService: NgbModal,
   ) {
   }
 
@@ -43,10 +42,6 @@ export class EdrivingComponent implements OnInit {
       })
   }
 
-  /**
-   * PARAMS = Id do usuário para ser editado
-   * SE o parametro for nulo significa que está criando um novo usuário
-   */
   create(id: number) {
     if (!id) {
       const modalRef = this.modalService.open(EditEdrivingModalComponent);
@@ -61,7 +56,6 @@ export class EdrivingComponent implements OnInit {
         return console.log("Error: " + res);
       });
     } else {
-      //EDITAR UM USUARIO
       const modalRef = this.modalService.open(EditEdrivingModalComponent);
       modalRef.componentInstance.id = id;
     }

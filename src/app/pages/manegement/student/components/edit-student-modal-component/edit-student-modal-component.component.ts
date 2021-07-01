@@ -1,12 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-import { of, Subscription } from 'rxjs';
+import { of } from 'rxjs';
 import { StudentBaseModel } from 'src/app/shared/models/student/studentModel.model';
 import { CustomAdapter, CustomDateParserFormatter } from 'src/app/_metronic/core';
-import { NgBrazilValidators, NgBrazil, MASKS } from 'ng-brazil';
-import { utilsBr } from 'js-brasil';
+import { NgBrazilValidators } from 'ng-brazil';
 import { ToastrService } from 'ngx-toastr';
+import { ManagementBaseComponent } from 'src/app/pages/management.base.component';
 
 const EMPTY_STUDENT: StudentBaseModel = {
   id: undefined,
@@ -14,7 +14,7 @@ const EMPTY_STUDENT: StudentBaseModel = {
   email: '',
   cpf: '',
   telefone: '',
-  status: 1, // STATUS ATIVO
+  status: 1,
   senha: '',
   confirmarSenha: '',
   cep: '',
@@ -32,7 +32,6 @@ const EMPTY_STUDENT: StudentBaseModel = {
   nivelAcesso: null,
   senhaAntiga:''
 };
-
 @Component({
   selector: 'app-edit-student-modal-component',
   templateUrl: './edit-student-modal-component.component.html',
@@ -43,7 +42,7 @@ const EMPTY_STUDENT: StudentBaseModel = {
     { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter }
   ]
 })
-export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
+export class EditStudentModalComponentComponent extends ManagementBaseComponent implements OnInit, OnDestroy {
 
   emailFormControl = new FormControl('', [
     Validators.required,
@@ -52,18 +51,14 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
 
   @Input() id: number;
 
-  isLoading$;
   student: StudentBaseModel;
-  createForm: FormGroup;
-  private subscriptions: Subscription[] = [];
-  MASKS = utilsBr.MASKS;
 
   constructor(
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     public modal: NgbActiveModal,
-    private toastr: ToastrService,
+    public toastr: ToastrService,
   ) {
-
+    super();
   }
 
   ngOnInit(): void {
@@ -108,7 +103,6 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
     this.student.orgaoExpedidor = formData.orgaoExpedidor.toUpperCase();
     this.student.turno = formData.turno.toUpperCase();
     this.student.turma = formData.turma.toUpperCase();
-
   }
 
   edit() {
@@ -116,21 +110,12 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
   }
 
   create() {
-    /**
-     * 1° validar/tratar os dados
-     * 2° insere os dados na API
-     * 3° trata o retorno da API
-     * 4° continua...
-     */
     console.log(this.student)
     this.modal.close(true)
     this.modal.dismiss("false");
     return of(this.student);
   }
 
-  /**
-   *  MÉTODO PARA CARREGAR ( INICIAR ) O FORMULÁRIO
-   */
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
@@ -178,33 +163,9 @@ export class EditStudentModalComponentComponent implements OnInit, OnDestroy {
         turma: [this.student.turma, Validators.compose([Validators.nullValidator])],
       });
     }
-
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
-
-
-  //VALIDADORES
-  isControlValid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.valid && (control.dirty || control.touched);
-  }
-
-  isControlInvalid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.invalid && (control.dirty || control.touched);
-  }
-
-  controlHasError(validation, controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.hasError(validation) && (control.dirty || control.touched);
-  }
-
-  isControlTouched(controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.dirty || control.touched;
-  }
-
 }

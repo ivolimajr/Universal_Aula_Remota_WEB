@@ -1,20 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { of, Subscription } from 'rxjs';
+import { of } from 'rxjs';
 import { CfcModel } from 'src/app/shared/models/cfc/cfcModel.model';
-import { utilsBr } from 'js-brasil';
 import { ToastrService } from 'ngx-toastr';
 import { NgBrazilValidators } from 'ng-brazil';
 import { CustomValidators } from 'ng2-validation';
-import { DisplayMessage } from 'src/app/shared/validators/generic-form-validation';
+import { ManagementBaseComponent } from 'src/app/pages/management.base.component';
 
 const EMPTY_CFC: CfcModel = {
   id: undefined,
   fullName: '',
   email: '',
   telefone: '',
-  status: 1, // STATUS ATIVO
+  status: 1,
   senha: '',
   confirmarSenha: '',
   bairro: '',
@@ -41,25 +40,22 @@ const EMPTY_CFC: CfcModel = {
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss']
 })
-export class AccountComponentCfc implements OnInit {
+export class AccountComponentCfc extends ManagementBaseComponent implements OnInit {
 
   email = new FormControl('', [Validators.required, Validators.email]); // TIRAR
 
   @Input() id: number;
 
-  isLoading$;
   cfc: CfcModel;
-  createForm: FormGroup;
-  private subscriptions: Subscription[] = [];
   modal: any;
-  MASKS = utilsBr.MASKS;
-  displayMessage: DisplayMessage = {};
 
   constructor(
-    private fb: FormBuilder,
-    private modalService: NgbModal,
-    private toastr: ToastrService,
-  ) { }
+    public fb: FormBuilder,
+    public modalService: NgbModal,
+    public toastr: ToastrService,
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.loadCustomer();
@@ -108,9 +104,6 @@ export class AccountComponentCfc implements OnInit {
     this.cfc.senhaAntiga = formData.senhaAntiga;
   }
 
-  /**
-   * Edita a modal (alterando a tabela)
-   */
   edit() {
     console.log("Edit do modal");
   }
@@ -120,19 +113,10 @@ export class AccountComponentCfc implements OnInit {
   }
 
   create() {
-    /**
-     * 1° validar/tratar os dados
-     * 2° insere os dados na API
-     * 3° trata o retorno da API
-     * 4° continua...
-     */
     console.log(this.cfc)
     return of(this.cfc);
   }
 
-  /**
-   *  MÉTODO PARA CARREGAR ( INICIAR ) O FORMULÁRIO
-   */
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
@@ -188,33 +172,9 @@ export class AccountComponentCfc implements OnInit {
 
       });
     }
-
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
-
-
-  //VALIDADORES
-  isControlValid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.valid && (control.dirty || control.touched);
-  }
-
-  isControlInvalid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.invalid && (control.dirty || control.touched);
-  }
-
-  controlHasError(validation, controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.hasError(validation) && (control.dirty || control.touched);
-  }
-
-  isControlTouched(controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.dirty || control.touched;
-  }
-
 }

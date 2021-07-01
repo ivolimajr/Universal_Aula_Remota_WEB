@@ -10,14 +10,13 @@ import { EditCursoModalComponent } from './edit-curso-modal/edit-curso-modal.com
 export class CursosComponent implements OnInit {
 
   constructor(
-    private modalService: NgbModal,
+    public modalService: NgbModal,
   ) { }
 
   ngOnInit(): void {
   }
   create(id: number) {
     if (!id) {
-      //CRIAR NOVO USUÁRIO
       console.log("Criar o usuário");
       const modalRef = this.modalService.open(EditCursoModalComponent);
       modalRef.componentInstance.id = 0;
@@ -31,7 +30,6 @@ export class CursosComponent implements OnInit {
         console.log("Error: " + res);
       });
     } else {
-      //EDITAR UM USUARIO
       const modalRef = this.modalService.open(EditCursoModalComponent);
       modalRef.componentInstance.id = id;
       console.log("Editar o id: " + id);

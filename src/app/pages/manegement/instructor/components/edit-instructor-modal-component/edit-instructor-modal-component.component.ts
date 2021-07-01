@@ -1,12 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-import { of, Subscription } from 'rxjs';
+import { of } from 'rxjs';
 import { InstrutorBaseModel } from 'src/app/shared/models/instructor/instrutorModel.model';
 import { CustomAdapter, CustomDateParserFormatter } from 'src/app/_metronic/core';
-import { utilsBr } from 'js-brasil';
-import { NgBrazilValidators, NgBrazil, MASKS } from 'ng-brazil';
+import { NgBrazilValidators } from 'ng-brazil';
 import { ToastrService } from 'ngx-toastr';
+import { ManagementBaseComponent } from 'src/app/pages/management.base.component';
 
 const EMPTY_INSTRUTOR: InstrutorBaseModel = {
   id: undefined,
@@ -17,7 +17,7 @@ const EMPTY_INSTRUTOR: InstrutorBaseModel = {
   cpf: '',
   identidade: '',
   telefone: '',
-  status: 1, // STATUS ATIVO
+  status: 1,
   cargo: '',
   cep: '',
   bairro: '',
@@ -33,7 +33,6 @@ const EMPTY_INSTRUTOR: InstrutorBaseModel = {
   nivelAcesso: null,
   senhaAntiga:''
 };
-
 @Component({
   selector: 'app-edit-instructor-modal-component',
   templateUrl: './edit-instructor-modal-component.component.html',
@@ -43,9 +42,8 @@ const EMPTY_INSTRUTOR: InstrutorBaseModel = {
     { provide: NgbDateAdapter, useClass: CustomAdapter },
     { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter }
   ]
-
 })
-export class EditInstructorModalComponentComponent implements OnInit, OnDestroy {
+export class EditInstructorModalComponentComponent extends ManagementBaseComponent implements OnInit, OnDestroy {
 
   emailFormControl = new FormControl('', [
     Validators.required,
@@ -54,19 +52,14 @@ export class EditInstructorModalComponentComponent implements OnInit, OnDestroy 
 
   @Input() id: number;
 
-  isLoading$;
   instrutor: InstrutorBaseModel;
-  createForm: FormGroup;
-  private subscriptions: Subscription[] = [];
-  MASKS = utilsBr.MASKS;
-
 
   constructor(
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     public modal: NgbActiveModal,
-    private toastr: ToastrService,
+    public toastr: ToastrService,
   ) {
-
+    super();
   }
 
   ngOnInit(): void {
@@ -117,21 +110,12 @@ export class EditInstructorModalComponentComponent implements OnInit, OnDestroy 
   }
 
   create() {
-    /**
-     * 1° validar/tratar os dados
-     * 2° insere os dados na API
-     * 3° trata o retorno da API
-     * 4° continua...
-     */
     console.log(this.instrutor)
     this.modal.close(true)
     this.modal.dismiss("false");
     return of(this.instrutor);
   }
 
-  /**
-   *  MÉTODO PARA CARREGAR ( INICIAR ) O FORMULÁRIO
-   */
   loadForm(id: number) {
     if (!id) {
       this.createForm = this.fb.group({
@@ -177,31 +161,9 @@ export class EditInstructorModalComponentComponent implements OnInit, OnDestroy 
 
       });
     }
-
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
-
-  isControlValid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.valid && (control.dirty || control.touched);
-  }
-
-  isControlInvalid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.invalid && (control.dirty || control.touched);
-  }
-
-  controlHasError(validation, controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.hasError(validation) && (control.dirty || control.touched);
-  }
-
-  isControlTouched(controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.dirty || control.touched;
-  }
-
 }

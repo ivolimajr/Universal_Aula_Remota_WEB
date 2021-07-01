@@ -1,12 +1,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-import { NgBrazilValidators, NgBrazil, MASKS } from 'ng-brazil';
-import { of, Subscription } from 'rxjs';
+import { NgBrazilValidators } from 'ng-brazil';
+import { of } from 'rxjs';
 import { PartnerModel } from '../../../../../shared/models/partner/partnerModel.model';
-import { CustomAdapter, CustomDateParserFormatter, getDateFromString } from '../../../../../_metronic/core';
-import { utilsBr } from 'js-brasil';
+import { CustomAdapter, CustomDateParserFormatter } from '../../../../../_metronic/core';
 import { ToastrService } from 'ngx-toastr';
+import { ManagementBaseComponent } from 'src/app/pages/management.base.component';
 
 const EMPTY_PARTNER: PartnerModel = {
   id: undefined,
@@ -28,8 +28,6 @@ const EMPTY_PARTNER: PartnerModel = {
   nivelAcesso: null,
   senhaAntiga:''
 };
-
-
 @Component({
   selector: 'app-edit-partner-modal',
   templateUrl: './edit-partner-modal.component.html',
@@ -40,7 +38,7 @@ const EMPTY_PARTNER: PartnerModel = {
     { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter }
   ]
 })
-export class EditPartnerModalComponent implements OnInit, OnDestroy {
+export class EditPartnerModalComponent extends ManagementBaseComponent implements OnInit, OnDestroy {
 
   emailFormControl = new FormControl('', [
     Validators.required,
@@ -48,25 +46,20 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
   ]);
   @Input() id: number;
 
-  isLoading$;
   partner: PartnerModel;
-  createForm: FormGroup;
-  private subscriptions: Subscription[] = [];
-  MASKS = utilsBr.MASKS;
 
   constructor(
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     public modal: NgbActiveModal,
-    private toastr: ToastrService,
-  ) { }
+    public toastr: ToastrService,
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.loadCustomer();
   }
 
-  /**
-   * 
-   */
   loadCustomer() {
     if (!this.id) {
       this.partner = EMPTY_PARTNER;
@@ -77,9 +70,6 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * 
-   */
   save() {
     this.prepareCustomer();
     this.create();
@@ -103,7 +93,6 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
     this.partner.numero = formData.numero;
     this.partner.senha = formData.senha;
     this.partner.uf = formData.uf.toUpperCase();
-
   }
 
   edit() {
@@ -111,12 +100,6 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
   }
 
   create() {
-    /**
-     * 1° validar/tratar os dados
-     * 2° insere os dados na API
-     * 3° trata o retorno da API
-     * 4° continua...
-     */
     console.log(this.partner)
     this.modal.close(true)
     this.modal.dismiss("false");
@@ -163,33 +146,9 @@ export class EditPartnerModalComponent implements OnInit, OnDestroy {
 
       });
     }
-
   }
 
-  /**
-   * 
-   */
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
-  }
-  //VALIDADORES
-  isControlValid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.valid && (control.dirty || control.touched);
-  }
-
-  isControlInvalid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.invalid && (control.dirty || control.touched);
-  }
-
-  controlHasError(validation, controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.hasError(validation) && (control.dirty || control.touched);
-  }
-
-  isControlTouched(controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.dirty || control.touched;
   }
 }

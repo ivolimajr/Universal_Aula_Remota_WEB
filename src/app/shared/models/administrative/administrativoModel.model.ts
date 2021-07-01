@@ -1,8 +1,4 @@
-/**
- * Essa é a interface da Auto Escola.
- */
 import { BaseModel } from '../baseModels/base.model';
-
 export interface AdministrativoModel extends BaseModel {
   cargo: string;
   cpf: string;

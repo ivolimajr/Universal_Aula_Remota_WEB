@@ -1,19 +1,19 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-import { utilsBr } from 'js-brasil';
-import { of, Subscription } from 'rxjs';
+import { of } from 'rxjs';
 import { CfcModel } from '../../../../../shared/models/cfc/cfcModel.model';
-import { CustomAdapter, CustomDateParserFormatter, getDateFromString } from '../../../../../_metronic/core';
-import { NgBrazilValidators, NgBrazil, MASKS } from 'ng-brazil';
+import { CustomAdapter, CustomDateParserFormatter } from '../../../../../_metronic/core';
+import { NgBrazilValidators } from 'ng-brazil';
 import { ToastrService } from 'ngx-toastr';
+import { ManagementBaseComponent } from 'src/app/pages/management.base.component';
 
 const EMPTY_CFC: CfcModel = {
   id: undefined,
   fullName: '',
   email: '',
   telefone: '',
-  status: 1, // STATUS ATIVO
+  status: 1,
   senha: '',
   confirmarSenha: '',
   bairro: '',
@@ -45,7 +45,7 @@ const EMPTY_CFC: CfcModel = {
     { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter }
   ]
 })
-export class EditCfcModalComponent implements OnInit, OnDestroy {
+export class EditCfcModalComponent extends ManagementBaseComponent implements OnInit, OnDestroy {
 
   emailFormControl = new FormControl('', [
     Validators.required,
@@ -53,17 +53,15 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
   ]);
   @Input() id: number;
 
-  isLoading$;
   cfc: CfcModel;
-  createForm: FormGroup;
-  private subscriptions: Subscription[] = [];
-  MASKS = utilsBr.MASKS;
 
   constructor(
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     public modal: NgbActiveModal,
-    private toastr: ToastrService,
-  ) { }
+    public toastr: ToastrService,
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.loadCustomer();
@@ -115,12 +113,6 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
   }
 
   create() {
-    /**
-     * 1° validar/tratar os dados
-     * 2° insere os dados na API
-     * 3° trata o retorno da API
-     * 4° continua...
-     */
     console.log(this.cfc)
     this.modal.close(true)
     this.modal.dismiss("false");
@@ -151,8 +143,6 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
         site: [this.cfc.site, Validators.compose([Validators.nullValidator])],
         uf: [this.cfc.uf, Validators.compose([Validators.nullValidator])],
         uploadDOC: [this.cfc.uploadDOC, Validators.compose([Validators.nullValidator])],
-
-
       });
     } else {
       this.createForm = this.fb.group({
@@ -184,25 +174,5 @@ export class EditCfcModalComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
-  }
-
-  isControlValid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.valid && (control.dirty || control.touched);
-  }
-
-  isControlInvalid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.invalid && (control.dirty || control.touched);
-  }
-
-  controlHasError(validation, controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.hasError(validation) && (control.dirty || control.touched);
-  }
-
-  isControlTouched(controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.dirty || control.touched;
   }
 }

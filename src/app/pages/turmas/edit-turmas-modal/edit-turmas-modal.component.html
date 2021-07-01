@@ -8,7 +8,6 @@
       <ng-container>
         <form action="#" class="form form-label-right" [formGroup]="createForm">
   
-          <!-- start: turma -->
           <div class="form-group row">
             <div class="col-lg">
               <label class="form-label" for="turma">Turma</label>
@@ -27,9 +26,7 @@
               </div>
             </div>
           </div>
-          <!-- end: turma -->
 
-       <!-- start: curso -->
        <div class="form-group row">
         <div class="col-lg">
           <label>Curso</label>
@@ -41,9 +38,7 @@
           </select>
         </div>
       </div>
-      <!-- end: curso -->
 
-       <!-- start: instrutor -->
        <div class="form-group row">
         <div class="col-lg">
           <label>Instrutor</label>
@@ -55,8 +50,7 @@
           </select>
         </div>
       </div>
-      <!-- end: instrutor -->
-          <!-- start:matricula -->
+
           <div class="form-group row">
             <div class="col-lg">
               <label class="form-label" for="matricula">Matrícula</label>
@@ -69,8 +63,7 @@
               </div>
             </div>
           </div>
-          <!-- end:matricula -->
-         <!-- start:link -->
+
          <div class="form-group row">
             <div class="col-lg">
               <label class="form-label" for="link">Link da sala virtual</label>
@@ -83,8 +76,7 @@
               </div>
             </div>
           </div>
-          <!-- end: Link -->
-           <!-- start: Data inicio -->
+
            <div class="form-group row">
             <div class="col-lg">
               <label>Data de Inicio</label>
@@ -98,8 +90,7 @@
                 Formato da data incorreta
               </div>
             </div>
-            <!-- end: Data inicio -->
-            <!-- start: data fim -->
+
             <div class="col-lg">
               <label class="form-label" for="dataFim">Data do fim</label>
               <input type="date" id="dataFim" class="form-control form-control-lg form-control-solid" name="dataFim" placeholder="Data do Fim" autocomplete="off" formControlName="dataFim" [class.is-invalid]="isControlInvalid('dataFim')" [class.is-valid]="isControlValid('dataFim')" />
@@ -111,7 +102,6 @@
               </div>
             </div>
           </div>
-          <!-- end: data fim--> 
         </form>
       </ng-container>
     </div>

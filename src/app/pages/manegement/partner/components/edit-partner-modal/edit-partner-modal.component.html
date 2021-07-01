@@ -8,7 +8,6 @@
     <ng-container>
       <form action="#" class="form form-label-right" [formGroup]="createForm">
 
-        <!-- start: Nome -->
         <div class="form-group row">
           <div class="col-lg">
             <label class="form-label" for="fullName">Órgão Responsável</label>
@@ -27,9 +26,7 @@
             </div>
           </div>
         </div>
-        <!-- end: Nome -->
 
-        <!-- start: email -->
         <div class="form-group row">
           <div class="col-lg">
             <label class="form-label" for="email" >E-mail</label>
@@ -42,9 +39,7 @@
             </div>
           </div>
         </div>
-        <!-- end: email -->
 
-        <!-- start: cnpj -->
         <div class="form-group row">
           <div class="col-lg">
             <label class="form-label" for="cnpj">cnpj</label>
@@ -62,9 +57,7 @@
               Limite de caracteres excedido
             </div>
           </div>
-          <!-- end: cnpj -->
 
-          <!-- start: Telefone -->
           <div class="col-lg">
             <label class="form-label" for="telefone" >Telefone</label>
             <input type="text" id="telefone" class="form-control form-control-lg form-control-solid" name="telefone" placeholder="telefone" autocomplete="off" formControlName="telefone" [class.is-invalid]="isControlInvalid('telefone')" [class.is-valid]="isControlValid('telefone')" telefone [textMask]="{mask: MASKS.telefone.textMask}" />
@@ -76,9 +69,7 @@
             </div>
           </div>
         </div>
-        <!-- end: Telefone -->
         
-        <!-- start: Data de Nascimento -->
         <div class="form-group row">
           <div class="col-lg">
             <label>Data de inicio da parceria</label>
@@ -92,9 +83,7 @@
               Formato da data incorreta
             </div>
           </div>
-          <!-- end: Data de Nascimento -->
 
-        <!-- start: CEP -->
         <div class="form-group row">
           <div class="col-lg">
             <label class="form-label" for="cep">CEP</label>
@@ -112,9 +101,7 @@
               Limite de caracteres excedido
             </div>
           </div>
-          <!-- end: CEP -->
 
-          <!-- start: Bairro -->
           <div class="col-lg">
             <label class="form-label" for="bairro" >Bairro</label>
             <input type="text" id="bairro" class="form-control form-control-lg form-control-solid" name="bairro" placeholder="Bairro" autocomplete="off" formControlName="bairro" [class.is-invalid]="isControlInvalid('bairro')" [class.is-valid]="isControlValid('bairro')" />
@@ -126,8 +113,7 @@
             </div>
           </div>
         </div>
-        <!-- end: Bairro -->
-        <!-- start: Cidade -->
+
         <div class="form-group row">
           <div class="col-lg">
             <label class="form-label" for="cidade">Cidade</label>
@@ -139,9 +125,7 @@
               Campo necessário
             </div>
           </div>
-          <!-- end: Cidade -->
 
-          <!-- start: Endereço -->
           <div class="col-lg">
             <label class="form-label" for="enderecoLogradouro">Endereço</label>
             <input type="text" id="enderecoLogradouro" class="form-control form-control-lg form-control-solid" name="enderecoLogradouro" placeholder="Endereço com número" autocomplete="off" formControlName="enderecoLogradouro" [class.is-invalid]="isControlInvalid('enderecoLogradouro')" [class.is-valid]="isControlValid('enderecoLogradouro')" />
@@ -153,9 +137,7 @@
             </div>
           </div>
         </div>
-        <!-- end: Endereço -->
 
-        <!-- start: Status -->
         <div class="form-group row">
           <div class="col-4"></div>
           <div class="col-lg">
@@ -175,10 +157,6 @@
             </div>
           </div>
         </div>
-        <!-- end: Status -->
-
-
-
   </div>
 
   <div class="modal-footer">

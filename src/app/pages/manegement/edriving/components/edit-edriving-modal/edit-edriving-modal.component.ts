@@ -1,15 +1,14 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-import { of, Subscription } from 'rxjs';
 import { EdrivingPost } from '../../../../../shared/models/edriving/edrivingModel.model';
 import { CustomAdapter, CustomDateParserFormatter } from '../../../../../_metronic/core';
 import { NgBrazilValidators } from 'ng-brazil';
-import { utilsBr } from 'js-brasil';
-import { ToastrService } from 'ngx-toastr';
 import { EdrivingCargoServices } from '../../../../../shared/services/http/Edriving/edrivingCargo.service';
 import { EdrivingCargoModel } from '../../../../../shared/models/edriving/EdrivingCargo.model';
 import { EdrivingServices } from '../../../../../shared/services/http/Edriving/Edriving.service';
+import { ManagementBaseComponent } from 'src/app/pages/management.base.component';
+import { ToastrService } from 'ngx-toastr';
 
 const EMPTY_EDRIVING: EdrivingPost = {
   id: undefined,
@@ -17,11 +16,10 @@ const EMPTY_EDRIVING: EdrivingPost = {
   email: '',
   cpf: '',
   telefone: '',
-  status: 1, // STATUS ATIVO
+  status: 1,
   senha: '',
   cargoid: 1
 };
-
 @Component({
   selector: 'app-edit-edriving-modal',
   templateUrl: './edit-edriving-modal.component.html',
@@ -29,27 +27,26 @@ const EMPTY_EDRIVING: EdrivingPost = {
 
   providers: [
     { provide: NgbDateAdapter, useClass: CustomAdapter },
-    { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter }
+    { provide: NgbDateParserFormatter, useClass: CustomDateParserFormatter },
+
   ]
 })
-export class EditEdrivingModalComponent implements OnInit, OnDestroy {
+export class EditEdrivingModalComponent extends ManagementBaseComponent implements OnInit, OnDestroy {
 
   @Input() id: number;
 
-  isLoading$;
   edriving: EdrivingPost;
-  createForm: FormGroup; // AGRUPADOR DE CONTROLES
-  private subscriptions: Subscription[] = [];
-  MASKS = utilsBr.MASKS;
   cargos: EdrivingCargoModel[];
 
   constructor(
     private _edrivingServices: EdrivingServices,
     private _edrivingCargoServices: EdrivingCargoServices,
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     public modal: NgbActiveModal,
-    private toastr: ToastrService,
-  ) { }
+    public toastr: ToastrService,
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.getCargo();
@@ -80,7 +77,6 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
 
   private prepareEdriving() {
     const formData = this.createForm.value;
-
     this.edriving.fullName = formData.fullName.toUpperCase();
     this.edriving.email = formData.email.toUpperCase();
     this.edriving.cpf = formData.cpf.replaceAll(".", "").replaceAll("-", "");
@@ -105,7 +101,6 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
       },
       error => {
         console.log(error.error.error);
-
         this.toastr.warning(error.error.error);
       }
     );
@@ -132,30 +127,9 @@ export class EditEdrivingModalComponent implements OnInit, OnDestroy {
         status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
       });
     }
-
   }
-
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
   }
-
-  isControlValid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.valid && (control.dirty || control.touched);
-  }
-
-  isControlInvalid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.invalid && (control.dirty || control.touched);
-  }
-
-  controlHasError(validation, controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.hasError(validation) && (control.dirty || control.touched);
-  }
-
-  isControlTouched(controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.dirty || control.touched;
-  }
 }
+

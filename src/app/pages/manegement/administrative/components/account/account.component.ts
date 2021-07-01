@@ -1,12 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { FormControl, Validators,  FormBuilder } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { of, Subscription } from 'rxjs';
+import { of } from 'rxjs';
 import { AdministrativoModel } from '../../../../../shared/models/administrative/administrativoModel.model';
-import { utilsBr } from 'js-brasil';
 import { ToastrService } from 'ngx-toastr';
-import { NgBrazilValidators, NgBrazil, MASKS } from 'ng-brazil';
-import { DisplayMessage } from 'src/app/shared/validators/generic-form-validation';
+import { NgBrazilValidators } from 'ng-brazil';
+import { ManagementBaseComponent } from 'src/app/pages/management.base.component';
 
 const EMPTY_ADMINISTRATIVO: AdministrativoModel = {
   id: undefined,
@@ -17,7 +16,7 @@ const EMPTY_ADMINISTRATIVO: AdministrativoModel = {
   cpf: '',
   identidade: '',
   telefone: '',
-  status: 1, // STATUS ATIVO
+  status: 1,
   cargo: '',
   cep: '',
   bairro: '',
@@ -40,25 +39,22 @@ const EMPTY_ADMINISTRATIVO: AdministrativoModel = {
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss']
 })
-export class AccountComponentAdministrative implements OnInit {
+export class AccountComponentAdministrative extends ManagementBaseComponent implements OnInit {
 
   email = new FormControl('', [Validators.required, Validators.email]);
 
-  @Input() id: number; // ID QUE VAMOS RECEBER PELA ROTA PARA PODER EDITAR
+  @Input() id: number;
 
-  isLoading$;
   administrativo: AdministrativoModel;
-  createForm: FormGroup;
-  private subscriptions: Subscription[] = [];
   modal: any;
-  MASKS = utilsBr.MASKS;
-  displayMessage: DisplayMessage = {};
 
   constructor(
-    private fb: FormBuilder,
-    private modalService: NgbModal,
-    private toastr: ToastrService,
-  ) { }
+    public fb: FormBuilder,
+    public modalService: NgbModal,
+    public toastr: ToastrService,
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.loadCustomer();
@@ -116,12 +112,6 @@ export class AccountComponentAdministrative implements OnInit {
   }
 
   create() {
-    /**
-     * 1° validar/tratar os dados
-     * 2° insere os dados na API
-     * 3° trata o retorno da API
-     * 4° continua...
-     */
     console.log(this.administrativo)
     return of(this.administrativo);
   }
@@ -152,7 +142,6 @@ export class AccountComponentAdministrative implements OnInit {
         orgaoExpedidor: [this.administrativo.orgaoExpedidor, Validators.compose([Validators.nullValidator])],
         site: [this.administrativo.site, Validators.compose([Validators.nullValidator])],
         uploadDOC: [this.administrativo.uploadDOC, Validators.compose([Validators.nullValidator])],
-
       });
     } else {
       this.createForm = this.fb.group({
@@ -186,27 +175,6 @@ export class AccountComponentAdministrative implements OnInit {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sb => sb.unsubscribe());
-  }
-
-  //VALIDADORES
-  isControlValid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.valid && (control.dirty || control.touched);
-  }
-
-  isControlInvalid(controlName: string): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.invalid && (control.dirty || control.touched);
-  }
-
-  controlHasError(validation, controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.hasError(validation) && (control.dirty || control.touched);
-  }
-
-  isControlTouched(controlName): boolean {
-    const control = this.createForm.controls[controlName];
-    return control.dirty || control.touched;
   }
 
 }

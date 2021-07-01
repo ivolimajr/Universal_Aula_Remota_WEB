@@ -8,7 +8,6 @@
       <ng-container>
         <form action="#" class="form form-label-right" [formGroup]="createForm">
   
-          <!-- start: Razão Social -->
           <div class="form-group row">
             <div class="col-lg">
               <label class="form-label" for="razaoSocial">Razão Social</label>
@@ -27,9 +26,7 @@
               </div>
             </div>
           </div>
-          <!-- end: Razão Social -->
   
-          <!-- start: Nome Fantasia -->
           <div class="form-group row">
             <div class="col-lg">
               <label class="form-label" for="nomeFantasia" >Nome Fantasia</label>
@@ -42,9 +39,7 @@
               </div>
             </div>
           </div>
-          <!-- end: Nome Fantasia -->
   
-          <!-- start: CNPJ -->
           <div class="form-group row">
             <div class="col-lg">
               <label class="form-label" for="cnpj">CNPJ</label>
@@ -62,9 +57,7 @@
                 Limite de caracteres excedido
               </div>
             </div>
-            <!-- end: CNPJ -->
   
-            <!-- start: Telefone -->
             <div class="col-lg">
               <label class="form-label" for="telefone" >Telefone</label>
               <input type="text" id="telefone" class="form-control form-control-lg form-control-solid" name="telefone" placeholder="telefone" autocomplete="off" formControlName="telefone" [class.is-invalid]="isControlInvalid('telefone')" [class.is-valid]="isControlValid('telefone')" telefone [textMask]="{mask: MASKS.telefone.textMask}" />
@@ -76,9 +69,7 @@
               </div>
             </div>
           </div>
-          <!-- end: Telefone -->
           
-          <!-- start: Data de Abertura -->
           <div class="form-group row">
             <div class="col-lg">
               <label>Data de Abertura</label>
@@ -92,8 +83,7 @@
                 Formato da data incorreta
               </div>
             </div>
-            <!-- end: Data de Abertura -->
-            <!-- start: Inscrição Estadual -->
+
             <div class="col-lg">
               <label class="form-label" for="inscricaoEstadual" >Inscrição Estadual</label>
               <input type="text" id="inscricaoEstadual" class="form-control form-control-lg form-control-solid" name="inscricaoEstadual" placeholder="Inscrição Estadual" autocomplete="off" formControlName="inscricaoEstadual" [class.is-invalid]="isControlInvalid('inscricaoEstadual')" [class.is-valid]="isControlValid('inscricaoEstadual')" />
@@ -105,8 +95,7 @@
               </div>
             </div>
           </div>
-          <!-- end: Inscrição Estadual -->
-          <!-- start: CEP -->
+
           <div class="form-group row">
             <div class="col-lg">
               <label class="form-label" for="cep">CEP</label>
@@ -124,9 +113,7 @@
                 Limite de caracteres excedido
               </div>
             </div>
-            <!-- end: CEP -->
   
-            <!-- start: Bairro -->
             <div class="col-lg">
               <label class="form-label" for="bairro" >Bairro</label>
               <input type="text" id="bairro" class="form-control form-control-lg form-control-solid" name="bairro" placeholder="Bairro" autocomplete="off" formControlName="bairro" [class.is-invalid]="isControlInvalid('bairro')" [class.is-valid]="isControlValid('bairro')" />
@@ -138,8 +125,7 @@
               </div>
             </div>
           </div>
-          <!-- end: Bairro -->
-          <!-- start: Cidade -->
+
           <div class="form-group row">
             <div class="col-lg">
               <label class="form-label" for="cidade">Cidade</label>
@@ -151,9 +137,7 @@
                 Campo necessário
               </div>
             </div>
-            <!-- end: Cidade -->
   
-            <!-- start: Endereço -->
             <div class="col-lg">
               <label class="form-label" for="enderecoLogradouro">Endereço</label>
               <input type="text" id="enderecoLogradouro" class="form-control form-control-lg form-control-solid" name="enderecoLogradouro" placeholder="Endereço com número" autocomplete="off" formControlName="enderecoLogradouro" [class.is-invalid]="isControlInvalid('enderecoLogradouro')" [class.is-valid]="isControlValid('enderecoLogradouro')" />
@@ -165,8 +149,7 @@
               </div>
             </div>
           </div>
-          <!-- end: Endereço -->
-          <!-- start: email -->
+
           <div class="form-group row">
             <div class="col-lg">
               <label class="form-label" for="email" >E-mail</label>
@@ -179,8 +162,7 @@
               </div>
             </div>
           </div>
-          <!-- end: email -->
-          <!-- start: site -->
+
           <div class="form-group row">
             <div class="col-lg">
               <label class="form-label" for="site" >Site (opcional)</label>
@@ -193,8 +175,7 @@
               </div>
             </div>
           </div>
-          <!-- end: site -->
-          <!-- start: Arquivo -->
+
           <div class="custom-file">
                <label class="form-label" accept="PDF,DOC" #fileinput for="uploadDOC">Documentação</label>
                 <input type="file" id="uploadDOC" class="form-control form-control-lg form-control-solid" name="uploadDOC" placeholder="documento" autocomplete="off" formControlName="uploadDOC" [class.is-invalid]="isControlInvalid('uploadDOC')" />
@@ -202,8 +183,7 @@
               Campo necessário
               </div>
                </div>
-         <!-- end: Arquivo -->
-          <!-- start: Status -->
+
           <div class="form-group row">
             <div class="col-4"></div>
             <div class="col-lg">
@@ -223,8 +203,7 @@
               </div>
             </div>
           </div>
-          <!-- end: Status -->
-          <!-- start: Cargo do usuário -->
+
           <div class="form-group row">
             <div class="col-lg">
               <label>Parceiro</label>
@@ -233,9 +212,7 @@
                 <option value="2">DETRAN/DF</option>
               </select>
             </div>
-          </div>
-          <!-- end: Cargo do usuário -->
-  
+          </div>  
         </form>
       </ng-container>
     </div>
