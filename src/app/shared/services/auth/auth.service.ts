@@ -53,7 +53,7 @@ export class AuthService extends BaseServices {
     return this.http
       .post<BaseModel>(
         this.URL_USUARIO + '/login?email=' + email + '&senha=' + senha,
-        { email, senha },
+        //{ email, senha },
         this.ObterHeaderJson()
       )
       .pipe(map(data => {

@@ -30,8 +30,16 @@ export abstract class BaseServices {
         response.error.errors = customError;
       }
     }
-    if (response.status === 404) {
+    if (response.status === 400) {
       customError.push("Valores Invalidos");
+
+      // Erros do tipo 500 não possuem uma lista de erros
+      // A lista de erros do HttpErrorResponse é readonly                
+      customResponse.error.errors = customError;
+      return throwError(customResponse);
+    }
+    if (response.status === 404) {
+      customError.push("Nenhum resultado encontrado");
 
       // Erros do tipo 500 não possuem uma lista de erros
       // A lista de erros do HttpErrorResponse é readonly                
