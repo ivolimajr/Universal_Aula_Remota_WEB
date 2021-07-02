@@ -15,17 +15,12 @@
           <thead>
             <th>Nome</th>
             <th>Email</th>
-            <th>Status</th>
             <th>ACTIONS</th>
           </thead>
           <tbody>
-            <tr *ngFor="let item of usuarios | async;">
+            <tr *ngFor="let item of lista;">
               <td>{{item.fullName}}</td>
               <td>{{item.email}}</td>
-              <td *ngIf="item.usuario.status === 1;else templateName">Ativo</td>
-              <ng-template #templateName>
-                <td>Inativo</td>
-              </ng-template>
               <td>
                 <a title="Edit customer" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3" (click)="create(item.id)">
                   <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true" class="svg-icon svg-icon-md svg-icon-primary">
