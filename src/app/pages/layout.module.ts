@@ -21,10 +21,6 @@ import { AsideDynamicComponent } from './_layout/components/aside-dynamic/aside-
 import { HeaderMenuDynamicComponent } from './_layout/components/header/header-menu-dynamic/header-menu-dynamic.component';
 import { HomeComponent } from './home/home.component';
 
-import { EdrivingComponent } from './manegement/edriving/edriving.component';
-import { EditEdrivingModalComponent } from './manegement/edriving/components/edit-edriving-modal/edit-edriving-modal.component';
-import { AccountComponentEdriving } from './manegement/edriving/components/account/account.component';
-
 import { PartnerComponent } from './manegement/partner/partner.component';
 import { EditPartnerModalComponent } from './manegement/partner/components/edit-partner-modal/edit-partner-modal.component';
 import { AccountComponentPartner } from './manegement/partner/components/account/account.component';
@@ -54,6 +50,7 @@ import { EditCursoModalComponent } from './cursos/edit-curso-modal/edit-curso-mo
 import { NgBrazil } from 'ng-brazil';
 import { TextMaskModule } from 'angular2-text-mask';
 import { CustomFormsModule } from 'ng2-validation';
+import { EdrivingModule } from './manegement/edriving/edriving.module';
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -67,10 +64,8 @@ import { CustomFormsModule } from 'ng2-validation';
     AsideDynamicComponent,
     HeaderMenuDynamicComponent,
     HomeComponent,
-    EdrivingComponent,
     PartnerComponent,
     CfcComponent,
-    EditEdrivingModalComponent,
     EditPartnerModalComponent,
     EditCfcModalComponent,
     StudentComponent,
@@ -81,7 +76,6 @@ import { CustomFormsModule } from 'ng2-validation';
     EditAdministrativeModalComponent,
     AccountComponentCfc,
     AccountComponentAdministrative,
-    AccountComponentEdriving,
     AccountComponentInstructor,
     AccountComponentPartner,
     AccountComponentStudent,
@@ -105,6 +99,7 @@ import { CustomFormsModule } from 'ng2-validation';
     NgbDatepickerModule,
     NgBrazil,
     TextMaskModule,
+    EdrivingModule,
     CustomFormsModule,
   ],
   providers: [NgbAlertConfig]

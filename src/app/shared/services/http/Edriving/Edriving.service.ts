@@ -17,7 +17,7 @@ export class EdrivingServices extends BaseServices {
   }
 
   public obterTodos(): Observable<any> {
-    return this.http.get(this.URL_EDRIVING,this.ObterHeaderJson());
+    return this.http.get(this.URL_EDRIVING, this.ObterHeaderJson());
   }
 
   public setUsuario(edrivingModel: EdrivingPost): Observable<EdrivingModel> {
@@ -28,5 +28,13 @@ export class EdrivingServices extends BaseServices {
         catchError(this.serviceError))
 
     return response;
+  }
+
+  public deleteUsuario(id: number): Observable<any> {
+    return this.http.post(this.URL_EDRIVING + '/delete/?id=' + id, this.ObterHeaderJson())
+      .pipe(map(data => {
+        return data
+      }),
+        catchError(this.serviceError));
   }
 }
