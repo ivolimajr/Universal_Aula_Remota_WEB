@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-import { EdrivingPost } from '../../../../../shared/models/edriving/edrivingModel.model';
+import { EdrivingGetAll, EdrivingPost } from '../../../../../shared/models/edriving/edrivingModel.model';
 import { CustomAdapter, CustomDateParserFormatter } from '../../../../../_metronic/core';
 import { NgBrazilValidators } from 'ng-brazil';
 import { EdrivingCargoServices } from '../../../../../shared/services/http/Edriving/edrivingCargo.service';
@@ -11,14 +11,13 @@ import { ManagementBaseComponent } from 'src/app/pages/management.base.component
 import { ToastrService } from 'ngx-toastr';
 
 const EMPTY_EDRIVING: EdrivingPost = {
-  id: undefined,
+  id: null,
   fullName: '',
   email: '',
   cpf: '',
   telefone: '',
   status: 1,
-  senha: '',
-  cargoid: 1
+  cargoid: null
 };
 @Component({
   selector: 'app-edit-edriving-modal',
@@ -35,7 +34,8 @@ export class EditEdrivingModalComponent extends ManagementBaseComponent implemen
 
   @Input() id: number;
 
-  edriving: EdrivingPost;
+  edrivingPost: EdrivingPost;
+  edrivingGet: EdrivingGetAll;
   cargos: EdrivingCargoModel[];
 
   constructor(
@@ -49,8 +49,9 @@ export class EditEdrivingModalComponent extends ManagementBaseComponent implemen
   }
 
   ngOnInit(): void {
+    this.loadEdriving(this.id)
+    this.loadForm(this.id);
     this.getCargo();
-    this.loadEdriving()
   }
 
   private getCargo() {
@@ -61,14 +62,27 @@ export class EditEdrivingModalComponent extends ManagementBaseComponent implemen
     })
   }
 
-  loadEdriving() {
+  loadEdriving(id: number) {
     if (!this.id) {
-      this.edriving = EMPTY_EDRIVING;
-      this.loadForm(null);
-    } else {
-      this.edriving = EMPTY_EDRIVING;
-      this.loadForm(this.id);
+      this.edrivingPost = EMPTY_EDRIVING;
+      return this.loadForm(this.id);
     }
+    this._edrivingServices.getOne(id).subscribe(
+      success => {
+        console.log(success.fullName);
+        this.edrivingPost.id = success.id;
+        this.edrivingGet.fullName = success.fullName;
+        this.edrivingGet.email = success.email;
+        this.edrivingGet.telefone = success.telefone;
+        this.edrivingGet.cargo.cargo = success.cargo.cargo;
+        this.edrivingGet.usuario.status = success.usuario.status;
+        console.log(this.edrivingGet);
+      },
+      error => {
+
+      }
+
+    );
   }
 
   save() {
@@ -76,15 +90,7 @@ export class EditEdrivingModalComponent extends ManagementBaseComponent implemen
   }
 
   private prepareEdriving() {
-    const formData = this.createForm.value;
-    this.edriving.fullName = formData.fullName.toUpperCase();
-    this.edriving.email = formData.email.toUpperCase();
-    this.edriving.cpf = formData.cpf.replaceAll(".", "").replaceAll("-", "");
-    this.edriving.telefone = formData.telefone.replaceAll("(", "").replaceAll(")", "").replaceAll("-", "").replaceAll(" ", "");
-    this.edriving.cargoid = formData.cargo;
-    this.edriving.status = formData.status;
-    this.edriving.senha = "";
-    this.create(this.edriving);
+
   }
 
   edit() {
@@ -92,10 +98,10 @@ export class EditEdrivingModalComponent extends ManagementBaseComponent implemen
   }
 
   create(edriving: EdrivingPost) {
-    this._edrivingServices.setUsuario(edriving).subscribe(
+    this._edrivingServices.setEdriving(edriving).subscribe(
       success => {
         console.log(success);
-        this.loadForm(null);
+        this.loadForm(this.id);
         this.toastr.success('Usuário Cadastrado');
         return this.modal.close(success)
       },
@@ -107,24 +113,20 @@ export class EditEdrivingModalComponent extends ManagementBaseComponent implemen
   }
 
   loadForm(id: number) {
-    if (!id) {
-      this.createForm = this.fb.group({
-        fullName: ["Ivo da Silva Lima Junior", Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
-        email: ["ivo@email.com", Validators.compose([Validators.required, Validators.email])],
-        telefone: ['61986618601', [Validators.required, NgBrazilValidators.telefone]],
-        cpf: ["03746457106", [Validators.required, NgBrazilValidators.cpf]],
-        cargo: ["", Validators.compose([Validators.nullValidator])],
-        status: [1, Validators.compose([Validators.nullValidator])],
-      });
+    console.log("Id LoadForm: " + id);
 
-    } else {
-      this.createForm = this.fb.group({
-        fullName: [this.edriving.fullName, Validators.compose([Validators.required, Validators.minLength(5), Validators.maxLength(100)])],
-        email: [this.edriving.email, Validators.compose([Validators.required, Validators.email])],
-        telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
-        cpf: ['', [Validators.required, NgBrazilValidators.cpf]],
-        cargo: [this.edriving.cargoid, Validators.compose([Validators.nullValidator])],
-        status: [this.edriving.status, Validators.compose([Validators.nullValidator])],
+    this.createForm = this.fb.group({
+      fullName: ["", Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+      email: ["", Validators.compose([Validators.required, Validators.email])],
+      telefone: ['', [Validators.required, NgBrazilValidators.telefone]],
+      cpf: ["", [Validators.required, NgBrazilValidators.cpf]],
+      cargo: ["", Validators.compose([Validators.nullValidator])],
+      status: [1, Validators.compose([Validators.nullValidator])],
+    });
+    if (id) {
+      this.createForm.patchValue({
+        fullName: "Ivo",
+        email: this.edrivingGet.email
       });
     }
   }

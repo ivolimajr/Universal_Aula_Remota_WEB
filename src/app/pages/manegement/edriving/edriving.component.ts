@@ -28,6 +28,8 @@ export class EdrivingComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
   ) {
 
+    this.getUsuariosEdriving();
+
   }
 
   ngOnInit(): void {
@@ -37,16 +39,15 @@ export class EdrivingComponent implements OnInit, OnDestroy {
       .subscribe((item: EdrivingGetAll) => {
         this.lista.push(item)
         this._cdRef.detectChanges();
-
       });
-
-    this.getUsuariosEdriving();
   }
 
   private getUsuariosEdriving() {
-    this.edrivingServices.obterTodos()
+    this.edrivingServices.getAll()
       .subscribe((items: EdrivingGetAll[]) => {
         this.lista = items;
+        console.log(this.lista);
+
       })
   }
 
@@ -68,6 +69,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         return console.log("Error: " + res);
       });
     } else {
+
       const modalRef = this.modalService.open(EditEdrivingModalComponent);
       modalRef.componentInstance.id = id;
     }

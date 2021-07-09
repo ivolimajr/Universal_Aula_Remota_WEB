@@ -20,7 +20,7 @@ export class DeleteEdrivingComponent implements OnInit {
   }
 
   deleteCustomer() {
-    this.edrivingServices.deleteUsuario(this.id).subscribe(
+    this.edrivingServices.deleteEdriving(this.id).subscribe(
       success => {
         console.log(success);
         this.toastr.success('Usuário Cadastrado');
