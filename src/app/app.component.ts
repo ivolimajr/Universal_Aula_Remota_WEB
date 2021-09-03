@@ -1,33 +1,30 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  OnInit,
-} from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {Component} from '@angular/core';
+import {AuthService} from './shared/services/auth/auth.service';
+import {TokenResult} from './shared/models/token.module';
 
-import { environment } from '../environments/environment';
-import { StorageServices } from './shared/services/storage/localStorage.service';
 @Component({
-  selector: 'body[root]',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
-
-  private authLocalStorageAuth = `${environment.appVersion}-${environment.AuthStorage}`;
-
-  constructor(
-    private router: Router,
-    private storageServices: StorageServices,
-  ) {
-    if (this.storageServices.getAuthFromLocalStorage(this.authLocalStorageAuth)) {
-      this.router.navigate(['/']);
+export class AppComponent {
+    constructor(private _authService: AuthService) {
+        this.getToken();
     }
-  }
-  ngOnInit(): void {
-  }
 
+    /**
+     * Busca um token para autenticar à API
+     * Se não tiver um token no STORAGE, o método busca um token na API
+     *
+     * @private
+     * return: void
+     */
+    private getToken(): void {
+        if (!this._authService.tokenFromLocalStorage) {
+            this._authService.getApiTokenFromApi()
+                .subscribe((s: TokenResult) => {
+                    this._authService.tokenFromLocalStorage = s.accessToken;
+                });
+        }
+    }
 }
-

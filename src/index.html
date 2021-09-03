@@ -1,89 +1,73 @@
 <!doctype html>
-
-<html lang="pt-BR">
-
+<html lang="pt-br">
 <head>
-  <meta charset="utf-8">
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="./assets/veloc.png">
-  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700|Roboto:300,400,500,600,700" rel="stylesheet">
+    <title>E-Driving - Aula Remota</title>
+    <meta charset="utf-8">
+    <meta
+        name="description"
+        content="Angular, Angular Material & TailwindCSS Admin Template">
+    <meta
+        name="keywords"
+        content="Fuse,HTML,CSS,Angular,Angular 2,Angular 4,Angular 5,Angular 6,Angular 7,Angular 8,Angular 9,Angular 10,Material,Material 2">
 
-  <title>E-Driving - Aula Remota</title>
-</head>
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-  }
+    <meta
+        name="viewport"
+        content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0">
 
-  #splash-screen {
-    position: absolute;
-    z-index: 1000;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    background-color: #f2f3f8;
-  }
+    <base href="/">
 
-  #splash-screen img {
-    margin-left: calc(100vw - 100%);
-    margin-bottom: 30px;
-  }
+    <!-- Favicon -->
+    <link
+        rel="icon"
+        type="image/png"
+        href="assets/images/logo/velo.png">
+    <link
+        rel="icon"
+        type="image/png"
+        href="assets/images/logo/velo.png">
 
-  #splash-screen.hidden {
-    opacity: 0;
-    visibility: hidden;
-  }
+    <!-- Fonts -->
+    <link
+        href="assets/fonts/inter/inter.css"
+        rel="stylesheet">
 
-  .splash-spinner {
-    animation: rotate 2s linear infinite;
-    margin-left: calc(100vw - 100%);
-    width: 50px;
-    height: 50px;
-  }
+    <link
+        href="https://fonts.gstatic.com"
+        rel="preconnect">
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+        rel="stylesheet">
 
-  .splash-spinner .path {
-    stroke: #5d78ff;
-    stroke-linecap: round;
-    animation: dash 1.5s ease-in-out infinite;
-  }
+    <!-- Icon fonts -->
+    <link
+        href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet">
 
-  @keyframes rotate {
-    100% {
-      transform: rotate(360deg);
-    }
-  }
+    <!-- Splash screen styles -->
+    <link
+        href="assets/styles/splash-screen.css"
+        rel="stylesheet">
 
-  @keyframes dash {
-    0% {
-      stroke-dasharray: 1, 150;
-      stroke-dashoffset: 0;
-    }
-
-    50% {
-      stroke-dasharray: 90, 150;
-      stroke-dashoffset: -35;
-    }
-
-    100% {
-      stroke-dasharray: 90, 150;
-      stroke-dashoffset: -124;
-    }
-  }
-</style>
 </head>
 
-<body root id="kt_body">
-  <div id="splash-screen">
-    <img src="./assets/media/logos/logo-black-all.png" alt="Metronic logo" />
-    <svg class="splash-spinner" viewBox="0 0 50 50">
-      <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
-    </svg>
-  </div>
+<!-- Apply the rounded design throughout the Angular Material library -->
+<body class="fuse-mat-rounded">
+
+<!-- Splash screen -->
+<fuse-splash-screen>
+    <img
+        src="assets/images/logo/velo.png"
+        alt="Fuse logo">
+    <div class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+    </div>
+</fuse-splash-screen>
+
+<!-- App root -->
+<app-root></app-root>
+
 </body>
 
 </html>

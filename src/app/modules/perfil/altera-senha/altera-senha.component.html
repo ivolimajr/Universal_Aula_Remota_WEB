@@ -1,0 +1,111 @@
+<div class="w-full max-w-3xl">
+
+    <!-- Form -->
+    <form [formGroup]="securityForm">
+
+        <!-- Section -->
+        <div class="w-full">
+            <div class="text-xl">Altere sua senha</div>
+            <div class="text-secondary">Mantenha sua conta segura, atualize sua senha constantemente</div>
+        </div>
+        <fuse-alert
+            class="mt-8 -mb-4"
+            *ngIf="showAlert"
+            [appearance]="'outline'"
+            [showIcon]="false"
+            [type]="alert.type"
+            [@shake]="alert.type === 'error'">
+            {{alert.message}}
+        </fuse-alert>
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <!-- Current password -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Senha atual</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:key'"
+                        matPrefix></mat-icon>
+                    <input
+                        id="password"
+                        [formControlName]="'senhaAtual'"
+                        type="password"
+                        #passwordField
+                        matInput>
+                    <button
+                        mat-icon-button
+                        type="button"
+                        (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+                        matSuffix>
+                        <mat-icon
+                            class="icon-size-5"
+                            *ngIf="passwordField.type === 'password'"
+                            [svgIcon]="'heroicons_solid:eye'">
+
+                        </mat-icon>
+                        <mat-icon
+                            class="icon-size-5"
+                            *ngIf="passwordField.type === 'text'"
+                            [svgIcon]="'heroicons_solid:eye-off'">
+                        </mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+            <!-- New password -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Nova Senha</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:key'"
+                        matPrefix></mat-icon>
+                    <input
+                        id="newPasswordField"
+                        [formControlName]="'novaSenha'"
+                        type="password"
+                        #newPasswordField
+                        matInput>
+                    <button
+                        mat-icon-button
+                        type="button"
+                        (click)="newPasswordField.type === 'password' ? newPasswordField.type = 'text' : newPasswordField.type = 'password'"
+                        matSuffix>
+                        <mat-icon
+                            class="icon-size-5"
+                            *ngIf="newPasswordField.type === 'password'"
+                            [svgIcon]="'heroicons_solid:eye'">
+
+                        </mat-icon>
+                        <mat-icon
+                            class="icon-size-5"
+                            *ngIf="newPasswordField.type === 'text'"
+                            [svgIcon]="'heroicons_solid:eye-off'">
+                        </mat-icon>
+                    </button>
+                </mat-form-field>
+                <div class="mt-1 text-md text-hint">Informe uma senha maior que 5 dígitos, com letras e números.
+                </div>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="my-10 border-t"></div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end">
+            <button
+                mat-stroked-button
+                type="button">
+                Cancelar
+            </button>
+            <button
+                class="ml-4"
+                mat-flat-button
+                type="button"
+                (click)="update()"
+                [color]="'primary'">Atualizar
+            </button>
+        </div>
+    </form>
+
+</div>

@@ -1,26 +1,14 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-
 export const environment = {
-  production: false,
-  appVersion: 'v1',
-  AuthStorage: 'auth29062021',
-  apiUrl: 'https://localhost:44341/api',
-  auth: {
-    clientId: '',
-    clientSecret: '',
-    cookieNameClientCredentials: 'access-token-client-hom',
-    cookieName: 'access-token-hom',
-    last_token: ''
-  }
+    production: false,
+    appVersion: 'Aula_Remova_V1',
+    isMockEnabled: false,
+    authStorage: 'auth148Bc0A5EDb',
+    dataStorage: 'data170c7JJJebDb',
+    tokenStorage: 'token0c7d8d689P',
+    apiUrl: 'https://localhost:44341/api/v1',
+    privateStorageKey: 'Sapien_ulla_ultricies',
+    auth: {
+        clientId: 'EDRIVING@EDRIVING.EDU.BR',
+        clientSecret: 'Senha@123',
+    }
 };
-
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.

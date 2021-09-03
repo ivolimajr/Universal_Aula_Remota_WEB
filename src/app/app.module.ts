@@ -1,51 +1,49 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
-import { ClipboardModule } from 'ngx-clipboard';
-import { TranslateModule } from '@ngx-translate/core';
-import { InlineSVGModule } from 'ng-inline-svg';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { NgxPaginationModule } from 'ngx-pagination';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ToastrModule } from 'ngx-toastr';
-import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
-import { SplashScreenModule } from './_metronic/partials/layout/splash-screen/splash-screen.module';
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ExtraOptions, PreloadAllModules, RouterModule} from '@angular/router';
+import {MarkdownModule} from 'ngx-markdown';
+import {FuseModule} from '@fuse';
+import {FuseConfigModule} from '@fuse/services/config';
+import {FuseMockApiModule} from '@fuse/lib/mock-api';
+import {CoreModule} from 'app/core/core.module';
+import {appConfig} from 'app/core/config/app.config';
+import {mockApiServices} from 'app/mock-api';
+import {LayoutModule} from 'app/layout/layout.module';
+import {AppComponent} from 'app/app.component';
+import {appRoutes} from 'app/app.routing';
+
+const routerConfig: ExtraOptions = {
+    scrollPositionRestoration: 'enabled',
+    preloadingStrategy: PreloadAllModules
+};
+
 @NgModule({
-  declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    SplashScreenModule,
-    TranslateModule.forRoot(),
-    HttpClientModule,
-    HighlightModule,
-    ClipboardModule,
-    FormsModule,
-    ReactiveFormsModule,
-    BrowserAnimationsModule,
-    ToastrModule.forRoot(),
-    NgxPaginationModule,
-    AppRoutingModule,
-    InlineSVGModule.forRoot(),
-    NgbModule,
-  ],
-  providers: [
-    {
-      provide: HIGHLIGHT_OPTIONS,
-      useValue: {
-        coreLibraryLoader: () => import('highlight.js/lib/core'),
-        languages: {
-          xml: () => import('highlight.js/lib/languages/xml'),
-          typescript: () => import('highlight.js/lib/languages/typescript'),
-          scss: () => import('highlight.js/lib/languages/scss'),
-          json: () => import('highlight.js/lib/languages/json')
-        },
-      },
-    },
-  ],
-  bootstrap: [AppComponent],
+    declarations: [
+        AppComponent
+    ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        RouterModule.forRoot(appRoutes, routerConfig),
+
+        // Fuse, FuseConfig & FuseMockAPI
+        FuseModule,
+        FuseConfigModule.forRoot(appConfig),
+        FuseMockApiModule.forRoot(mockApiServices),
+
+        // Core module of your application
+        CoreModule,
+
+        // Layout module of your application
+        LayoutModule,
+
+        // 3rd party modules that require global configuration via forRoot
+        MarkdownModule.forRoot({})
+    ],
+    bootstrap: [
+        AppComponent
+    ]
 })
-export class AppModule { }
+export class AppModule {
+}
