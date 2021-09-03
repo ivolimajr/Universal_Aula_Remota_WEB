@@ -45,6 +45,42 @@ export class AlteraSenhaComponent implements OnInit {
         this._changeDetectorRef.markForCheck();
     }
 
+    /**
+     * Atualiza a senha de acesso do usuário
+     *
+     * @return void
+     */
+    update(): void {
+        //Verifica se o formulário é válido
+        if (this.securityForm.invalid) {
+            this.setAlert('Dados Inválidos.');
+            return;
+        }
+        //Verifica se a senha atual confere
+        const formData = this.securityForm.value;
+        if (formData.senhaAtual !== this._authServices.getLoginFromStorage().password) {
+            this.setAlert('Senha atual não confere');
+            return;
+        }
+        //atualiza a senha na API
+        this._userServices.updatePassById(this.securityForm.value).subscribe((val) => {
+            this.setAlert('Senha Atualizada', 'success');
+            //Atualiza a senha no localStorage
+            this.loginUser.email = this._authServices.getUserInfoFromStorage().email;
+            this.loginUser.password = formData.currentPassword;
+            this.localStorage.setValueFromLocalStorage(environment.dataStorage, this.loginUser);
+            //Atualiza o formulário
+            this._changeDetectorRef.markForCheck();
+            return;
+        });
+    }
+
+    /**
+     *Carrega o formulário
+     *
+     * @private
+     * @return void
+     */
     private loadForm(): void {
         this.securityForm = this._formBuilder.group({
             id: [this.idUser],
@@ -62,37 +98,11 @@ export class AlteraSenhaComponent implements OnInit {
         this._changeDetectorRef.markForCheck();
     }
 
-    update(): void {
-        if (this.securityForm.invalid) {
-            this.alert.type = 'error';
-            this.alert.message = 'Dados Inválidos.';
-            this.showAlert = true;
-            this._changeDetectorRef.markForCheck();
-            return;
-        }
-        const formData = this.securityForm.value;
-        if (formData.senhaAtual !== this._authServices.getLoginFromStorage().password) {
-            this.alert.type = 'error';
-            this.alert.message = 'Senha atual não confere';
-            this.showAlert = true;
-            console.log(formData.senhaAtual);
-            console.log(this._authServices.getLoginFromStorage().password);
-            this._changeDetectorRef.markForCheck();
-            return;
-        }
-
-        this._userServices.updatePassById(this.securityForm.value).subscribe((val) => {
-            this.alert.type = 'success';
-            this.alert.message = 'Senha Atualizada';
-            this.showAlert = true;
-
-            this.loginUser.email = this._authServices.getUserInfoFromStorage().email;
-            this.loginUser.password = formData.currentPassword;
-            this.localStorage.setValueFromLocalStorage(environment.dataStorage, this.loginUser);
-
-            this._changeDetectorRef.markForCheck();
-            return;
-        });
-
+    private setAlert(message: string, type: any = 'error'): void {
+        this.showAlert = false;
+        this.alert.type = type;
+        this.alert.message = message;
+        this.showAlert = true;
+        this._changeDetectorRef.markForCheck();
     }
 }
