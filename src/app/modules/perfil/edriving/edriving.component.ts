@@ -1,4 +1,11 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnInit,
+    ViewEncapsulation
+} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EdrivingPost, EdrivingUsuario} from '../../../shared/models/edriving.module';
 import {UserService} from '../../../shared/services/http/user.service';
@@ -9,6 +16,8 @@ import {Usuario} from '../../../shared/models/usuario.model';
 import {AuthService} from '../../../shared/services/auth/auth.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
+import {MatDialog} from "@angular/material/dialog";
+import {AlertModalComponent} from "../../../layout/common/alert/alert-modal.component";
 
 @Component({
     selector: 'app-edriving',
@@ -23,7 +32,6 @@ export class EdrivingComponent implements OnInit {
         type: 'error',
         message: ''
     };
-
     accountForm: FormGroup;
     user: Usuario;
     showAlert: boolean = false;
@@ -32,6 +40,7 @@ export class EdrivingComponent implements OnInit {
     private edrivingUserPost = new EdrivingPost();
 
     constructor(
+        public dialog: MatDialog,
         private _formBuilder: FormBuilder,
         private _userService: UserService,
         private _authServices: AuthService,
@@ -60,11 +69,8 @@ export class EdrivingComponent implements OnInit {
 
         this._edrivingServices.update(this.edrivingUserPost).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
-            console.log(res);
             if(res.error){
-                this.showAlert = false;
-                this.apiError = true;
-                this.apiErrorMessage = res.error;
+                this.setAlert(res.error);
                 this._changeDetectorRef.markForCheck();
                 return;
             }
@@ -102,7 +108,6 @@ export class EdrivingComponent implements OnInit {
 
             //Retorna a mensagem de atualizado
             this.setAlert('Atualizado.','success');
-
             this._changeDetectorRef.markForCheck();
         });
 
@@ -135,16 +140,26 @@ export class EdrivingComponent implements OnInit {
      * @param index do array de telefones a ser removido
      */
     removePhoneNumber(id: number, index: number): void {
-        this._userServices.removePhonenumber(id)
-            .subscribe((res) => {
-                if (!res) {
-                    this.setAlert('Telefone já em uso');
-                }
-                const phoneNumbersFormArray = this.accountForm.get('telefones') as FormArray;
-                // Remove the phone number field
-                phoneNumbersFormArray.removeAt(index);
-                this._changeDetectorRef.markForCheck();
+        console.log(this.edrivingUser.telefones.length);
+        if(this.edrivingUser.telefones.length === 1){
+            const dialogRef = this.dialog.open(AlertModalComponent, {
+                width: '280px',
+                data: {content: 'Usuário não pode ficar sem contato.',oneButton: true}
             });
+            return;
+        }
+        console.log('2');
+
+        // this._userServices.removePhonenumber(id)
+        //     .subscribe((res) => {
+        //         if (!res) {
+        //             this.setAlert('Telefone já em uso');
+        //         }
+        //         const phoneNumbersFormArray = this.accountForm.get('telefones') as FormArray;
+        //         // Remove the phone number field
+        //         phoneNumbersFormArray.removeAt(index);
+        //         this._changeDetectorRef.markForCheck();
+        //     });
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -250,5 +265,6 @@ export class EdrivingComponent implements OnInit {
         this.alert.type = type;
         this.alert.message = message;
         this.showAlert = true;
+        this._changeDetectorRef.markForCheck();
     }
 }

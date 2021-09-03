@@ -44,42 +44,22 @@ export class LoginComponent implements OnInit {
      */
     private prepareForm(): void {
         this.userStorage = this._authService.getLoginFromStorage();
-        //Se tiver um usuário no storage já é setado o email
-        if (this.userStorage) {
-            this.loginForm = this._formBuilder.group({
-                email: [this.userStorage.email,
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(5),
-                        Validators.maxLength(70)]
-                    )],
-                password: ['Pay@2021',
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(5),
-                        Validators.maxLength(70)])],
-                rememberMe: ['']
-            });
-        } else {
-            this.loginForm = this._formBuilder.group({
-                email: ['ivo@edriving.com',
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(5),
-                        Validators.maxLength(70)]
-                    )],
-                password: ['Pay@2021',
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(5),
-                        Validators.maxLength(70)])],
-                rememberMe: ['']
-            });
-        }
+        this.loginForm = this._formBuilder.group({
+            email: ['PLATAFORMA@EDRIVING.COM',
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(5),
+                    Validators.maxLength(70)]
+                )],
+            password: ['Pay@2021',
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(5),
+                    Validators.maxLength(70)])],
+            rememberMe: ['']
+        });
     }
 
     /**
@@ -132,10 +112,11 @@ export class LoginComponent implements OnInit {
         this.showAlert = false;
 
         //Faz Login
-        this._authService.signIn(this.loginForm.value).subscribe((val) => {
-            if (val.ok != null && !val.ok) {
+        this._authService.signIn(this.loginForm.value).subscribe((res) => {
+            if (res.ok != null && !res.ok) {
+                console.log(res);
                 this.alert.type = 'error';
-                this.alert.message = val.error;
+                this.alert.message = res.error.detail;
                 this.showAlert = true;
                 this.loginForm.enable();
                 return;

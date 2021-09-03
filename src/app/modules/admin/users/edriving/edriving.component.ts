@@ -9,7 +9,7 @@ import {EdrivingUsuario} from '../../../../shared/models/edriving.module';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
 import {fuseAnimations} from '../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../@fuse/components/alert';
-import {DeleteModalComponent} from './delete-modal/delete-modal.component';
+import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
 
 const ELEMENT_DATA: EdrivingUsuario[] = [];
 
@@ -78,7 +78,10 @@ export class EdrivingComponent implements AfterViewInit, OnInit {
             return;
         }
 
-        const dialogRef = this.dialog.open(DeleteModalComponent, {});
+        const dialogRef = this.dialog.open(AlertModalComponent, {
+            width: '280px',
+            data: {title: 'Confirmar Remoção ?'}
+        });
         dialogRef.afterClosed().subscribe((result) => {
             if (!result) {
                 return;

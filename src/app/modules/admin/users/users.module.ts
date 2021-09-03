@@ -21,15 +21,15 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatInputModule} from '@angular/material/input';
 import {FuseAlertModule} from '../../../../@fuse/components/alert';
 import { MatDialogModule } from '@angular/material/dialog';
-import { DeleteModalComponent } from './edriving/delete-modal/delete-modal.component';
-import {MatSelectModule} from "@angular/material/select";
+import { AlertModalComponent } from '../../../layout/common/alert/alert-modal.component';
+import {MatSelectModule} from '@angular/material/select';
 
 
 @NgModule({
     declarations: [
         EdrivingComponent,
         EdrivingFormModalComponent,
-        DeleteModalComponent
+        AlertModalComponent
     ],
     imports: [
         RouterModule.forChild(UsersRouting),
