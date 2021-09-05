@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {EdrivingPost, EdrivingUsuario} from '../../../shared/models/edriving.module';
+import {EdrivingPost, EdrivingUsuario} from '../../../shared/models/edriving.model';
 import {UserService} from '../../../shared/services/http/user.service';
 import {EdrivingService} from '../../../shared/services/http/edriving.service';
 import {fuseAnimations} from '@fuse/animations';

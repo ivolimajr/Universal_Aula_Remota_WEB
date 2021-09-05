@@ -1,23 +1,23 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../../@fuse/components/alert';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {EdrivingPost} from 'app/shared/models/edriving.model';
-import {EdrivingService} from '../../../../../shared/services/http/edriving.service';
+import {Cargo} from '../../../../../shared/models/cargo.model';
+import {ParceiroPost} from '../../../../../shared/models/parceiro.model';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
 import {catchError} from 'rxjs/operators';
 import {of} from 'rxjs';
-import {Cargo} from '../../../../../shared/models/cargo.model';
-import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
+import {ParceiroService} from '../../../../../shared/services/http/parceiro.service';
 
 @Component({
-    selector: 'app-edrivin-form-modal',
-    templateUrl: './edriving-form-modal.component.html',
-    styleUrls: ['./edriving-form-modal.component.scss'],
+    selector: 'app-parceiro-form-modal',
+    templateUrl: './parceiro-form-modal.component.html',
+    styleUrls: ['./parceiro-form-modal.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations
 })
-export class EdrivingFormModalComponent implements OnInit {
+export class ParceiroFormModalComponent implements OnInit {
 
     alert: { type: FuseAlertType; message: string } = {
         type: 'error',
@@ -27,14 +27,14 @@ export class EdrivingFormModalComponent implements OnInit {
     accountForm: FormGroup;
     showAlert: boolean = false;
     cargos: Cargo[];
-    private edrivingUserPost = new EdrivingPost();
+    private parceiroUserPost = new ParceiroPost();
 
     constructor(
         public dialog: MatDialog,
         private _formBuilder: FormBuilder,
-        public dialogRef: MatDialogRef<EdrivingFormModalComponent>,
+        public dialogRef: MatDialogRef<ParceiroFormModalComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _edrivingServices: EdrivingService
+        private _parceiroServices: ParceiroService
     ) {
     }
 
@@ -51,7 +51,7 @@ export class EdrivingFormModalComponent implements OnInit {
     submit(): void{
         if(!this.prepareUser()) {return;}
 
-        this._edrivingServices.create(this.edrivingUserPost).subscribe((res: any)=>{
+        this._parceiroServices.create(this.parceiroUserPost).subscribe((res: any)=>{
             if(res.error){
                 this.dialog.open(AlertModalComponent, {
                     width: '280px',
@@ -108,7 +108,7 @@ export class EdrivingFormModalComponent implements OnInit {
      * Busca os cargos dos usuário do tipo edriving
      */
     private getCargos(): void {
-        this._edrivingServices.getCargos().subscribe((res) => {
+        this._parceiroServices.getCargos().subscribe((res) => {
             this.cargos = res;
             this._changeDetectorRef.markForCheck();
         }),
@@ -123,25 +123,61 @@ export class EdrivingFormModalComponent implements OnInit {
      */
     private prepareForm(): void {
         this.accountForm = this._formBuilder.group({
-            nome: ['Nome Apagar',
+            nome: ['DETRAN',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(100)]
                 )],
-            cpf: ['00000000002',
-                Validators.compose([
-                    Validators.required,
-                    Validators.nullValidator,
-                    Validators.minLength(11),
-                    Validators.maxLength(11)])],
-            email: ['claudio3@email.com',
+            email: ['parceiro@email.com',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(70)])],
+            cnpj: ['00000000002000',
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(14),
+                    Validators.maxLength(14)])],
+            descricao: ['Descrição qualquer',
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(5),
+                    Validators.maxLength(100)])],
+            cep: ['72235621',
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(8),
+                    Validators.maxLength(8)])],
+            enderecoLogradouro: ['Logradouro',
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(3),
+                    Validators.maxLength(150)])],
+            bairro: ['Bairro',
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(3),
+                    Validators.maxLength(150)])],
+            cidade: ['Cidade',
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(3),
+                    Validators.maxLength(150)])],
+            numero: ['01',
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(1),
+                    Validators.maxLength(50)])],
             cargoId: [0,
                 Validators.compose([
                     Validators.required])],
@@ -156,7 +192,7 @@ export class EdrivingFormModalComponent implements OnInit {
         // Create a phone number form group
         phoneNumbersFormGroups.push(
             this._formBuilder.group({
-                telefone: ['61986618603']
+                telefone: ['61786618603']
             }));
 
         // Adiciona o array de telefones ao fomrGroup
@@ -192,12 +228,19 @@ export class EdrivingFormModalComponent implements OnInit {
             });
             return false;
         }
-        this.edrivingUserPost.nome = formData.nome;
-        this.edrivingUserPost.email = formData.email;
-        this.edrivingUserPost.cpf = formData.cpf;
-        this.edrivingUserPost.cargoId = formData.cargoId;
-        this.edrivingUserPost.senha = 'Pay@2021';
-        this.edrivingUserPost.telefones = formData.telefones;
+        this.parceiroUserPost.nome = formData.nome;
+        this.parceiroUserPost.email = formData.email;
+        this.parceiroUserPost.cnpj = formData.cnpj;
+        this.parceiroUserPost.descricao = formData.descricao;
+        this.parceiroUserPost.cep = formData.cep;
+        this.parceiroUserPost.uf = 'DF';
+        this.parceiroUserPost.enderecoLogradouro = formData.enderecoLogradouro;
+        this.parceiroUserPost.bairro = formData.bairro;
+        this.parceiroUserPost.cidade = formData.cidade;
+        this.parceiroUserPost.numero = formData.numero;
+        this.parceiroUserPost.cargoId = formData.cargoId;
+        this.parceiroUserPost.senha = 'Pay@2021';
+        this.parceiroUserPost.telefones = formData.telefones;
         return true;
     }
 }

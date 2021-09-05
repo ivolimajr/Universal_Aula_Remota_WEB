@@ -12,7 +12,7 @@ import {Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {FuseMediaWatcherService} from '@fuse/services/media-watcher';
 import {EdrivingService} from '../../shared/services/http/edriving.service';
-import {EdrivingUsuario} from '../../shared/models/edriving.module';
+import {EdrivingUsuario} from '../../shared/models/edriving.model';
 import {AuthService} from '../../shared/services/auth/auth.service';
 
 @Component({

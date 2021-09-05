@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {AuthService} from './shared/services/auth/auth.service';
-import {TokenResult} from './shared/models/token.module';
+import {TokenResult} from './shared/models/token.model';
 
 @Component({
     selector: 'app-root',

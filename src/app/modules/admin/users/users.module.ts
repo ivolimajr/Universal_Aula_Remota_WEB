@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {EdrivingComponent} from './edriving/edriving.component';
 import {RouterModule} from '@angular/router';
-import {UsersRouting} from './users.routing';
+import {usersRouting} from './usersRouting';
 import {MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -23,16 +23,20 @@ import {FuseAlertModule} from '../../../../@fuse/components/alert';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AlertModalComponent } from '../../../layout/common/alert/alert-modal.component';
 import {MatSelectModule} from '@angular/material/select';
+import { ParceiroComponent } from './parceiro/parceiro.component';
+import { ParceiroFormModalComponent } from './parceiro/parceiro-form-modal/parceiro-form-modal.component';
 
 
 @NgModule({
     declarations: [
         EdrivingComponent,
         EdrivingFormModalComponent,
-        AlertModalComponent
+        AlertModalComponent,
+        ParceiroComponent,
+        ParceiroFormModalComponent
     ],
     imports: [
-        RouterModule.forChild(UsersRouting),
+        RouterModule.forChild(usersRouting),
         MatButtonModule,
         MatButtonToggleModule,
         MatCheckboxModule,

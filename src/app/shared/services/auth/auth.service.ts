@@ -6,7 +6,7 @@ import {UserService} from 'app/shared/services/http/user.service';
 import {LocalStorageService} from '../storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
 import {Usuario, UsuarioLogin} from '../../models/usuario.model';
-import {TokenResult} from 'app/shared/models/token.module';
+import {TokenResult} from 'app/shared/models/token.model';
 
 const API_TOKEN_URL = `${environment.apiUrl}/Auth/getToken`;
 const API_LOGIN_URL = `${environment.apiUrl}/Usuario/Login`;

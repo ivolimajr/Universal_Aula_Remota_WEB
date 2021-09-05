@@ -1,26 +1,26 @@
 import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {MatSort} from '@angular/material/sort';
-import {MatTable, MatTableDataSource} from '@angular/material/table';
-import {MatDialog} from '@angular/material/dialog';
-import {MatPaginator} from '@angular/material/paginator';
-import {EdrivingFormModalComponent} from './edriving-form-modal/edriving-form-modal.component';
-import {EdrivingService} from '../../../../shared/services/http/edriving.service';
-import {EdrivingUsuario} from '../../../../shared/models/edriving.model';
-import {AuthService} from '../../../../shared/services/auth/auth.service';
+import {ParceiroUsuario} from '../../../../shared/models/parceiro.model';
 import {fuseAnimations} from '../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../@fuse/components/alert';
+import {MatTable, MatTableDataSource} from '@angular/material/table';
+import {MatSort} from '@angular/material/sort';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatDialog} from '@angular/material/dialog';
+import {AuthService} from '../../../../shared/services/auth/auth.service';
+import {ParceiroService} from '../../../../shared/services/http/parceiro.service';
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
+import {ParceiroFormModalComponent} from './parceiro-form-modal/parceiro-form-modal.component';
 
-const ELEMENT_DATA: EdrivingUsuario[] = [];
+
+const ELEMENT_DATA: ParceiroUsuario[] = [];
 
 @Component({
-    selector: 'app-edriving',
-    templateUrl: './edriving.component.html',
-    styleUrls: ['./edriving.component.scss'],
+  selector: 'app-parceiro',
+  templateUrl: './parceiro.component.html',
+  styleUrls: ['./parceiro.component.scss'],
     animations: fuseAnimations
 })
-
-export class EdrivingComponent implements AfterViewInit, OnInit {
+export class ParceiroComponent implements AfterViewInit, OnInit {
 
     alert: { type: FuseAlertType; message: string } = {
         type: 'error',
@@ -28,20 +28,20 @@ export class EdrivingComponent implements AfterViewInit, OnInit {
     };
 
     displayedColumns: string[] = ['nome', 'email', 'id'];
-    dataSource = new MatTableDataSource<EdrivingUsuario>(ELEMENT_DATA);
+    dataSource = new MatTableDataSource<ParceiroUsuario>(ELEMENT_DATA);
     loading: boolean = true;
     showAlert: boolean = false;
-    _users$ = this._edrivingServices.getAll();
+    _users$ = this._parceiroServices.getAll();
 
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatTable) table: MatTable<EdrivingUsuario>;
+    @ViewChild(MatTable) table: MatTable<ParceiroUsuario>;
 
     constructor(
         public dialog: MatDialog,
         private _authServices: AuthService,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _edrivingServices: EdrivingService
+        private _parceiroServices: ParceiroService
     ) {
     }
 
@@ -56,7 +56,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit {
 
     creteUser(): void {
         this.showAlert = false;
-        const dialogRef = this.dialog.open(EdrivingFormModalComponent);
+        const dialogRef = this.dialog.open(ParceiroFormModalComponent);
 
         dialogRef.afterClosed().subscribe((result) => {
             if(result){
@@ -91,7 +91,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit {
     }
 
     private getUsers(): void {
-        this._users$.subscribe((items: EdrivingUsuario[]) => {
+        this._users$.subscribe((items: ParceiroUsuario[]) => {
             this.dataSource.data = items;
             this.loading = false;
             this._changeDetectorRef.markForCheck();
@@ -99,7 +99,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit {
     }
 
     private deleteFromApi(id: number): void {
-        this._edrivingServices.delete(id).subscribe((res)=>{
+        this._parceiroServices.delete(id).subscribe((res)=>{
             if(res){
                 this.setAlert('Removido', 'success');
                 this.getUsers();
