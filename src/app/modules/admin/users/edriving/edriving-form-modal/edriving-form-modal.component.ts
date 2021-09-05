@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../../@fuse/components/alert';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -8,6 +8,7 @@ import {EdrivingService} from '../../../../../shared/services/http/edriving.serv
 import {catchError} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {Cargo} from '../../../../../shared/models/cargo.model';
+import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
 
 @Component({
     selector: 'app-edrivin-form-modal',
@@ -25,12 +26,11 @@ export class EdrivingFormModalComponent implements OnInit {
 
     accountForm: FormGroup;
     showAlert: boolean = false;
-    apiError: boolean = false;
-    apiErrorMessage: string = '';
     cargos: Cargo[];
     private edrivingUserPost = new EdrivingPost();
 
     constructor(
+        public dialog: MatDialog,
         private _formBuilder: FormBuilder,
         public dialogRef: MatDialogRef<EdrivingFormModalComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
@@ -49,33 +49,18 @@ export class EdrivingFormModalComponent implements OnInit {
     }
 
     submit(): void{
-        this.showAlert = false;
-        this.apiError = false;
-        if(this.accountForm.invalid){
-            this.setAlert('Dados Inválido');
-            return;
-        }
-        const formData = this.accountForm.value;
-        this.edrivingUserPost.nome = formData.nome;
-        this.edrivingUserPost.email = formData.email;
-        this.edrivingUserPost.cpf = formData.cpf;
-        this.edrivingUserPost.cargoId = formData.cargo;
-        this.edrivingUserPost.senha = 'Pay@2021';
-        this.edrivingUserPost.telefones = formData.telefones;
+        if(!this.prepareUser()) {return;}
+
         this._edrivingServices.create(this.edrivingUserPost).subscribe((res: any)=>{
             if(res.error){
-                console.log(res.error);
-                this.apiError = true;
-                this.apiErrorMessage = res.error;
-                this._changeDetectorRef.markForCheck();
+                this.dialog.open(AlertModalComponent, {
+                    width: '280px',
+                    data: {title: res.error, oneButton: true}
+                });
                 return;
             }
             this.dialogRef.close(res);
-        }),catchError((res)=>{
-            console.log('error');
-            console.log(res);
-            return of(res);
-        });
+        }),catchError(res=>of(res));
     }
 
     closeAlert(): void{
@@ -125,15 +110,13 @@ export class EdrivingFormModalComponent implements OnInit {
     private getCargos(): void {
         this._edrivingServices.getCargos().subscribe((res) => {
             this.cargos = res;
+            this._changeDetectorRef.markForCheck();
         }),
-            catchError((res) => {
-                console.log(res);
-                return of(res);
-            });
+            catchError(res => of(res));
     }
 
     /**
-     * monta o formulário com os validadores
+     * Monta o formulário com os validadores
      *
      * @return void
      * @private
@@ -183,12 +166,38 @@ export class EdrivingFormModalComponent implements OnInit {
 
         this._changeDetectorRef.markForCheck();
     }
+
     private setAlert(value: string, type: any = 'error'): void {
-        console.log('1');
-        console.log(value);
         this.showAlert = false;
         this.alert.type = type;
         this.alert.message = value;
         this.showAlert = true;
+        this._changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * Prepara o usuário para envio
+     */
+    private prepareUser(): boolean{
+        this.showAlert = false;
+        if(this.accountForm.invalid){
+            this.setAlert('Dados Inválido');
+            return;
+        }
+        const formData = this.accountForm.value;
+        if(formData.cargo === undefined || formData.cargo === 0){
+            this.dialog.open(AlertModalComponent, {
+                width: '280px',
+                data: {title: 'Selecione um Cargo', oneButton: true}
+            });
+            return false;
+        }
+        this.edrivingUserPost.nome = formData.nome;
+        this.edrivingUserPost.email = formData.email;
+        this.edrivingUserPost.cpf = formData.cpf;
+        this.edrivingUserPost.cargoId = formData.cargo;
+        this.edrivingUserPost.senha = 'Pay@2021';
+        this.edrivingUserPost.telefones = formData.telefones;
+        return true;
     }
 }

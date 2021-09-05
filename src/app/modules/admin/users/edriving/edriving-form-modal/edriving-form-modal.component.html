@@ -7,7 +7,7 @@
         </div>
         <fuse-alert
             (click)="closeAlert()"
-            class="mt-8 -mb-4"
+            class="mt-8 mb-4"
             *ngIf="showAlert"
             [appearance]="'outline'"
             [showIcon]="false"
@@ -16,7 +16,7 @@
             {{alert.message}}
         </fuse-alert>
         <!-- Divider -->
-        <div class="w-8 h-0.5 mt-3 rounded bg-accent"></div>
+        <div class="w-15 h-0.5 mt-3 mb-3 rounded bg-accent"></div>
         <!-- Features -->
         <div class="flex flex-col mt-2.5">
 
@@ -144,7 +144,6 @@
             [color]="'primary'">
             Salvar
         </button>
-        <mat-hint align="center" class="text-red-500 text-center" *ngIf="apiError">{{apiErrorMessage}}</mat-hint>
     </fuse-card>
 
 </div>
