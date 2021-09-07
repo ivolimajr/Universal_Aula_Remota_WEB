@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
     private prepareForm(): void {
         this.userStorage = this._authService.getLoginFromStorage();
         this.loginForm = this._formBuilder.group({
-            email: ['PLATAFORMA@EDRIVING.COM',
+            email: ['@EDRIVING.COM',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,

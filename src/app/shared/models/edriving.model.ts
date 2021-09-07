@@ -22,5 +22,5 @@ export class EdrivingPost {
     telefones: Array<Telefone>;
     cargoId: number;
     status: number;
-    senha: string;
+    senha?: string;
 }

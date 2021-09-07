@@ -20,7 +20,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         id: 'parceiro',
         title: 'Parceiros',
         type: 'basic',
-        icon: 'heroicons_outline:academic-cap',
+        icon: 'heroicons_outline:user-group',
         link: '/usuario/parceiro'
     }
 ];
@@ -43,7 +43,7 @@ export const compactNavigation: FuseNavigationItem[] = [
         id: 'parceiro',
         title: 'Parceiros',
         type: 'basic',
-        icon: 'heroicons_outline:academic-cap',
+        icon: 'heroicons_outline:user-group',
         link: '/usuario/parceiro'
     }
 ];
@@ -66,7 +66,7 @@ export const futuristicNavigation: FuseNavigationItem[] = [
         id: 'parceiro',
         title: 'Parceiros',
         type: 'basic',
-        icon: 'heroicons_outline:academic-cap',
+        icon: 'heroicons_outline:user-group',
         link: '/usuario/parceiro'
     }
 ];
@@ -89,7 +89,7 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         id: 'parceiro',
         title: 'Parceiros',
         type: 'basic',
-        icon: 'heroicons_outline:academic-cap',
+        icon: 'heroicons_outline:user-group',
         link: '/usuario/parceiro'
     }
 ];

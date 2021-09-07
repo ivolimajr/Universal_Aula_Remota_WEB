@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../../@fuse/components/alert';
@@ -9,6 +9,11 @@ import {catchError} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {Cargo} from '../../../../../shared/models/cargo.model';
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
+import {UserService} from '../../../../../shared/services/http/user.service';
+import {LocalStorageService} from '../../../../../shared/services/storage/localStorage.service';
+import {Usuario} from '../../../../../shared/models/usuario.model';
+import {environment} from '../../../../../../environments/environment';
+import {AuthService} from '../../../../../shared/services/auth/auth.service';
 
 @Component({
     selector: 'app-edrivin-form-modal',
@@ -24,47 +29,102 @@ export class EdrivingFormModalComponent implements OnInit {
         message: ''
     };
 
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    @Input() id: number; //Se vier um ID, exibir e atualizar o usuário
     accountForm: FormGroup;
+    loading: boolean = true; //Inicia o componente com um lading
     showAlert: boolean = false;
-    cargos: Cargo[];
-    private edrivingUserPost = new EdrivingPost();
+    message: string = null; //Mensagem quando estiver salvando ou editando um usuário
+    cargos: Cargo[]; //Lista com os cargos
+    cargoId: number;
+    selected: string = null; //Cargo Selecionado
+    private edrivingUserPost = new EdrivingPost(); //Objeto para envio dos dados para API
+    private phoneArray = [];
+    private user: Usuario;
 
     constructor(
         public dialog: MatDialog,
         private _formBuilder: FormBuilder,
         public dialogRef: MatDialogRef<EdrivingFormModalComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _edrivingServices: EdrivingService
+        private _edrivingServices: EdrivingService,
+        private _authServices: AuthService,
+        private _storageServices: LocalStorageService
     ) {
     }
 
     ngOnInit(): void {
+        //Busca os cargos
+        this.getCargos();
         //Prepara o formulário
         this.prepareForm();
-        this.getCargos();
     }
 
+    //Fecha o formulário
     onNoClick(): void {
         this.dialogRef.close();
     }
 
-    submit(): void{
-        if(!this.prepareUser()) {return;}
+    /**
+     * Atualiza ou cria um novo usuário;
+     *
+     * @return void
+     */
+    submit(): void {
+        //Prepara o usuário
+        const result = this.prepareUser();
+        if (result) {
+            //Exibe o alerta de salvando dados
+            this.loading = true;
+            this.message = 'Salvando';
+            this._changeDetectorRef.markForCheck();
 
-        this._edrivingServices.create(this.edrivingUserPost).subscribe((res: any)=>{
-            if(res.error){
-                this.dialog.open(AlertModalComponent, {
-                    width: '280px',
-                    data: {title: res.error, oneButton: true}
-                });
-                return;
+            //Atualiza o usuário
+            if (this.id) {
+                this._edrivingServices.update(this.edrivingUserPost).subscribe((res: any) => {
+                    if (res.error) {
+                        this.dialog.open(AlertModalComponent, {
+                            width: '280px',
+                            data: {title: res.error, oneButton: true}
+                        });
+                        this.closeAlert();
+                        return;
+                    }
+                    //Se o usuário a ser atualizado for o usuário logado, atualiza os dados na storage
+                    if(this.id === this._authServices.getUserInfoFromStorage().id){
+                        this.user = this._authServices.getUserInfoFromStorage();
+                        this.user.nome = res.nome;
+                        this.user.email = res.email;
+                        this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
+                    }
+                    this.closeAlert();
+                    this.dialogRef.close(res);
+                    return;
+                }), catchError(res => of(res));
+            } else {
+                //Cria um usuário
+                this._edrivingServices.create(this.edrivingUserPost).subscribe((res: any) => {
+                    if (res.error) {
+                        this.dialog.open(AlertModalComponent, {
+                            width: '280px',
+                            data: {title: res.error, oneButton: true}
+                        });
+                        this.closeAlert();
+                        return;
+                    }
+                    this.closeAlert();
+                    this.dialogRef.close(res);
+                }), catchError(res => of(res));
             }
-            this.dialogRef.close(res);
-        }),catchError(res=>of(res));
+        }
     }
 
-    closeAlert(): void{
+    //Fecha o alerta na tela
+    closeAlert(): void {
+        this.loading = false;
+        this.message = null;
         this.showAlert = false;
+        this._changeDetectorRef.markForCheck();
     }
 
     /**
@@ -74,9 +134,8 @@ export class EdrivingFormModalComponent implements OnInit {
      * @param index do array de telefones a ser removido
      */
     removePhoneNumber(id: number, index: number): void {
-
         const phoneNumbersFormArray = this.accountForm.get('telefones') as FormArray;
-        if(phoneNumbersFormArray.length === 1){
+        if (phoneNumbersFormArray.length === 1) {
             this.setAlert('Informe um telefone');
             return;
         }
@@ -90,19 +149,23 @@ export class EdrivingFormModalComponent implements OnInit {
      * @return void
      */
     addPhoneNumberField(): void {
-
         // Cria um novo formGroup vazio
         const phoneNumberFormGroup = this._formBuilder.group({
             id: [0],
             telefone: ['']
-        });
-
+        }, Validators.compose([
+            Validators.required,
+            Validators.nullValidator,
+            Validators.minLength(3)
+        ]));
         // Adiciona o formGroup ao array de telefones
         (this.accountForm.get('telefones') as FormArray).push(phoneNumberFormGroup);
-
-        // Marca as alterações
         this._changeDetectorRef.markForCheck();
     }
+
+    onSelectCargoChange(id: number): void {
+        this.cargoId = id;
+    };
 
     /**
      * Busca os cargos dos usuário do tipo edriving
@@ -116,55 +179,180 @@ export class EdrivingFormModalComponent implements OnInit {
     }
 
     /**
-     * Monta o formulário com os validadores
+     * Prepara o formulário com os validadores
+     *Se não for passado um ID para o componente, significa que é um novo usuáro.
+     * Caso contrário, será atualizado o usuário
      *
      * @return void
      * @private
      */
     private prepareForm(): void {
+        //Cria um formulário para exibição e atualização de um usuário
+        if (this.id !== null) {
+            this.prepareEditForm();
+            return;
+        }
+        //Cria um formulário para adição de um usuário
         this.accountForm = this._formBuilder.group({
-            nome: ['Nome Apagar',
+            nome: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(100)]
                 )],
-            cpf: ['00000000002',
+            cpf: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(11),
                     Validators.maxLength(11)])],
-            email: ['claudio3@email.com',
+            email: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(70)])],
-            cargoId: [0,
-                Validators.compose([
-                    Validators.required])],
             telefones: this._formBuilder.array([], Validators.compose([
                 Validators.required,
                 Validators.nullValidator
             ])),
         });
 
-        // cria um array para montar o formBuilder de telefones
-        const phoneNumbersFormGroups = [];
         // Create a phone number form group
-        phoneNumbersFormGroups.push(
+        this.phoneArray.push(
             this._formBuilder.group({
-                telefone: ['61986618603']
-            }));
+                telefone: ['']
+            }, Validators.compose([
+                Validators.required,
+                Validators.nullValidator,
+                Validators.minLength(3)
+            ])));
 
         // Adiciona o array de telefones ao fomrGroup
-        phoneNumbersFormGroups.forEach((phoneNumbersFormGroup) => {
+        this.phoneArray.forEach((phoneNumbersFormGroup) => {
             (this.accountForm.get('telefones') as FormArray).push(phoneNumbersFormGroup);
         });
 
+        this.loading = false;
         this._changeDetectorRef.markForCheck();
+        this.phoneArray = [];
+    }
+
+    /**
+     * Prepara o usuário para envio
+     */
+    private prepareUser(): boolean {
+        const formData = this.accountForm.value;
+        let result: boolean = true;
+        //Verifica se os telefones informados são válidos
+        formData.telefones.forEach((item) => {
+            if (item.telefone === null || item.telefone === '' || item.telefone.length !== 11) {
+                this.dialog.open(AlertModalComponent, {
+                    width: '280px',
+                    data: {title: 'Telefone Inválido', content: item.telefone, oneButton: true}
+                });
+                result = false;
+            }
+        });
+
+        if (this.cargoId === undefined || this.cargoId === 0) {
+            this.dialog.open(AlertModalComponent, {
+                width: '280px',
+                data: {title: 'Selecione um Cargo', oneButton: true}
+            });
+            result = false;
+        }
+
+        if (this.id) {
+            this.edrivingUserPost.id = this.id;
+        }
+        if (!this.id) {
+            this.edrivingUserPost.senha = 'Pay@2021';
+        }
+        this.edrivingUserPost.nome = formData.nome;
+        this.edrivingUserPost.email = formData.email;
+        this.edrivingUserPost.cpf = formData.cpf;
+        this.edrivingUserPost.cargoId = this.cargoId;
+        this.edrivingUserPost.telefones = formData.telefones;
+        console.log(result);
+        return result;
+    }
+
+    private prepareEditForm(): void {
+
+        this.loading = true;
+        this.message = 'Buscando dados.';
+        this._changeDetectorRef.markForCheck();
+
+        this._edrivingServices.getOne(this.id).subscribe((res) => {
+            this.accountForm = this._formBuilder.group({
+                nome: [res.nome,
+                    Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator,
+                        Validators.minLength(5),
+                        Validators.maxLength(100)]
+                    )],
+                cpf: [res.cpf,
+                    Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator,
+                        Validators.minLength(11),
+                        Validators.maxLength(11)])],
+                email: [res.email,
+                    Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator,
+                        Validators.minLength(5),
+                        Validators.maxLength(70)])],
+                telefones: this._formBuilder.array([], Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator
+                ])),
+            });
+            this.cargoId = res.cargoId;
+            this.selected = res.cargo.id.toString();
+
+            //Só monta o array de telefones se houver telefones de contato cadastrado
+            if (res.telefones.length > 0) {
+                // Iterate through them
+                res.telefones.forEach((phoneNumber) => {
+
+                    //Cria um formGroup de telefone
+                    this.phoneArray.push(
+                        this._formBuilder.group({
+                            id: [phoneNumber.id],
+                            telefone: [phoneNumber.telefone]
+                        }, Validators.compose([
+                            Validators.required,
+                            Validators.nullValidator,
+                            Validators.minLength(3)
+                        ]))
+                    );
+                });
+            } else {
+                // Create a phone number form group
+                this.phoneArray.push(
+                    this._formBuilder.group({
+                        id: [0],
+                        telefone: ['']
+                    }, Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator,
+                        Validators.minLength(3)
+                    ]))
+                );
+            }
+
+            // Adiciona o array de telefones ao fomrGroup
+            this.phoneArray.forEach((phoneNumbersFormGroup) => {
+                (this.accountForm.get('telefones') as FormArray).push(phoneNumbersFormGroup);
+            });
+            this.edrivingUserPost.id = res.id;
+            this.closeAlert();
+            this.phoneArray = [];
+        });
     }
 
     private setAlert(value: string, type: any = 'error'): void {
@@ -173,31 +361,5 @@ export class EdrivingFormModalComponent implements OnInit {
         this.alert.message = value;
         this.showAlert = true;
         this._changeDetectorRef.markForCheck();
-    }
-
-    /**
-     * Prepara o usuário para envio
-     */
-    private prepareUser(): boolean{
-        this.showAlert = false;
-        if(this.accountForm.invalid){
-            this.setAlert('Dados Inválido');
-            return;
-        }
-        const formData = this.accountForm.value;
-        if(formData.cargoId === undefined || formData.cargoId === 0){
-            this.dialog.open(AlertModalComponent, {
-                width: '280px',
-                data: {title: 'Selecione um Cargo', oneButton: true}
-            });
-            return false;
-        }
-        this.edrivingUserPost.nome = formData.nome;
-        this.edrivingUserPost.email = formData.email;
-        this.edrivingUserPost.cpf = formData.cpf;
-        this.edrivingUserPost.cargoId = formData.cargoId;
-        this.edrivingUserPost.senha = 'Pay@2021';
-        this.edrivingUserPost.telefones = formData.telefones;
-        return true;
     }
 }

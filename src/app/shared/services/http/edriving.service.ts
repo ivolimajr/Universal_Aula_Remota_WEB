@@ -25,7 +25,6 @@ export class EdrivingService {
      * @return retorna um usuário ou o error
      */
     getOne(id: number): Observable<EdrivingUsuario> {
-
         return this._httpClient.get<EdrivingUsuario>(URL_EDRIVING + '/' + id).pipe(
             switchMap((response: any) => of(response)),
             catchError((e) => {
@@ -69,7 +68,6 @@ export class EdrivingService {
         if (data.id === 0 || data.id == null) {
             return of(null);
         }
-
         return this._httpClient.put(URL_EDRIVING, data).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))

@@ -25,5 +25,5 @@ export interface AppConfig {
 export const appConfig: AppConfig = {
     layout: 'classy',
     scheme: 'light',
-    theme: 'default'
+    theme: 'brant'
 };

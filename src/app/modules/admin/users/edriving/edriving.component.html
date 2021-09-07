@@ -18,7 +18,7 @@
                     class="ml-1 items-center"
                     mat-flat-button
                     [color]="'primary'"
-                    (click)="creteUser()">
+                    (click)="setUser(null)">
                     <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                     <span class="ml-1 mr-1">Inserir</span>
                 </button>
@@ -30,6 +30,7 @@
                 <fuse-alert
                     class="mt-2 mb-4"
                     *ngIf="showAlert"
+                    (click)="closeAlert()"
                     [appearance]="'outline'"
                     [showIcon]="false"
                     [type]="alert.type"
@@ -63,13 +64,25 @@
                     <ng-container matColumnDef="id">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
                         <td mat-cell *matCellDef="let element">
-                            <button
-                                style="width: auto"
-                                class="items-center"
-                                mat-flat-button
-                                (click)="removeUser(element.id)">
-                                <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                            </button>
+                            <div class="flex space-x-4 ...">
+                                <div>
+                                    <button
+                                        style="width: auto"
+                                        class="items-center"
+                                        mat-flat-button
+                                        (click)="removeUser(element.id)">
+                                        <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button
+                                        class="items-center pl-4 w-auto"
+                                        mat-flat-button
+                                        (click)="setUser(element.id)">
+                                        <mat-icon [svgIcon]="'heroicons_outline:eye'"></mat-icon>
+                                    </button>
+                                </div>
+                            </div>
                         </td>
                     </ng-container>
 
