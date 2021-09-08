@@ -11,6 +11,7 @@ import {LocalStorageService} from '../../../shared/services/storage/localStorage
 import {environment} from '../../../../environments/environment';
 import {MatDialog} from '@angular/material/dialog';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
+import {MASKS, NgBrazilValidators} from 'ng-brazil';
 
 @Component({
     selector: 'app-edriving',
@@ -28,6 +29,7 @@ export class EdrivingComponent implements OnInit {
     accountForm: FormGroup;
     user: Usuario;
     showAlert: boolean = false;
+    masks = MASKS;
     private edrivingUserPost = new EdrivingPost();
 
     constructor(
@@ -53,6 +55,9 @@ export class EdrivingComponent implements OnInit {
      * @return void
      */
     update(): void {
+
+        console.log(this.accountForm.value);
+        return;
         //Verifica se o formulário é valido
         if (this.checkFormToSend() === false) {
             return null;
@@ -177,12 +182,14 @@ export class EdrivingComponent implements OnInit {
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
-                    Validators.minLength(11),
-                    Validators.maxLength(11)])],
+                    Validators.minLength(14),
+                    Validators.maxLength(14),
+                    NgBrazilValidators.cpf])],
             email: [this.edrivingUser.email,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
+                    Validators.email,
                     Validators.minLength(5),
                     Validators.maxLength(70)])],
             telefones: this._formBuilder.array([], Validators.compose([
@@ -203,7 +210,12 @@ export class EdrivingComponent implements OnInit {
                 phoneNumbersFormGroups.push(
                     this._formBuilder.group({
                         id: [phoneNumber.id],
-                        telefone: [phoneNumber.telefone]
+                        telefone: [phoneNumber.telefone,
+                            Validators.compose([
+                                Validators.required,
+                                Validators.nullValidator
+                            ])
+                        ]
                     })
                 );
             });
@@ -212,7 +224,12 @@ export class EdrivingComponent implements OnInit {
             phoneNumbersFormGroups.push(
                 this._formBuilder.group({
                     id: [0],
-                    telefone: ['']
+                    telefone: ['', Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator,
+                        Validators.minLength(14)
+                    ])
+                    ]
                 })
             );
         }
@@ -243,8 +260,8 @@ export class EdrivingComponent implements OnInit {
         const formData = this.accountForm.value;
         this.edrivingUserPost.nome = formData.nome;
         this.edrivingUserPost.email = formData.email;
-        this.edrivingUserPost.cpf = formData.cpf;
-        this.edrivingUserPost.telefones = formData.telefones;
+        this.edrivingUserPost.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');;
+        this.edrivingUserPost.telefones = formData.telefones.replace(/[^0-9,]*/g, '').replace(',', '.');;
 
         return true;
     }

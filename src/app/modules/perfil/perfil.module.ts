@@ -9,6 +9,7 @@ import {perfilRoutes} from './perfil.routing';
 import {AlteraSenhaComponent} from './altera-senha/altera-senha.component';
 import {EnderecoComponent} from './endereco/endereco.component';
 import {CustomMaterialModule} from '../../shared/material.module';
+import {TextMaskModule} from 'angular2-text-mask';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import {CustomMaterialModule} from '../../shared/material.module';
         CustomMaterialModule,
         FuseAlertModule,
         FuseAutogrowModule,
+        TextMaskModule,
     ]
 })
 export class PerfilModule {
