@@ -10,6 +10,7 @@ import {AuthService} from '../../../../shared/services/auth/auth.service';
 import {ParceiroService} from '../../../../shared/services/http/parceiro.service';
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
 import {ParceiroFormModalComponent} from './parceiro-form-modal/parceiro-form-modal.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 const ELEMENT_DATA: ParceiroUsuario[] = [];
@@ -33,12 +34,16 @@ export class ParceiroComponent implements AfterViewInit, OnInit {
     showAlert: boolean = false;
     _users$ = this._parceiroServices.getAll();
 
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatSort) sort: MatSort;
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatPaginator) paginator: MatPaginator;
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatTable) table: MatTable<ParceiroUsuario>;
 
     constructor(
         public dialog: MatDialog,
+        private _snackBar: MatSnackBar,
         private _authServices: AuthService,
         private _changeDetectorRef: ChangeDetectorRef,
         private _parceiroServices: ParceiroService
@@ -53,18 +58,37 @@ export class ParceiroComponent implements AfterViewInit, OnInit {
         this.dataSource.sort = this.sort;
         this.getUsers();
     }
+    /**
+     * Atualiza ou adiciona um novo usuário do tipo Edriving
+     *
+     * @param id -> se tiver ID exibe e atualiza, caso contrário, adiciona
+     * @return void
+     */
+    setUser(id: number): void {
 
-    creteUser(): void {
-        this.showAlert = false;
-        const dialogRef = this.dialog.open(ParceiroFormModalComponent);
-
-        dialogRef.afterClosed().subscribe((result) => {
-            if(result){
-                this.dataSource.data = [...this.dataSource.data,result];
-                this.setAlert('Inserido','success');
-                this._changeDetectorRef.detectChanges();
-            }
-        });
+        //Atualiza um usuário
+        if (id) {
+            const dialogRef = this.dialog.open(ParceiroFormModalComponent);
+            dialogRef.componentInstance.id = id;
+            dialogRef.afterClosed().subscribe((result) => {
+                if (result) {
+                    this.openSnackBar('Atualizado');
+                    this.getUsers();
+                }
+            });
+        } else {
+            //Cria um usuário
+            this.showAlert = false;
+            const dialogRef = this.dialog.open(ParceiroFormModalComponent);
+            dialogRef.componentInstance.id = id;
+            dialogRef.afterClosed().subscribe((result) => {
+                if(result){
+                    this.dataSource.data = [...this.dataSource.data,result];
+                    this.openSnackBar('Inserido');
+                    this._changeDetectorRef.detectChanges();
+                }
+            });
+        }
     }
 
     applyFilter(event: Event): void {
@@ -72,9 +96,15 @@ export class ParceiroComponent implements AfterViewInit, OnInit {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
+    /**
+     * Remove um usuário caso o alert de confirmação dê OK
+     *
+     * @param id
+     * @return void
+     */
     removeUser(id: number): void {
         if (id === 0 || id === null || id === this._authServices.getUserInfoFromStorage().id) {
-            this.setAlert('Remoção Inválida');
+            this.openSnackBar('Remoção Inválida');
             return;
         }
 
@@ -90,6 +120,12 @@ export class ParceiroComponent implements AfterViewInit, OnInit {
         });
     }
 
+    /**
+     * Lista os usuários
+     *
+     * @private
+     * @return void
+     */
     private getUsers(): void {
         this._users$.subscribe((items: ParceiroUsuario[]) => {
             this.dataSource.data = items;
@@ -98,22 +134,30 @@ export class ParceiroComponent implements AfterViewInit, OnInit {
         });
     }
 
+    /**
+     * Remove o usuário
+     *
+     * @param id do usuário a ser removido
+     * @private
+     * @return void
+     */
     private deleteFromApi(id: number): void {
         this._parceiroServices.delete(id).subscribe((res)=>{
-            if(res){
-                this.setAlert('Removido', 'success');
-                this.getUsers();
-                this._changeDetectorRef.markForCheck();
-                return;
+            if (!res) {
+                this.openSnackBar('Problemas na Remoção');
             }
-            this.setAlert('Problemas na Remoção');
+            this.openSnackBar('removido');
+            this.getUsers();
+            return;
         });
     }
 
-    private setAlert(value: string, type: any = 'error'): void {
-        this.showAlert = false;
-        this.alert.type = type;
-        this.alert.message = value;
-        this.showAlert = true;
+    private openSnackBar(message: string): void {
+        this._snackBar.open(message,'',{
+            duration: 5*1000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['mat-toolbar', 'mat-accent']
+        });
     }
 }

@@ -5,7 +5,6 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {fuseAnimations} from '../../../../../@fuse/animations';
-import {FuseAlertType} from '../../../../../@fuse/components/alert';
 import {EdrivingFormModalComponent} from './edriving-form-modal/edriving-form-modal.component';
 import {EdrivingService} from '../../../../shared/services/http/edriving.service';
 import {EdrivingUsuario} from '../../../../shared/models/edriving.model';
@@ -79,6 +78,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit {
                 if (result) {
                     this.dataSource.data = [...this.dataSource.data, result];
                     this.openSnackBar('Inserido');
+                    this._changeDetectorRef.detectChanges();
                 }
             });
         }

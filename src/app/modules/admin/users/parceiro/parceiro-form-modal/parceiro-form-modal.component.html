@@ -1,248 +1,268 @@
 <div mat-dialog-content>
     <fuse-card class="flex-col w-full max-w-300 p-6 sm:py-12 sm:px-10 filter-pricing border-2 border-gray-100">
-        <div class="text-3xl font-bold tracking-tight leading-tight">Novo Usuário</div>
-        <div class="mt-2 text-md font-medium tracking-tight text-secondary">Vocês está cadastrando um novo parceiro da Plataforma
-        </div>
-        <fuse-alert
-            (click)="closeAlert()"
-            class="mt-8 mb-4"
-            *ngIf="showAlert"
-            [appearance]="'outline'"
-            [showIcon]="false"
-            [type]="alert.type"
-            [@shake]="alert.type === 'error'">
-            {{alert.message}}
-        </fuse-alert>
+        <ng-container *ngIf="!id; else editMode">
+            <div class="text-3xl font-bold tracking-tight leading-tight">Novo Usuário</div>
+            <div class="mt-2 text-md font-medium tracking-tight text-secondary">Vocês está cadastrando um novo parceiro
+                da Plataforma
+            </div>
+        </ng-container>
+        <ng-template #editMode>
+            <div class="text-3xl font-bold tracking-tight leading-tight">Editar Usuário</div>
+            <div class="mt-2 text-md font-medium tracking-tight text-secondary">Vocês está editando um parceiro da
+                Plataforma
+            </div>
+        </ng-template>
         <!-- Divider -->
         <div class="w-15 h-0.5 mt-3 mb-3 rounded bg-accent"></div>
         <!-- Features -->
-        <div class="flex flex-col mt-2.5">
+        <ng-container *ngIf="loading; else loaded">
+            <ng-container *ngIf="loading;">
+                <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+                <fuse-alert
+                    class="mt-2.5"
+                    [type]="'info'"
+                    [appearance]="'border'">
+                    <span fuseAlertTitle>Aguarde...</span>
+                    {{message}}
+                </fuse-alert>
+            </ng-container>
+        </ng-container>
+        <ng-template #loaded>
 
-            <form [formGroup]="accountForm">
+            <div class="flex flex-col mt-2.5">
 
-                <!--start: Nome-->
-                <div class="sm:col-span-4">
-                    <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
-                        <mat-label for="nome">Nome</mat-label>
-                        <mat-icon
-                            class="icon-size-5 mr-0.5"
-                            [svgIcon]="'heroicons_solid:user'"
-                            matPrefix></mat-icon>
-                        <input
-                            id="nome"
-                            matInput
-                            [formControlName]="'nome'">
+                <form [formGroup]="accountForm">
 
-                    </mat-form-field>
-                    <mat-error *ngIf="accountForm.get('nome').hasError('nome')">
-                        Insira um nome válido
-                    </mat-error>
-                </div>
-                <!--end:Nome-->
+                    <!--start: Nome-->
+                    <div class="sm:col-span-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="nome">Nome</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:user'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="nome"
+                                matInput
+                                [formControlName]="'nome'">
 
-                <!--start: Email-->
-                <div class="sm:col-span-4 mt-2.5">
-                    <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
-                        <mat-label for="nome">Email</mat-label>
-                        <mat-icon
-                            class="icon-size-5 mr-0.5"
-                            [svgIcon]="'heroicons_solid:mail'"
-                            matPrefix></mat-icon>
-                        <input
-                            id="email"
-                            matInput
-                            [formControlName]="'email'">
-
-                    </mat-form-field>
-                    <mat-error *ngIf="accountForm.get('email').hasError('email')">
-                        Insira um e-mail válido
-                    </mat-error>
-                </div>
-                <!--end:Email-->
-
-                <!--start: CPF-->
-                <div class="sm:col-span-4 mt-2.5">
-                    <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
-                        <mat-label for="cnpj">CNPJ</mat-label>
-                        <mat-icon
-                            class="icon-size-5 mr-0.5"
-                            [svgIcon]="'heroicons_solid:credit-card'"
-                            matPrefix></mat-icon>
-                        <input
-                            id="cnpj"
-                            matInput
-                            [formControlName]="'cnpj'">
-
-                    </mat-form-field>
-                    <mat-error *ngIf="accountForm.get('cnpj').hasError('cnpj')">
-                        Insira um cnpj válido
-                    </mat-error>
-                </div>
-                <!--end:CPF-->
-                <mat-form-field appearance="legacy">
-                    <mat-label>Cargo</mat-label>
-                    <mat-select [formControlName]="'cargoId'">
-                        <mat-option *ngFor="let item of cargos" value="{{item.id}}">{{item.cargo}}</mat-option>
-                    </mat-select>
-                    <mat-hint align="end">Selecione o cargo</mat-hint>
-                </mat-form-field>
-                <div class="my-5 border-t"></div>
-                <!--start: CEP-->
-                <div class="sm:col-span-4 mt-2.5">
-                    <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
-                        <mat-label for="cep">CEP</mat-label>
-                        <mat-icon
-                            class="icon-size-5 mr-0.5"
-                            [svgIcon]="'heroicons_solid:credit-card'"
-                            matPrefix></mat-icon>
-                        <input
-                            id="cep"
-                            matInput
-                            [formControlName]="'cep'">
-
-                    </mat-form-field>
-                    <mat-error *ngIf="accountForm.get('cep').hasError('cep')">
-                        Insira um cep válido
-                    </mat-error>
-                </div>
-                <!--end:CPF-->
-                <!--start: enderecoLogradouro-->
-                <div class="sm:col-span-4 mt-2.5">
-                    <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
-                        <mat-label for="enderecoLogradouro">Endereço</mat-label>
-                        <mat-icon
-                            class="icon-size-5 mr-0.5"
-                            [svgIcon]="'heroicons_solid:credit-card'"
-                            matPrefix></mat-icon>
-                        <input
-                            id="enderecoLogradouro"
-                            matInput
-                            [formControlName]="'enderecoLogradouro'">
-
-                    </mat-form-field>
-                    <mat-error *ngIf="accountForm.get('enderecoLogradouro').hasError('enderecoLogradouro')">
-                        Insira um endereço válido
-                    </mat-error>
-                </div>
-                <!--end:enderecoLogradouro-->
-                <!--start: bairro-->
-                <div class="sm:col-span-4 mt-2.5">
-                    <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
-                        <mat-label for="bairro">Bairro</mat-label>
-                        <mat-icon
-                            class="icon-size-5 mr-0.5"
-                            [svgIcon]="'heroicons_solid:credit-card'"
-                            matPrefix></mat-icon>
-                        <input
-                            id="bairro"
-                            matInput
-                            [formControlName]="'bairro'">
-
-                    </mat-form-field>
-                    <mat-error *ngIf="accountForm.get('bairro').hasError('bairro')">
-                        Insira um bairro válido
-                    </mat-error>
-                </div>
-                <!--end:bairro-->
-                <!--start: cidade-->
-                <div class="sm:col-span-4 mt-2.5">
-                    <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
-                        <mat-label for="cidade">Cidade</mat-label>
-                        <mat-icon
-                            class="icon-size-5 mr-0.5"
-                            [svgIcon]="'heroicons_solid:credit-card'"
-                            matPrefix></mat-icon>
-                        <input
-                            id="cidade"
-                            matInput
-                            [formControlName]="'cidade'">
-
-                    </mat-form-field>
-                    <mat-error *ngIf="accountForm.get('cidade').hasError('cidade')">
-                        Insira um cidade válido
-                    </mat-error>
-                </div>
-                <!--end:cidade-->
-                <!--start: numero-->
-                <div class="sm:col-span-4 mt-2.5">
-                    <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
-                        <mat-label for="numero">Número</mat-label>
-                        <mat-icon
-                            class="icon-size-5 mr-0.5"
-                            [svgIcon]="'heroicons_solid:credit-card'"
-                            matPrefix></mat-icon>
-                        <input
-                            id="numero"
-                            matInput
-                            [formControlName]="'numero'">
-
-                    </mat-form-field>
-                    <mat-error *ngIf="accountForm.get('numero').hasError('numero')">
-                        Insira um numero válido
-                    </mat-error>
-                </div>
-                <!--end:numero-->
-
-                <div class="my-5 border-t"></div>
-                <div class="sm:col-span-4 mt-2.5">
-                    <div class="space-y-4">
-                        <ng-container
-                            *ngFor="let phoneNumber of accountForm.get('telefones')['controls']; let i = index;"
-                            formArrayName="telefones">
-                            <div class="relative flex">
-                                <mat-form-field class="fuse-mat-no-subscript flex-auto">
-                                    <mat-label>Telefone</mat-label>
-                                    <input
-                                        matInput
-                                        [placeholder]="'telefone'"
-                                        [formControl]="phoneNumber.get('telefone')"
-                                        [value]="phoneNumber.value.telefone ?? ''">
-                                </mat-form-field>
-                                <!-- Remove phone number -->
-                                <ng-container>
-                                    <div
-                                        class="flex items-center w-10 pl-2"
-                                        [ngClass]="'mt-6'">
-                                        <button
-                                            class="w-8 h-8 min-h-8"
-                                            mat-icon-button
-                                            (click)="removePhoneNumber(phoneNumber.value.id ?? 0,i)"
-                                            matTooltip="Remove">
-                                            <mat-icon
-                                                class="icon-size-5"
-                                                [svgIcon]="'heroicons_solid:trash'"></mat-icon>
-                                        </button>
-                                    </div>
-                                </ng-container>
-                            </div>
-                        </ng-container>
+                        </mat-form-field>
+                        <mat-error *ngIf="accountForm.get('nome').hasError('nome')">
+                            Insira um nome válido
+                        </mat-error>
                     </div>
-                    <div
-                        class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer"
-                        (click)="addPhoneNumberField()">
-                        <mat-icon
-                            class="icon-size-5"
-                            [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
-                        <span class="ml-2 font-medium text-secondary group-hover:underline">Inserir novo contato</span>
-                    </div>
-                </div>
+                    <!--end:Nome-->
 
-            </form>
-        </div>
-        <!-- CTA -->
-        <button
-            class="ml-1 items-center"
-            [disabled]="accountForm.invalid"
-            class="fuse-mat-button-large mt-10"
-            mat-stroked-button
-            (click)="submit()"
-            [color]="'primary'">
-            Salvar
-        </button>
+                    <!--start: Email-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="nome">Email</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:mail'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="email"
+                                matInput
+                                [formControlName]="'email'">
+
+                        </mat-form-field>
+                        <mat-error *ngIf="accountForm.get('email').hasError('email')">
+                            Insira um e-mail válido
+                        </mat-error>
+                    </div>
+                    <!--end:Email-->
+
+                    <!--start: cnpj-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="cnpj">CNPJ</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:credit-card'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="cnpj"
+                                matInput
+                                [formControlName]="'cnpj'">
+
+                        </mat-form-field>
+                        <mat-error *ngIf="accountForm.get('cnpj').hasError('cnpj')">
+                            Insira um cnpj válido
+                        </mat-error>
+                    </div>
+                    <!--end:cnpj-->
+                    <!--start: cargo-->
+                    <mat-form-field appearance="legacy">
+                        <mat-label>Cargo</mat-label>
+                        <mat-select [(value)]="selected" required (valueChange)="onSelectCargoChange($event)">
+                            <mat-option *ngFor="let item of cargos" value="{{item.id}}">{{item.cargo}}</mat-option>
+                        </mat-select>
+                        <mat-hint align="end">Selecione o cargo</mat-hint>
+                    </mat-form-field>
+                    <!--end: cargo-->
+                    <div class="my-5 border-t"></div>
+                    <!--start: CEP-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="cep">CEP</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:credit-card'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="cep"
+                                matInput
+                                [formControlName]="'cep'">
+
+                        </mat-form-field>
+                        <mat-error *ngIf="accountForm.get('cep').hasError('cep')">
+                            Insira um cep válido
+                        </mat-error>
+                    </div>
+                    <!--end:CPF-->
+                    <!--start: enderecoLogradouro-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="enderecoLogradouro">Endereço</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:credit-card'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="enderecoLogradouro"
+                                matInput
+                                [formControlName]="'enderecoLogradouro'">
+
+                        </mat-form-field>
+                        <mat-error *ngIf="accountForm.get('enderecoLogradouro').hasError('enderecoLogradouro')">
+                            Insira um endereço válido
+                        </mat-error>
+                    </div>
+                    <!--end:enderecoLogradouro-->
+                    <!--start: bairro-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="bairro">Bairro</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:credit-card'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="bairro"
+                                matInput
+                                [formControlName]="'bairro'">
+
+                        </mat-form-field>
+                        <mat-error *ngIf="accountForm.get('bairro').hasError('bairro')">
+                            Insira um bairro válido
+                        </mat-error>
+                    </div>
+                    <!--end:bairro-->
+                    <!--start: cidade-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="cidade">Cidade</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:credit-card'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="cidade"
+                                matInput
+                                [formControlName]="'cidade'">
+
+                        </mat-form-field>
+                        <mat-error *ngIf="accountForm.get('cidade').hasError('cidade')">
+                            Insira um cidade válido
+                        </mat-error>
+                    </div>
+                    <!--end:cidade-->
+                    <!--start: numero-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="numero">Número</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:credit-card'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="numero"
+                                matInput
+                                [formControlName]="'numero'">
+
+                        </mat-form-field>
+                        <mat-error *ngIf="accountForm.get('numero').hasError('numero')">
+                            Insira um numero válido
+                        </mat-error>
+                    </div>
+                    <!--end:numero-->
+
+                    <div class="my-5 border-t"></div>
+                    <!--start:telefones-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <div class="space-y-4">
+                            <ng-container
+                                *ngFor="let phoneNumber of accountForm.get('telefones')['controls']; let i = index;"
+                                formArrayName="telefones">
+                                <div class="relative flex">
+                                    <mat-form-field class="fuse-mat-no-subscript flex-auto">
+                                        <mat-label>Telefone</mat-label>
+                                        <input
+                                            matInput
+                                            [placeholder]="'telefone'"
+                                            [formControl]="phoneNumber.get('telefone')"
+                                            [value]="phoneNumber.value.telefone ?? ''">
+                                    </mat-form-field>
+                                    <!-- Remove phone number -->
+                                    <ng-container>
+                                        <div
+                                            class="flex items-center w-10 pl-2"
+                                            [ngClass]="'mt-6'">
+                                            <button
+                                                class="w-8 h-8 min-h-8"
+                                                mat-icon-button
+                                                (click)="removePhoneNumber(phoneNumber.value.id ?? 0,i)"
+                                                matTooltip="Remove">
+                                                <mat-icon
+                                                    class="icon-size-5"
+                                                    [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                                            </button>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <!--end:telefones-->
+                        <div
+                            class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer"
+                            (click)="addPhoneNumberField()">
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                            <span
+                                class="ml-2 font-medium text-secondary group-hover:underline">Inserir novo contato</span>
+                        </div>
+                    </div>
+                    <!--end:telefones-->
+
+                </form>
+            </div>
+            <!-- CTA -->
+            <button
+                class="ml-1 items-center"
+                [disabled]="accountForm.invalid"
+                class="fuse-mat-button-large mt-10"
+                mat-stroked-button
+                (click)="submit()"
+                [color]="'primary'">
+                Salvar
+            </button>
+        </ng-template>
     </fuse-card>
 
 </div>
 <div mat-dialog-actions class="mt-5">
-    <button mat-button mat-dialog-close (click)="onNoClick()" >Cancelar</button>
+    <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
 </div>
 

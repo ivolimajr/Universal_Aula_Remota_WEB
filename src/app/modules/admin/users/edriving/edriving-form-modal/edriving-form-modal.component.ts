@@ -228,7 +228,7 @@ export class EdrivingFormModalComponent implements OnInit {
             (this.accountForm.get('telefones') as FormArray).push(phoneNumbersFormGroup);
         });
 
-        this.loading = false;
+        this.closeAlert();
         this._changeDetectorRef.markForCheck();
         this.phoneArray = [];
     }
@@ -263,7 +263,6 @@ export class EdrivingFormModalComponent implements OnInit {
         this.edrivingUserPost.cpf = formData.cpf;
         this.edrivingUserPost.cargoId = this.cargoId;
         this.edrivingUserPost.telefones = formData.telefones;
-        console.log(result);
         return result;
     }
 
