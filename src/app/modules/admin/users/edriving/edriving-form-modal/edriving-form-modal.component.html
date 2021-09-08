@@ -12,17 +12,6 @@
                 Edriving
             </div>
         </ng-template>
-
-        <fuse-alert
-            (click)="closeAlert()"
-            class="mt-8 mb-4"
-            *ngIf="showAlert"
-            [appearance]="'outline'"
-            [showIcon]="false"
-            [type]="alert.type"
-            [@shake]="alert.type === 'error'">
-            {{alert.message}}
-        </fuse-alert>
         <!-- Divider -->
         <div class="w-15 h-0.5 mt-3 mb-3 rounded bg-accent"></div>
         <!-- Features -->

@@ -3,12 +3,13 @@ import {MatSort} from '@angular/material/sort';
 import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {MatDialog} from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {fuseAnimations} from '../../../../../@fuse/animations';
+import {FuseAlertType} from '../../../../../@fuse/components/alert';
 import {EdrivingFormModalComponent} from './edriving-form-modal/edriving-form-modal.component';
 import {EdrivingService} from '../../../../shared/services/http/edriving.service';
 import {EdrivingUsuario} from '../../../../shared/models/edriving.model';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
-import {fuseAnimations} from '../../../../../@fuse/animations';
-import {FuseAlertType} from '../../../../../@fuse/components/alert';
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
 
 const ELEMENT_DATA: EdrivingUsuario[] = [];
@@ -22,15 +23,9 @@ const ELEMENT_DATA: EdrivingUsuario[] = [];
 
 export class EdrivingComponent implements AfterViewInit, OnInit {
 
-    alert: { type: FuseAlertType; message: string } = {
-        type: 'error',
-        message: ''
-    };
-
     displayedColumns: string[] = ['nome', 'email', 'id']; //Exibe as colunas da tabela
     dataSource = new MatTableDataSource<EdrivingUsuario>(ELEMENT_DATA); //Dados da tabela
     loading: boolean = true;
-    showAlert: boolean = false;
     _users$ = this._edrivingServices.getAll(); //Observable dos usuário
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
@@ -42,6 +37,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit {
 
     constructor(
         public dialog: MatDialog,
+        private _snackBar: MatSnackBar,
         private _authServices: AuthService,
         private _changeDetectorRef: ChangeDetectorRef,
         private _edrivingServices: EdrivingService
@@ -71,19 +67,18 @@ export class EdrivingComponent implements AfterViewInit, OnInit {
             dialogRef.componentInstance.id = id;
             dialogRef.afterClosed().subscribe((result) => {
                 if (result) {
-                    this.setAlert('Atualizado', 'success');
+                    this.openSnackBar('Atualizado');
                     this.getUsers();
                 }
             });
         } else {
             //Cria um usuário
-            this.showAlert = false;
             const dialogRef = this.dialog.open(EdrivingFormModalComponent);
             dialogRef.componentInstance.id = id;
             dialogRef.afterClosed().subscribe((result) => {
                 if (result) {
                     this.dataSource.data = [...this.dataSource.data, result];
-                    this.setAlert('Inserido', 'success');
+                    this.openSnackBar('Inserido');
                 }
             });
         }
@@ -108,7 +103,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit {
     removeUser(id: number): void {
         //Se o id informado for nulo, ou se o usuário for remover ele mesmo, é retornado um erro
         if (id === 0 || id === null || id === this._authServices.getUserInfoFromStorage().id) {
-            this.setAlert('Remoção Inválida');
+            this.openSnackBar('Remoção Inválida');
             return;
         }
         //Exibe o alerta de confirmação
@@ -123,10 +118,6 @@ export class EdrivingComponent implements AfterViewInit, OnInit {
             //Se a confirmação do alerta for um OK, remove o usuário
             this.deleteFromApi(id);
         });
-    }
-
-    closeAlert(): void {
-        this.showAlert = false;
     }
 
     /**
@@ -153,19 +144,20 @@ export class EdrivingComponent implements AfterViewInit, OnInit {
     private deleteFromApi(id: number): void {
         this._edrivingServices.delete(id).subscribe((res) => {
             if (!res) {
-                this.setAlert('Problemas na Remoção');
+                this.openSnackBar('Problemas na Remoção');
             }
-            this.setAlert('Removido', 'success');
+            this.openSnackBar('removido');
             this.getUsers();
             return;
         });
     }
 
-    private setAlert(value: string, type: any = 'error'): void {
-        this.showAlert = false;
-        this.alert.type = type;
-        this.alert.message = value;
-        this.showAlert = true;
-        this._changeDetectorRef.markForCheck();
+    private openSnackBar(message: string): void {
+        this._snackBar.open(message,'',{
+            duration: 5*1000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['mat-toolbar', 'mat-accent']
+        });
     }
 }

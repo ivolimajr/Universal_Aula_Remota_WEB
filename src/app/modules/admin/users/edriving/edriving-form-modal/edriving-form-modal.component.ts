@@ -8,12 +8,11 @@ import {EdrivingService} from '../../../../../shared/services/http/edriving.serv
 import {catchError} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {Cargo} from '../../../../../shared/models/cargo.model';
-import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
-import {UserService} from '../../../../../shared/services/http/user.service';
 import {LocalStorageService} from '../../../../../shared/services/storage/localStorage.service';
 import {Usuario} from '../../../../../shared/models/usuario.model';
 import {environment} from '../../../../../../environments/environment';
 import {AuthService} from '../../../../../shared/services/auth/auth.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-edrivin-form-modal',
@@ -44,6 +43,7 @@ export class EdrivingFormModalComponent implements OnInit {
 
     constructor(
         public dialog: MatDialog,
+        private _snackBar: MatSnackBar,
         private _formBuilder: FormBuilder,
         public dialogRef: MatDialogRef<EdrivingFormModalComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
@@ -83,10 +83,7 @@ export class EdrivingFormModalComponent implements OnInit {
             if (this.id) {
                 this._edrivingServices.update(this.edrivingUserPost).subscribe((res: any) => {
                     if (res.error) {
-                        this.dialog.open(AlertModalComponent, {
-                            width: '280px',
-                            data: {title: res.error, oneButton: true}
-                        });
+                        this.openSnackBar(res.error,'warn');
                         this.closeAlert();
                         return;
                     }
@@ -105,10 +102,7 @@ export class EdrivingFormModalComponent implements OnInit {
                 //Cria um usuário
                 this._edrivingServices.create(this.edrivingUserPost).subscribe((res: any) => {
                     if (res.error) {
-                        this.dialog.open(AlertModalComponent, {
-                            width: '280px',
-                            data: {title: res.error, oneButton: true}
-                        });
+                        this.openSnackBar(res.error,'warn');
                         this.closeAlert();
                         return;
                     }
@@ -136,7 +130,7 @@ export class EdrivingFormModalComponent implements OnInit {
     removePhoneNumber(id: number, index: number): void {
         const phoneNumbersFormArray = this.accountForm.get('telefones') as FormArray;
         if (phoneNumbersFormArray.length === 1) {
-            this.setAlert('Informe um telefone');
+            this.openSnackBar('Remoção Inválida','warn');
             return;
         }
         phoneNumbersFormArray.removeAt(index);
@@ -248,19 +242,13 @@ export class EdrivingFormModalComponent implements OnInit {
         //Verifica se os telefones informados são válidos
         formData.telefones.forEach((item) => {
             if (item.telefone === null || item.telefone === '' || item.telefone.length !== 11) {
-                this.dialog.open(AlertModalComponent, {
-                    width: '280px',
-                    data: {title: 'Telefone Inválido', content: item.telefone, oneButton: true}
-                });
+                this.openSnackBar('Insira um telefone','warn');
                 result = false;
             }
         });
 
         if (this.cargoId === undefined || this.cargoId === 0) {
-            this.dialog.open(AlertModalComponent, {
-                width: '280px',
-                data: {title: 'Selecione um Cargo', oneButton: true}
-            });
+            this.openSnackBar('Selecione um Cargo','warn');
             result = false;
         }
 
@@ -355,11 +343,12 @@ export class EdrivingFormModalComponent implements OnInit {
         });
     }
 
-    private setAlert(value: string, type: any = 'error'): void {
-        this.showAlert = false;
-        this.alert.type = type;
-        this.alert.message = value;
-        this.showAlert = true;
-        this._changeDetectorRef.markForCheck();
+    private openSnackBar(message: string,type: string = 'accent'): void {
+        this._snackBar.open(message,'',{
+            duration: 5*1000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['mat-toolbar', 'mat-'+type]
+        });
     }
 }
