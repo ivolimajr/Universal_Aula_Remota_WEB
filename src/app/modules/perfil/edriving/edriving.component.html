@@ -10,15 +10,6 @@
             <div class="text-secondary">Mantenha seus dados sempre atualizados!</div>
         </div>
         <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
-            <fuse-alert
-                class="mt-8 -mb-4"
-                *ngIf="showAlert"
-                [appearance]="'outline'"
-                [showIcon]="false"
-                [type]="alert.type"
-                [@shake]="alert.type === 'error'">
-                {{alert.message}}
-            </fuse-alert>
             <!-- Nome -->
             <div class="sm:col-span-4">
                 <mat-form-field class="fuse-mat-no-subscript w-full">

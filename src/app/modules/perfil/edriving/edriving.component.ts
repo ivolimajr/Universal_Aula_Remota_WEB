@@ -4,7 +4,6 @@ import {EdrivingPost, EdrivingUsuario} from '../../../shared/models/edriving.mod
 import {UserService} from '../../../shared/services/http/user.service';
 import {EdrivingService} from '../../../shared/services/http/edriving.service';
 import {fuseAnimations} from '@fuse/animations';
-import {FuseAlertType} from '@fuse/components/alert';
 import {Usuario} from '../../../shared/models/usuario.model';
 import {AuthService} from '../../../shared/services/auth/auth.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
@@ -12,6 +11,7 @@ import {environment} from '../../../../environments/environment';
 import {MatDialog} from '@angular/material/dialog';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-edriving',
@@ -22,18 +22,15 @@ import {MASKS, NgBrazilValidators} from 'ng-brazil';
 })
 export class EdrivingComponent implements OnInit {
     @Input() edrivingUser: EdrivingUsuario;
-    alert: { type: FuseAlertType; message: string } = {
-        type: 'error',
-        message: ''
-    };
+
     accountForm: FormGroup;
     user: Usuario;
-    showAlert: boolean = false;
     masks = MASKS;
     private edrivingUserPost = new EdrivingPost();
 
     constructor(
         public dialog: MatDialog,
+        private _snackBar: MatSnackBar,
         private _formBuilder: FormBuilder,
         private _userService: UserService,
         private _authServices: AuthService,
@@ -56,8 +53,6 @@ export class EdrivingComponent implements OnInit {
      */
     update(): void {
 
-        console.log(this.accountForm.value);
-        return;
         //Verifica se o formulário é valido
         if (this.checkFormToSend() === false) {
             return null;
@@ -66,7 +61,7 @@ export class EdrivingComponent implements OnInit {
         this._edrivingServices.update(this.edrivingUserPost).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
-                this.setAlert(res.error);
+                this.openSnackBar(res.error.detail,'warn');
                 this._changeDetectorRef.markForCheck();
                 return;
             }
@@ -103,7 +98,7 @@ export class EdrivingComponent implements OnInit {
             }
 
             //Retorna a mensagem de atualizado
-            this.setAlert('Atualizado.', 'success');
+            this.openSnackBar('Atualizado');
             this._changeDetectorRef.markForCheck();
         });
 
@@ -146,7 +141,7 @@ export class EdrivingComponent implements OnInit {
         this._userServices.removePhonenumber(id)
             .subscribe((res) => {
                 if (!res) {
-                    this.setAlert('Telefone já em uso');
+                    this.openSnackBar('Telefone já em uso','warn');
                 }
                 const phoneNumbersFormArray = this.accountForm.get('telefones') as FormArray;
                 // Remove the phone number field
@@ -182,8 +177,8 @@ export class EdrivingComponent implements OnInit {
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
-                    Validators.minLength(14),
-                    Validators.maxLength(14),
+                    Validators.minLength(11),
+                    Validators.maxLength(11),
                     NgBrazilValidators.cpf])],
             email: [this.edrivingUser.email,
                 Validators.compose([
@@ -251,26 +246,31 @@ export class EdrivingComponent implements OnInit {
      * @return um boleano
      */
     private checkFormToSend(): boolean {
+        const formData = this.accountForm.value;
 
         if (this.accountForm.invalid) {
-            this.setAlert('Dados Inválidos');
+            this.openSnackBar('Dados Inválidos','warn');
             return false;
         }
         //Se todos os dados forem válidos, monta o objeto para atualizar
-        const formData = this.accountForm.value;
         this.edrivingUserPost.nome = formData.nome;
         this.edrivingUserPost.email = formData.email;
-        this.edrivingUserPost.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');;
-        this.edrivingUserPost.telefones = formData.telefones.replace(/[^0-9,]*/g, '').replace(',', '.');;
-
+        this.edrivingUserPost.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
+        formData.telefones.forEach((item)=>{
+            if(item.telefone.length !== 11){
+                item.telefone = item.telefone.replace(/[^0-9,]*/g, '').replace(',', '.');
+            }
+        });
+        this.edrivingUserPost.telefones = formData.telefones;
         return true;
     }
 
-    private setAlert(message: string, type: any = 'error'): void {
-        this.showAlert = false;
-        this.alert.type = type;
-        this.alert.message = message;
-        this.showAlert = true;
-        this._changeDetectorRef.markForCheck();
+    private openSnackBar(message: string,type: string = 'accent'): void {
+        this._snackBar.open(message,'',{
+            duration: 5*1000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['mat-toolbar', 'mat-'+type]
+        });
     }
 }
