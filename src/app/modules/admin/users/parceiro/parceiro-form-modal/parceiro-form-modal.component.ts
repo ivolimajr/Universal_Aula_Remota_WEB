@@ -13,6 +13,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {LocalStorageService} from '../../../../../shared/services/storage/localStorage.service';
 import {AuthService} from '../../../../../shared/services/auth/auth.service';
 import {environment} from '../../../../../../environments/environment';
+import {MASKS, NgBrazilValidators} from 'ng-brazil';
 
 @Component({
     selector: 'app-parceiro-form-modal',
@@ -31,6 +32,7 @@ export class ParceiroFormModalComponent implements OnInit {
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @Input() id: number; //Se vier um ID, exibir e atualizar o usuário
     accountForm: FormGroup;
+    masks = MASKS;
     loading: boolean = true; //Inicia o componente com um lading
     message: string = null; //Mensagem quando estiver salvando ou editando um usuário
     cargos: Cargo[];
@@ -135,11 +137,7 @@ export class ParceiroFormModalComponent implements OnInit {
         const phoneNumberFormGroup = this._formBuilder.group({
             id: [0],
             telefone: ['']
-        }, Validators.compose([
-            Validators.required,
-            Validators.nullValidator,
-            Validators.minLength(3)
-        ]));
+        });
         // Adiciona o formGroup ao array de telefones
         (this.accountForm.get('telefones') as FormArray).push(phoneNumberFormGroup);
         this._changeDetectorRef.markForCheck();
@@ -154,7 +152,9 @@ export class ParceiroFormModalComponent implements OnInit {
      */
     private getCargos(): void {
         this._parceiroServices.getCargos().subscribe((res) => {
+            console.log(res);
             this.cargos = res;
+            console.log(this.cargos);
             this._changeDetectorRef.markForCheck();
         }),
             catchError(res => of(res));
@@ -207,7 +207,8 @@ export class ParceiroFormModalComponent implements OnInit {
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(8),
-                    Validators.maxLength(8)])],
+                    Validators.maxLength(8),
+                    NgBrazilValidators.cep])],
             enderecoLogradouro: ['Logradouro',
                 Validators.compose([
                     Validators.required,
@@ -244,12 +245,12 @@ export class ParceiroFormModalComponent implements OnInit {
         // Create a phone number form group
         this.phoneArray.push(
             this._formBuilder.group({
-                telefone: ['']
-            }, Validators.compose([
-                Validators.required,
-                Validators.nullValidator,
-                Validators.minLength(3)
-            ])));
+                telefone: ['', Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator
+                ])]
+            })
+        );
 
         // Adiciona o array de telefones ao fomrGroup
         this.phoneArray.forEach((phoneNumbersFormGroup) => {
@@ -268,8 +269,13 @@ export class ParceiroFormModalComponent implements OnInit {
         const formData = this.accountForm.value;
         let result: boolean = true;
 
+        if (this.accountForm.invalid) {
+            this.openSnackBar('Dados Inválidos', 'warn');
+            return false;
+        }
+        //Verifica se os telefones informados são válidos
         formData.telefones.forEach((item) => {
-            if (item.telefone === null || item.telefone === '' || item.telefone.length !== 11) {
+            if (item.telefone === null || item.telefone === '' || item.telefone.length < 11) {
                 this.openSnackBar('Insira um telefone', 'warn');
                 result = false;
             }
@@ -289,15 +295,20 @@ export class ParceiroFormModalComponent implements OnInit {
 
         this.parceiroUserPost.nome = formData.nome;
         this.parceiroUserPost.email = formData.email;
-        this.parceiroUserPost.cnpj = formData.cnpj;
+        this.parceiroUserPost.cnpj = formData.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
         this.parceiroUserPost.descricao = formData.descricao;
-        this.parceiroUserPost.cep = formData.cep;
+        this.parceiroUserPost.cep = formData.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
         this.parceiroUserPost.uf = 'DF';
         this.parceiroUserPost.enderecoLogradouro = formData.enderecoLogradouro;
         this.parceiroUserPost.bairro = formData.bairro;
         this.parceiroUserPost.cidade = formData.cidade;
         this.parceiroUserPost.numero = formData.numero;
         this.parceiroUserPost.cargoId = this.cargoId;
+        formData.telefones.forEach((item) => {
+            if (item.telefone.length !== 11) {
+                item.telefone = item.telefone.replace(/[^0-9,]*/g, '').replace(',', '.');
+            }
+        });
         this.parceiroUserPost.telefones = formData.telefones;
         return result;
     }
@@ -340,7 +351,8 @@ export class ParceiroFormModalComponent implements OnInit {
                         Validators.required,
                         Validators.nullValidator,
                         Validators.minLength(8),
-                        Validators.maxLength(8)])],
+                        Validators.maxLength(8),
+                        NgBrazilValidators.cep])],
                 enderecoLogradouro: [res.endereco.enderecoLogradouro,
                     Validators.compose([
                         Validators.required,
@@ -386,25 +398,22 @@ export class ParceiroFormModalComponent implements OnInit {
                     this.phoneArray.push(
                         this._formBuilder.group({
                             id: [phoneNumber.id],
-                            telefone: [phoneNumber.telefone]
-                        }, Validators.compose([
-                            Validators.required,
-                            Validators.nullValidator,
-                            Validators.minLength(3)
-                        ]))
-                    );
+                            telefone: [phoneNumber.telefone,Validators.compose([
+                                Validators.required,
+                                Validators.nullValidator
+                            ])]
+                        }));
                 });
             } else {
                 // Create a phone number form group
                 this.phoneArray.push(
                     this._formBuilder.group({
                         id: [0],
-                        telefone: ['']
-                    }, Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(3)
-                    ]))
+                        telefone: ['', Validators.compose([
+                            Validators.required,
+                            Validators.nullValidator
+                        ])]
+                    })
                 );
             }
 

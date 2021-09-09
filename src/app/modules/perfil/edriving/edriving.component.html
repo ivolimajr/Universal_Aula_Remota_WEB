@@ -95,7 +95,7 @@
                             <mat-label>Telefone</mat-label>
                             <input
                                 matInput
-                                cpf [textMask]="{mask: masks.telefone.textMaskFunction}"
+                                telefone [textMask]="{mask: masks.telefone.textMaskFunction}"
                                 [placeholder]="'telefone'"
                                 [formControl]="phoneNumber.get('telefone')"
                                 [value]="phoneNumber.value.telefone ?? ''">

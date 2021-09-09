@@ -61,7 +61,7 @@ export class EdrivingComponent implements OnInit {
         this._edrivingServices.update(this.edrivingUserPost).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
-                this.openSnackBar(res.error.detail,'warn');
+                this.openSnackBar(res.error.detail, 'warn');
                 this._changeDetectorRef.markForCheck();
                 return;
             }
@@ -141,7 +141,7 @@ export class EdrivingComponent implements OnInit {
         this._userServices.removePhonenumber(id)
             .subscribe((res) => {
                 if (!res) {
-                    this.openSnackBar('Telefone já em uso','warn');
+                    this.openSnackBar('Telefone já em uso', 'warn');
                 }
                 const phoneNumbersFormArray = this.accountForm.get('telefones') as FormArray;
                 // Remove the phone number field
@@ -178,7 +178,7 @@ export class EdrivingComponent implements OnInit {
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(11),
-                    Validators.maxLength(11),
+                    Validators.maxLength(14),
                     NgBrazilValidators.cpf])],
             email: [this.edrivingUser.email,
                 Validators.compose([
@@ -221,10 +221,8 @@ export class EdrivingComponent implements OnInit {
                     id: [0],
                     telefone: ['', Validators.compose([
                         Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(14)
-                    ])
-                    ]
+                        Validators.nullValidator
+                    ])]
                 })
             );
         }
@@ -249,15 +247,15 @@ export class EdrivingComponent implements OnInit {
         const formData = this.accountForm.value;
 
         if (this.accountForm.invalid) {
-            this.openSnackBar('Dados Inválidos','warn');
+            this.openSnackBar('Dados Inválidos', 'warn');
             return false;
         }
         //Se todos os dados forem válidos, monta o objeto para atualizar
         this.edrivingUserPost.nome = formData.nome;
         this.edrivingUserPost.email = formData.email;
         this.edrivingUserPost.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
-        formData.telefones.forEach((item)=>{
-            if(item.telefone.length !== 11){
+        formData.telefones.forEach((item) => {
+            if (item.telefone.length !== 11) {
                 item.telefone = item.telefone.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
@@ -265,12 +263,12 @@ export class EdrivingComponent implements OnInit {
         return true;
     }
 
-    private openSnackBar(message: string,type: string = 'accent'): void {
-        this._snackBar.open(message,'',{
-            duration: 5*1000,
+    private openSnackBar(message: string, type: string = 'accent'): void {
+        this._snackBar.open(message, '', {
+            duration: 5 * 1000,
             horizontalPosition: 'center',
             verticalPosition: 'top',
-            panelClass: ['mat-toolbar', 'mat-'+type]
+            panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
 }

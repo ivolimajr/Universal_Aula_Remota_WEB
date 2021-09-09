@@ -13,6 +13,7 @@ import {Usuario} from '../../../../../shared/models/usuario.model';
 import {environment} from '../../../../../../environments/environment';
 import {AuthService} from '../../../../../shared/services/auth/auth.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {MASKS, NgBrazilValidators} from 'ng-brazil';
 
 @Component({
     selector: 'app-edrivin-form-modal',
@@ -31,8 +32,8 @@ export class EdrivingFormModalComponent implements OnInit {
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @Input() id: number; //Se vier um ID, exibir e atualizar o usuário
     accountForm: FormGroup;
+    masks = MASKS;
     loading: boolean = true; //Inicia o componente com um lading
-    showAlert: boolean = false;
     message: string = null; //Mensagem quando estiver salvando ou editando um usuário
     cargos: Cargo[]; //Lista com os cargos
     cargoId: number;
@@ -83,12 +84,12 @@ export class EdrivingFormModalComponent implements OnInit {
             if (this.id) {
                 this._edrivingServices.update(this.edrivingUserPost).subscribe((res: any) => {
                     if (res.error) {
-                        this.openSnackBar(res.error,'warn');
+                        this.openSnackBar(res.error, 'warn');
                         this.closeAlert();
                         return;
                     }
                     //Se o usuário a ser atualizado for o usuário logado, atualiza os dados na storage
-                    if(this.id === this._authServices.getUserInfoFromStorage().id){
+                    if (this.id === this._authServices.getUserInfoFromStorage().id) {
                         this.user = this._authServices.getUserInfoFromStorage();
                         this.user.nome = res.nome;
                         this.user.email = res.email;
@@ -102,7 +103,7 @@ export class EdrivingFormModalComponent implements OnInit {
                 //Cria um usuário
                 this._edrivingServices.create(this.edrivingUserPost).subscribe((res: any) => {
                     if (res.error) {
-                        this.openSnackBar(res.error,'warn');
+                        this.openSnackBar(res.error, 'warn');
                         this.closeAlert();
                         return;
                     }
@@ -117,7 +118,6 @@ export class EdrivingFormModalComponent implements OnInit {
     closeAlert(): void {
         this.loading = false;
         this.message = null;
-        this.showAlert = false;
         this._changeDetectorRef.markForCheck();
     }
 
@@ -130,7 +130,7 @@ export class EdrivingFormModalComponent implements OnInit {
     removePhoneNumber(id: number, index: number): void {
         const phoneNumbersFormArray = this.accountForm.get('telefones') as FormArray;
         if (phoneNumbersFormArray.length === 1) {
-            this.openSnackBar('Remoção Inválida','warn');
+            this.openSnackBar('Remoção Inválida', 'warn');
             return;
         }
         phoneNumbersFormArray.removeAt(index);
@@ -147,11 +147,7 @@ export class EdrivingFormModalComponent implements OnInit {
         const phoneNumberFormGroup = this._formBuilder.group({
             id: [0],
             telefone: ['']
-        }, Validators.compose([
-            Validators.required,
-            Validators.nullValidator,
-            Validators.minLength(3)
-        ]));
+        });
         // Adiciona o formGroup ao array de telefones
         (this.accountForm.get('telefones') as FormArray).push(phoneNumberFormGroup);
         this._changeDetectorRef.markForCheck();
@@ -200,10 +196,12 @@ export class EdrivingFormModalComponent implements OnInit {
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(11),
-                    Validators.maxLength(11)])],
+                    Validators.maxLength(14),
+                    NgBrazilValidators.cpf])],
             email: ['',
                 Validators.compose([
                     Validators.required,
+                    Validators.email,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(70)])],
@@ -216,12 +214,12 @@ export class EdrivingFormModalComponent implements OnInit {
         // Create a phone number form group
         this.phoneArray.push(
             this._formBuilder.group({
-                telefone: ['']
-            }, Validators.compose([
-                Validators.required,
-                Validators.nullValidator,
-                Validators.minLength(3)
-            ])));
+                telefone: ['', Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator
+                ])]
+            })
+        );
 
         // Adiciona o array de telefones ao fomrGroup
         this.phoneArray.forEach((phoneNumbersFormGroup) => {
@@ -239,16 +237,22 @@ export class EdrivingFormModalComponent implements OnInit {
     private prepareUser(): boolean {
         const formData = this.accountForm.value;
         let result: boolean = true;
+
+        if (this.accountForm.invalid) {
+            this.openSnackBar('Dados Inválidos', 'warn');
+            return false;
+        }
+
         //Verifica se os telefones informados são válidos
         formData.telefones.forEach((item) => {
-            if (item.telefone === null || item.telefone === '' || item.telefone.length !== 11) {
-                this.openSnackBar('Insira um telefone','warn');
+            if (item.telefone === null || item.telefone === '' || item.telefone.length < 11) {
+                this.openSnackBar('Insira um telefone', 'warn');
                 result = false;
             }
         });
 
         if (this.cargoId === undefined || this.cargoId === 0) {
-            this.openSnackBar('Selecione um Cargo','warn');
+            this.openSnackBar('Selecione um Cargo', 'warn');
             result = false;
         }
 
@@ -260,8 +264,13 @@ export class EdrivingFormModalComponent implements OnInit {
         }
         this.edrivingUserPost.nome = formData.nome;
         this.edrivingUserPost.email = formData.email;
-        this.edrivingUserPost.cpf = formData.cpf;
+        this.edrivingUserPost.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
         this.edrivingUserPost.cargoId = this.cargoId;
+        formData.telefones.forEach((item) => {
+            if (item.telefone.length !== 11) {
+                item.telefone = item.telefone.replace(/[^0-9,]*/g, '').replace(',', '.');
+            }
+        });
         this.edrivingUserPost.telefones = formData.telefones;
         return result;
     }
@@ -310,28 +319,24 @@ export class EdrivingFormModalComponent implements OnInit {
                     this.phoneArray.push(
                         this._formBuilder.group({
                             id: [phoneNumber.id],
-                            telefone: [phoneNumber.telefone]
-                        }, Validators.compose([
+                            telefone: [phoneNumber.telefone,Validators.compose([
                             Validators.required,
-                            Validators.nullValidator,
-                            Validators.minLength(3)
-                        ]))
-                    );
+                            Validators.nullValidator
+                        ])]
+                    }));
                 });
             } else {
                 // Create a phone number form group
                 this.phoneArray.push(
                     this._formBuilder.group({
                         id: [0],
-                        telefone: ['']
-                    }, Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(3)
-                    ]))
+                        telefone: ['', Validators.compose([
+                            Validators.required,
+                            Validators.nullValidator
+                        ])]
+                    })
                 );
             }
-
             // Adiciona o array de telefones ao fomrGroup
             this.phoneArray.forEach((phoneNumbersFormGroup) => {
                 (this.accountForm.get('telefones') as FormArray).push(phoneNumbersFormGroup);
@@ -342,12 +347,12 @@ export class EdrivingFormModalComponent implements OnInit {
         });
     }
 
-    private openSnackBar(message: string,type: string = 'accent'): void {
-        this._snackBar.open(message,'',{
-            duration: 5*1000,
+    private openSnackBar(message: string, type: string = 'accent'): void {
+        this._snackBar.open(message, '', {
+            duration: 5 * 1000,
             horizontalPosition: 'center',
             verticalPosition: 'top',
-            panelClass: ['mat-toolbar', 'mat-'+type]
+            panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
 }

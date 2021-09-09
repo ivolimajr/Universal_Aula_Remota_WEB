@@ -10,6 +10,7 @@ import { AlertModalComponent } from '../../../layout/common/alert/alert-modal.co
 import { ParceiroComponent } from './parceiro/parceiro.component';
 import { ParceiroFormModalComponent } from './parceiro/parceiro-form-modal/parceiro-form-modal.component';
 import {CustomMaterialModule} from '../../../shared/material.module';
+import {TextMaskModule} from 'angular2-text-mask';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import {CustomMaterialModule} from '../../../shared/material.module';
         SharedModule,
         FuseCardModule,
         FuseAlertModule,
+        TextMaskModule,
     ]
 })
 export class UsersModule {
