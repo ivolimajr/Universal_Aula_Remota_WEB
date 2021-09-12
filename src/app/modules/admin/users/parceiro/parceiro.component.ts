@@ -102,22 +102,25 @@ export class ParceiroComponent implements AfterViewInit, OnInit {
      * @param id
      * @return void
      */
-    removeUser(id: number): void {
-        if (id === 0 || id === null || id === this._authServices.getUserInfoFromStorage().id) {
-            this.openSnackBar('Remoção Inválida');
+    removeUser(id: number, email: string): void {
+        //Se o id informado for nulo, ou se o usuário for remover ele mesmo, é retornado um erro
+        if (email !== this._authServices.getUserInfoFromStorage().email) {
+            //Exibe o alerta de confirmação
+            const dialogRef = this.dialog.open(AlertModalComponent, {
+                width: '280px',
+                data: {title: 'Confirmar Remoção ?'}
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+                if (!result) {
+                    return;
+                }
+                //Se a confirmação do alerta for um OK, remove o usuário
+                this.deleteFromApi(id);
+            });
             return;
         }
-
-        const dialogRef = this.dialog.open(AlertModalComponent, {
-            width: '280px',
-            data: {title: 'Confirmar Remoção ?'}
-        });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (!result) {
-                return;
-            }
-            this.deleteFromApi(id);
-        });
+        this.openSnackBar('Remoção Inválida');
+        return;
     }
 
     /**

@@ -184,7 +184,7 @@ export class ParceiroFormModalComponent implements OnInit {
                     Validators.minLength(5),
                     Validators.maxLength(100)]
                 )],
-            email: ['parceiro@email.com',
+            email: ['parceiro@edriving.com',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,

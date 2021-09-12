@@ -100,24 +100,25 @@ export class EdrivingComponent implements AfterViewInit, OnInit {
      * @param id
      * @return void
      */
-    removeUser(id: number): void {
+    removeUser(id: number, email: string): void {
         //Se o id informado for nulo, ou se o usuário for remover ele mesmo, é retornado um erro
-        if (id === 0 || id === null || id === this._authServices.getUserInfoFromStorage().id) {
-            this.openSnackBar('Remoção Inválida');
+        if (email !== this._authServices.getUserInfoFromStorage().email) {
+            //Exibe o alerta de confirmação
+            const dialogRef = this.dialog.open(AlertModalComponent, {
+                width: '280px',
+                data: {title: 'Confirmar Remoção ?'}
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+                if (!result) {
+                    return;
+                }
+                //Se a confirmação do alerta for um OK, remove o usuário
+                this.deleteFromApi(id);
+            });
             return;
         }
-        //Exibe o alerta de confirmação
-        const dialogRef = this.dialog.open(AlertModalComponent, {
-            width: '280px',
-            data: {title: 'Confirmar Remoção ?'}
-        });
-        dialogRef.afterClosed().subscribe((result) => {
-            if (!result) {
-                return;
-            }
-            //Se a confirmação do alerta for um OK, remove o usuário
-            this.deleteFromApi(id);
-        });
+        this.openSnackBar('Remoção Inválida');
+        return;
     }
 
     /**
@@ -153,8 +154,8 @@ export class EdrivingComponent implements AfterViewInit, OnInit {
     }
 
     private openSnackBar(message: string): void {
-        this._snackBar.open(message,'',{
-            duration: 5*1000,
+        this._snackBar.open(message, '', {
+            duration: 5 * 1000,
             horizontalPosition: 'center',
             verticalPosition: 'top',
             panelClass: ['mat-toolbar', 'mat-accent']

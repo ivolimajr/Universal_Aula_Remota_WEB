@@ -14,6 +14,9 @@ import {FuseMediaWatcherService} from '@fuse/services/media-watcher';
 import {EdrivingService} from '../../shared/services/http/edriving.service';
 import {EdrivingUsuario} from '../../shared/models/edriving.model';
 import {AuthService} from '../../shared/services/auth/auth.service';
+import {ParceiroUsuario} from '../../shared/models/parceiro.model';
+import {ParceiroService} from '../../shared/services/http/parceiro.service';
+import {Endereco} from "../../shared/models/endereco.model";
 
 @Component({
     selector: 'app-perfil',
@@ -27,17 +30,21 @@ export class PerfilComponent implements OnInit, OnDestroy {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'dadosPessoais';
+    selectedPanel: string = 'endereco';
 
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
-    edrivingUser$: Observable<EdrivingUsuario>;
+    edrivingUser: EdrivingUsuario = null;
+    parceiroUser: ParceiroUsuario = null;
+    enderecoUser: Endereco = null;
+    loading: boolean = true;
     idUser: number;
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _authService: AuthService,
-        private _edrivingServices: EdrivingService
+        private _edrivingServices: EdrivingService,
+        private _parceiroServices: ParceiroService
     ) {
     }
 
@@ -53,38 +60,13 @@ export class PerfilComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // Usuario
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Carrega o usuário para edição dos dados
-     * É um condicional para exibir o formulário, dependendo do nível de acesso é renderizado um componente.
-     *
-     * @private
-     */
-    private loadUser(): void {
-        //pega os dados do usuário que estão no localstorage
-        this._authService.user$.subscribe((res) => {
-            //verifica se o usuário tem perfil de edriving - perfil que gerencia a plataforma
-            if (res.nivelAcesso >= 10 && res.nivelAcesso < 20) {
-                //busca o usuário na API
-                this.edrivingUser$ = this._edrivingServices.getOne(res.id);
-                //carrega o painel A
-                this.loadPanelA();
-                //Set o id do usuário para alterar a senha
-                this.edrivingUser$.subscribe((res) => this.idUser = res.usuarioId);
-                this._changeDetectorRef.markForCheck();
-            }
-        });
-    }
 
     // -----------------------------------------------------------------------------------------------------
     // Comportamento do painel
     // -----------------------------------------------------------------------------------------------------
 
     //Carrega os dados do painel para usuários do Edriving
-    loadPanelA(): void {
+    loadPanel(): void {
         this.panels = [
             {
                 id: 'dadosPessoais',
@@ -102,30 +84,6 @@ export class PerfilComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    //Carrega os dados do painel com Endereço, para Auto Escola
-    loadPanelB(): void {
-        this.panels = [
-            {
-                id: 'dadosPessoais',
-                icon: 'heroicons_outline:user-circle',
-                title: 'Dados Pessoais',
-                description: 'Gerencie seus dados pessoais'
-            },
-            {
-                id: 'seguranca',
-                icon: 'heroicons_outline:lock-closed',
-                title: 'Segurança',
-                description: 'Mantenha sua conta protegida.'
-            },
-            {
-                id: 'endereco',
-                icon: 'heroicons_outline:home',
-                title: 'Endereço',
-                description: 'Mantenha seu endereço sempre atualizado'
-            },
-        ];
-        this._changeDetectorRef.markForCheck();
-    }
 
     //Altera entre a sobreposição do painel esquerdo com direito, sobrepoe ou escurece.
     mediaChanges(): void {
@@ -180,5 +138,57 @@ export class PerfilComponent implements OnInit, OnDestroy {
      */
     trackByFn(index: number, item: any): any {
         return item.id || index;
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // Usuario
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * Carrega o usuário para edição dos dados
+     * É um condicional para exibir o formulário, dependendo do nível de acesso é renderizado um componente.
+     *
+     * @private
+     */
+    private loadUser(): void {
+        //pega os dados do usuário que estão no localstorage
+        this._authService.user$.subscribe((res) => {
+            //verifica se o usuário tem perfil de edriving - perfil que gerencia a plataforma
+            if (res.nivelAcesso >= 10 && res.nivelAcesso < 20) {
+                //busca o usuário na API
+                this._edrivingServices.getOne(res.id).subscribe((result)=>{
+                    this.edrivingUser = result;
+                    //Set o id do usuário para alterar a senha
+                    this.idUser = result.id;
+                    //carrega o painel A
+                    this.loadPanel();
+                    this.loading = false;
+                    this._changeDetectorRef.markForCheck();
+                });
+            }
+            //verifica se o usuário tem perfil de edriving - perfil que gerencia a plataforma
+            if (res.nivelAcesso >= 20 && res.nivelAcesso < 30) {
+                //busca o usuário na API
+                this._parceiroServices.getOne(res.id).subscribe((result)=>{
+                    this.parceiroUser = result;
+                    this.enderecoUser = result.endereco;
+                    //Set o id do usuário para alterar a senha
+                    this.idUser = result.id;
+                    //carrega o painel A
+                    this.loadPanel();
+                    this.panels.push(
+                        {
+                            id: 'endereco',
+                            icon: 'heroicons_outline:lock-closed',
+                            title: 'Endereço',
+                            description: 'Mantenha seu endereço atualizado.'
+                        }
+                    );
+                    this.loading = false;
+                    this._changeDetectorRef.markForCheck();
+                });
+            }
+            this._changeDetectorRef.markForCheck();
+        });
     }
 }

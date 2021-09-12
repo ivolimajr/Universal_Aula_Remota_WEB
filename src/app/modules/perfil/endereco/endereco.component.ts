@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
+import {Endereco} from '../../../shared/models/endereco.model';
 
 @Component({
     selector: 'endereco',
@@ -9,24 +10,16 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 })
 export class EnderecoComponent implements OnInit {
 
+    @Input() enderecoUser: Endereco;
+    @Input() idUser: number;
     planBillingForm: FormGroup;
     plans: any[];
 
-    /**
-     * Constructor
-     */
     constructor(
         private _formBuilder: FormBuilder
     ) {
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On init
-     */
     ngOnInit(): void {
         // Create the form
         this.planBillingForm = this._formBuilder.group({

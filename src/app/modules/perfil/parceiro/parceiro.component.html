@@ -1,0 +1,179 @@
+<div class="w-full max-w-3xl">
+
+
+    <!-- Form -->
+    <form [formGroup]="accountForm">
+
+        <!-- Section -->
+        <div class="w-full">
+            <div class="text-xl">Dados Pessoais</div>
+            <div class="text-secondary">Mantenha seus dados sempre atualizados!</div>
+        </div>
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <!-- Nome -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label for="nome">Nome</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:user'"
+                        matPrefix></mat-icon>
+                    <input
+                        id="nome"
+                        matInput
+                        [formControlName]="'nome'">
+
+                </mat-form-field>
+                <mat-error *ngIf="accountForm.get('nome').hasError('required')">
+                    Informe nome
+                </mat-error>
+                <mat-error *ngIf="accountForm.get('nome').hasError('nome')">
+                    Insira um nome válido
+                </mat-error>
+            </div>
+
+            <!-- Email -->
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label for="email">Email</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:mail'"
+                        matPrefix></mat-icon>
+                    <input
+                        id="email"
+                        [formControlName]="'email'"
+                        matInput>
+                </mat-form-field>
+                <mat-error *ngIf="accountForm.get('email').hasError('required')">
+                    Informe nome
+                </mat-error>
+                <mat-error *ngIf="accountForm.get('email').hasError('email')">
+                    Insira um nome válido
+                </mat-error>
+            </div>
+
+            <!-- cnpj -->
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label for="cnpj">CNPJ</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:credit-card'"
+                        matPrefix></mat-icon>
+                    <input
+                        id="cnpj"
+                        cnpj [textMask]="{mask: masks.cnpj.textMask}"
+                        [formControlName]="'cnpj'"
+                        matInput>
+                </mat-form-field>
+                <mat-error *ngIf="accountForm.get('cnpj').hasError('required')">
+                    Informe cnpj
+                </mat-error>
+                <mat-error *ngIf="accountForm.get('cnpj').hasError('cnpj')">
+                    Insira um cnpj válido
+                </mat-error>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="my-10 border-t"></div>
+        <!-- descricao -->
+        <div class="sm:col-span-2">
+            <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label for="descricao">Descrição</mat-label>
+                <mat-icon
+                    class="icon-size-5"
+                    [svgIcon]="'heroicons_solid:annotation'"
+                    matPrefix></mat-icon>
+                <textarea
+                    id="descricao"
+                    [formControlName]="'descricao'"
+                    matInput> </textarea>
+            </mat-form-field>
+            <mat-error *ngIf="accountForm.get('descricao').hasError('required')">
+                Informe uma descrição
+            </mat-error>
+            <mat-error *ngIf="accountForm.get('descricao').hasError('descricao')">
+                Insira uma descrição válido
+            </mat-error>
+        </div>
+        <div class="my-10 border-t"></div>
+
+        <!-- Section -->
+        <div class="w-full">
+            <div class="text-xl">Dados de contato</div>
+            <div class="text-secondary">Dados necessário para nossa equipe entrar em contato com você.
+            </div>
+        </div>
+        <div class="mt-8">
+            <div class="space-y-4">
+                <ng-container
+                    *ngFor="let phoneNumber of accountForm.get('telefones')['controls']; let i = index;"
+                    formArrayName="telefones">
+                    <div class="relative flex">
+                        <mat-form-field class="fuse-mat-no-subscript flex-auto">
+                            <mat-label>Telefone</mat-label>
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'heroicons_solid:phone'"
+                                matPrefix></mat-icon>
+                            <input
+                                matInput
+                                telefone [textMask]="{mask: masks.telefone.textMaskFunction}"
+                                [placeholder]="'telefone'"
+                                [formControl]="phoneNumber.get('telefone')"
+                                [value]="phoneNumber.value.telefone ?? ''">
+                        </mat-form-field>
+                        <!-- Remove phone number -->
+                        <ng-container>
+                            <div
+                                class="flex items-center w-10 pl-2"
+                                [ngClass]="'mt-6'">
+                                <button
+                                    class="w-8 h-8 min-h-8"
+                                    mat-icon-button
+                                    (click)="removePhoneNumber(phoneNumber.value.id ?? 0,i)"
+                                    matTooltip="Remove">
+                                    <mat-icon
+                                        class="icon-size-5"
+                                        [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                                </button>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container>
+            </div>
+            <div
+                class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer"
+                (click)="addPhoneNumberField()">
+                <mat-icon
+                    class="icon-size-5"
+                    [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                <span class="ml-2 font-medium text-secondary group-hover:underline">Inserir novo contato</span>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="mt-11 mb-10 border-t"></div>
+        <!-- Actions -->
+        <div class="flex items-center justify-end">
+            <button
+                mat-stroked-button
+                type="button">
+                Cancelar
+            </button>
+            <button
+                [disabled]="accountForm.disabled"
+                class="ml-4"
+                mat-flat-button
+                type="button"
+                (click)="update()"
+                [color]="'primary'">
+                <span>Salvar</span>
+            </button>
+        </div>
+    </form>
+
+
+</div>

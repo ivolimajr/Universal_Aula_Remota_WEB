@@ -10,6 +10,7 @@ import {AlteraSenhaComponent} from './altera-senha/altera-senha.component';
 import {EnderecoComponent} from './endereco/endereco.component';
 import {CustomMaterialModule} from '../../shared/material.module';
 import {TextMaskModule} from 'angular2-text-mask';
+import { ParceiroComponent } from './parceiro/parceiro.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {TextMaskModule} from 'angular2-text-mask';
         EdrivingComponent,
         PerfilComponent,
         AlteraSenhaComponent,
-        EnderecoComponent
+        EnderecoComponent,
+        ParceiroComponent
     ],
     imports: [
         RouterModule.forChild(perfilRoutes),
