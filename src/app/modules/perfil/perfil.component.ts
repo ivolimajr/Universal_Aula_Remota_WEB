@@ -16,7 +16,7 @@ import {EdrivingUsuario} from '../../shared/models/edriving.model';
 import {AuthService} from '../../shared/services/auth/auth.service';
 import {ParceiroUsuario} from '../../shared/models/parceiro.model';
 import {ParceiroService} from '../../shared/services/http/parceiro.service';
-import {Endereco} from "../../shared/models/endereco.model";
+import {Endereco} from '../../shared/models/endereco.model';
 
 @Component({
     selector: 'app-perfil',
@@ -49,6 +49,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        console.log('Perfil');
         this.loadUser();
         this.mediaChanges();
     }

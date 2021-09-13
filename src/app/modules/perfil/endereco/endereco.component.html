@@ -51,6 +51,8 @@
                         [svgIcon]="'heroicons_solid:calendar'"
                         matPrefix></mat-icon>
                     <input
+                        [(ngModel)]="cep"
+                        (blur)="buscaCep($event)"
                         [formControlName]="'cep'"
                         matInput>
                 </mat-form-field>
@@ -77,12 +79,7 @@
                         [svgIcon]="'heroicons_solid:location-marker'"
                         matPrefix></mat-icon>
                     <mat-select [formControlName]="'uf'">
-                        <mat-option [value]="'usa'">United States</mat-option>
-                        <mat-option [value]="'canada'">Canada</mat-option>
-                        <mat-option [value]="'mexico'">Mexico</mat-option>
-                        <mat-option [value]="'france'">France</mat-option>
-                        <mat-option [value]="'germany'">Germany</mat-option>
-                        <mat-option [value]="'italy'">Italy</mat-option>
+                        <mat-option *ngFor="let item of estados" [value]="item">{{item}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>

@@ -1,7 +1,8 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Endereco} from '../../../shared/models/endereco.model';
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {CepService} from '../../../shared/services/http/cep.service';
 
 @Component({
     selector: 'endereco',
@@ -15,10 +16,15 @@ export class EnderecoComponent implements OnInit {
     @Input() idUser: number;
     addressForm: FormGroup;
     plans: any[];
+    cep: string;
+    estados = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
+        'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
 
     constructor(
         private _formBuilder: FormBuilder,
         private _snackBar: MatSnackBar,
+        private _changeDetectorRef: ChangeDetectorRef,
+        private _cepService: CepService,
     ) {
     }
 
@@ -40,6 +46,19 @@ export class EnderecoComponent implements OnInit {
      */
     trackByFn(index: number, item: any): any {
         return item.id || index;
+    }
+
+    buscaCep(event): void{
+        console.log(event.target.value);
+        this._cepService.buscar(event.target.value).subscribe((res)=>{
+            console.log(res);
+            this.enderecoUser.bairro = res.bairro;
+            this.enderecoUser.enderecoLogradouro = res.logradouro;
+            this.enderecoUser.cep = res.cep;
+            this.enderecoUser.cidade = res.localidade;
+            this._changeDetectorRef.markForCheck();
+            console.log(this.enderecoUser);
+        });
     }
 
     private prepareForm(): void {
