@@ -1,12 +1,12 @@
 <div class="w-full max-w-3xl">
 
     <!-- Form -->
-    <form [formGroup]="planBillingForm">
+    <form [formGroup]="addressForm">
 
         <!-- Section -->
         <div class="w-full">
-            <div class="text-xl">Change your plan</div>
-            <div class="text-secondary">Upgrade or downgrade your current plan.</div>
+            <div class="text-xl">Endereço</div>
+            <div class="text-secondary">Mantenha seu endereço atualizado</div>
         </div>
 
         <!-- Divider -->
@@ -17,26 +17,26 @@
             <!-- Card holder -->
             <div class="col-span-4">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>Card holder</mat-label>
+                    <mat-label>Endereço</mat-label>
                     <mat-icon
                         class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:user'"
+                        [svgIcon]="'heroicons_solid:hashtag'"
                         matPrefix></mat-icon>
                     <input
-                        [formControlName]="'cardHolder'"
+                        [formControlName]="'enderecoLogradouro'"
                         matInput>
                 </mat-form-field>
             </div>
             <!-- Card number -->
             <div class="col-span-4 sm:col-span-2">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>Card number</mat-label>
+                    <mat-label>Bairro</mat-label>
                     <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:credit-card'"
                         matPrefix></mat-icon>
                     <input
-                        [formControlName]="'cardNumber'"
+                        [formControlName]="'bairro'"
                         matInput>
                 </mat-form-field>
             </div>
@@ -45,39 +45,38 @@
                 <mat-form-field
                     class="fuse-mat-no-subscript w-full"
                     [floatLabel]="'always'">
-                    <mat-label>Expiration date</mat-label>
+                    <mat-label>CEP</mat-label>
                     <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:calendar'"
                         matPrefix></mat-icon>
                     <input
-                        [formControlName]="'cardExpiration'"
-                        [placeholder]="'MM / YY'"
+                        [formControlName]="'cep'"
                         matInput>
                 </mat-form-field>
             </div>
             <!-- Card CVC -->
             <div class="col-span-2 sm:col-span-1">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>CVC / CVC2</mat-label>
+                    <mat-label>Número</mat-label>
                     <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:lock-closed'"
                         matPrefix></mat-icon>
                     <input
-                        [formControlName]="'cardCVC'"
+                        [formControlName]="'numero'"
                         matInput>
                 </mat-form-field>
             </div>
             <!-- Country -->
             <div class="col-span-4 sm:col-span-2">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>Country</mat-label>
+                    <mat-label>UF</mat-label>
                     <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:location-marker'"
                         matPrefix></mat-icon>
-                    <mat-select [formControlName]="'country'">
+                    <mat-select [formControlName]="'uf'">
                         <mat-option [value]="'usa'">United States</mat-option>
                         <mat-option [value]="'canada'">Canada</mat-option>
                         <mat-option [value]="'mexico'">Mexico</mat-option>
@@ -90,12 +89,12 @@
             <!-- ZIP -->
             <div class="col-span-4 sm:col-span-2">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>ZIP / Postal code</mat-label>
+                    <mat-label>Cidade</mat-label>
                     <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:hashtag'"
                         matPrefix></mat-icon>
-                    <input matInput>
+                    <input matInput [formControlName]="'cidade'">
                 </mat-form-field>
             </div>
         </div>

@@ -5,7 +5,8 @@ export const environment = {
     authStorage: 'auth148Bc0A5EDb',
     dataStorage: 'data170c7JJJebDb',
     tokenStorage: 'token0c7d8d689P',
-    apiUrl: 'https://localhost:44341/api/v1',
+    // apiUrl: 'https://localhost:44341/api/v1',
+    apiUrl: 'http://localhost:5000/api/v1',
     privateStorageKey: 'Sapien_ulla_ultricies',
     auth: {
         clientId: 'EDRIVING@EDRIVING.EDU.BR',

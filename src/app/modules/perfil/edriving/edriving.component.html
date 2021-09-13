@@ -93,6 +93,10 @@
                     <div class="relative flex">
                         <mat-form-field class="fuse-mat-no-subscript flex-auto">
                             <mat-label>Telefone</mat-label>
+                            <mat-icon
+                                class="icon-size-5"
+                                [svgIcon]="'heroicons_solid:phone'"
+                                matPrefix></mat-icon>
                             <input
                                 matInput
                                 telefone [textMask]="{mask: masks.telefone.textMaskFunction}"

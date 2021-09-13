@@ -12,7 +12,7 @@ import {EdrivingService} from '../../../shared/services/http/edriving.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
 import {ParceiroService} from '../../../shared/services/http/parceiro.service';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
-import {environment} from "../../../../environments/environment";
+import {environment} from '../../../../environments/environment';
 
 @Component({
     selector: 'app-parceiro',
