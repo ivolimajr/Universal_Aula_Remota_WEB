@@ -1,4 +1,12 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewEncapsulation
+} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EdrivingPost, EdrivingUsuario} from '../../../shared/models/edriving.model';
 import {UserService} from '../../../shared/services/http/user.service';
@@ -12,6 +20,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-edriving',
@@ -20,13 +29,15 @@ import {MatSnackBar} from '@angular/material/snack-bar';
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations
 })
-export class EdrivingComponent implements OnInit {
+export class EdrivingComponent implements OnInit, OnDestroy {
     @Input() edrivingUser: EdrivingUsuario;
 
     accountForm: FormGroup;
     user: Usuario;
     masks = MASKS;
     private edrivingUserPost = new EdrivingPost();
+    private userSub: Subscription;
+    private phoneSub: Subscription;
 
     constructor(
         public dialog: MatDialog,
@@ -36,7 +47,6 @@ export class EdrivingComponent implements OnInit {
         private _authServices: AuthService,
         private _edrivingServices: EdrivingService,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _userServices: UserService,
         private _storageServices: LocalStorageService
     ) {
     }
@@ -58,7 +68,7 @@ export class EdrivingComponent implements OnInit {
             return null;
         }
 
-        this._edrivingServices.update(this.edrivingUserPost).subscribe((res: any) => {
+        this.userSub = this._edrivingServices.update(this.edrivingUserPost).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
                 this.openSnackBar(res.error.detail, 'warn');
@@ -138,7 +148,7 @@ export class EdrivingComponent implements OnInit {
             });
             return;
         }
-        this._userServices.removePhonenumber(id)
+        this.phoneSub = this._userService.removePhonenumber(id)
             .subscribe((res) => {
                 if (!res) {
                     this.openSnackBar('Telefone já em uso', 'warn');
@@ -154,6 +164,10 @@ export class EdrivingComponent implements OnInit {
         return item.id || index;
     }
 
+    ngOnDestroy(): void {
+        this.phoneSub.unsubscribe();
+        this.userSub.unsubscribe();
+    }
     // -----------------------------------------------------------------------------------------------------
     // @ Private methods
     // -----------------------------------------------------------------------------------------------------

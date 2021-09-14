@@ -1,4 +1,12 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewEncapsulation
+} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../../shared/services/auth/auth.service';
 import {UsuarioLogin} from '../../../shared/models/usuario.model';
@@ -7,6 +15,7 @@ import {fuseAnimations} from '../../../../@fuse/animations';
 import {UserService} from '../../../shared/services/http/user.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'altera-senha',
@@ -17,7 +26,7 @@ import {environment} from '../../../../environments/environment';
 })
 
 
-export class AlteraSenhaComponent implements OnInit {
+export class AlteraSenhaComponent implements OnInit, OnDestroy {
     @Input() idUser: number;
     alert: { type: FuseAlertType; message: string } = {
         type: 'error',
@@ -27,6 +36,7 @@ export class AlteraSenhaComponent implements OnInit {
     securityForm: FormGroup;
     showAlert: boolean = false;
     private loginUser = new UsuarioLogin();
+    private authSub: Subscription;
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -63,7 +73,7 @@ export class AlteraSenhaComponent implements OnInit {
             return;
         }
         //atualiza a senha na API
-        this._userServices.updatePassById(this.securityForm.value).subscribe((val) => {
+        this.authSub = this._userServices.updatePassById(this.securityForm.value).subscribe((val) => {
             this.setAlert('Senha Atualizada', 'success');
             //Atualiza a senha no localStorage
             this.loginUser.email = this._authServices.getUserInfoFromStorage().email;
@@ -73,6 +83,10 @@ export class AlteraSenhaComponent implements OnInit {
             this._changeDetectorRef.markForCheck();
             return;
         });
+    }
+
+    ngOnDestroy(): void {
+        this.authSub.unsubscribe();
     }
 
     /**

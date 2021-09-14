@@ -1,10 +1,11 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {fuseAnimations} from '@fuse/animations';
 import {AuthService} from 'app/shared/services/auth/auth.service';
 import {Usuario} from 'app/shared/models/usuario.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'login',
@@ -12,11 +13,12 @@ import {MatSnackBar} from '@angular/material/snack-bar';
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
 
     loginForm: FormGroup;
     private userStorage: Usuario;
+    private loginSub: Subscription;
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -44,7 +46,7 @@ export class LoginComponent implements OnInit {
         this.loginForm.disable();
 
         //Faz Login
-        this._authService.signIn(this.loginForm.value).subscribe((res) => {
+        this.loginSub = this._authService.signIn(this.loginForm.value).subscribe((res) => {
             if (res.error) {
                 this.openSnackBar(res.error.detail);
                 this.loginForm.enable();
@@ -53,6 +55,13 @@ export class LoginComponent implements OnInit {
             const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
             this._router.navigateByUrl(redirectURL);
         });
+    }
+
+    ngOnDestroy(): void {
+        if(this.loginSub){
+            this.loginSub.unsubscribe();
+            console.log('subscreveu')
+        }
     }
 
     /**
@@ -91,4 +100,5 @@ export class LoginComponent implements OnInit {
             panelClass: ['mat-toolbar', 'mat-accent']
         });
     }
+
 }

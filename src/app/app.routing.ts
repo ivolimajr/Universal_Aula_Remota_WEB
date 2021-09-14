@@ -30,7 +30,10 @@ export const appRoutes: Route[] = [
                 path: 'reset-password',
                 loadChildren: () => import('app/modules/auth/reset-password/reset-password.module').then(m => m.AuthResetPasswordModule)
             },
-            {path: 'login', loadChildren: () => import('app/modules/auth/login/login.module').then(m => m.LoginModule)}
+            {
+                path: 'login',
+                loadChildren: () => import('app/modules/auth/login/login.module').then(m => m.LoginModule)
+            }
         ]
     },
 

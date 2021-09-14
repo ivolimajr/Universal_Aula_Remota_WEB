@@ -8,7 +8,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {MatDrawer} from '@angular/material/sidenav';
-import {Observable, Subject} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {FuseMediaWatcherService} from '@fuse/services/media-watcher';
 import {EdrivingService} from '../../shared/services/http/edriving.service';
@@ -30,7 +30,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'endereco';
+    selectedPanel: string = 'dadosPessoais';
 
     edrivingUser: EdrivingUsuario = null;
     parceiroUser: ParceiroUsuario = null;
@@ -38,6 +38,8 @@ export class PerfilComponent implements OnInit, OnDestroy {
     loading: boolean = true;
     idUser: number;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    private userSub: Subscription;
+    private authSub: Subscription;
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
@@ -49,13 +51,14 @@ export class PerfilComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        console.log('Perfil');
         this.loadUser();
         this.mediaChanges();
     }
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
+        this.userSub.unsubscribe();
+        this.authSub.unsubscribe();
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
         this._changeDetectorRef.markForCheck();
@@ -153,11 +156,11 @@ export class PerfilComponent implements OnInit, OnDestroy {
      */
     private loadUser(): void {
         //pega os dados do usuário que estão no localstorage
-        this._authService.user$.subscribe((res) => {
+        this.authSub = this._authService.user$.subscribe((res) => {
             //verifica se o usuário tem perfil de edriving - perfil que gerencia a plataforma
             if (res.nivelAcesso >= 10 && res.nivelAcesso < 20) {
                 //busca o usuário na API
-                this._edrivingServices.getOne(res.id).subscribe((result)=>{
+                this.userSub = this._edrivingServices.getOne(res.id).subscribe((result) => {
                     this.edrivingUser = result;
                     //Set o id do usuário para alterar a senha
                     this.idUser = result.id;
@@ -170,7 +173,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
             //verifica se o usuário tem perfil de edriving - perfil que gerencia a plataforma
             if (res.nivelAcesso >= 20 && res.nivelAcesso < 30) {
                 //busca o usuário na API
-                this._parceiroServices.getOne(res.id).subscribe((result)=>{
+                this.userSub = this._parceiroServices.getOne(res.id).subscribe((result) => {
                     this.parceiroUser = result;
                     this.enderecoUser = result.endereco;
                     //Set o id do usuário para alterar a senha
