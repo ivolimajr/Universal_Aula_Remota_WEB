@@ -54,7 +54,7 @@ export class EdrivingComponent implements OnInit {
     update(): void {
 
         //Verifica se o formulário é valido
-        if (this.checkFormToSend() === false) {
+        if (this.prepareFormToSend() === false) {
             return null;
         }
 
@@ -243,7 +243,7 @@ export class EdrivingComponent implements OnInit {
      * @private
      * @return um boleano
      */
-    private checkFormToSend(): boolean {
+    private prepareFormToSend(): boolean {
         const formData = this.accountForm.value;
 
         if (this.accountForm.invalid) {

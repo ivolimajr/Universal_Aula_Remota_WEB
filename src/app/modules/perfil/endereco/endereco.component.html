@@ -51,8 +51,8 @@
                         [svgIcon]="'heroicons_solid:calendar'"
                         matPrefix></mat-icon>
                     <input
-                        [(ngModel)]="cep"
-                        (blur)="buscaCep($event)"
+                        (blur)="buscaCep($event.target)"
+                        cep [textMask]="{mask: masks.cep.textMask}"
                         [formControlName]="'cep'"
                         matInput>
                 </mat-form-field>
@@ -109,8 +109,10 @@
             <button
                 class="ml-4"
                 mat-flat-button
+                [disabled]="addressForm.disabled"
+                (click)="update()"
                 type="button"
-                [color]="'primary'">Save
+                [color]="'primary'">Salvar
             </button>
         </div>
     </form>

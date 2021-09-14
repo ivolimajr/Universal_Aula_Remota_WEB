@@ -1,5 +1,5 @@
 export class Endereco {
-    id: 0;
+    id?: number;
     uf: string;
     cep: string;
     enderecoLogradouro: string;

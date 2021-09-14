@@ -9,6 +9,7 @@ export interface CEPMODEL {
     complemento: string; //""
     localidade: string; //"Brasília"
     logradouro: string; //"QNP 26 Conjunto U"
+    uf: string; //DF
 }
 
 @Injectable({
@@ -27,16 +28,6 @@ export class CepService {
 
     buscar(cep: string): Observable<CEPMODEL> {
         return this.httpClient.get<CEPMODEL>(`//viacep.com.br/ws/${cep}/json/`);
-
-        /*
-    subscribe((dados)=>{
-        of(dados);
-        this.endereco.bairro = dados.bairro;
-        this.endereco.enderecoLogradouro = dados.logradouro;
-        this.endereco.cep = dados.cep;
-        this.endereco.cidade = dados.localidade;
-        this.endereco;
-        */
     }
 
 }

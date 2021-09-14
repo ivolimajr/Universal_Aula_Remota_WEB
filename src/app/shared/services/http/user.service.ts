@@ -3,6 +3,7 @@ import {environment} from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {catchError, switchMap} from 'rxjs/operators';
+import {Endereco} from '../../models/endereco.model';
 
 
 const URL_USER_API = `${environment.apiUrl}/Usuario`;
@@ -44,9 +45,24 @@ export class UserService {
 
         return this._httpClient.post(URL_USER_API + '/alterar-senha/', credentials).pipe(
             switchMap((response: any) => of(response)),
-            catchError((e) => {
-                return of(e);
-            })
+            catchError(e => of(e))
+        );
+    }
+
+    /**
+     * Atualiza a endereco de qualquer usuário
+     *
+     * @param endereco do usuário a ser atualizado
+     * @return retorna um endereco ou error
+     */
+    updateAddress(endereco: Endereco): Observable<Endereco> {
+        if (endereco.id === 0 || endereco.id == null) {
+            return of(null);
+        }
+
+        return this._httpClient.put(URL_USER_API + '/atualizar-endereco/', endereco).pipe(
+            switchMap((response: any) => of(response)),
+            catchError(e => of(e))
         );
     }
 }

@@ -3,6 +3,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Endereco} from '../../../shared/models/endereco.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CepService} from '../../../shared/services/http/cep.service';
+import {MASKS, NgBrazilValidators} from 'ng-brazil';
+import {UserService} from '../../../shared/services/http/user.service';
 
 @Component({
     selector: 'endereco',
@@ -14,6 +16,7 @@ export class EnderecoComponent implements OnInit {
 
     @Input() enderecoUser: Endereco;
     @Input() idUser: number;
+    masks = MASKS;
     addressForm: FormGroup;
     plans: any[];
     cep: string;
@@ -25,6 +28,7 @@ export class EnderecoComponent implements OnInit {
         private _snackBar: MatSnackBar,
         private _changeDetectorRef: ChangeDetectorRef,
         private _cepService: CepService,
+        private _userService: UserService,
     ) {
     }
 
@@ -38,6 +42,29 @@ export class EnderecoComponent implements OnInit {
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
 
+    update(): void{
+        this.addressForm.disable();
+        //Verifica se o formulário é valido
+        if (this.prepareFormToSend() === false) {
+            return null;
+        }
+
+        this._userService.updateAddress(this.enderecoUser).subscribe((res: any)=>{
+            console.log(res);
+            if (res.error) {
+                this.openSnackBar(res.error.detail, 'warn');
+                this.addressForm.enable();
+                this._changeDetectorRef.markForCheck();
+                return;
+            }
+            //Retorna a mensagem de atualizado
+            this.openSnackBar('Atualizado');
+            this.addressForm.enable();
+            this._changeDetectorRef.markForCheck();
+
+        });
+    }
+
     /**
      * Track by function for ngFor loops
      *
@@ -48,17 +75,46 @@ export class EnderecoComponent implements OnInit {
         return item.id || index;
     }
 
-    buscaCep(event): void{
-        console.log(event.target.value);
-        this._cepService.buscar(event.target.value).subscribe((res)=>{
-            console.log(res);
-            this.enderecoUser.bairro = res.bairro;
-            this.enderecoUser.enderecoLogradouro = res.logradouro;
-            this.enderecoUser.cep = res.cep;
-            this.enderecoUser.cidade = res.localidade;
+    buscaCep(event): void {
+        if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
+            this.openSnackBar('Cep inválido');
+            return;
+        }
+        this._cepService.buscar(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
+            this.addressForm.patchValue({
+                bairro: res.bairro,
+                enderecoLogradouro: res.logradouro,
+                cidade: res.localidade,
+                cep: res.cep,
+                uf: res.uf
+            });
             this._changeDetectorRef.markForCheck();
-            console.log(this.enderecoUser);
         });
+    }
+
+    private prepareFormToSend(): boolean {
+        const formValue = this.addressForm.value;
+        let result = true;
+        if (this.addressForm.invalid) {
+            this.openSnackBar('Dados Inválidos');
+            result = false;
+            return result;
+        }
+        if (formValue.uf.length !== 2) {
+            this.openSnackBar('UF Inválida');
+            this.addressForm.enable();
+            result = false;
+            return result;
+        }
+        this.enderecoUser.id = formValue.id;
+        this.enderecoUser.uf = formValue.uf;
+        this.enderecoUser.cep = formValue.cep.replace(/[^0-9,]*/g, '');
+        this.enderecoUser.enderecoLogradouro = formValue.enderecoLogradouro;
+        this.enderecoUser.bairro = formValue.bairro;
+        this.enderecoUser.cidade = formValue.cidade;
+        this.enderecoUser.numero = formValue.numero;
+        console.log(this.enderecoUser);
+        return result;
     }
 
     private prepareForm(): void {
@@ -73,6 +129,7 @@ export class EnderecoComponent implements OnInit {
             cep: [this.enderecoUser.cep, Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
+                NgBrazilValidators.cep,
                 Validators.minLength(5),
                 Validators.maxLength(14)
             ])],
