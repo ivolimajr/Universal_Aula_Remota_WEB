@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ParceiroUsuario} from '../../../../shared/models/parceiro.model';
 import {fuseAnimations} from '../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../@fuse/components/alert';
@@ -11,6 +11,7 @@ import {ParceiroService} from '../../../../shared/services/http/parceiro.service
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
 import {ParceiroFormModalComponent} from './parceiro-form-modal/parceiro-form-modal.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {Subscription} from 'rxjs';
 
 
 const ELEMENT_DATA: ParceiroUsuario[] = [];
@@ -21,7 +22,7 @@ const ELEMENT_DATA: ParceiroUsuario[] = [];
   styleUrls: ['./parceiro.component.scss'],
     animations: fuseAnimations
 })
-export class ParceiroComponent implements AfterViewInit, OnInit {
+export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
 
     alert: { type: FuseAlertType; message: string } = {
         type: 'error',
@@ -33,6 +34,8 @@ export class ParceiroComponent implements AfterViewInit, OnInit {
     loading: boolean = true;
     showAlert: boolean = false;
     _users$ = this._parceiroServices.getAll();
+    private dataSub: Subscription;
+    private userSub: Subscription;
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatSort) sort: MatSort;
@@ -123,6 +126,16 @@ export class ParceiroComponent implements AfterViewInit, OnInit {
         return;
     }
 
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        if(this.userSub){
+            this.userSub.unsubscribe();
+        }
+        if(this.dataSub){
+            this.dataSub.unsubscribe();
+        }
+        this._changeDetectorRef.markForCheck();
+    }
     /**
      * Lista os usuários
      *
@@ -130,7 +143,7 @@ export class ParceiroComponent implements AfterViewInit, OnInit {
      * @return void
      */
     private getUsers(): void {
-        this._users$.subscribe((items: ParceiroUsuario[]) => {
+        this.dataSub = this._users$.subscribe((items: ParceiroUsuario[]) => {
             this.dataSource.data = items;
             this.loading = false;
             this._changeDetectorRef.markForCheck();
@@ -145,7 +158,7 @@ export class ParceiroComponent implements AfterViewInit, OnInit {
      * @return void
      */
     private deleteFromApi(id: number): void {
-        this._parceiroServices.delete(id).subscribe((res)=>{
+        this.userSub = this._parceiroServices.delete(id).subscribe((res)=>{
             if (!res) {
                 this.openSnackBar('Problemas na Remoção');
             }

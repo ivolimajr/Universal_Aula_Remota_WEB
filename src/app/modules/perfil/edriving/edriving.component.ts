@@ -165,8 +165,13 @@ export class EdrivingComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.phoneSub.unsubscribe();
-        this.userSub.unsubscribe();
+        if(this.userSub){
+            this.userSub.unsubscribe();
+        }
+        if(this.phoneSub){
+            this.phoneSub.unsubscribe();
+        }
+        this._changeDetectorRef.markForCheck();
     }
     // -----------------------------------------------------------------------------------------------------
     // @ Private methods

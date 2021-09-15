@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatSort} from '@angular/material/sort';
 import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {MatDialog} from '@angular/material/dialog';
@@ -10,6 +10,7 @@ import {EdrivingService} from '../../../../shared/services/http/edriving.service
 import {EdrivingUsuario} from '../../../../shared/models/edriving.model';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
+import {Subscription} from 'rxjs';
 
 const ELEMENT_DATA: EdrivingUsuario[] = [];
 
@@ -20,12 +21,14 @@ const ELEMENT_DATA: EdrivingUsuario[] = [];
     animations: fuseAnimations
 })
 
-export class EdrivingComponent implements AfterViewInit, OnInit {
+export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
 
     displayedColumns: string[] = ['nome', 'email', 'id']; //Exibe as colunas da tabela
     dataSource = new MatTableDataSource<EdrivingUsuario>(ELEMENT_DATA); //Dados da tabela
     loading: boolean = true;
     _users$ = this._edrivingServices.getAll(); //Observable dos usuário
+    private dataSub: Subscription;
+    private userSub: Subscription;
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatSort) sort: MatSort;
@@ -121,6 +124,16 @@ export class EdrivingComponent implements AfterViewInit, OnInit {
         return;
     }
 
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        if(this.userSub){
+            this.userSub.unsubscribe();
+        }
+        if(this.dataSub){
+            this.dataSub.unsubscribe();
+        }
+        this._changeDetectorRef.markForCheck();
+    }
     /**
      * Lista os usuários
      *
@@ -128,7 +141,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit {
      * @return void
      */
     private getUsers(): void {
-        this._users$.subscribe((items: EdrivingUsuario[]) => {
+        this.dataSub = this._users$.subscribe((items: EdrivingUsuario[]) => {
             this.dataSource.data = items;
             this.loading = false;
             this._changeDetectorRef.markForCheck();
@@ -143,7 +156,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit {
      * @return void
      */
     private deleteFromApi(id: number): void {
-        this._edrivingServices.delete(id).subscribe((res) => {
+        this.userSub = this._edrivingServices.delete(id).subscribe((res) => {
             if (!res) {
                 this.openSnackBar('Problemas na Remoção');
             }

@@ -57,8 +57,12 @@ export class PerfilComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this.userSub.unsubscribe();
-        this.authSub.unsubscribe();
+        if(this.userSub){
+            this.userSub.unsubscribe();
+        }
+        if(this.authSub){
+            this.authSub.unsubscribe();
+        }
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
         this._changeDetectorRef.markForCheck();

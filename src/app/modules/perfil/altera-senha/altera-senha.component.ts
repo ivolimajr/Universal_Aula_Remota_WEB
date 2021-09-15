@@ -86,7 +86,10 @@ export class AlteraSenhaComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.authSub.unsubscribe();
+        if(this.authSub){
+            this.authSub.unsubscribe();
+        }
+        this._changeDetectorRef.markForCheck();
     }
 
     /**

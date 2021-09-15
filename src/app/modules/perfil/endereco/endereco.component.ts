@@ -1,10 +1,19 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewEncapsulation
+} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Endereco} from '../../../shared/models/endereco.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CepService} from '../../../shared/services/http/cep.service';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {UserService} from '../../../shared/services/http/user.service';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'endereco',
@@ -12,7 +21,7 @@ import {UserService} from '../../../shared/services/http/user.service';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EnderecoComponent implements OnInit {
+export class EnderecoComponent implements OnInit, OnDestroy {
 
     @Input() enderecoUser: Endereco;
     @Input() idUser: number;
@@ -22,6 +31,8 @@ export class EnderecoComponent implements OnInit {
     cep: string;
     estados = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
         'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
+    private userSub: Subscription;
+    private cepSub: Subscription;
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -49,7 +60,7 @@ export class EnderecoComponent implements OnInit {
             return null;
         }
 
-        this._userService.updateAddress(this.enderecoUser).subscribe((res: any)=>{
+        this.userSub = this._userService.updateAddress(this.enderecoUser).subscribe((res: any)=>{
             console.log(res);
             if (res.error) {
                 this.openSnackBar(res.error.detail, 'warn');
@@ -80,7 +91,7 @@ export class EnderecoComponent implements OnInit {
             this.openSnackBar('Cep inválido');
             return;
         }
-        this._cepService.buscar(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
+        this.cepSub = this._cepService.buscar(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
             this.addressForm.patchValue({
                 bairro: res.bairro,
                 enderecoLogradouro: res.logradouro,
@@ -90,6 +101,16 @@ export class EnderecoComponent implements OnInit {
             });
             this._changeDetectorRef.markForCheck();
         });
+    }
+
+    ngOnDestroy(): void {
+        if(this.cepSub){
+            this.cepSub.unsubscribe();
+        }
+        if(this.userSub){
+            this.userSub.unsubscribe();
+        }
+        this._changeDetectorRef.markForCheck();
     }
 
     private prepareFormToSend(): boolean {
@@ -113,7 +134,6 @@ export class EnderecoComponent implements OnInit {
         this.enderecoUser.bairro = formValue.bairro;
         this.enderecoUser.cidade = formValue.cidade;
         this.enderecoUser.numero = formValue.numero;
-        console.log(this.enderecoUser);
         return result;
     }
 

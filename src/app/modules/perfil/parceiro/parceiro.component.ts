@@ -1,4 +1,12 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewEncapsulation
+} from '@angular/core';
 import {fuseAnimations} from '../../../../@fuse/animations';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Usuario} from '../../../shared/models/usuario.model';
@@ -13,6 +21,7 @@ import {LocalStorageService} from '../../../shared/services/storage/localStorage
 import {ParceiroService} from '../../../shared/services/http/parceiro.service';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
 import {environment} from '../../../../environments/environment';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-parceiro',
@@ -21,13 +30,15 @@ import {environment} from '../../../../environments/environment';
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations
 })
-export class ParceiroComponent implements OnInit {
+export class ParceiroComponent implements OnInit, OnDestroy {
     @Input() parceiroUser: ParceiroUsuario;
 
     accountForm: FormGroup;
     user: Usuario;
     masks = MASKS;
     private parceiroUserPost = new ParceiroPost();
+    private userSub: Subscription;
+    private phoneSub: Subscription;
 
     constructor(
         public dialog: MatDialog,
@@ -37,7 +48,6 @@ export class ParceiroComponent implements OnInit {
         private _authServices: AuthService,
         private _parceiroServices: ParceiroService,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _userServices: UserService,
         private _storageServices: LocalStorageService
     ) {
     }
@@ -60,7 +70,7 @@ export class ParceiroComponent implements OnInit {
             return null;
         }
 
-        this._parceiroServices.update(this.parceiroUserPost).subscribe((res: any) => {
+        this.userSub = this._parceiroServices.update(this.parceiroUserPost).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
                 this.openSnackBar(res.error.detail, 'warn');
@@ -141,7 +151,7 @@ export class ParceiroComponent implements OnInit {
             });
             return;
         }
-        this._userServices.removePhonenumber(id)
+        this.phoneSub = this._userService.removePhonenumber(id)
             .subscribe((res) => {
                 if (!res) {
                     this.openSnackBar('Telefone já em uso', 'warn');
@@ -155,6 +165,16 @@ export class ParceiroComponent implements OnInit {
 
     trackByFn(index: number, item: any): any {
         return item.id || index;
+    }
+
+    ngOnDestroy(): void {
+        if(this.userSub){
+            this.userSub.unsubscribe();
+        }
+        if(this.phoneSub){
+            this.phoneSub.unsubscribe();
+        }
+        this._changeDetectorRef.markForCheck();
     }
 
     /**
