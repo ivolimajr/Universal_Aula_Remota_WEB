@@ -6,23 +6,30 @@ import {
     compactNavigation,
     defaultNavigation,
     futuristicNavigation,
-    horizontalNavigation
+    parceiroNavigation,
+    plataformaNavigation
 } from 'app/shared/services/initialData/navigation/data';
+import {AuthService} from '../../auth/auth.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NavServices {
-    private readonly _compactNavigation: FuseNavigationItem[] = compactNavigation;
     private readonly _defaultNavigation: FuseNavigationItem[] = defaultNavigation;
-    private readonly _futuristicNavigation: FuseNavigationItem[] = futuristicNavigation;
-    private readonly _horizontalNavigation: FuseNavigationItem[] = horizontalNavigation;
-
+    private readonly _plataformaNavigation: FuseNavigationItem[] = plataformaNavigation;
+    private readonly _parceiroNavigation: FuseNavigationItem[] = parceiroNavigation;
+    private nivelAcesso: number;
     /**
      * Constructor
      */
-    constructor(private _fuseMockApiService: FuseMockApiService) {
+    constructor(
+        private _fuseMockApiService: FuseMockApiService,
+        private _authServices: AuthService
+        ) {
         // Register Mock API handlers
+        if(this._authServices.getUserInfoFromStorage()){
+            this.nivelAcesso = this._authServices.getUserInfoFromStorage().nivelAcesso;
+        }
         this.registerHandlers();
     }
 
@@ -41,41 +48,43 @@ export class NavServices {
             .onGet('api/common/navigation')
             .reply(() => {
 
-                // Fill compact navigation children using the default navigation
-                this._compactNavigation.forEach((compactNavItem) => {
+                //Montagem do menu para os usuário da plataforma do tipo Edriving
+                if( this.nivelAcesso >= 10 && this.nivelAcesso < 20){
+                    // Fill compact navigation children using the default navigation
                     this._defaultNavigation.forEach((defaultNavItem) => {
-                        if (defaultNavItem.id === compactNavItem.id) {
-                            compactNavItem.children = cloneDeep(defaultNavItem.children);
-                        }
+                        this._plataformaNavigation.forEach((item) => {
+                            if (item.id === defaultNavItem.id) {
+                                defaultNavItem.children = cloneDeep(item.children);
+                            } else{
+                                this._defaultNavigation.push(item);
+                            }
+                        });
                     });
-                });
+                }
 
-                // Fill futuristic navigation children using the default navigation
-                this._futuristicNavigation.forEach((futuristicNavItem) => {
+                //Montagem do menu para os usuários do tipo parceiro
+                if( this.nivelAcesso >= 20 && this.nivelAcesso < 30){
+                    // Fill compact navigation children using the default navigation
                     this._defaultNavigation.forEach((defaultNavItem) => {
-                        if (defaultNavItem.id === futuristicNavItem.id) {
-                            futuristicNavItem.children = cloneDeep(defaultNavItem.children);
-                        }
+                        this._parceiroNavigation.forEach((item) => {
+                            if (item.id === defaultNavItem.id) {
+                                defaultNavItem.children = cloneDeep(item.children);
+                            } else{
+                                this._defaultNavigation.push(item);
+                            }
+                        });
                     });
-                });
+                }
 
-                // Fill horizontal navigation children using the default navigation
-                this._horizontalNavigation.forEach((horizontalNavItem) => {
-                    this._defaultNavigation.forEach((defaultNavItem) => {
-                        if (defaultNavItem.id === horizontalNavItem.id) {
-                            horizontalNavItem.children = cloneDeep(defaultNavItem.children);
-                        }
-                    });
-                });
 
                 // Return the response
                 return [
                     200,
                     {
-                        compact: cloneDeep(this._compactNavigation),
+                        compact: cloneDeep(this._defaultNavigation),
                         default: cloneDeep(this._defaultNavigation),
-                        futuristic: cloneDeep(this._futuristicNavigation),
-                        horizontal: cloneDeep(this._horizontalNavigation)
+                        futuristic: cloneDeep(this._defaultNavigation),
+                        horizontal: cloneDeep(this._defaultNavigation)
                     }
                 ];
             });
