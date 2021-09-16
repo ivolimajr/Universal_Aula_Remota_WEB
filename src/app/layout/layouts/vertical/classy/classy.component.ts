@@ -6,6 +6,7 @@ import {FuseMediaWatcherService} from '@fuse/services/media-watcher';
 import {FuseNavigationService, FuseVerticalNavigationComponent} from '@fuse/components/navigation';
 import {InitialData} from 'app/app.types';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
+import {Usuario} from '../../../../shared/models/usuario.model';
 
 @Component({
     selector: 'classy-layout',
@@ -14,6 +15,7 @@ import {AuthService} from '../../../../shared/services/auth/auth.service';
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy {
     data: InitialData;
+    user: Usuario;
     isScreenSmall: boolean;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -38,7 +40,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
         this._activatedRoute.data.subscribe((data: Data) => {
             this.data = data.initialData;
         });
-        this.data.user = this._authService.getUserInfoFromStorage();
+        this.user = this._authService.getUserInfoFromStorage();
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$

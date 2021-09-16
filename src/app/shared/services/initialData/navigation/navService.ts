@@ -7,12 +7,12 @@ import {
     defaultNavigation,
     futuristicNavigation,
     horizontalNavigation
-} from 'app/mock-api/common/navigation/data';
+} from 'app/shared/services/initialData/navigation/data';
 
 @Injectable({
     providedIn: 'root'
 })
-export class NavigationMockApi {
+export class NavServices {
     private readonly _compactNavigation: FuseNavigationItem[] = compactNavigation;
     private readonly _defaultNavigation: FuseNavigationItem[] = defaultNavigation;
     private readonly _futuristicNavigation: FuseNavigationItem[] = futuristicNavigation;
