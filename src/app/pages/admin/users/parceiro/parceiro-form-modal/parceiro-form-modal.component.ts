@@ -14,11 +14,11 @@ import {LocalStorageService} from '../../../../../shared/services/storage/localS
 import {AuthService} from '../../../../../shared/services/auth/auth.service';
 import {environment} from '../../../../../../environments/environment';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
+import {CepService} from '../../../../../shared/services/http/cep.service';
 
 @Component({
     selector: 'app-parceiro-form-modal',
     templateUrl: './parceiro-form-modal.component.html',
-    styleUrls: ['./parceiro-form-modal.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations
 })
@@ -38,11 +38,14 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
     cargos: Cargo[];
     cargoId: number;
     selected: string = null; //Cargo Selecionado
+    estados = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
+        'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
     private parceiroUserPost = new ParceiroPost();
     private phoneArray = [];
     private user: Usuario;
     private cargoSub: Subscription;
     private userSub: Subscription;
+    private cepSub: Subscription;
 
     constructor(
         public dialog: MatDialog,
@@ -52,13 +55,21 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _parceiroServices: ParceiroService,
         private _authServices: AuthService,
+        private _cepService: CepService,
         private _storageServices: LocalStorageService
     ) {
     }
 
     ngOnDestroy(): void {
-        this.userSub.unsubscribe();
-        this.cargoSub.unsubscribe();
+        if(this.userSub){
+            this.userSub.unsubscribe();
+        }
+        if(this.cargoSub){
+            this.cargoSub.unsubscribe();
+        }
+        if(this.cepSub){
+            this.cepSub.unsubscribe();
+        }
     }
 
     ngOnInit(): void {
@@ -140,11 +151,14 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
      * @return void
      */
     addPhoneNumberField(): void {
-        // Cria um novo formGroup vazio
-        const phoneNumberFormGroup = this._formBuilder.group({
-            id: [0],
-            telefone: ['']
-        });
+
+        const phoneNumberFormGroup =  this._formBuilder.group({
+                telefone: ['', Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator
+                ])]
+            });
+
         // Adiciona o formGroup ao array de telefones
         (this.accountForm.get('telefones') as FormArray).push(phoneNumberFormGroup);
         this._changeDetectorRef.markForCheck();
@@ -154,13 +168,29 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
         this.cargoId = id;
     };
 
+    buscaCep(event): void {
+        if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
+            this.openSnackBar('Cep inválido');
+            return;
+        }
+        this.cepSub = this._cepService.buscar(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
+            this.accountForm.patchValue({
+                bairro: res.bairro,
+                enderecoLogradouro: res.logradouro,
+                cidade: res.localidade,
+                cep: res.cep,
+                uf: res.uf
+            });
+            this._changeDetectorRef.markForCheck();
+        });
+    }
+
     /**
      * Busca os cargos dos usuário do tipo edriving
      */
     private getCargos(): void {
         this.cargoSub = this._parceiroServices.getCargos().subscribe((res) => {
             this.cargos = res;
-            console.log(this.cargos);
             this._changeDetectorRef.markForCheck();
         }),
             catchError(res => of(res));
@@ -213,7 +243,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(8),
-                    Validators.maxLength(8),
+                    Validators.maxLength(10),
                     NgBrazilValidators.cep])],
             enderecoLogradouro: ['Logradouro',
                 Validators.compose([
@@ -227,6 +257,12 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
+            uf: ['Selecione', Validators.compose([
+                Validators.required,
+                Validators.nullValidator,
+                Validators.minLength(2),
+                Validators.maxLength(2)
+            ])],
             cidade: ['Cidade',
                 Validators.compose([
                     Validators.required,
@@ -244,7 +280,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                     Validators.required])],
             telefones: this._formBuilder.array([], Validators.compose([
                 Validators.required,
-                Validators.nullValidator
+                Validators.nullValidator,
             ])),
         });
 

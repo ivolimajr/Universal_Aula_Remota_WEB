@@ -47,11 +47,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         //Faz Login
         this.loginSub = this._authService.signIn(this.loginForm.value).subscribe((res) => {
-            if (res.status === 401) {
-                this.loginForm.enable();
-                return window.location.reload();
-            }
-
             if (res.error) {
                 this.openSnackBar(res.error.detail);
                 this.loginForm.enable();

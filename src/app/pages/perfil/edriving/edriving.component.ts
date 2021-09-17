@@ -121,16 +121,15 @@ export class EdrivingComponent implements OnInit, OnDestroy {
      */
     addPhoneNumberField(): void {
 
-        // Cria um novo formGroup vazio
-        const phoneNumberFormGroup = this._formBuilder.group({
-            id: [0],
-            telefone: ['']
+        const phoneNumberFormGroup =  this._formBuilder.group({
+            telefone: ['', Validators.compose([
+                Validators.required,
+                Validators.nullValidator
+            ])]
         });
 
         // Adiciona o formGroup ao array de telefones
         (this.accountForm.get('telefones') as FormArray).push(phoneNumberFormGroup);
-
-        // Marca as alterações
         this._changeDetectorRef.markForCheck();
     }
 

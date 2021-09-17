@@ -113,6 +113,7 @@
                                 matPrefix></mat-icon>
                             <input
                                 id="cep"
+                                (blur)="buscaCep($event.target)"
                                 matInput
                                 cep [textMask]="{mask: masks.cep.textMask}"
                                 [formControlName]="'cep'">
@@ -161,6 +162,24 @@
                         </mat-error>
                     </div>
                     <!--end:bairro-->
+                    <!--start: estado-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="uf">Estado</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:credit-card'"
+                                matPrefix></mat-icon>
+                            <mat-select [formControlName]="'uf'">
+                                <mat-option *ngFor="let item of estados" [value]="item">{{item}}</mat-option>
+                            </mat-select>
+
+                        </mat-form-field>
+                        <mat-error *ngIf="accountForm.get('cidade').hasError('cidade')">
+                            Insira um cidade válido
+                        </mat-error>
+                    </div>
+                    <!--end:cidade-->
                     <!--start: cidade-->
                     <div class="sm:col-span-4 mt-2.5">
                         <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">

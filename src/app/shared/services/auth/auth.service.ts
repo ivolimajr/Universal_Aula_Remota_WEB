@@ -95,7 +95,6 @@ export class AuthService {
     signOut(): Observable<boolean> {
         this.storageServices.removeFromStorage(environment.dataStorage);
         this.storageServices.removeFromStorage(environment.authStorage);
-        console.log('Deslogando');
         this._authenticated = false;
 
         return of(true);

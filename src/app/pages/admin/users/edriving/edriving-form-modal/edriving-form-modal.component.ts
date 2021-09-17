@@ -18,7 +18,6 @@ import {MASKS, NgBrazilValidators} from 'ng-brazil';
 @Component({
     selector: 'app-edrivin-form-modal',
     templateUrl: './edriving-form-modal.component.html',
-    styleUrls: ['./edriving-form-modal.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations
 })
@@ -143,11 +142,13 @@ export class EdrivingFormModalComponent implements OnInit {
      * @return void
      */
     addPhoneNumberField(): void {
-        // Cria um novo formGroup vazio
-        const phoneNumberFormGroup = this._formBuilder.group({
-            id: [0],
-            telefone: ['']
+        const phoneNumberFormGroup =  this._formBuilder.group({
+            telefone: ['', Validators.compose([
+                Validators.required,
+                Validators.nullValidator
+            ])]
         });
+
         // Adiciona o formGroup ao array de telefones
         (this.accountForm.get('telefones') as FormArray).push(phoneNumberFormGroup);
         this._changeDetectorRef.markForCheck();

@@ -53,14 +53,14 @@ export class EnderecoComponent implements OnInit, OnDestroy {
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
 
-    update(): void{
+    update(): void {
         this.addressForm.disable();
         //Verifica se o formulário é valido
         if (this.prepareFormToSend() === false) {
             return null;
         }
 
-        this.userSub = this._userService.updateAddress(this.enderecoUser).subscribe((res: any)=>{
+        this.userSub = this._userService.updateAddress(this.enderecoUser).subscribe((res: any) => {
             console.log(res);
             if (res.error) {
                 this.openSnackBar(res.error.detail, 'warn');
@@ -104,10 +104,10 @@ export class EnderecoComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if(this.cepSub){
+        if (this.cepSub) {
             this.cepSub.unsubscribe();
         }
-        if(this.userSub){
+        if (this.userSub) {
             this.userSub.unsubscribe();
         }
         this._changeDetectorRef.markForCheck();
@@ -149,9 +149,9 @@ export class EnderecoComponent implements OnInit, OnDestroy {
             cep: [this.enderecoUser.cep, Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
-                NgBrazilValidators.cep,
-                Validators.minLength(5),
-                Validators.maxLength(14)
+                Validators.minLength(8),
+                Validators.maxLength(10),
+                NgBrazilValidators.cep
             ])],
             enderecoLogradouro: [this.enderecoUser.enderecoLogradouro, Validators.compose([
                 Validators.required,
