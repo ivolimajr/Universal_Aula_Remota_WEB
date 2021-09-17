@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../../@fuse/components/alert';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -6,7 +6,7 @@ import {Cargo} from '../../../../../shared/models/cargo.model';
 import {ParceiroPost} from '../../../../../shared/models/parceiro.model';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {catchError} from 'rxjs/operators';
-import {of} from 'rxjs';
+import {of, Subscription} from 'rxjs';
 import {ParceiroService} from '../../../../../shared/services/http/parceiro.service';
 import {Usuario} from '../../../../../shared/models/usuario.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -22,7 +22,7 @@ import {MASKS, NgBrazilValidators} from 'ng-brazil';
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations
 })
-export class ParceiroFormModalComponent implements OnInit {
+export class ParceiroFormModalComponent implements OnInit, OnDestroy {
 
     alert: { type: FuseAlertType; message: string } = {
         type: 'error',
@@ -41,6 +41,8 @@ export class ParceiroFormModalComponent implements OnInit {
     private parceiroUserPost = new ParceiroPost();
     private phoneArray = [];
     private user: Usuario;
+    private cargoSub: Subscription;
+    private userSub: Subscription;
 
     constructor(
         public dialog: MatDialog,
@@ -52,6 +54,11 @@ export class ParceiroFormModalComponent implements OnInit {
         private _authServices: AuthService,
         private _storageServices: LocalStorageService
     ) {
+    }
+
+    ngOnDestroy(): void {
+        this.userSub.unsubscribe();
+        this.cargoSub.unsubscribe();
     }
 
     ngOnInit(): void {
@@ -73,7 +80,7 @@ export class ParceiroFormModalComponent implements OnInit {
             this._changeDetectorRef.markForCheck();
 
             if (this.id) {
-                this._parceiroServices.update(this.parceiroUserPost).subscribe((res: any) => {
+                this.userSub = this._parceiroServices.update(this.parceiroUserPost).subscribe((res: any) => {
                     if (res.error) {
                         this.openSnackBar(res.error, 'warn');
                         this.closeAlert();
@@ -91,7 +98,7 @@ export class ParceiroFormModalComponent implements OnInit {
                     return;
                 }), catchError(res => of(res));
             } else {
-                this._parceiroServices.create(this.parceiroUserPost).subscribe((res: any) => {
+                this.userSub = this._parceiroServices.create(this.parceiroUserPost).subscribe((res: any) => {
                     if (res.error) {
                         this.openSnackBar(res.error, 'warn');
                         this.closeAlert();
@@ -151,8 +158,7 @@ export class ParceiroFormModalComponent implements OnInit {
      * Busca os cargos dos usuário do tipo edriving
      */
     private getCargos(): void {
-        this._parceiroServices.getCargos().subscribe((res) => {
-            console.log(res);
+        this.cargoSub = this._parceiroServices.getCargos().subscribe((res) => {
             this.cargos = res;
             console.log(this.cargos);
             this._changeDetectorRef.markForCheck();

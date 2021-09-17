@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {cloneDeep} from 'lodash-es';
 import {FuseNavigationItem} from '@fuse/components/navigation';
 import {FuseMockApiService} from '@fuse/lib/mock-api';
@@ -13,6 +13,7 @@ import {AuthService} from '../../auth/auth.service';
     providedIn: 'root'
 })
 export class NavServices {
+    private _dataNavigation: FuseNavigationItem[] = [];
     private readonly _defaultNavigation: FuseNavigationItem[] = defaultNavigation;
     private readonly _plataformaNavigation: FuseNavigationItem[] = plataformaNavigation;
     private readonly _parceiroNavigation: FuseNavigationItem[] = parceiroNavigation;
@@ -25,11 +26,6 @@ export class NavServices {
         private _fuseMockApiService: FuseMockApiService,
         private _authServices: AuthService
     ) {
-        // Register Mock API handlers
-        if (this._authServices.getUserInfoFromStorage()) {
-            this.nivelAcesso = this._authServices.getUserInfoFromStorage().nivelAcesso;
-            console.log(this._authServices.getUserInfoFromStorage().nivelAcesso);
-        }
         this.registerHandlers();
     }
 
@@ -47,50 +43,45 @@ export class NavServices {
         this._fuseMockApiService
             .onGet('api/common/navigation')
             .reply(() => {
-                if(this._defaultNavigation.length === 1){
-                    //Montagem do menu para os usuário da plataforma do tipo Edriving
-                    if (this.nivelAcesso >= 10 && this.nivelAcesso < 20) {
-                        this._defaultNavigation.push(...this._plataformaNavigation);
-                        this._defaultNavigation.push(...this._parceiroNavigation);
-                        // Return the response
-                        return [
-                            200,
-                            {
-                                compact: cloneDeep(this._defaultNavigation),
-                                default: cloneDeep(this._defaultNavigation),
-                                futuristic: cloneDeep(this._defaultNavigation),
-                                horizontal: cloneDeep(this._defaultNavigation)
-                            }
-                        ];
-                    }
 
-                    //Montagem do menu para os usuários do tipo parceiro
-                    if (this.nivelAcesso >= 20 && this.nivelAcesso < 30) {
-                        this._defaultNavigation.push(...this._parceiroNavigation);
-                        // Return the response
-                        return [
-                            200,
-                            {
-                                compact: cloneDeep(this._defaultNavigation),
-                                default: cloneDeep(this._defaultNavigation),
-                                futuristic: cloneDeep(this._defaultNavigation),
-                                horizontal: cloneDeep(this._defaultNavigation)
-                            }
-                        ];
-                    }
+                this._dataNavigation = [];
 
-
+                if (this._authServices.getUserInfoFromStorage()) {
+                    this.nivelAcesso = this._authServices.getUserInfoFromStorage().nivelAcesso;
                 }
 
-                return [
-                    200,
-                    {
-                        compact: cloneDeep(this._defaultNavigation),
-                        default: cloneDeep(this._defaultNavigation),
-                        futuristic: cloneDeep(this._defaultNavigation),
-                        horizontal: cloneDeep(this._defaultNavigation)
-                    }
-                ];
+                //Montagem do menu para os usuário da plataforma do tipo Edriving
+                if (this.nivelAcesso >= 10 && this.nivelAcesso < 20) {
+                    this._dataNavigation.push(...this._defaultNavigation);
+                    this._dataNavigation.push(...this._plataformaNavigation);
+                    this._dataNavigation.push(...this._parceiroNavigation);
+                    // Return the response
+                    return [
+                        200,
+                        {
+                            compact: cloneDeep(this._dataNavigation),
+                            default: cloneDeep(this._dataNavigation),
+                            futuristic: cloneDeep(this._dataNavigation),
+                            horizontal: cloneDeep(this._dataNavigation)
+                        }
+                    ];
+                }
+
+                //Montagem do menu para os usuários do tipo parceiro
+                if (this.nivelAcesso >= 20 && this.nivelAcesso < 30) {
+                    this._dataNavigation.push(...this._defaultNavigation);
+                    this._dataNavigation.push(...this._parceiroNavigation);
+                    // Return the response
+                    return [
+                        200,
+                        {
+                            compact: cloneDeep(this._dataNavigation),
+                            default: cloneDeep(this._dataNavigation),
+                            futuristic: cloneDeep(this._dataNavigation),
+                            horizontal: cloneDeep(this._dataNavigation)
+                        }
+                    ];
+                }
             });
     }
 }

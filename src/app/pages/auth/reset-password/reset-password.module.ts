@@ -8,8 +8,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {FuseCardModule} from '@fuse/components/card';
 import {FuseAlertModule} from '@fuse/components/alert';
 import {SharedModule} from 'app/shared/shared.module';
-import {AuthResetPasswordComponent} from 'app/modules/auth/reset-password/reset-password.component';
-import {authResetPasswordRoutes} from 'app/modules/auth/reset-password/reset-password.routing';
+import {AuthResetPasswordComponent} from 'app/pages/auth/reset-password/reset-password.component';
+import {authResetPasswordRoutes} from 'app/pages/auth/reset-password/reset-password.routing';
 
 @NgModule({
     declarations: [

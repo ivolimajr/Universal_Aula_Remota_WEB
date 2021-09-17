@@ -24,15 +24,15 @@ export const appRoutes: Route[] = [
         children: [
             {
                 path: 'forgot-password',
-                loadChildren: () => import('app/modules/auth/forgot-password/forgot-password.module').then(m => m.AuthForgotPasswordModule)
+                loadChildren: () => import('app/pages/auth/forgot-password/forgot-password.module').then(m => m.AuthForgotPasswordModule)
             },
             {
                 path: 'reset-password',
-                loadChildren: () => import('app/modules/auth/reset-password/reset-password.module').then(m => m.AuthResetPasswordModule)
+                loadChildren: () => import('app/pages/auth/reset-password/reset-password.module').then(m => m.AuthResetPasswordModule)
             },
             {
                 path: 'login',
-                loadChildren: () => import('app/modules/auth/login/login.module').then(m => m.LoginModule)
+                loadChildren: () => import('app/pages/auth/login/login.module').then(m => m.LoginModule)
             }
         ]
     },
@@ -49,11 +49,11 @@ export const appRoutes: Route[] = [
         children: [
             {
                 path: 'sign-out',
-                loadChildren: () => import('app/modules/auth/sign-out/sign-out.module').then(m => m.AuthSignOutModule)
+                loadChildren: () => import('app/pages/auth/sign-out/sign-out.module').then(m => m.AuthSignOutModule)
             },
             {
                 path: 'unlock-session',
-                loadChildren: () => import('app/modules/auth/unlock-session/unlock-session.module').then(m => m.AuthUnlockSessionModule)
+                loadChildren: () => import('app/pages/auth/unlock-session/unlock-session.module').then(m => m.AuthUnlockSessionModule)
             }
         ]
     },
@@ -68,11 +68,11 @@ export const appRoutes: Route[] = [
             initialData: InitialDataResolver,
         },
         children: [
-            {path: 'inicio', loadChildren: () => import('app/modules/admin/home/home.module').then(m => m.HomeModule)},
-            {path: 'perfil', loadChildren: () => import('app/modules/perfil/perfil.module').then(m => m.PerfilModule)},
+            {path: 'inicio', loadChildren: () => import('app/pages/admin/home/home.module').then(m => m.HomeModule)},
+            {path: 'perfil', loadChildren: () => import('app/pages/perfil/perfil.module').then(m => m.PerfilModule)},
             {
                 path: 'usuario',
-                loadChildren: () => import('app/modules/admin/users/users.module').then(m => m.UsersModule)
+                loadChildren: () => import('app/pages/admin/users/users.module').then(m => m.UsersModule)
             },
         ]
     },

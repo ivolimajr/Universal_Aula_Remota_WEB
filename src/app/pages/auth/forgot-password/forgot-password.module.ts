@@ -8,15 +8,15 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {FuseCardModule} from '@fuse/components/card';
 import {FuseAlertModule} from '@fuse/components/alert';
 import {SharedModule} from 'app/shared/shared.module';
-import {AuthUnlockSessionComponent} from 'app/modules/auth/unlock-session/unlock-session.component';
-import {authUnlockSessionRoutes} from 'app/modules/auth/unlock-session/unlock-session.routing';
+import {AuthForgotPasswordComponent} from 'app/pages/auth/forgot-password/forgot-password.component';
+import {authForgotPasswordRoutes} from 'app/pages/auth/forgot-password/forgot-password.routing';
 
 @NgModule({
     declarations: [
-        AuthUnlockSessionComponent
+        AuthForgotPasswordComponent
     ],
     imports: [
-        RouterModule.forChild(authUnlockSessionRoutes),
+        RouterModule.forChild(authForgotPasswordRoutes),
         MatButtonModule,
         MatFormFieldModule,
         MatIconModule,
@@ -27,5 +27,5 @@ import {authUnlockSessionRoutes} from 'app/modules/auth/unlock-session/unlock-se
         SharedModule
     ]
 })
-export class AuthUnlockSessionModule {
+export class AuthForgotPasswordModule {
 }
