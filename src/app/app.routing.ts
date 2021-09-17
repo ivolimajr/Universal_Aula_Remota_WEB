@@ -9,8 +9,8 @@ import {InitialDataResolver} from 'app/app.resolvers';
 export const appRoutes: Route[] = [
 
     // Redirect empty path to '/home'
-    {path: '', pathMatch: 'full', redirectTo: 'usuario/edriving'},
-    {path: 'signed-in-redirect', pathMatch: 'full', redirectTo: 'usuario/edriving'},
+    {path: '', pathMatch: 'full', redirectTo: 'inicio'},
+    {path: 'signed-in-redirect', pathMatch: 'full', redirectTo: 'inicio'},
 
     // Auth routes for guests
     {
@@ -68,7 +68,7 @@ export const appRoutes: Route[] = [
             initialData: InitialDataResolver,
         },
         children: [
-            {path: 'example', loadChildren: () => import('app/modules/admin/home/home.module').then(m => m.HomeModule)},
+            {path: 'inicio', loadChildren: () => import('app/modules/admin/home/home.module').then(m => m.HomeModule)},
             {path: 'perfil', loadChildren: () => import('app/modules/perfil/perfil.module').then(m => m.PerfilModule)},
             {
                 path: 'usuario',

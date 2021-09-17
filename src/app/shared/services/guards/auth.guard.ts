@@ -18,18 +18,12 @@ import {switchMap} from 'rxjs/operators';
     providedIn: 'root'
 })
 export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
-    /**
-     * Constructor
-     */
+
     constructor(
         private _authService: AuthService,
         private _router: Router
     ) {
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
 
     /**
      * Can activate

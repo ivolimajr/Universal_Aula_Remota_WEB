@@ -9,15 +9,9 @@ import {InitialData} from 'app/app.types';
     providedIn: 'root'
 })
 export class InitialDataResolver implements Resolve<any> {
-    /**
-     * Constructor
-     */
+
     constructor(private _httpClient: HttpClient) {
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
 
     /**
      * Use this resolver to resolve initial mock-api for the application

@@ -47,6 +47,11 @@ export class LoginComponent implements OnInit, OnDestroy {
 
         //Faz Login
         this.loginSub = this._authService.signIn(this.loginForm.value).subscribe((res) => {
+            if (res.status === 401) {
+                this.loginForm.enable();
+                return window.location.reload();
+            }
+
             if (res.error) {
                 this.openSnackBar(res.error.detail);
                 this.loginForm.enable();
@@ -58,7 +63,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if(this.loginSub){
+        if (this.loginSub) {
             this.loginSub.unsubscribe();
         }
     }
@@ -72,7 +77,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private prepareForm(): void {
         this.userStorage = this._authService.getLoginFromStorage();
         this.loginForm = this._formBuilder.group({
-            email: ['@EDRIVING.COM',
+            email: ['PLATAFORMA@EDRIVING.COM',
                 Validators.compose([
                     Validators.required,
                     Validators.email,
@@ -90,10 +95,9 @@ export class LoginComponent implements OnInit, OnDestroy {
         });
     }
 
-
     private openSnackBar(message: string): void {
-        this._snackBar.open(message,'',{
-            duration: 5*1000,
+        this._snackBar.open(message, '', {
+            duration: 5 * 1000,
             horizontalPosition: 'center',
             verticalPosition: 'top',
             panelClass: ['mat-toolbar', 'mat-accent']

@@ -7,6 +7,7 @@ import {LocalStorageService} from '../storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
 import {Usuario, UsuarioLogin} from '../../models/usuario.model';
 import {TokenResult} from 'app/shared/models/token.model';
+import {NavServices} from "../initialData/navigation/navService";
 
 const API_TOKEN_URL = `${environment.apiUrl}/Auth/getToken`;
 const API_LOGIN_URL = `${environment.apiUrl}/Usuario/Login`;
@@ -62,13 +63,13 @@ export class AuthService {
 
         return this._httpClient.post(API_LOGIN_URL, credentials).pipe(
             switchMap((response: any) => {
+                this.storageServices.setValueFromLocalStorage(environment.authStorage, response);
+
                 //Define os atributos de login e senha para salvar no Storage para verificações.
                 this.userLogin.email = credentials.email;
                 this.userLogin.password = credentials.password;
-
                 //Salva os dados no storage
                 this.storageServices.setValueFromLocalStorage(environment.dataStorage, this.userLogin);
-                this.storageServices.setValueFromLocalStorage(environment.authStorage, response);
 
                 //Define autenticado
                 this._authenticated = true;
@@ -94,7 +95,7 @@ export class AuthService {
     signOut(): Observable<boolean> {
         this.storageServices.removeFromStorage(environment.dataStorage);
         this.storageServices.removeFromStorage(environment.authStorage);
-        console.log("Deslogando");
+        console.log('Deslogando');
         this._authenticated = false;
 
         return of(true);
@@ -182,7 +183,7 @@ export class AuthService {
      * @param model de Usuario
      */
     set user(value: Usuario) {
-        if (value) this.storageServices.setValueFromLocalStorage(environment.authStorage, value);
+        if (value) {this.storageServices.setValueFromLocalStorage(environment.authStorage, value);}
         this._user.next(value);
     }
 
