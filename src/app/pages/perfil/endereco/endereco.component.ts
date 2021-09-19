@@ -140,7 +140,7 @@ export class EnderecoComponent implements OnInit, OnDestroy {
     private prepareForm(): void {
         this.addressForm = this._formBuilder.group({
             id: [this.enderecoUser.id],
-            uf: [this.enderecoUser, Validators.compose([
+            uf: [this.enderecoUser.uf, Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
                 Validators.minLength(2),

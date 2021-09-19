@@ -11,6 +11,8 @@ import { ParceiroComponent } from './parceiro/parceiro.component';
 import { ParceiroFormModalComponent } from './parceiro/parceiro-form-modal/parceiro-form-modal.component';
 import {CustomMaterialModule} from '../../../shared/material.module';
 import {TextMaskModule} from 'angular2-text-mask';
+import { AutoescolaComponent } from './autoescola/autoescola.component';
+import { AutoescolaFormModalComponent } from './autoescola/autoescola-form-modal/autoescola-form-modal.component';
 
 
 @NgModule({
@@ -19,7 +21,9 @@ import {TextMaskModule} from 'angular2-text-mask';
         EdrivingFormModalComponent,
         AlertModalComponent,
         ParceiroComponent,
-        ParceiroFormModalComponent
+        ParceiroFormModalComponent,
+        AutoescolaComponent,
+        AutoescolaFormModalComponent
     ],
     imports: [
         RouterModule.forChild(usersRouting),

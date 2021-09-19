@@ -14,33 +14,7 @@
 
         <!-- Section -->
         <div class="grid grid-cols-4 gap-6 w-full mt-8">
-            <!-- Card holder -->
-            <div class="col-span-4">
-                <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>Endereço</mat-label>
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:hashtag'"
-                        matPrefix></mat-icon>
-                    <input
-                        [formControlName]="'enderecoLogradouro'"
-                        matInput>
-                </mat-form-field>
-            </div>
-            <!-- Card number -->
-            <div class="col-span-4 sm:col-span-2">
-                <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label>Bairro</mat-label>
-                    <mat-icon
-                        class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:credit-card'"
-                        matPrefix></mat-icon>
-                    <input
-                        [formControlName]="'bairro'"
-                        matInput>
-                </mat-form-field>
-            </div>
-            <!-- Card expiration -->
+            <!--start:cep-->
             <div class="col-span-2 sm:col-span-1">
                 <mat-form-field
                     class="fuse-mat-no-subscript w-full"
@@ -48,7 +22,7 @@
                     <mat-label>CEP</mat-label>
                     <mat-icon
                         class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:calendar'"
+                        [svgIcon]="'heroicons_solid:hashtag'"
                         matPrefix></mat-icon>
                     <input
                         (blur)="buscaCep($event.target)"
@@ -57,20 +31,50 @@
                         matInput>
                 </mat-form-field>
             </div>
-            <!-- Card CVC -->
+            <!--end:cep-->
+            <!-- start:enderecoLogradouro -->
+            <div class="col-span-4 sm:col-span-3">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Endereço</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:location-marker'"
+                        matPrefix></mat-icon>
+                    <input
+                        [formControlName]="'enderecoLogradouro'"
+                        matInput>
+                </mat-form-field>
+            </div>
+            <!--end:enderecoLogradouro-->
+            <!--start:bairro-->
+            <div class="col-span-4 sm:col-span-3">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Bairro</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:home'"
+                        matPrefix></mat-icon>
+                    <input
+                        [formControlName]="'bairro'"
+                        matInput>
+                </mat-form-field>
+            </div>
+            <!--end:bairro-->
+            <!--start:numero-->
             <div class="col-span-2 sm:col-span-1">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Número</mat-label>
                     <mat-icon
                         class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:lock-closed'"
+                        [svgIcon]="'heroicons_solid:annotation'"
                         matPrefix></mat-icon>
                     <input
                         [formControlName]="'numero'"
                         matInput>
                 </mat-form-field>
             </div>
-            <!-- Country -->
+            <!--end:numero-->
+            <!--start:uf-->
             <div class="col-span-4 sm:col-span-2">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>UF</mat-label>
@@ -83,17 +87,19 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <!-- ZIP -->
+            <!--end:uf-->
+            <!--start:cidade-->
             <div class="col-span-4 sm:col-span-2">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Cidade</mat-label>
                     <mat-icon
                         class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:hashtag'"
+                        [svgIcon]="'heroicons_solid:map'"
                         matPrefix></mat-icon>
                     <input matInput [formControlName]="'cidade'">
                 </mat-form-field>
             </div>
+            <!--end:cidade-->
         </div>
 
         <!-- Divider -->

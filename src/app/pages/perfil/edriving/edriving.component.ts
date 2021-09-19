@@ -67,10 +67,11 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         if (this.prepareFormToSend() === false) {
             return null;
         }
-
+        this.accountForm.disable();
         this.userSub = this._edrivingServices.update(this.edrivingUserPost).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
+                this.accountForm.enable();
                 this.openSnackBar(res.error.detail, 'warn');
                 this._changeDetectorRef.markForCheck();
                 return;
@@ -109,6 +110,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
 
             //Retorna a mensagem de atualizado
             this.openSnackBar('Atualizado');
+            this.accountForm.enable();
             this._changeDetectorRef.markForCheck();
         });
 

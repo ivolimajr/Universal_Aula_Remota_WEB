@@ -18,15 +18,22 @@ export const plataformaNavigation: FuseNavigationItem[] =[
         type: 'basic',
         icon: 'heroicons_outline:academic-cap',
         link: '/usuario/edriving'
-    }
-];
-
-export const parceiroNavigation: FuseNavigationItem[] =[
+    },
     {
         id: 'parceiro',
         title: 'Parceiros',
         type: 'basic',
         icon: 'heroicons_outline:user-group',
         link: '/usuario/parceiro'
+    }
+];
+
+export const parceiroNavigation: FuseNavigationItem[] =[
+    {
+        id: 'autoescola',
+        title: 'auto-escola',
+        type: 'basic',
+        icon: 'heroicons_outline:user-group',
+        link: '/usuario/auto-escola'
     }
 ];

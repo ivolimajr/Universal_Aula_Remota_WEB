@@ -10,13 +10,12 @@ import {
 import {fuseAnimations} from '../../../../@fuse/animations';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Usuario} from '../../../shared/models/usuario.model';
-import {MASKS, NgBrazilValidators} from 'ng-brazil';
+import {MASKS} from 'ng-brazil';
 import {ParceiroPost, ParceiroUsuario} from '../../../shared/models/parceiro.model';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {UserService} from '../../../shared/services/http/user.service';
 import {AuthService} from '../../../shared/services/auth/auth.service';
-import {EdrivingService} from '../../../shared/services/http/edriving.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
 import {ParceiroService} from '../../../shared/services/http/parceiro.service';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
@@ -69,11 +68,12 @@ export class ParceiroComponent implements OnInit, OnDestroy {
         if (this.checkFormToSend() === false) {
             return null;
         }
-
+    this.accountForm.disable();
         this.userSub = this._parceiroServices.update(this.parceiroUserPost).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
                 this.openSnackBar(res.error.detail, 'warn');
+                this.accountForm.enable();
                 this._changeDetectorRef.markForCheck();
                 return;
             }
@@ -111,6 +111,7 @@ export class ParceiroComponent implements OnInit, OnDestroy {
 
             //Retorna a mensagem de atualizado
             this.openSnackBar('Atualizado');
+            this.accountForm.enable();
             this._changeDetectorRef.markForCheck();
         });
 

@@ -66,15 +66,19 @@ export class AlteraSenhaComponent implements OnInit, OnDestroy {
             this.setAlert('Dados Inválidos.');
             return;
         }
+
+        this.securityForm.disable();
         //Verifica se a senha atual confere
         const formData = this.securityForm.value;
         if (formData.senhaAtual !== this._authServices.getLoginFromStorage().password) {
             this.setAlert('Senha atual não confere');
+            this.securityForm.enable();
             return;
         }
         //atualiza a senha na API
         this.authSub = this._userServices.updatePassById(this.securityForm.value).subscribe((val) => {
             this.setAlert('Senha Atualizada', 'success');
+            this.securityForm.enable();
             //Atualiza a senha no localStorage
             this.loginUser.email = this._authServices.getUserInfoFromStorage().email;
             this.loginUser.password = formData.currentPassword;
