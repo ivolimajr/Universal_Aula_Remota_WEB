@@ -8,19 +8,19 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {fuseAnimations} from '@fuse/animations';
+import {MatDialog} from '@angular/material/dialog';
+import {MASKS, NgBrazilValidators} from 'ng-brazil';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {Subscription} from 'rxjs';
 import {EdrivingPost, EdrivingUsuario} from '../../../shared/models/edriving.model';
 import {UserService} from '../../../shared/services/http/user.service';
 import {EdrivingService} from '../../../shared/services/http/edriving.service';
-import {fuseAnimations} from '@fuse/animations';
 import {Usuario} from '../../../shared/models/usuario.model';
 import {AuthService} from '../../../shared/services/auth/auth.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
-import {MatDialog} from '@angular/material/dialog';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
-import {MASKS, NgBrazilValidators} from 'ng-brazil';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-edriving',

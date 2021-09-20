@@ -1,6 +1,6 @@
 <div mat-dialog-content>
     <fuse-card class="flex-col w-full max-w-300 p-6 sm:py-12 sm:px-10 filter-pricing border-2 border-gray-100">
-        <ng-container *ngIf="!id; else editMode">
+        <ng-container *ngIf="!userEdit; else editMode">
             <div class="text-3xl font-bold tracking-tight leading-tight">Novo Usuário</div>
             <div class="mt-2 text-md font-medium tracking-tight text-secondary">Vocês está cadastrando um novo parceiro
                 da Plataforma

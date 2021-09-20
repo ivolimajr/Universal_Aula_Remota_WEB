@@ -1,19 +1,18 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {of, Subscription} from 'rxjs';
+import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../../@fuse/components/alert';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {EdrivingPost} from 'app/shared/models/edriving.model';
+import {EdrivingPost, EdrivingUsuario} from 'app/shared/models/edriving.model';
 import {EdrivingService} from '../../../../../shared/services/http/edriving.service';
-import {catchError} from 'rxjs/operators';
-import {of} from 'rxjs';
 import {Cargo} from '../../../../../shared/models/cargo.model';
 import {LocalStorageService} from '../../../../../shared/services/storage/localStorage.service';
 import {Usuario} from '../../../../../shared/models/usuario.model';
 import {environment} from '../../../../../../environments/environment';
 import {AuthService} from '../../../../../shared/services/auth/auth.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {MASKS, NgBrazilValidators} from 'ng-brazil';
 
 @Component({
     selector: 'app-edrivin-form-modal',
@@ -21,7 +20,7 @@ import {MASKS, NgBrazilValidators} from 'ng-brazil';
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations
 })
-export class EdrivingFormModalComponent implements OnInit {
+export class EdrivingFormModalComponent implements OnInit, OnDestroy {
 
     alert: { type: FuseAlertType; message: string } = {
         type: 'error',
@@ -29,7 +28,7 @@ export class EdrivingFormModalComponent implements OnInit {
     };
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    @Input() id: number; //Se vier um ID, exibir e atualizar o usuário
+    @Input() userEdit: EdrivingUsuario; //Se vier um ID, exibir e atualizar o usuário
     accountForm: FormGroup;
     masks = MASKS;
     loading: boolean = true; //Inicia o componente com um lading
@@ -40,6 +39,8 @@ export class EdrivingFormModalComponent implements OnInit {
     private edrivingUserPost = new EdrivingPost(); //Objeto para envio dos dados para API
     private phoneArray = [];
     private user: Usuario;
+    private userSub: Subscription;
+    private cargoSub: Subscription;
 
     constructor(
         public dialog: MatDialog,
@@ -80,15 +81,15 @@ export class EdrivingFormModalComponent implements OnInit {
             this._changeDetectorRef.markForCheck();
 
             //Atualiza o usuário
-            if (this.id) {
-                this._edrivingServices.update(this.edrivingUserPost).subscribe((res: any) => {
+            if (this.userEdit) {
+                this.userSub = this._edrivingServices.update(this.edrivingUserPost).subscribe((res: any) => {
                     if (res.error) {
                         this.openSnackBar(res.error, 'warn');
                         this.closeAlert();
                         return;
                     }
                     //Se o usuário a ser atualizado for o usuário logado, atualiza os dados na storage
-                    if (this.id === this._authServices.getUserInfoFromStorage().id) {
+                    if (this.userEdit.id === this._authServices.getUserInfoFromStorage().id) {
                         this.user = this._authServices.getUserInfoFromStorage();
                         this.user.nome = res.nome;
                         this.user.email = res.email;
@@ -97,10 +98,11 @@ export class EdrivingFormModalComponent implements OnInit {
                     this.closeAlert();
                     this.dialogRef.close(res);
                     return;
-                }), catchError(res => of(res));
+                });
             } else {
                 //Cria um usuário
-                this._edrivingServices.create(this.edrivingUserPost).subscribe((res: any) => {
+                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                this.userSub = this._edrivingServices.create(this.edrivingUserPost).subscribe((res: any) => {
                     if (res.error) {
                         this.openSnackBar(res.error, 'warn');
                         this.closeAlert();
@@ -108,7 +110,7 @@ export class EdrivingFormModalComponent implements OnInit {
                     }
                     this.closeAlert();
                     this.dialogRef.close(res);
-                }), catchError(res => of(res));
+                });
             }
         }
     }
@@ -158,15 +160,23 @@ export class EdrivingFormModalComponent implements OnInit {
         this.cargoId = id;
     };
 
+    ngOnDestroy(): void {
+        if(this.userSub){
+            this.userSub.unsubscribe();
+        }
+        if(this.cargoSub){
+            this.cargoSub.unsubscribe();
+        }
+    }
+
     /**
      * Busca os cargos dos usuário do tipo edriving
      */
     private getCargos(): void {
-        this._edrivingServices.getCargos().subscribe((res) => {
+        this.cargoSub = this._edrivingServices.getCargos().subscribe((res) => {
             this.cargos = res;
             this._changeDetectorRef.markForCheck();
-        }),
-            catchError(res => of(res));
+        });
     }
 
     /**
@@ -179,7 +189,7 @@ export class EdrivingFormModalComponent implements OnInit {
      */
     private prepareForm(): void {
         //Cria um formulário para exibição e atualização de um usuário
-        if (this.id !== null) {
+        if (this.userEdit !== null) {
             this.prepareEditForm();
             return;
         }
@@ -257,10 +267,10 @@ export class EdrivingFormModalComponent implements OnInit {
             result = false;
         }
 
-        if (this.id) {
-            this.edrivingUserPost.id = this.id;
+        if (this.userEdit.id) {
+            this.edrivingUserPost.id = this.userEdit.id;
         }
-        if (!this.id) {
+        if (!this.userEdit) {
             this.edrivingUserPost.senha = 'Pay@2021';
         }
         this.edrivingUserPost.nome = formData.nome;
@@ -282,22 +292,21 @@ export class EdrivingFormModalComponent implements OnInit {
         this.message = 'Buscando dados.';
         this._changeDetectorRef.markForCheck();
 
-        this._edrivingServices.getOne(this.id).subscribe((res) => {
             this.accountForm = this._formBuilder.group({
-                nome: [res.nome,
+                nome: [this.userEdit.nome,
                     Validators.compose([
                         Validators.required,
                         Validators.nullValidator,
                         Validators.minLength(5),
                         Validators.maxLength(100)]
                     )],
-                cpf: [res.cpf,
+                cpf: [this.userEdit.cpf,
                     Validators.compose([
                         Validators.required,
                         Validators.nullValidator,
                         Validators.minLength(11),
                         Validators.maxLength(11)])],
-                email: [res.email,
+                email: [this.userEdit.email,
                     Validators.compose([
                         Validators.required,
                         Validators.nullValidator,
@@ -308,13 +317,13 @@ export class EdrivingFormModalComponent implements OnInit {
                     Validators.nullValidator
                 ])),
             });
-            this.cargoId = res.cargoId;
-            this.selected = res.cargo.id.toString();
+            this.cargoId = this.userEdit.cargoId;
+            this.selected = this.userEdit.cargo.id.toString();
 
             //Só monta o array de telefones se houver telefones de contato cadastrado
-            if (res.telefones.length > 0) {
+            if (this.userEdit.telefones.length > 0) {
                 // Iterate through them
-                res.telefones.forEach((phoneNumber) => {
+                this.userEdit.telefones.forEach((phoneNumber) => {
 
                     //Cria um formGroup de telefone
                     this.phoneArray.push(
@@ -342,10 +351,9 @@ export class EdrivingFormModalComponent implements OnInit {
             this.phoneArray.forEach((phoneNumbersFormGroup) => {
                 (this.accountForm.get('telefones') as FormArray).push(phoneNumbersFormGroup);
             });
-            this.edrivingUserPost.id = res.id;
+            this.edrivingUserPost.id = this.userEdit.id;
             this.closeAlert();
             this.phoneArray = [];
-        });
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {

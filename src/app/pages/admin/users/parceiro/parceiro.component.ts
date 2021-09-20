@@ -1,17 +1,17 @@
 import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatSort} from '@angular/material/sort';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {Subscription} from 'rxjs';
 import {ParceiroUsuario} from '../../../../shared/models/parceiro.model';
 import {fuseAnimations} from '../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../@fuse/components/alert';
 import {MatTable, MatTableDataSource} from '@angular/material/table';
-import {MatSort} from '@angular/material/sort';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatDialog} from '@angular/material/dialog';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
 import {ParceiroService} from '../../../../shared/services/http/parceiro.service';
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
 import {ParceiroFormModalComponent} from './parceiro-form-modal/parceiro-form-modal.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {Subscription} from 'rxjs';
 
 
 const ELEMENT_DATA: ParceiroUsuario[] = [];
@@ -67,12 +67,12 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
      * @param id -> se tiver ID exibe e atualiza, caso contrário, adiciona
      * @return void
      */
-    setUser(id: number): void {
+    setUser(user: ParceiroUsuario): void {
 
         //Atualiza um usuário
-        if (id) {
+        if (user) {
             const dialogRef = this.dialog.open(ParceiroFormModalComponent);
-            dialogRef.componentInstance.id = id;
+            dialogRef.componentInstance.userEdit = user;
             dialogRef.afterClosed().subscribe((result) => {
                 if (result) {
                     this.openSnackBar('Atualizado');
@@ -83,7 +83,7 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
             //Cria um usuário
             this.showAlert = false;
             const dialogRef = this.dialog.open(ParceiroFormModalComponent);
-            dialogRef.componentInstance.id = id;
+            dialogRef.componentInstance.userEdit = user;
             dialogRef.afterClosed().subscribe((result) => {
                 if(result){
                     this.dataSource.data = [...this.dataSource.data,result];

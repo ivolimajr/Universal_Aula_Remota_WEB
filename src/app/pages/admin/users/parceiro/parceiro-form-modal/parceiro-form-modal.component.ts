@@ -1,19 +1,18 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {Subscription} from 'rxjs';
+import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../../@fuse/components/alert';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Cargo} from '../../../../../shared/models/cargo.model';
-import {ParceiroPost} from '../../../../../shared/models/parceiro.model';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {catchError} from 'rxjs/operators';
-import {of, Subscription} from 'rxjs';
+import {ParceiroPost, ParceiroUsuario} from '../../../../../shared/models/parceiro.model';
 import {ParceiroService} from '../../../../../shared/services/http/parceiro.service';
 import {Usuario} from '../../../../../shared/models/usuario.model';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {LocalStorageService} from '../../../../../shared/services/storage/localStorage.service';
 import {AuthService} from '../../../../../shared/services/auth/auth.service';
 import {environment} from '../../../../../../environments/environment';
-import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {CepService} from '../../../../../shared/services/http/cep.service';
 
 @Component({
@@ -30,7 +29,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
     };
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    @Input() id: number; //Se vier um ID, exibir e atualizar o usuário
+    @Input() userEdit: ParceiroUsuario; //Se vier um ID, exibir e atualizar o usuário
     accountForm: FormGroup;
     masks = MASKS;
     loading: boolean = true; //Inicia o componente com um lading
@@ -61,13 +60,13 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if(this.userSub){
+        if (this.userSub) {
             this.userSub.unsubscribe();
         }
-        if(this.cargoSub){
+        if (this.cargoSub) {
             this.cargoSub.unsubscribe();
         }
-        if(this.cepSub){
+        if (this.cepSub) {
             this.cepSub.unsubscribe();
         }
     }
@@ -90,7 +89,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
             this.message = 'Salvando';
             this._changeDetectorRef.markForCheck();
 
-            if (this.id) {
+            if (this.userEdit) {
                 this.userSub = this._parceiroServices.update(this.parceiroUserPost).subscribe((res: any) => {
                     if (res.error) {
                         this.openSnackBar(res.error, 'warn');
@@ -98,7 +97,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                         return;
                     }
                     //Se o usuário a ser atualizado for o usuário logado, atualiza os dados na storage
-                    if (this.id === this._authServices.getUserInfoFromStorage().id) {
+                    if (this.userEdit.id === this._authServices.getUserInfoFromStorage().id) {
                         this.user = this._authServices.getUserInfoFromStorage();
                         this.user.nome = res.nome;
                         this.user.email = res.email;
@@ -107,7 +106,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                     this.closeAlert();
                     this.dialogRef.close(res);
                     return;
-                }), catchError(res => of(res));
+                });
             } else {
                 this.userSub = this._parceiroServices.create(this.parceiroUserPost).subscribe((res: any) => {
                     if (res.error) {
@@ -117,7 +116,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                     }
                     this.closeAlert();
                     this.dialogRef.close(res);
-                }), catchError(res => of(res));
+                });
             }
         }
     }
@@ -152,12 +151,12 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
      */
     addPhoneNumberField(): void {
 
-        const phoneNumberFormGroup =  this._formBuilder.group({
-                telefone: ['', Validators.compose([
-                    Validators.required,
-                    Validators.nullValidator
-                ])]
-            });
+        const phoneNumberFormGroup = this._formBuilder.group({
+            telefone: ['', Validators.compose([
+                Validators.required,
+                Validators.nullValidator
+            ])]
+        });
 
         // Adiciona o formGroup ao array de telefones
         (this.accountForm.get('telefones') as FormArray).push(phoneNumberFormGroup);
@@ -192,8 +191,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
         this.cargoSub = this._parceiroServices.getCargos().subscribe((res) => {
             this.cargos = res;
             this._changeDetectorRef.markForCheck();
-        }),
-            catchError(res => of(res));
+        });
     }
 
     /**
@@ -206,70 +204,70 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
      */
     private prepareForm(): void {
         //Cria um formulário para exibição e atualização de um usuário
-        if (this.id !== null) {
+        if (this.userEdit !== null) {
             this.prepareEditForm();
             return;
         }
 
         //Cria um formulário para adição de um usuário
         this.accountForm = this._formBuilder.group({
-            nome: ['DETRAN',
+            nome: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(100)]
                 )],
-            email: ['parceiro@edriving.com',
+            email: ['@edriving.com',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(70)])],
-            cnpj: ['00000000002000',
+            cnpj: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(14),
                     Validators.maxLength(14)])],
-            descricao: ['Descrição qualquer',
+            descricao: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(100)])],
-            cep: ['72235621',
+            cep: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(8),
                     Validators.maxLength(10),
                     NgBrazilValidators.cep])],
-            enderecoLogradouro: ['Logradouro',
+            enderecoLogradouro: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
-            bairro: ['Bairro',
+            bairro: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
-            uf: ['Selecione', Validators.compose([
+            uf: ['', Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
                 Validators.minLength(2),
                 Validators.maxLength(2)
             ])],
-            cidade: ['Cidade',
+            cidade: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
-            numero: ['01',
+            numero: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -328,10 +326,10 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
             result = false;
         }
 
-        if (this.id) {
-            this.parceiroUserPost.id = this.id;
+        if (this.userEdit) {
+            this.parceiroUserPost.id = this.userEdit.id;
         }
-        if (!this.id) {
+        if (!this.userEdit) {
             this.parceiroUserPost.senha = 'Pay@2021';
         }
 
@@ -361,112 +359,116 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
         this.message = 'Buscando dados.';
         this._changeDetectorRef.markForCheck();
 
-        this._parceiroServices.getOne(this.id).subscribe((res) => {
-            this.accountForm = this._formBuilder.group({
-                nome: [res.nome,
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(5),
-                        Validators.maxLength(100)]
-                    )],
-                email: [res.email,
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(5),
-                        Validators.maxLength(70)])],
-                cnpj: [res.cnpj,
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(14),
-                        Validators.maxLength(14)])],
-                descricao: [res.descricao,
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(5),
-                        Validators.maxLength(100)])],
-                cep: [res.endereco.cep,
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(8),
-                        Validators.maxLength(8),
-                        NgBrazilValidators.cep])],
-                enderecoLogradouro: [res.endereco.enderecoLogradouro,
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(3),
-                        Validators.maxLength(150)])],
-                bairro: [res.endereco.bairro,
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(3),
-                        Validators.maxLength(150)])],
-                cidade: [res.endereco.cidade,
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(3),
-                        Validators.maxLength(150)])],
-                numero: [res.endereco.numero,
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(1),
-                        Validators.maxLength(50)])],
-                cargoId: [res.cargoId,
-                    Validators.compose([
-                        Validators.required])],
-                telefones: this._formBuilder.array([], Validators.compose([
+        this.accountForm = this._formBuilder.group({
+            nome: [this.userEdit.nome,
+                Validators.compose([
                     Validators.required,
-                    Validators.nullValidator
-                ])),
-            });
+                    Validators.nullValidator,
+                    Validators.minLength(5),
+                    Validators.maxLength(100)]
+                )],
+            email: [this.userEdit.email,
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(5),
+                    Validators.maxLength(70)])],
+            cnpj: [this.userEdit.cnpj,
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(14),
+                    Validators.maxLength(14)])],
+            descricao: [this.userEdit.descricao,
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(5),
+                    Validators.maxLength(100)])],
+            cep: [this.userEdit.endereco.cep,
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(8),
+                    Validators.maxLength(8),
+                    NgBrazilValidators.cep])],
+            uf: [this.userEdit.endereco.uf, Validators.compose([
+                Validators.required,
+                Validators.nullValidator,
+                Validators.minLength(2),
+                Validators.maxLength(2)
+            ])],
+            enderecoLogradouro: [this.userEdit.endereco.enderecoLogradouro,
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(3),
+                    Validators.maxLength(150)])],
+            bairro: [this.userEdit.endereco.bairro,
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(3),
+                    Validators.maxLength(150)])],
+            cidade: [this.userEdit.endereco.cidade,
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(3),
+                    Validators.maxLength(150)])],
+            numero: [this.userEdit.endereco.numero,
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(1),
+                    Validators.maxLength(50)])],
+            cargoId: [this.userEdit.cargoId,
+                Validators.compose([
+                    Validators.required])],
+            telefones: this._formBuilder.array([], Validators.compose([
+                Validators.required,
+                Validators.nullValidator
+            ])),
+        });
 
-            this.cargoId = res.cargoId;
-            this.selected = res.cargo.id.toString();
+        this.cargoId = this.userEdit.cargoId;
+        this.selected = this.userEdit.cargo.id.toString();
 
-            //Só monta o array de telefones se houver telefones de contato cadastrado
-            if (res.telefones.length > 0) {
-                // Iterate through them
-                res.telefones.forEach((phoneNumber) => {
+        //Só monta o array de telefones se houver telefones de contato cadastrado
+        if (this.userEdit.telefones.length > 0) {
+            // Iterate through them
+            this.userEdit.telefones.forEach((phoneNumber) => {
 
-                    //Cria um formGroup de telefone
-                    this.phoneArray.push(
-                        this._formBuilder.group({
-                            id: [phoneNumber.id],
-                            telefone: [phoneNumber.telefone,Validators.compose([
-                                Validators.required,
-                                Validators.nullValidator
-                            ])]
-                        }));
-                });
-            } else {
-                // Create a phone number form group
+                //Cria um formGroup de telefone
                 this.phoneArray.push(
                     this._formBuilder.group({
-                        id: [0],
-                        telefone: ['', Validators.compose([
+                        id: [phoneNumber.id],
+                        telefone: [phoneNumber.telefone, Validators.compose([
                             Validators.required,
                             Validators.nullValidator
                         ])]
-                    })
-                );
-            }
-
-            // Adiciona o array de telefones ao fomrGroup
-            this.phoneArray.forEach((phoneNumbersFormGroup) => {
-                (this.accountForm.get('telefones') as FormArray).push(phoneNumbersFormGroup);
+                    }));
             });
-            this.parceiroUserPost.id = res.id;
-            this.closeAlert();
-            this.phoneArray = [];
+        } else {
+            // Create a phone number form group
+            this.phoneArray.push(
+                this._formBuilder.group({
+                    id: [0],
+                    telefone: ['', Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator
+                    ])]
+                })
+            );
+        }
+
+        // Adiciona o array de telefones ao fomrGroup
+        this.phoneArray.forEach((phoneNumbersFormGroup) => {
+            (this.accountForm.get('telefones') as FormArray).push(phoneNumbersFormGroup);
         });
+        this.parceiroUserPost.id = this.userEdit.id;
+        this.closeAlert();
+        this.phoneArray = [];
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {

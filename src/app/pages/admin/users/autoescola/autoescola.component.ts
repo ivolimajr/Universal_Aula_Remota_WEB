@@ -1,17 +1,18 @@
 import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {fuseAnimations} from '../../../../../@fuse/animations';
-import {FuseAlertType} from '../../../../../@fuse/components/alert';
 import {MatTable, MatTableDataSource} from '@angular/material/table';
-import {Subscription} from 'rxjs';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {Subscription} from 'rxjs';
+import {fuseAnimations} from '../../../../../@fuse/animations';
+import {FuseAlertType} from '../../../../../@fuse/components/alert';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
 import {AutoescolaService} from '../../../../shared/services/http/autoescola.service';
-import {AutoescolaFormModalComponent} from './autoescola-form-modal/autoescola-form-modal.component';
+import {AutoescolaFormComponent} from './autoescola-form-modal/autoescola-form.component';
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
 import {AutoEscolaUsuario} from '../../../../shared/models/autoEscola.model';
+import {Router} from "@angular/router";
 
 const ELEMENT_DATA: AutoEscolaUsuario[] = [];
 
@@ -28,7 +29,7 @@ export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
         message: ''
     };
 
-    displayedColumns: string[] = ['nome', 'email', 'id'];
+    displayedColumns: string[] = ['razaoSocial', 'email', 'id'];
     dataSource = new MatTableDataSource<AutoEscolaUsuario>(ELEMENT_DATA);
     loading: boolean = true;
     showAlert: boolean = false;
@@ -48,6 +49,7 @@ export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
       private _snackBar: MatSnackBar,
       private _authServices: AuthService,
       private _changeDetectorRef: ChangeDetectorRef,
+      private _router: Router,
       private _autoEscolaServices: AutoescolaService
       ) { }
 
@@ -65,30 +67,13 @@ export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
      * @param id -> se tiver ID exibe e atualiza, caso contrário, adiciona
      * @return void
      */
-    setUser(id: number): void {
+    setUser(user: AutoEscolaUsuario): void {
 
         //Atualiza um usuário
-        if (id) {
-            const dialogRef = this.dialog.open(AutoescolaFormModalComponent);
-            dialogRef.componentInstance.id = id;
-            dialogRef.afterClosed().subscribe((result) => {
-                if (result) {
-                    this.openSnackBar('Atualizado');
-                    this.getUsers();
-                }
-            });
+        if (user) {
+            this._router.navigate(['usuario/auto-escola', user.id]);
         } else {
-            //Cria um usuário
-            this.showAlert = false;
-            const dialogRef = this.dialog.open(AutoescolaFormModalComponent);
-            dialogRef.componentInstance.id = id;
-            dialogRef.afterClosed().subscribe((result) => {
-                if(result){
-                    this.dataSource.data = [...this.dataSource.data,result];
-                    this.openSnackBar('Inserido');
-                    this._changeDetectorRef.detectChanges();
-                }
-            });
+            this._router.navigateByUrl('usuario/auto-escola/inserir');
         }
     }
 
@@ -141,7 +126,6 @@ export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
      */
     private getUsers(): void {
         this.dataSub = this._users$.subscribe((items: AutoEscolaUsuario[]) => {
-            console.log(items);
             this.dataSource.data = items;
             this.loading = false;
             this._changeDetectorRef.markForCheck();

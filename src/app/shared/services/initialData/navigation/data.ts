@@ -16,7 +16,7 @@ export const plataformaNavigation: FuseNavigationItem[] =[
         id: 'edriving',
         title: 'Usuario da Plataforma',
         type: 'basic',
-        icon: 'heroicons_outline:academic-cap',
+        icon: 'heroicons_outline:star',
         link: '/usuario/edriving'
     },
     {
@@ -33,7 +33,7 @@ export const parceiroNavigation: FuseNavigationItem[] =[
         id: 'autoescola',
         title: 'auto-escola',
         type: 'basic',
-        icon: 'heroicons_outline:user-group',
+        icon: 'heroicons_outline:truck',
         link: '/usuario/auto-escola'
     }
 ];

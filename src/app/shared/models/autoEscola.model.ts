@@ -2,15 +2,18 @@ import {Cargo} from './cargo.model';
 import {Endereco} from './endereco.model';
 import {Usuario} from './usuario.model';
 import {Telefone} from './telefone.model';
+import {Arquivo} from "./arquivo.model";
 
 export class AutoEscolaUsuario {
     id: number;
-    nome: string;
+    razaoSocial: string;
+    nomeFantasia: string;
+    inscricaoEstadual: string;
+    dataFundacao: string;
     email: string;
     descricao: string;
+    site: string;
     cnpj: string;
-    cargoId: number;
-    cargo: Cargo;
     enderecoId: number;
     endereco: Endereco;
     usuarioId: number;
@@ -19,18 +22,21 @@ export class AutoEscolaUsuario {
 }
 
 export class AutoEscolaPost {
-    id?: number;
-    nome: string;
+    id: number;
+    razaoSocial: string;
+    nomeFantasia: string;
+    inscricaoEstadual: string;
+    dataFundacao: string;
     email: string;
-    cnpj: string;
     descricao: string;
-    senha: string;
-    cargoId: number;
+    site: string;
+    cnpj: string;
     uf: string;
     cep: string;
     enderecoLogradouro: string;
     bairro: string;
     cidade: string;
     numero: string;
+    arquivos: Array<Arquivo>;
     telefones: Array<Telefone>;
 }

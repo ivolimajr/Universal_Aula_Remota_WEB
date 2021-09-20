@@ -8,12 +8,12 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Endereco} from '../../../shared/models/endereco.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {CepService} from '../../../shared/services/http/cep.service';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
-import {UserService} from '../../../shared/services/http/user.service';
 import {Subscription} from 'rxjs';
+import {Endereco} from '../../../shared/models/endereco.model';
+import {CepService} from '../../../shared/services/http/cep.service';
+import {UserService} from '../../../shared/services/http/user.service';
 
 @Component({
     selector: 'endereco',

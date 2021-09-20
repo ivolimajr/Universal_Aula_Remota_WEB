@@ -4,13 +4,13 @@ import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {MatDialog} from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {Subscription} from 'rxjs';
 import {fuseAnimations} from '../../../../../@fuse/animations';
 import {EdrivingFormModalComponent} from './edriving-form-modal/edriving-form-modal.component';
 import {EdrivingService} from '../../../../shared/services/http/edriving.service';
 import {EdrivingUsuario} from '../../../../shared/models/edriving.model';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
-import {Subscription} from 'rxjs';
 
 const ELEMENT_DATA: EdrivingUsuario[] = [];
 
@@ -61,12 +61,12 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
      * @param id -> se tiver ID exibe e atualiza, caso contrário, adiciona
      * @return void
      */
-    setUser(id: number): void {
+    setUser(user: EdrivingUsuario): void {
 
         //Atualiza um usuário
-        if (id) {
+        if (user) {
             const dialogRef = this.dialog.open(EdrivingFormModalComponent);
-            dialogRef.componentInstance.id = id;
+            dialogRef.componentInstance.userEdit = user;
             dialogRef.afterClosed().subscribe((result) => {
                 if (result) {
                     this.openSnackBar('Atualizado');
@@ -76,7 +76,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
         } else {
             //Cria um usuário
             const dialogRef = this.dialog.open(EdrivingFormModalComponent);
-            dialogRef.componentInstance.id = id;
+            dialogRef.componentInstance.userEdit = user;
             dialogRef.afterClosed().subscribe((result) => {
                 if (result) {
                     this.dataSource.data = [...this.dataSource.data, result];

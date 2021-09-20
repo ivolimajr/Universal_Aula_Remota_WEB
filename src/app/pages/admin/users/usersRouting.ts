@@ -3,6 +3,7 @@ import {EdrivingComponent} from './edriving/edriving.component';
 import {ParceiroComponent} from './parceiro/parceiro.component';
 import {ParceiroGuard, PlataformaGuard} from '../../../shared/services/guards/user.guard';
 import {AutoescolaComponent} from './autoescola/autoescola.component';
+import {AutoescolaFormComponent} from './autoescola/autoescola-form-modal/autoescola-form.component';
 
 
 export const usersRouting: Route[] = [
@@ -20,5 +21,15 @@ export const usersRouting: Route[] = [
         path: 'auto-escola',
         canActivate: [ParceiroGuard],
         component: AutoescolaComponent
+    },
+    {
+        path: 'auto-escola/inserir',
+        canActivate: [ParceiroGuard],
+        component: AutoescolaFormComponent
+    },
+    {
+        path: 'auto-escola/:id',
+        canActivate: [ParceiroGuard],
+        component: AutoescolaFormComponent
     }
 ];

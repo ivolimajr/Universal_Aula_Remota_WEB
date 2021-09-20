@@ -7,20 +7,20 @@ import {
     OnInit,
     ViewEncapsulation
 } from '@angular/core';
-import {fuseAnimations} from '../../../../@fuse/animations';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Usuario} from '../../../shared/models/usuario.model';
 import {MASKS} from 'ng-brazil';
-import {ParceiroPost, ParceiroUsuario} from '../../../shared/models/parceiro.model';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Subscription} from 'rxjs';
+import {fuseAnimations} from '../../../../@fuse/animations';
+import {Usuario} from '../../../shared/models/usuario.model';
+import {ParceiroPost, ParceiroUsuario} from '../../../shared/models/parceiro.model';
 import {UserService} from '../../../shared/services/http/user.service';
 import {AuthService} from '../../../shared/services/auth/auth.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
 import {ParceiroService} from '../../../shared/services/http/parceiro.service';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
 import {environment} from '../../../../environments/environment';
-import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-parceiro',

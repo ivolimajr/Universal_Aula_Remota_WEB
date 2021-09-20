@@ -8,6 +8,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Subscription} from 'rxjs';
 import {AuthService} from '../../../shared/services/auth/auth.service';
 import {UsuarioLogin} from '../../../shared/models/usuario.model';
 import {FuseAlertType} from '../../../../@fuse/components/alert';
@@ -15,7 +16,6 @@ import {fuseAnimations} from '../../../../@fuse/animations';
 import {UserService} from '../../../shared/services/http/user.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
-import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'altera-senha',

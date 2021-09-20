@@ -12,7 +12,7 @@ import { ParceiroFormModalComponent } from './parceiro/parceiro-form-modal/parce
 import {CustomMaterialModule} from '../../../shared/material.module';
 import {TextMaskModule} from 'angular2-text-mask';
 import { AutoescolaComponent } from './autoescola/autoescola.component';
-import { AutoescolaFormModalComponent } from './autoescola/autoescola-form-modal/autoescola-form-modal.component';
+import { AutoescolaFormComponent } from './autoescola/autoescola-form-modal/autoescola-form.component';
 
 
 @NgModule({
@@ -23,7 +23,7 @@ import { AutoescolaFormModalComponent } from './autoescola/autoescola-form-modal
         ParceiroComponent,
         ParceiroFormModalComponent,
         AutoescolaComponent,
-        AutoescolaFormModalComponent
+        AutoescolaFormComponent
     ],
     imports: [
         RouterModule.forChild(usersRouting),
