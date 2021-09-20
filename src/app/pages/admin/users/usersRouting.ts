@@ -3,7 +3,7 @@ import {EdrivingComponent} from './edriving/edriving.component';
 import {ParceiroComponent} from './parceiro/parceiro.component';
 import {ParceiroGuard, PlataformaGuard} from '../../../shared/services/guards/user.guard';
 import {AutoescolaComponent} from './autoescola/autoescola.component';
-import {AutoescolaFormComponent} from './autoescola/autoescola-form-modal/autoescola-form.component';
+import {AutoescolaFormComponent} from './autoescola/autoescola-form/autoescola-form.component';
 
 
 export const usersRouting: Route[] = [

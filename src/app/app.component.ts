@@ -8,7 +8,10 @@ import {TokenResult} from './shared/models/token.model';
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+    private token: TokenResult;
+    private now = new Date();
     constructor(private _authService: AuthService) {
+        this.token = this._authService.tokenFromLocalStorage;
         this.getToken();
     }
 
@@ -20,11 +23,19 @@ export class AppComponent {
      * return: void
      */
     private getToken(): void {
+        //Se não houver um token no localStorage, é buscado um token na API
         if (!this._authService.tokenFromLocalStorage) {
             this._authService.getApiTokenFromApi()
-                .subscribe((s: TokenResult) => {
-                    this._authService.tokenFromLocalStorage = s.accessToken;
+                .subscribe((result: TokenResult) => {
+                    this._authService.tokenFromLocalStorage = result;
+                    return;
                 });
         }
+        //Verifica se o token está expirado
+        const expiration = new Date(this.token.expiration);
+        if(expiration < this.now){
+            return console.log('Token Vencido');
+        }
+        console.log('Token em dia');
     }
 }

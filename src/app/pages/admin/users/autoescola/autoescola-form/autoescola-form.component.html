@@ -23,7 +23,6 @@
             <div class="mb-8 text-2xl font-bold">Adicionar</div>
         </ng-template>
 
-
         <form
             class="p-4 bg-card shadow rounded overflow-hidden shadow-2xl"
             [formGroup]="verticalStepperForm">
@@ -34,21 +33,18 @@
                     [formGroupName]="'step1'"
                     [stepControl]="verticalStepperForm.get('step1')"
                     #verticalStepperStep1>
-                    <ng-template matStepLabel>Basic information</ng-template>
-                    <p class="my-6 font-medium">
-                        Fill in your basic information to let us know your preferences
-                    </p>
+                    <ng-template matStepLabel>Informações Básicas</ng-template>
                     <div class="flex">
                         <mat-form-field class="flex-auto">
                             <input
                                 matInput
                                 [formControlName]="'razaoSocial'"
-                                [placeholder]="'razaoSocial'"
+                                [placeholder]="'Razão Social'"
                                 required>
                             <mat-icon
                                 class="icon-size-5"
                                 matPrefix
-                                [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                                [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
                         </mat-form-field>
                     </div>
                     <div class="flex flex-col gt-xs:flex-row">
@@ -56,27 +52,31 @@
                             <input
                                 matInput
                                 [formControlName]="'nomeFantasia'"
-                                [placeholder]="'nomeFantasia'"
+                                [placeholder]="'Nome Fantasia'"
                                 required>
                             <mat-icon
                                 class="icon-size-5"
                                 matPrefix
-                                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                                [svgIcon]="'heroicons_solid:user'"></mat-icon>
                         </mat-form-field>
                         <mat-form-field class="flex-auto gt-xs:pl-3">
                             <input
                                 matInput
                                 [formControlName]="'inscricaoEstadual'"
-                                [placeholder]="'inscricaoEstadual'"
+                                [placeholder]="'Inscrição Estadual'"
                                 required>
                             <mat-icon
                                 class="icon-size-5"
                                 matPrefix
-                                [svgIcon]="'heroicons_solid:translate'"></mat-icon>
+                                [svgIcon]="'heroicons_solid:identification'"></mat-icon>
                         </mat-form-field>
                         <mat-form-field class="flex-auto gt-xs:pl-3">
-                            <mat-label>Choose a date</mat-label>
+                            <mat-label>Data de Abertura</mat-label>
                             <input matInput type="date" [formControlName]="'dataFundacao'">
+                            <mat-icon
+                                class="icon-size-5"
+                                matPrefix
+                                [svgIcon]="'heroicons_solid:date'"></mat-icon>
                         </mat-form-field>
                         <mat-form-field class="flex-auto gt-xs:pl-3">
                             <input
@@ -329,17 +329,11 @@
                                 *ngFor="let file of verticalStepperForm.get('step4').get('arquivos')['controls']; let i = index;"
                                 formArrayName="arquivos">
                                 <div class="relative flex">
-                                    <mat-form-field class="fuse-mat-no-subscript flex-auto">
-                                        <mat-label>Telefone</mat-label>
                                         <input
-                                            matInput
+                                            type="file"
+                                            accept=".pdf"
                                             [placeholder]="'arquivos'"
-                                            [formControl]="file.get('arquivo')"
-                                            [value]="file.value.arquivo ?? ''">
-                                        <mat-icon
-                                            class="icon-size-5"
-                                            [svgIcon]="'heroicons_solid:cloud-upload'"></mat-icon>
-                                    </mat-form-field>
+                                            [formControl]="file.get('arquivo')">
                                     <!-- Remove phone number -->
                                     <ng-container>
                                         <div
@@ -402,6 +396,14 @@
                         information.
                     </p>
                     <div class="flex justify-end mt-8">
+                        <button
+                            class="px-8 mr-2"
+                            mat-flat-button
+                            [color]="'accent'"
+                            type="button"
+                            matStepperPrevious>
+                            Back
+                        </button>
                         <button
                             class="px-8"
                             mat-flat-button

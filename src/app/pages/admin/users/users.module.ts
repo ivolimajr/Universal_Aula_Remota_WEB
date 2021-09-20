@@ -12,7 +12,7 @@ import { ParceiroFormModalComponent } from './parceiro/parceiro-form-modal/parce
 import {CustomMaterialModule} from '../../../shared/material.module';
 import {TextMaskModule} from 'angular2-text-mask';
 import { AutoescolaComponent } from './autoescola/autoescola.component';
-import { AutoescolaFormComponent } from './autoescola/autoescola-form-modal/autoescola-form.component';
+import { AutoescolaFormComponent } from './autoescola/autoescola-form/autoescola-form.component';
 
 
 @NgModule({

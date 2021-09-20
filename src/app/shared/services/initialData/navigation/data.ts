@@ -6,7 +6,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         id: 'home',
         title: 'Início',
         type: 'basic',
-        icon: 'heroicons_outline:chart-pie',
+        icon: 'heroicons_outline:home',
         link: '/inicio'
     }
 ];
@@ -31,7 +31,7 @@ export const plataformaNavigation: FuseNavigationItem[] =[
 export const parceiroNavigation: FuseNavigationItem[] =[
     {
         id: 'autoescola',
-        title: 'auto-escola',
+        title: 'Auto Escolas',
         type: 'basic',
         icon: 'heroicons_outline:truck',
         link: '/usuario/auto-escola'

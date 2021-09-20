@@ -133,7 +133,7 @@ export class AuthService {
      * @param somente o access token em formato de string (cláro né)
      * return: void
      */
-    set tokenFromLocalStorage(token: string) {
+    set tokenFromLocalStorage(token: TokenResult) {
         this.storageServices.setValueFromLocalStorage(environment.tokenStorage, token);
     }
 
@@ -144,7 +144,7 @@ export class AuthService {
      * @public
      * return: string
      */
-    get tokenFromLocalStorage(): string {
+    get tokenFromLocalStorage(): TokenResult {
         return this.storageServices.getValueFromLocalStorage(environment.tokenStorage) ?? '';
     }
 

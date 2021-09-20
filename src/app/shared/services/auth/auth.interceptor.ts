@@ -3,20 +3,20 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/com
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {AuthService} from 'app/shared/services/auth/auth.service';
-import {AuthUtils} from 'app/shared/services/auth/auth.utils';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+    private accessToken: string;
     constructor(private _authService: AuthService) {
+        this.accessToken = this._authService.tokenFromLocalStorage.accessToken;
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // Clone the request object
         let newReq = req.clone();
-
-        if (this._authService.tokenFromLocalStorage && !AuthUtils.isTokenExpired(this._authService.tokenFromLocalStorage)) {
+        if (this._authService.tokenFromLocalStorage) {
             newReq = req.clone({
-                headers: req.headers.set('Authorization', 'Bearer ' + this._authService.tokenFromLocalStorage)
+                headers: req.headers.set('Authorization', 'Bearer ' + this.accessToken)
             });
         }
 

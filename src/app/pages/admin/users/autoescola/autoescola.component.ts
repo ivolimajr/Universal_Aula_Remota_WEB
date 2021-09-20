@@ -9,7 +9,7 @@ import {fuseAnimations} from '../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../@fuse/components/alert';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
 import {AutoescolaService} from '../../../../shared/services/http/autoescola.service';
-import {AutoescolaFormComponent} from './autoescola-form-modal/autoescola-form.component';
+import {AutoescolaFormComponent} from './autoescola-form/autoescola-form.component';
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
 import {AutoEscolaUsuario} from '../../../../shared/models/autoEscola.model';
 import {Router} from "@angular/router";

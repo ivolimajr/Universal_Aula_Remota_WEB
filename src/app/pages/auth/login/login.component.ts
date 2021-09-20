@@ -52,6 +52,7 @@ export class LoginComponent implements OnInit, OnDestroy {
                 this.loginForm.enable();
                 return;
             }
+            this.loginForm.enable();
             const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
             this._router.navigateByUrl(redirectURL);
         });

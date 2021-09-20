@@ -124,7 +124,7 @@ export class AutoescolaFormComponent implements OnInit {
                         Validators.minLength(15),
                         Validators.maxLength(20)
                     ])],
-                dataFundacao: ['',
+                dataFundacao: ['2021-01-30',
                     Validators.required,
                 ],
                 email: ['autoescola@edriving.com',
@@ -223,7 +223,7 @@ export class AutoescolaFormComponent implements OnInit {
         // Create a phone number form group
         this.fileArray.push(
             this._formBuilder.group({
-                arquivo: ['', Validators.compose([
+                arquivo: [null, Validators.compose([
                     Validators.required,
                     Validators.nullValidator
                 ])]
