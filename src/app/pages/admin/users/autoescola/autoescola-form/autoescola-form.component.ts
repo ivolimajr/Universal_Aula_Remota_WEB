@@ -2,6 +2,9 @@ import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {CepService} from '../../../../../shared/services/http/cep.service';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-autoescola-form',
@@ -11,13 +14,18 @@ export class AutoescolaFormComponent implements OnInit {
 
     verticalStepperForm: FormGroup;
     masks = MASKS;
+    estados = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
+        'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
     public id: number = parseInt(this.routeAcitve.snapshot.paramMap.get('id'), 10);
     private phoneArray = [];
     private fileArray = [];
+    private cepSub: Subscription;
 
     constructor(
         private routeAcitve: ActivatedRoute,
+        private _snackBar: MatSnackBar,
         private _changeDetectorRef: ChangeDetectorRef,
+        private _cepService: CepService,
         private _formBuilder: FormBuilder
     ) {
     }
@@ -98,10 +106,27 @@ export class AutoescolaFormComponent implements OnInit {
         this._changeDetectorRef.markForCheck();
     }
 
-    submit(id: number){
+    submit(id: number): void{
         if(!id){
             console.log(this.verticalStepperForm.value);
         }
+    }
+
+    buscaCep(event): void {
+        if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
+            this.openSnackBar('Cep inválido');
+            return;
+        }
+        this.cepSub = this._cepService.buscar(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
+            this.verticalStepperForm.get('step2').patchValue({
+                bairro: res.bairro,
+                enderecoLogradouro: res.logradouro,
+                cidade: res.localidade,
+                cep: res.cep,
+                uf: res.uf
+            });
+            this._changeDetectorRef.markForCheck();
+        });
     }
 
     private loadForm(): void {
@@ -170,7 +195,7 @@ export class AutoescolaFormComponent implements OnInit {
                         Validators.nullValidator,
                         Validators.minLength(3),
                         Validators.maxLength(150)])],
-                uf: ['SP', Validators.compose([
+                uf: ['DF', Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(2),
@@ -240,4 +265,13 @@ export class AutoescolaFormComponent implements OnInit {
         this.fileArray = [];
     }
 
+
+    private openSnackBar(message: string, type: string = 'accent'): void {
+        this._snackBar.open(message, '', {
+            duration: 5 * 1000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            panelClass: ['mat-toolbar', 'mat-' + type]
+        });
+    }
 }
