@@ -34,7 +34,7 @@
                     [stepControl]="verticalStepperForm.get('step1')"
                     #verticalStepperStep1>
                     <ng-template matStepLabel>Informações Básicas</ng-template>
-                    <div class="flex">
+                    <div class="flex mt-2">
                         <mat-form-field class="flex-auto">
                             <input
                                 matInput
@@ -76,18 +76,18 @@
                             <mat-icon
                                 class="icon-size-5"
                                 matPrefix
-                                [svgIcon]="'heroicons_solid:date'"></mat-icon>
+                                [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
                         </mat-form-field>
                         <mat-form-field class="flex-auto gt-xs:pl-3">
                             <input
                                 matInput
                                 [formControlName]="'email'"
-                                [placeholder]="'email'"
+                                [placeholder]="'e-mail'"
                                 required>
                             <mat-icon
                                 class="icon-size-5"
                                 matPrefix
-                                [svgIcon]="'heroicons_solid:translate'"></mat-icon>
+                                [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                         </mat-form-field>
                         <mat-form-field class="flex-auto gt-xs:pl-3">
                             <input
@@ -98,7 +98,7 @@
                             <mat-icon
                                 class="icon-size-5"
                                 matPrefix
-                                [svgIcon]="'heroicons_solid:translate'"></mat-icon>
+                                [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
                         </mat-form-field>
                         <mat-form-field class="flex-auto gt-xs:pl-3">
                             <input
@@ -109,19 +109,19 @@
                             <mat-icon
                                 class="icon-size-5"
                                 matPrefix
-                                [svgIcon]="'heroicons_solid:translate'"></mat-icon>
-                            <span matPrefix>www.example.com/</span>
+                                [svgIcon]="'heroicons_solid:globe-alt'"></mat-icon>
+                            <span matPrefix>https://www.</span>
                         </mat-form-field>
                         <mat-form-field class="flex-auto gt-xs:pl-3">
                             <input
                                 matInput
                                 [formControlName]="'cnpj'"
-                                [placeholder]="'cnpj'"
+                                [placeholder]="'CNPJ'"
                                 required>
                             <mat-icon
                                 class="icon-size-5"
                                 matPrefix
-                                [svgIcon]="'heroicons_solid:translate'"></mat-icon>
+                                [svgIcon]="'heroicons_solid:identification'"></mat-icon>
                         </mat-form-field>
                     </div>
                     <div class="flex justify-end">
@@ -141,11 +141,8 @@
                     [formGroupName]="'step2'"
                     [stepControl]="verticalStepperForm.get('step2')"
                     #verticalStepperStep2>
-                    <ng-template matStepLabel>Profile</ng-template>
-                    <p class="my-6 font-medium">
-                        People here will get to know you with this information
-                    </p>
-                    <div class="flex flex-col gt-xs:flex-row">
+                    <ng-template matStepLabel>Endereço</ng-template>
+                    <div class="flex flex-col gt-xs:flex-row mt-2">
                         <mat-form-field class="flex-auto gt-xs:pr-3">
                             <input
                                 matInput

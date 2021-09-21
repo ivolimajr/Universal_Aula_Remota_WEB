@@ -138,7 +138,7 @@ export class AutoescolaFormComponent implements OnInit {
                         Validators.required,
                         Validators.maxLength(150)
                     ])],
-                site: ['www.isadoraericardotelecomunicacoesltda.com.br',
+                site: ['cacoesltda.com.br',
                     Validators.compose([
                         Validators.required,
                         Validators.maxLength(100)
