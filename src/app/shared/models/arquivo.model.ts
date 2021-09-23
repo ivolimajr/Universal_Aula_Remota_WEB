@@ -1,4 +1,4 @@
 export class Arquivo {
     id?: number;
-    arquivo: [];
+    arquivo: File;
 }

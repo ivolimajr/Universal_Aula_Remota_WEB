@@ -1,8 +1,7 @@
-import {Cargo} from './cargo.model';
 import {Endereco} from './endereco.model';
 import {Usuario} from './usuario.model';
 import {Telefone} from './telefone.model';
-import {Arquivo} from "./arquivo.model";
+import {Arquivo} from './arquivo.model';
 
 export class AutoEscolaUsuario {
     id: number;
@@ -37,6 +36,7 @@ export class AutoEscolaPost {
     bairro: string;
     cidade: string;
     numero: string;
+    senha: string;
     arquivos: Array<Arquivo>;
     telefones: Array<Telefone>;
 }

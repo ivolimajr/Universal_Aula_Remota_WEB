@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {Injectable, ViewChild} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
@@ -14,6 +14,9 @@ const URL_AUTOESCOLA_CARGO = `${environment.apiUrl}/AutoescolaCargo`;
     providedIn: 'root'
 })
 export class AutoescolaService {
+    @ViewChild('fileInput') selectedFileEl;
+
+    header = new HttpHeaders();
 
     constructor(private _httpClient: HttpClient) {
     }
@@ -51,7 +54,20 @@ export class AutoescolaService {
      * @return retorna o usuário ou error
      */
     create(data: AutoEscolaPost): Observable<AutoEscolaPost> {
-        return this._httpClient.post(URL_AUTOESCOLA, data).pipe(
+
+        this.header = this.header.set('Content-Type', 'multipart/form-data');
+        const formData = new FormData();
+
+        Object.keys(data).forEach((key) => {
+            formData.append(key, data[key]);
+        });
+        /*
+        data.arquivos.forEach((item) =>{
+            const file: File = item.arquivo;
+            formData.append('arquivos', file);
+        });
+        */
+        return this._httpClient.post(URL_AUTOESCOLA, formData).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))
         );
@@ -91,6 +107,7 @@ export class AutoescolaService {
             catchError(e => of(e))
         );
     }
+
     /**
      * Busca todos os cargos referente ao usuário do tipo Edriving
      *

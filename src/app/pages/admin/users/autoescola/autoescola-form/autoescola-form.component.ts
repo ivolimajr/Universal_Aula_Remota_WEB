@@ -1,10 +1,12 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CepService} from '../../../../../shared/services/http/cep.service';
 import {Subscription} from 'rxjs';
+import {AutoEscolaPost} from '../../../../../shared/models/autoEscola.model';
+import {AutoescolaService} from '../../../../../shared/services/http/autoescola.service';
 
 @Component({
     selector: 'app-autoescola-form',
@@ -14,18 +16,24 @@ export class AutoescolaFormComponent implements OnInit {
 
     verticalStepperForm: FormGroup;
     masks = MASKS;
+    loading: boolean = true; //Inicia o componente com um lading
+    message: string = null; //Mensagem quando estiver salvando ou editando um usuário
     estados = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
         'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
     public id: number = parseInt(this.routeAcitve.snapshot.paramMap.get('id'), 10);
     private phoneArray = [];
     private fileArray = [];
+    private userPost = new AutoEscolaPost();
     private cepSub: Subscription;
+    private userSub: Subscription;
 
     constructor(
         private routeAcitve: ActivatedRoute,
         private _snackBar: MatSnackBar,
+        private _router: Router,
         private _changeDetectorRef: ChangeDetectorRef,
         private _cepService: CepService,
+        private _autoEscolaService: AutoescolaService,
         private _formBuilder: FormBuilder
     ) {
     }
@@ -106,12 +114,36 @@ export class AutoescolaFormComponent implements OnInit {
         this._changeDetectorRef.markForCheck();
     }
 
-    submit(id: number): void{
-        if(!id){
-            console.log(this.verticalStepperForm.value);
+    submit(id: number): void {
+        if (!id) {
+            const result = this.prepareUser();
+            if(result){
+                //Exibe o alerta de salvando dados
+                this.loading = true;
+                this.message = 'Salvando';
+                this._changeDetectorRef.markForCheck();
+
+                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                this.userSub = this._autoEscolaService.create(this.userPost).subscribe((res: any) => {
+                    console.log(res);
+                    if (res.error) {
+                        this.openSnackBar(res.error, 'warn');
+                        this.closeAlert();
+                        return;
+                    }
+                    this.closeAlert();
+                    this._router.navigate(['usuario/auto-escola']);
+                });
+            }
         }
     }
 
+    //Fecha o alerta na tela
+    closeAlert(): void {
+        this.loading = false;
+        this.message = null;
+        this._changeDetectorRef.markForCheck();
+    }
     buscaCep(event): void {
         if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
             this.openSnackBar('Cep inválido');
@@ -147,7 +179,7 @@ export class AutoescolaFormComponent implements OnInit {
                     Validators.compose([
                         Validators.required,
                         Validators.minLength(15),
-                        Validators.maxLength(20)
+                        Validators.maxLength(30)
                     ])],
                 dataFundacao: ['2021-01-30',
                     Validators.required,
@@ -273,5 +305,44 @@ export class AutoescolaFormComponent implements OnInit {
             verticalPosition: 'top',
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
+    }
+
+    private prepareUser(): boolean {
+
+        const result = true;
+
+        const formDataStepOne = this.verticalStepperForm.value.step1;
+        const formDataStepTwo = this.verticalStepperForm.value.step2;
+        const formDataStepThree = this.verticalStepperForm.value.step3;
+        const formDataStepFour = this.verticalStepperForm.value.step4;
+
+        //Step1
+        this.userPost.razaoSocial = formDataStepOne.razaoSocial;
+        this.userPost.nomeFantasia = formDataStepOne.nomeFantasia;
+        this.userPost.inscricaoEstadual = formDataStepOne.inscricaoEstadual.replace(/[^0-9,]*/g, '').replace('-','').replace('/','');
+        this.userPost.dataFundacao = formDataStepOne.dataFundacao;
+        this.userPost.email = formDataStepOne.email;
+        this.userPost.descricao = formDataStepOne.descricao;
+        this.userPost.site = formDataStepOne.site;
+        this.userPost.cnpj = formDataStepOne.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-','');
+        //Step2
+        this.userPost.uf = formDataStepTwo.uf;
+        this.userPost.cep = formDataStepTwo.cep.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-','');
+        this.userPost.enderecoLogradouro = formDataStepTwo.enderecoLogradouro;
+        this.userPost.bairro = formDataStepTwo.bairro;
+        this.userPost.cidade = formDataStepTwo.cidade;
+        this.userPost.numero = formDataStepTwo.numero;
+        this.userPost.senha = 'Pay@2021';
+        //Step3
+        formDataStepThree.telefones.forEach((item) => {
+            if (item.telefone.length !== 11) {
+                item.telefone = item.telefone.replace(/[^0-9,]*/g, '').replace(',', '.');
+            }
+        });
+        this.userPost.telefones = formDataStepThree.telefones;
+        //Step4
+        this.userPost.arquivos = formDataStepFour.arquivos;
+
+        return result;
     }
 }
