@@ -1,11 +1,11 @@
 import {Injectable, ViewChild} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpBackend, HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
 import {Cargo} from '../../models/cargo.model';
 import {AutoEscolaPost, AutoEscolaUsuario} from '../../models/autoEscola.model';
-
+import {AuthService} from '../auth/auth.service';
 
 const URL_AUTOESCOLA = `${environment.apiUrl}/AutoEscola`;
 const URL_AUTOESCOLA_CARGO = `${environment.apiUrl}/AutoescolaCargo`;
@@ -17,8 +17,15 @@ export class AutoescolaService {
     @ViewChild('fileInput') selectedFileEl;
 
     header = new HttpHeaders();
+    private httpClientBackEnd: HttpClient;
+    private accessToken: string;
 
-    constructor(private _httpClient: HttpClient) {
+    constructor(
+        private _httpClient: HttpClient,
+        private httpBackend: HttpBackend,
+        private _authService: AuthService) {
+        this.httpClientBackEnd = new HttpClient(httpBackend);
+        this.accessToken = this._authService.tokenFromLocalStorage.accessToken;
     }
 
     /**
@@ -53,20 +60,28 @@ export class AutoescolaService {
      * @param data model do usuario
      * @return retorna o usuário ou error
      */
-    create(data: AutoEscolaPost): Observable<AutoEscolaPost> {
+    create(data: AutoEscolaPost, files: Set<File>): Observable<AutoEscolaPost> {
 
-        this.header = this.header.set('Content-Type', 'multipart/form-data');
+        this.header = this.header.set('Authorization', 'Bearer ' + this.accessToken);
         const formData = new FormData();
 
-        Object.keys(data).forEach((key) => {
-            formData.append(key, data[key]);
+        for (const key in data){
+            if(key !== 'arquivos' && key !== 'telefones'){
+                formData.append(key, data[key]);
+            }
+        }
+
+        let i = 0;
+        data.telefones.forEach((item) => {
+            const name = 'telefones[' + i + '][telefone]';
+            formData.append(name, item.telefone);
+            i++;
         });
-        /*
-        data.arquivos.forEach((item) =>{
-            const file: File = item.arquivo;
-            formData.append('arquivos', file);
+        files.forEach((item) => {
+            const name = 'arquivos';
+            formData.append(name, item);
         });
-        */
+
         return this._httpClient.post(URL_AUTOESCOLA, formData).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))

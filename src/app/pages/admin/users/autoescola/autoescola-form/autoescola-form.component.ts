@@ -16,16 +16,18 @@ export class AutoescolaFormComponent implements OnInit {
 
     verticalStepperForm: FormGroup;
     masks = MASKS;
-    loading: boolean = true; //Inicia o componente com um lading
+    loading: boolean = false; //Inicia o componente com um lading
     message: string = null; //Mensagem quando estiver salvando ou editando um usuário
     estados = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
         'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
     public id: number = parseInt(this.routeAcitve.snapshot.paramMap.get('id'), 10);
     private phoneArray = [];
-    private fileArray = [];
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    files: Set<File>;
     private userPost = new AutoEscolaPost();
     private cepSub: Subscription;
     private userSub: Subscription;
+    private fileArray = [];
 
     constructor(
         private routeAcitve: ActivatedRoute,
@@ -124,7 +126,7 @@ export class AutoescolaFormComponent implements OnInit {
                 this._changeDetectorRef.markForCheck();
 
                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                this.userSub = this._autoEscolaService.create(this.userPost).subscribe((res: any) => {
+                this.userSub = this._autoEscolaService.create(this.userPost,this.files).subscribe((res: any) => {
                     console.log(res);
                     if (res.error) {
                         this.openSnackBar(res.error, 'warn');
@@ -132,6 +134,7 @@ export class AutoescolaFormComponent implements OnInit {
                         return;
                     }
                     this.closeAlert();
+                    this.openSnackBar('Salvo');
                     this._router.navigate(['usuario/auto-escola']);
                 });
             }
@@ -144,6 +147,7 @@ export class AutoescolaFormComponent implements OnInit {
         this.message = null;
         this._changeDetectorRef.markForCheck();
     }
+
     buscaCep(event): void {
         if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
             this.openSnackBar('Cep inválido');
@@ -161,21 +165,34 @@ export class AutoescolaFormComponent implements OnInit {
         });
     }
 
+    onChange(event): void{
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        const selectedFiles = <FileList>event.srcElement.files;
+        const fileNames = [];
+        this.files = new Set();
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
+        for (let i=0;i< selectedFiles.length;i++){
+            fileNames.push(selectedFiles[i].name);
+            this.files.add(selectedFiles[i]);
+        }
+        console.log(this.files);
+    }
+
     private loadForm(): void {
         // Vertical stepper form
         this.verticalStepperForm = this._formBuilder.group({
             step1: this._formBuilder.group({
-                razaoSocial: ['Isadora e Ricardo Telecomunicações Ltda',
+                razaoSocial: ['Dora e Ricardo Telecomunicações Ltda',
                     Validators.compose([
                         Validators.required,
                         Validators.maxLength(150)
                     ])],
-                nomeFantasia: ['Eduardo e Antonio Filmagens Ltda',
+                nomeFantasia: ['Antonio Filmagens Ltda',
                     Validators.compose([
                         Validators.required,
                         Validators.maxLength(150)
                     ])],
-                inscricaoEstadual: ['669.503.958.772',
+                inscricaoEstadual: ['669.503.958.773',
                     Validators.compose([
                         Validators.required,
                         Validators.minLength(15),
@@ -184,7 +201,7 @@ export class AutoescolaFormComponent implements OnInit {
                 dataFundacao: ['2021-01-30',
                     Validators.required,
                 ],
-                email: ['autoescola@edriving.com',
+                email: ['autoescola2@edriving.com',
                     Validators.compose([
                         Validators.required,
                         Validators.email,
@@ -200,7 +217,7 @@ export class AutoescolaFormComponent implements OnInit {
                         Validators.required,
                         Validators.maxLength(100)
                     ])],
-                cnpj: ['55.228.271/0001-90',
+                cnpj: ['51862639000117',
                     Validators.compose([
                         Validators.required,
                         Validators.maxLength(18),
