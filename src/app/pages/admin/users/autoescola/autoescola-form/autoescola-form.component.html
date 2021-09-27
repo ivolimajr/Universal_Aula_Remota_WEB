@@ -42,6 +42,8 @@
                 <mat-vertical-stepper
                     [linear]="true"
                     #verticalStepper>
+
+                    <!--start:Step-DadosEmpresa-->
                     <mat-step
                         [formGroupName]="'step1'"
                         [stepControl]="verticalStepperForm.get('step1')"
@@ -50,6 +52,8 @@
                         <p class="my-6 font-medium">
                             Pode ser inserido algum texto aqui
                         </p>
+
+                        <!--start:razaoSocial-->
                         <div class="flex mt-2">
                             <mat-form-field class="flex-auto">
                                 <input
@@ -63,7 +67,10 @@
                                     [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
                             </mat-form-field>
                         </div>
+                        <!--end:razaoSocial-->
+
                         <div class="flex flex-col gt-xs:flex-row">
+                            <!--start:nomeFantasia-->
                             <mat-form-field class="flex-auto gt-xs:pr-3">
                                 <input
                                     matInput
@@ -75,6 +82,9 @@
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:user'"></mat-icon>
                             </mat-form-field>
+                            <!--end:nomeFantasia-->
+
+                            <!--start:inscricaoEstadual-->
                             <mat-form-field class="flex-auto gt-xs:pl-3">
                                 <input
                                     matInput
@@ -86,6 +96,9 @@
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:identification'"></mat-icon>
                             </mat-form-field>
+                            <!--end:inscricaoEstadual-->
+
+                            <!--start:dataFundacao-->
                             <mat-form-field class="flex-auto gt-xs:pl-3">
                                 <mat-label>Data de Abertura</mat-label>
                                 <input matInput type="date" [formControlName]="'dataFundacao'">
@@ -94,6 +107,9 @@
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
                             </mat-form-field>
+                            <!--end:dataFundacao-->
+
+                            <!--start:email-->
                             <mat-form-field class="flex-auto gt-xs:pl-3">
                                 <input
                                     matInput
@@ -105,6 +121,9 @@
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                             </mat-form-field>
+                            <!--end:email-->
+
+                            <!--start:descricao-->
                             <mat-form-field class="flex-auto gt-xs:pl-3">
                                 <input
                                     matInput
@@ -116,6 +135,9 @@
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
                             </mat-form-field>
+                            <!--end:descricao-->
+
+                            <!--start:site-->
                             <mat-form-field class="flex-auto gt-xs:pl-3">
                                 <input
                                     matInput
@@ -128,6 +150,9 @@
                                     [svgIcon]="'heroicons_solid:globe-alt'"></mat-icon>
                                 <span matPrefix>https://www.</span>
                             </mat-form-field>
+                            <!--end:site-->
+
+                            <!--start:cnpj-->
                             <mat-form-field class="flex-auto gt-xs:pl-3">
                                 <input
                                     matInput
@@ -140,6 +165,8 @@
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:identification'"></mat-icon>
                             </mat-form-field>
+                            <!--end:cnpj-->
+
                         </div>
                         <div class="flex justify-end">
                             <button
@@ -153,7 +180,9 @@
                             </button>
                         </div>
                     </mat-step>
+                    <!--end:Step-DadosEmpresa-->
 
+                    <!--start:Step-Endereco-->
                     <mat-step
                         [formGroupName]="'step2'"
                         [stepControl]="verticalStepperForm.get('step2')"
@@ -259,7 +288,9 @@
                             </button>
                         </div>
                     </mat-step>
+                    <!--end:Step-Endereco-->
 
+                    <!--start:Step-Contatos-->
                     <mat-step
                         [formGroupName]="'step3'"
                         [stepControl]="verticalStepperForm.get('step3')">
@@ -336,7 +367,9 @@
                             </button>
                         </div>
                     </mat-step>
+                    <!--end:Step-Contatos-->
 
+                    <!--start:Step-Contratos-->
                     <mat-step
                         [formGroupName]="'step4'"
                         [stepControl]="verticalStepperForm.get('step4')">
@@ -407,7 +440,9 @@
                             </button>
                         </div>
                     </mat-step>
+                    <!--end:Step-Contratos-->
 
+                    <!--start:Step-DadosEmpresa-->
                     <mat-step>
                         <ng-template matStepLabel>Resumo</ng-template>
                         <p class="my-6 font-medium">
@@ -433,6 +468,8 @@
                             </button>
                         </div>
                     </mat-step>
+                    <!--end:Step-DadosEmpresa-->
+
                 </mat-vertical-stepper>
             </form>
         </ng-template>

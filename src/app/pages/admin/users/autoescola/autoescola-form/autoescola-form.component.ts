@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
@@ -12,7 +12,7 @@ import {AutoescolaService} from '../../../../../shared/services/http/autoescola.
     selector: 'app-autoescola-form',
     templateUrl: './autoescola-form.component.html'
 })
-export class AutoescolaFormComponent implements OnInit {
+export class AutoescolaFormComponent implements OnInit, OnDestroy {
 
     verticalStepperForm: FormGroup;
     masks = MASKS;
@@ -36,8 +36,9 @@ export class AutoescolaFormComponent implements OnInit {
         private _changeDetectorRef: ChangeDetectorRef,
         private _cepService: CepService,
         private _autoEscolaService: AutoescolaService,
-        private _formBuilder: FormBuilder
+        private _formBuilder: FormBuilder,
     ) {
+        this.files = new Set();
     }
 
     ngOnInit(): void {
@@ -117,20 +118,22 @@ export class AutoescolaFormComponent implements OnInit {
     }
 
     submit(id: number): void {
-        if (!id) {
-            const result = this.prepareUser();
-            if(result){
-                //Exibe o alerta de salvando dados
-                this.loading = true;
-                this.message = 'Salvando';
-                this._changeDetectorRef.markForCheck();
+        this.verticalStepperForm.disable();
+        const result = this.prepareUser();
+        if (result) {
+            //Exibe o alerta de salvando dados
+            this.loading = true;
+            this.message = 'Salvando';
+            this._changeDetectorRef.markForCheck();
 
+            if (!id) {
                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                this.userSub = this._autoEscolaService.create(this.userPost,this.files).subscribe((res: any) => {
+                this.userSub = this._autoEscolaService.create(this.userPost, this.files).subscribe((res: any) => {
                     console.log(res);
                     if (res.error) {
                         this.openSnackBar(res.error, 'warn');
                         this.closeAlert();
+                        this.verticalStepperForm.enable();
                         return;
                     }
                     this.closeAlert();
@@ -165,17 +168,24 @@ export class AutoescolaFormComponent implements OnInit {
         });
     }
 
-    onChange(event): void{
+    onChange(event): void {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const selectedFiles = <FileList>event.srcElement.files;
         const fileNames = [];
-        this.files = new Set();
         // eslint-disable-next-line @typescript-eslint/prefer-for-of
-        for (let i=0;i< selectedFiles.length;i++){
+        for (let i = 0; i < selectedFiles.length; i++) {
             fileNames.push(selectedFiles[i].name);
             this.files.add(selectedFiles[i]);
         }
-        console.log(this.files);
+    }
+
+    ngOnDestroy(): void {
+        if (this.userSub) {
+            this.userSub.unsubscribe();
+        }
+        if (this.cepSub) {
+            this.cepSub.unsubscribe();
+        }
     }
 
     private loadForm(): void {
@@ -314,7 +324,6 @@ export class AutoescolaFormComponent implements OnInit {
         this.fileArray = [];
     }
 
-
     private openSnackBar(message: string, type: string = 'accent'): void {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,
@@ -325,26 +334,38 @@ export class AutoescolaFormComponent implements OnInit {
     }
 
     private prepareUser(): boolean {
+        let result = true;
 
-        const result = true;
+        if (this.verticalStepperForm.invalid) {
+            this.openSnackBar('Dados Inválidos', 'warn');
+            result = false;
+        }
 
         const formDataStepOne = this.verticalStepperForm.value.step1;
         const formDataStepTwo = this.verticalStepperForm.value.step2;
         const formDataStepThree = this.verticalStepperForm.value.step3;
         const formDataStepFour = this.verticalStepperForm.value.step4;
 
+        //Verifica se os telefones informados são válidos
+        formDataStepThree.telefones.forEach((item) => {
+            if (item.telefone === null || item.telefone === '' || item.telefone.length < 11) {
+                this.openSnackBar('Insira um telefone', 'warn');
+                result = false;
+            }
+        });
+
         //Step1
         this.userPost.razaoSocial = formDataStepOne.razaoSocial;
         this.userPost.nomeFantasia = formDataStepOne.nomeFantasia;
-        this.userPost.inscricaoEstadual = formDataStepOne.inscricaoEstadual.replace(/[^0-9,]*/g, '').replace('-','').replace('/','');
+        this.userPost.inscricaoEstadual = formDataStepOne.inscricaoEstadual.replace(/[^0-9,]*/g, '').replace('-', '').replace('/', '');
         this.userPost.dataFundacao = formDataStepOne.dataFundacao;
         this.userPost.email = formDataStepOne.email;
         this.userPost.descricao = formDataStepOne.descricao;
         this.userPost.site = formDataStepOne.site;
-        this.userPost.cnpj = formDataStepOne.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-','');
+        this.userPost.cnpj = formDataStepOne.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
         //Step2
         this.userPost.uf = formDataStepTwo.uf;
-        this.userPost.cep = formDataStepTwo.cep.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-','');
+        this.userPost.cep = formDataStepTwo.cep.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
         this.userPost.enderecoLogradouro = formDataStepTwo.enderecoLogradouro;
         this.userPost.bairro = formDataStepTwo.bairro;
         this.userPost.cidade = formDataStepTwo.cidade;

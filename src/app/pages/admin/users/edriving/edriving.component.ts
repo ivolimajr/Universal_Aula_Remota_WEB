@@ -156,22 +156,24 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
      * @return void
      */
     private deleteFromApi(id: number): void {
-        this.userSub = this._edrivingServices.delete(id).subscribe((res) => {
-            if (!res) {
-                this.openSnackBar('Problemas na Remoção');
+        this.userSub = this._edrivingServices.delete(id).subscribe((res: any)=>{
+            console.log(res);
+            if (res.error) {
+                this.openSnackBar(res.error,'warn');
+                return;
             }
-            this.openSnackBar('removido');
+            this.openSnackBar('Removido');
             this.getUsers();
             return;
         });
     }
 
-    private openSnackBar(message: string): void {
-        this._snackBar.open(message, '', {
-            duration: 5 * 1000,
+    private openSnackBar(message: string, type: string = 'accent'): void {
+        this._snackBar.open(message,'',{
+            duration: 5*1000,
             horizontalPosition: 'center',
             verticalPosition: 'top',
-            panelClass: ['mat-toolbar', 'mat-accent']
+            panelClass: ['mat-toolbar', 'mat-'+type]
         });
     }
 }
