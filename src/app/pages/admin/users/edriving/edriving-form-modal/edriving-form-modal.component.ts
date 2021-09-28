@@ -348,8 +348,8 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                 );
             }
             // Adiciona o array de telefones ao fomrGroup
-            this.phoneArray.forEach((phoneNumbersFormGroup) => {
-                (this.accountForm.get('telefones') as FormArray).push(phoneNumbersFormGroup);
+            this.phoneArray.forEach((item) => {
+                (this.accountForm.get('telefones') as FormArray).push(item);
             });
             this.edrivingUserPost.id = this.userEdit.id;
             this.closeAlert();

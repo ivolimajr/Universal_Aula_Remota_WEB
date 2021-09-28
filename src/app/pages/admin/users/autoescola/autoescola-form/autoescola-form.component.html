@@ -148,7 +148,6 @@
                                     class="icon-size-5"
                                     matPrefix
                                     [svgIcon]="'heroicons_solid:globe-alt'"></mat-icon>
-                                <span matPrefix>https://www.</span>
                             </mat-form-field>
                             <!--end:site-->
 
@@ -374,9 +373,33 @@
                         [formGroupName]="'step4'"
                         [stepControl]="verticalStepperForm.get('step4')">
                         <ng-template matStepLabel>Documentos</ng-template>
-                        <p class="my-6 font-medium">
-                            Pode ser inserido algum texto aqui
-                        </p>
+                        <div class="my-6 font-medium" *ngIf="fileArray.length > 0">
+                            <ng-container *ngFor="let item of fileArray;let i = index;">
+                                <div class="relative flex">
+                                    <div
+                                        class="flex items-center w-10 pl-2"
+                                        [ngClass]="'mt-6'">
+                                        <p>{{item.nome}}</p>
+                                    </div>
+                                    <!-- Remove phone number -->
+                                    <ng-container>
+                                        <div
+                                            class="flex items-center w-10 pl-2"
+                                            [ngClass]="'mt-6'">
+                                            <button
+                                                class="w-8 h-8 min-h-8"
+                                                mat-icon-button
+                                                (click)="removeFileField(item.id ?? 0,i)"
+                                                matTooltip="Remove">
+                                                <mat-icon
+                                                    class="icon-size-5"
+                                                    [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                                            </button>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </div>
                         <div class="flex flex-col gt-sm:flex-row">
                             <div class="flex flex-col">
                                 <ng-container

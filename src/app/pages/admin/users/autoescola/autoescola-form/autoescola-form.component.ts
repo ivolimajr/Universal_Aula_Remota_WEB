@@ -2,6 +2,7 @@ import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
+import {formatDate} from '@angular/common';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CepService} from '../../../../../shared/services/http/cep.service';
 import {Subscription} from 'rxjs';
@@ -189,6 +190,11 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
     }
 
     private loadForm(): void {
+
+        if (this.id) {
+            this.prepareEditUser();
+            return;
+        }
         // Vertical stepper form
         this.verticalStepperForm = this._formBuilder.group({
             step1: this._formBuilder.group({
@@ -382,5 +388,200 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         this.userPost.arquivos = formDataStepFour.arquivos;
 
         return result;
+    }
+
+    private prepareEditUser(): void {
+        this.loading = true;
+        this._changeDetectorRef.markForCheck();
+        this._autoEscolaService.getOne(this.id).subscribe((res: any) => {
+            console.log(res);
+            if (res.error) {
+                this.openSnackBar(res.error, 'warn');
+                return;
+            }
+            this.verticalStepperForm = this._formBuilder.group({
+                step1: this._formBuilder.group({
+                    razaoSocial: [res.razaoSocial,
+                        Validators.compose([
+                            Validators.required,
+                            Validators.maxLength(150)
+                        ])],
+                    nomeFantasia: [res.nomeFantasia,
+                        Validators.compose([
+                            Validators.required,
+                            Validators.maxLength(150)
+                        ])],
+                    inscricaoEstadual: [res.inscricaoEstadual,
+                        Validators.compose([
+                            Validators.required,
+                            Validators.minLength(15),
+                            Validators.maxLength(30)
+                        ])],
+                    dataFundacao: [formatDate(res.dataFundacao, 'yyyy-MM-dd', 'en'),
+                        Validators.required,
+                    ],
+                    email: [res.email,
+                        Validators.compose([
+                            Validators.required,
+                            Validators.email,
+                            Validators.maxLength(70)
+                        ])],
+                    descricao: [res.descricao,
+                        Validators.compose([
+                            Validators.required,
+                            Validators.maxLength(150)
+                        ])],
+                    site: [res.site,
+                        Validators.compose([
+                            Validators.required,
+                            Validators.maxLength(100)
+                        ])],
+                    cnpj: [res.cnpj,
+                        Validators.compose([
+                            Validators.required,
+                            Validators.maxLength(18),
+                            NgBrazilValidators.cnpj
+                        ])],
+                }),
+                step2: this._formBuilder.group({
+                    cep: [res.endereco.cep,
+                        Validators.compose([
+                            Validators.required,
+                            Validators.nullValidator,
+                            Validators.minLength(8),
+                            Validators.maxLength(10),
+                            NgBrazilValidators.cep])],
+                    enderecoLogradouro: [res.endereco.enderecoLogradouro,
+                        Validators.compose([
+                            Validators.required,
+                            Validators.nullValidator,
+                            Validators.minLength(3),
+                            Validators.maxLength(150)])],
+                    bairro: [res.endereco.bairro,
+                        Validators.compose([
+                            Validators.required,
+                            Validators.nullValidator,
+                            Validators.minLength(3),
+                            Validators.maxLength(150)])],
+                    uf: [res.endereco.uf, Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator,
+                        Validators.minLength(2),
+                        Validators.maxLength(2)
+                    ])],
+                    cidade: [res.endereco.cidade,
+                        Validators.compose([
+                            Validators.required,
+                            Validators.nullValidator,
+                            Validators.minLength(3),
+                            Validators.maxLength(150)])],
+                    numero: [res.endereco.numero,
+                        Validators.compose([
+                            Validators.required,
+                            Validators.nullValidator,
+                            Validators.minLength(1),
+                            Validators.maxLength(50)])],
+                }),
+                step3: this._formBuilder.group({
+                    telefones: this._formBuilder.array([],
+                        Validators.compose([
+                            Validators.required,
+                            Validators.nullValidator
+                        ]))
+                }),
+                step4: this._formBuilder.group({
+                    arquivos: this._formBuilder.array([],
+                        Validators.compose([
+                            Validators.required,
+                            Validators.nullValidator
+                        ]))
+                })
+            });
+
+            if (res.telefones.length > 0) {
+                res.telefones.forEach((item) => {
+                    //Cria um formGroup de telefone
+                    this.phoneArray.push(
+                        this._formBuilder.group({
+                            id: [item.id],
+                            telefone: [item.telefone, Validators.compose([
+                                Validators.required,
+                                Validators.nullValidator
+                            ])]
+                        }));
+                });
+            } else {
+                // Create a phone number form group
+                this.phoneArray.push(
+                    this._formBuilder.group({
+                        id: [0],
+                        telefone: ['', Validators.compose([
+                            Validators.required,
+                            Validators.nullValidator
+                        ])]
+                    })
+                );
+            }
+            // Adiciona o array de telefones ao fomrGroup
+            this.phoneArray.forEach((item) => {
+                (this.verticalStepperForm.get('step3').get('telefones') as FormArray).push(item);
+            });
+            // Create a phone number form group
+            this.fileArray.push(
+                this._formBuilder.group({
+                    arquivo: [null, Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator
+                    ])]
+                })
+            );
+
+            // Adiciona o array de telefones ao fomrGroup
+            this.fileArray.forEach((item) => {
+                (this.verticalStepperForm.get('step4').get('arquivos') as FormArray).push(item);
+            });
+
+            this.fileArray = res.arquivos;
+            console.log(this.fileArray);
+
+            /*
+
+                        if (res.arquivos.length > 0) {
+                            res.arquivos.forEach((item) => {
+                                //Cria um formGroup de telefone
+                                this.fileArray.push(
+                                    this._formBuilder.group({
+                                        id: [item.id],
+                                        telefone: [item.arquivo,Validators.compose([
+                                            Validators.required,
+                                            Validators.nullValidator
+                                        ])]
+                                    }));
+                            });
+                        } else {
+                            // Create a phone number form group
+                            this.fileArray.push(
+                                this._formBuilder.group({
+                                    id: [0],
+                                    arquivo: ['', Validators.compose([
+                                        Validators.required,
+                                        Validators.nullValidator
+                                    ])]
+                                })
+                            );
+                        }
+                        // Adiciona o array de telefones ao fomrGroup
+                        this.fileArray.forEach((item) => {
+                            (this.verticalStepperForm.get('step4').get('arquivos') as FormArray).push(item);
+                        });
+            */
+
+
+            this.loading = false;
+            this._changeDetectorRef.markForCheck();
+            this.phoneArray = [];
+        });
+
+
     }
 }

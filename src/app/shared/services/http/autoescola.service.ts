@@ -49,7 +49,7 @@ export class AutoescolaService {
      */
     getAll(): Observable<AutoEscolaUsuario[]> {
         return this._httpClient.get<AutoEscolaUsuario[]>(URL_AUTOESCOLA).pipe(
-            switchMap((response: AutoEscolaUsuario[]) => of(response['items'])),
+            switchMap((response: AutoEscolaUsuario[]) => of(response)),
             catchError(e => of(e))
         );
     }
