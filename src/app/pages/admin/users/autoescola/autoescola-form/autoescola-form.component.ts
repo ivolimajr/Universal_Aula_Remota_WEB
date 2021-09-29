@@ -195,6 +195,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             this.prepareEditUser();
             return;
         }
+
         // Vertical stepper form
         this.verticalStepperForm = this._formBuilder.group({
             step1: this._formBuilder.group({
@@ -211,7 +212,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                 inscricaoEstadual: ['669.503.958.773',
                     Validators.compose([
                         Validators.required,
-                        Validators.minLength(15),
+                        Validators.minLength(8),
                         Validators.maxLength(30)
                     ])],
                 dataFundacao: ['2021-01-30',
@@ -414,7 +415,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                     inscricaoEstadual: [res.inscricaoEstadual,
                         Validators.compose([
                             Validators.required,
-                            Validators.minLength(15),
+                            Validators.minLength(8),
                             Validators.maxLength(30)
                         ])],
                     dataFundacao: [formatDate(res.dataFundacao, 'yyyy-MM-dd', 'en'),
