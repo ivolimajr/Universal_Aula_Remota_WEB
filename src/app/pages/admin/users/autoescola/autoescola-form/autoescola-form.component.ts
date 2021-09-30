@@ -8,6 +8,8 @@ import {CepService} from '../../../../../shared/services/http/cep.service';
 import {Subscription} from 'rxjs';
 import {AutoEscolaPost} from '../../../../../shared/models/autoEscola.model';
 import {AutoescolaService} from '../../../../../shared/services/http/autoescola.service';
+import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
     selector: 'app-autoescola-form',
@@ -31,6 +33,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
     private fileArray = [];
 
     constructor(
+        public dialog: MatDialog,
         private routeAcitve: ActivatedRoute,
         private _snackBar: MatSnackBar,
         private _router: Router,
@@ -109,6 +112,36 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
      * @param id do telefone a ser removido
      * @param index do array de telefones a ser removido
      */
+    removeFileFieldFromApi(id: number, index: number): void {
+        //Exibe o alerta de confirmação
+        const dialogRef = this.dialog.open(AlertModalComponent, {
+            width: '280px',
+            data: {title: 'Documento será removido, confirma ?'}
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (!result) {
+                return;
+            }
+            //Se a confirmação do alerta for um OK, remove o usuário
+            this.deleteFileFromApi(id);
+        });
+        return;
+        /*
+        const phoneNumbersFormArray = this.verticalStepperForm.get('step4').get('arquivos') as FormArray;
+        if (phoneNumbersFormArray.length === 1) {
+            return;
+        }
+        phoneNumbersFormArray.removeAt(index);
+        this._changeDetectorRef.markForCheck();
+        */
+    }
+
+    /**
+     * Remove um telefone do formulário de contato e do banco de dados
+     *
+     * @param id do telefone a ser removido
+     * @param index do array de telefones a ser removido
+     */
     removeFileField(id: number, index: number): void {
         const phoneNumbersFormArray = this.verticalStepperForm.get('step4').get('arquivos') as FormArray;
         if (phoneNumbersFormArray.length === 1) {
@@ -118,7 +151,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    submit(id: number): void {
+    submit(): void {
         this.verticalStepperForm.disable();
         const result = this.prepareUser();
         if (result) {
@@ -127,7 +160,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             this.message = 'Salvando';
             this._changeDetectorRef.markForCheck();
 
-            if (!id) {
+            if (!this.id) {
                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                 this.userSub = this._autoEscolaService.create(this.userPost, this.files).subscribe((res: any) => {
                     console.log(res);
@@ -141,6 +174,10 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                     this.openSnackBar('Salvo');
                     this._router.navigate(['usuario/auto-escola']);
                 });
+            } else {
+                console.log(this.userPost);
+                this.closeAlert();
+                this.openSnackBar('Salvo');
             }
         }
     }
@@ -361,6 +398,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             }
         });
 
+        if (this.id) {this.userPost.id = this.id;}
         //Step1
         this.userPost.razaoSocial = formDataStepOne.razaoSocial;
         this.userPost.nomeFantasia = formDataStepOne.nomeFantasia;
@@ -385,8 +423,15 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             }
         });
         this.userPost.telefones = formDataStepThree.telefones;
+
         //Step4
-        this.userPost.arquivos = formDataStepFour.arquivos;
+        if (this.fileArray) {
+            this.userPost.arquivos = this.fileArray;
+            this.userPost.arquivos.push(...formDataStepFour.arquivos);
+        } else {
+            this.userPost.arquivos = formDataStepFour.arquivos;
+        }
+
 
         return result;
     }
@@ -491,11 +536,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                         ]))
                 }),
                 step4: this._formBuilder.group({
-                    arquivos: this._formBuilder.array([],
-                        Validators.compose([
-                            Validators.required,
-                            Validators.nullValidator
-                        ]))
+                    arquivos: this._formBuilder.array([])
                 })
             });
 
@@ -527,62 +568,18 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             this.phoneArray.forEach((item) => {
                 (this.verticalStepperForm.get('step3').get('telefones') as FormArray).push(item);
             });
-            // Create a phone number form group
-            this.fileArray.push(
-                this._formBuilder.group({
-                    arquivo: [null, Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator
-                    ])]
-                })
-            );
-
-            // Adiciona o array de telefones ao fomrGroup
-            this.fileArray.forEach((item) => {
-                (this.verticalStepperForm.get('step4').get('arquivos') as FormArray).push(item);
-            });
 
             this.fileArray = res.arquivos;
-            console.log(this.fileArray);
-
-            /*
-
-                        if (res.arquivos.length > 0) {
-                            res.arquivos.forEach((item) => {
-                                //Cria um formGroup de telefone
-                                this.fileArray.push(
-                                    this._formBuilder.group({
-                                        id: [item.id],
-                                        telefone: [item.arquivo,Validators.compose([
-                                            Validators.required,
-                                            Validators.nullValidator
-                                        ])]
-                                    }));
-                            });
-                        } else {
-                            // Create a phone number form group
-                            this.fileArray.push(
-                                this._formBuilder.group({
-                                    id: [0],
-                                    arquivo: ['', Validators.compose([
-                                        Validators.required,
-                                        Validators.nullValidator
-                                    ])]
-                                })
-                            );
-                        }
-                        // Adiciona o array de telefones ao fomrGroup
-                        this.fileArray.forEach((item) => {
-                            (this.verticalStepperForm.get('step4').get('arquivos') as FormArray).push(item);
-                        });
-            */
-
 
             this.loading = false;
             this._changeDetectorRef.markForCheck();
             this.phoneArray = [];
         });
 
+
+    }
+
+    private deleteFileFromApi(id: number): void {
 
     }
 }

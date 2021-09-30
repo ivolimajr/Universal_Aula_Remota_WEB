@@ -6,10 +6,10 @@ import {UserService} from 'app/shared/services/http/user.service';
 import {LocalStorageService} from '../storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
 import {Usuario, UsuarioLogin} from '../../models/usuario.model';
-import {TokenResult} from 'app/shared/models/token.model';
+import {RefreshToken, TokenResult} from 'app/shared/models/token.model';
 import {NavServices} from "../initialData/navigation/navService";
 
-const API_TOKEN_URL = `${environment.apiUrl}/Auth/getToken`;
+const API_TOKEN_URL = `${environment.apiUrl}/Auth`;
 const API_LOGIN_URL = `${environment.apiUrl}/Usuario/Login`;
 const USERNAME = environment.auth.clientId;
 const PASSWORD = environment.auth.clientSecret;
@@ -122,7 +122,14 @@ export class AuthService {
      * @return consome a API e retorna o Observable do TokenResult
      */
     getApiTokenFromApi(): Observable<TokenResult> {
-        return this._httpClient.post<TokenResult>(`${API_TOKEN_URL}`, {USERNAME, PASSWORD});
+        return this._httpClient.post<TokenResult>(`${API_TOKEN_URL}/getToken`, {USERNAME, PASSWORD});
+    }
+    /***
+     *Método responsável por buscar o token de autenticação na API
+     * @return consome a API e retorna o Observable do TokenResult
+     */
+    refreshToken(accessToken: string, refreshToken: string): Observable<TokenResult> {
+        return this._httpClient.post<TokenResult>(`${API_TOKEN_URL}/refresh`, {accessToken, refreshToken});
     }
 
     /**

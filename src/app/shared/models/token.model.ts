@@ -10,3 +10,7 @@ export class TokenResult {
     accessToken: string;
     refreshToken: string;
 }
+export class RefreshToken {
+    accessToken: string;
+    refreshToken: string;
+}
