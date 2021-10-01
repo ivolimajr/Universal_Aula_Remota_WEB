@@ -43,6 +43,128 @@
                     [linear]="true"
                     #verticalStepper>
 
+                    <!--start:Step-Resumo-->
+                    <mat-step>
+                        <ng-template matStepLabel>Resumo</ng-template>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:mt-10">
+
+                            <div class="flex flex-col h-auto max-w-120 w-full overflow-hidden">
+                                <div class="text-2xl font-semibold leading-tight">Informações Básicas</div>
+                                <div class="mt-4">
+                                    <ul>
+                                        <li class="mt-1"><b>Razão Social: </b>Empresa de tal</li>
+                                        <li class="mt-1"><b>Razão Social: </b>Empresa de tal</li>
+                                        <li class="mt-1"><b>Razão Social: </b>Empresa de tal</li>
+                                        <li class="mt-1"><b>Razão Social: </b>Empresa de tal</li>
+                                        <li class="mt-1"><b>Razão Social: </b>Empresa de tal</li>
+                                        <li class="mt-1"><b>Razão Social: </b>Empresa de tal</li>
+                                        <li class="mt-1"><b>Razão Social: </b>Empresa de tal</li>
+                                    </ul>
+                                </div>
+                                <hr class="w-full border-t my-6">
+                            </div>
+                            <div
+                                class="flex flex-col h-auto max-w-80 w-full rounded-2xl overflow-hidden bg-card border border-indigo-300">
+                                <fuse-card class="flex flex-col p-8 filter-info">
+                                    <div class="text-2xl font-semibold leading-tight">About Me</div>
+                                    <div class="mt-4">
+                                        I’m a friendly kitchen assistant who suffers from a severe phobia of buttons.
+                                        <br><br>
+                                        Brother of Elijah Jay Watkins, who has phobia of buttons and trust issues.
+                                    </div>
+                                    <hr class="w-full border-t my-6">
+                                    <div class="flex flex-col">
+                                        <div class="flex items-center">
+                                            <mat-icon
+                                                class="icon-size-5 mr-3"
+                                                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                                            <span class="leading-none">London, UK</span>
+                                        </div>
+                                        <div class="flex items-center mt-4">
+                                            <mat-icon
+                                                class="icon-size-5 mr-3"
+                                                [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
+                                            <span class="leading-none">ACME Corp. Lead UX Designer</span>
+                                        </div>
+                                        <div class="flex items-center mt-4">
+                                            <mat-icon
+                                                class="icon-size-5 mr-3"
+                                                [svgIcon]="'heroicons_solid:cake'"></mat-icon>
+                                            <span class="leading-none">April, 24</span>
+                                        </div>
+                                    </div>
+                                    <button
+                                        class="px-6 mt-8"
+                                        mat-flat-button
+                                        [color]="'primary'"
+                                        [routerLink]="['./']">
+                                        See complete bio
+                                    </button>
+                                </fuse-card>
+                            </div>
+                            <div
+                                class="flex flex-col h-auto max-w-80 w-full rounded-2xl overflow-hidden bg-card border border-indigo-300">
+                                <fuse-card class="flex flex-col p-8 filter-info">
+                                    <div class="text-2xl font-semibold leading-tight">About Me</div>
+                                    <div class="mt-4">
+                                        I’m a friendly kitchen assistant who suffers from a severe phobia of buttons.
+                                        <br><br>
+                                        Brother of Elijah Jay Watkins, who has phobia of buttons and trust issues.
+                                    </div>
+                                    <hr class="w-full border-t my-6">
+                                    <div class="flex flex-col">
+                                        <div class="flex items-center">
+                                            <mat-icon
+                                                class="icon-size-5 mr-3"
+                                                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                                            <span class="leading-none">London, UK</span>
+                                        </div>
+                                        <div class="flex items-center mt-4">
+                                            <mat-icon
+                                                class="icon-size-5 mr-3"
+                                                [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
+                                            <span class="leading-none">ACME Corp. Lead UX Designer</span>
+                                        </div>
+                                        <div class="flex items-center mt-4">
+                                            <mat-icon
+                                                class="icon-size-5 mr-3"
+                                                [svgIcon]="'heroicons_solid:cake'"></mat-icon>
+                                            <span class="leading-none">April, 24</span>
+                                        </div>
+                                    </div>
+                                    <button
+                                        class="px-6 mt-8"
+                                        mat-flat-button
+                                        [color]="'primary'"
+                                        [routerLink]="['./']">
+                                        See complete bio
+                                    </button>
+                                </fuse-card>
+                            </div>
+
+                        </div>
+                        <div class="flex justify-end mt-8">
+                            <button
+                                class="px-8 mr-2"
+                                mat-flat-button
+                                [color]="'accent'"
+                                type="button"
+                                matStepperPrevious>
+                                Voltar
+                            </button>
+                            <button
+                                class="px-8"
+                                mat-flat-button
+                                [color]="'primary'"
+                                type="reset"
+                                (click)="submit();">
+                                Salvar
+                            </button>
+                        </div>
+                    </mat-step>
+                    <!--end:Step-Resumo-->
+
                     <!--start:Step-DadosEmpresa-->
                     <mat-step
                         [formGroupName]="'step1'"
@@ -101,7 +223,7 @@
                             <!--start:dataFundacao-->
                             <mat-form-field class="flex-auto gt-xs:pl-3">
                                 <mat-label>Data de Abertura</mat-label>
-                                <input matInput type="date" [formControlName]="'dataFundacao'">
+                                <input matInput type="date" [formControlName]="'dataFundacao'" [max]="'2021-01-31'">
                                 <mat-icon
                                     class="icon-size-5"
                                     matPrefix
@@ -303,7 +425,7 @@
                                 <ng-container
                                     *ngFor="let item of verticalStepperForm.get('step3').get('telefones')['controls']; let i = index;"
                                     formArrayName="telefones">
-                                    <div class="relative flex">
+                                    <div class="relative flex w-1/3">
                                         <mat-form-field class="fuse-mat-no-subscript flex-auto">
                                             <mat-label>Telefone</mat-label>
                                             <input
@@ -331,11 +453,10 @@
                                     </div>
                                 </ng-container>
                             </div>
-                            <div
-                                class="group inline-flex items-center mt-2 ml-4 py-2 px-4 rounded cursor-pointer"
-                                (click)="addPhoneNumberField()">
+                            <div class="group inline-flex items-center mt-2 py-2 rounded cursor-pointer"
+                                 (click)="addPhoneNumberField()">
                                 <mat-icon
-                                    class="icon-size-5"
+                                    class="icon-size-5 text-green-500"
                                     [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
                                 <span
                                     class="ml-2 font-medium text-secondary group-hover:underline">Inserir novo contato</span>
@@ -344,7 +465,6 @@
                         </div>
                         <div class="flex flex-col mt-8 gt-sm:mt-0 gt-sm:ml-16">
                             <span class="font-medium mb-2">Pode ser inserido algo aqui</span>
-
                         </div>
                         <div class="flex justify-end mt-8">
                             <button
@@ -374,10 +494,12 @@
                         [stepControl]="verticalStepperForm.get('step4')"
                         #verticalStepperStep4>
                         <ng-template matStepLabel>Documentos</ng-template>
+                        <!--start:EditMode-->
                         <div class="my-6 font-medium" *ngIf="fileArray.length">
                             <div class="flex flex-wrap">
                                 <ng-container *ngFor="let item of fileArray;let i = index;">
-                                    <div class="ml-2.5 text-center justify-center m-4 p-4 min-w-36 max-w-36 min-h-30 max-h-30 rounded border-2 bg-card ng-star-inserted">
+                                    <div
+                                        class="ml-2.5 text-center justify-center m-4 p-4 min-w-36 max-w-36 min-h-30 max-h-30 rounded border-2 bg-card ng-star-inserted">
                                         <mat-icon class="sm:icon-size-5 md:icon-size-10"
                                                   svgIcon="iconsmind:file_trash"></mat-icon>
                                         <button
@@ -395,8 +517,9 @@
                                     </div>
                                 </ng-container>
                             </div>
+                            <!--end:EditMode-->
                         </div>
-                        <div class="flex flex-col gt-sm:flex-row mt-3">
+                        <div class="flex flex-col gt-sm:flex-row mt-5">
                             <div class="flex flex-col">
                                 <ng-container
                                     *ngFor="let file of verticalStepperForm.get('step4').get('arquivos')['controls']; let i = index;"
@@ -429,10 +552,10 @@
                             </div>
                             <!--end:telefones-->
                             <div
-                                class="group inline-flex items-center mt-2 ml-4 py-2 px-4 rounded cursor-pointer"
+                                class="group inline-flex items-center mt-2 py-2 rounded cursor-pointer"
                                 (click)="addFileField()">
                                 <mat-icon
-                                    class="icon-size-5"
+                                    class="icon-size-5 text-green-500"
                                     [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
                                 <span
                                     class="ml-2 font-medium text-secondary group-hover:underline">Adicionar arquivo</span>
@@ -461,34 +584,6 @@
                     </mat-step>
                     <!--end:Step-Contratos-->
 
-                    <!--start:Step-DadosEmpresa-->
-                    <mat-step>
-                        <ng-template matStepLabel>Resumo</ng-template>
-                        <p class="my-6 font-medium">
-                            Thank you for completing our form! You can reset the form if you would like to change your
-                            information.
-                        </p>
-                        <div class="flex justify-end mt-8">
-                            <button
-                                class="px-8 mr-2"
-                                mat-flat-button
-                                [color]="'accent'"
-                                type="button"
-                                matStepperPrevious>
-                                Voltar
-                            </button>
-                            <button
-                                class="px-8"
-                                mat-flat-button
-                                [color]="'primary'"
-                                type="reset"
-                                (click)="submit();">
-                                Salvar
-                            </button>
-                            <mat-spinner [diameter]="2"></mat-spinner>
-                        </div>
-                    </mat-step>
-                    <!--end:Step-DadosEmpresa-->
 
                 </mat-vertical-stepper>
             </form>
