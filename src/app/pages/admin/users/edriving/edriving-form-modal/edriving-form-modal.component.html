@@ -1,5 +1,9 @@
+<ng-container *ngIf="loading;">
+    <mat-progress-bar class="mb-5" [mode]="'indeterminate'"></mat-progress-bar>
+</ng-container>
 <div mat-dialog-content>
     <fuse-card class="flex-col w-full max-w-300 p-6 sm:py-12 sm:px-10 filter-pricing border-2 border-gray-100">
+
         <ng-container *ngIf="!userEdit; else editMode">
             <div class="text-3xl font-bold tracking-tight leading-tight">Novo Usuário</div>
             <div class="mt-2 text-md font-medium tracking-tight text-secondary">Vocês está cadastrando um novo usuário
@@ -12,22 +16,8 @@
                 Edriving
             </div>
         </ng-template>
-        <!-- Divider -->
         <div class="w-15 h-0.5 mt-3 mb-3 rounded bg-accent"></div>
-        <!-- Features -->
-        <ng-container *ngIf="loading; else loaded">
-            <ng-container *ngIf="loading;">
-                <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
-                <fuse-alert
-                    class="mt-2.5"
-                    [type]="'info'"
-                    [appearance]="'border'">
-                    <span fuseAlertTitle>Aguarde...</span>
-                    {{message}}
-                </fuse-alert>
-            </ng-container>
-        </ng-container>
-        <ng-template #loaded>
+        <ng-container>
 
             <div class="flex flex-col mt-2.5">
 
@@ -93,6 +83,7 @@
                         </mat-error>
                     </div>
                     <!--end:CPF-->
+
                     <!--start:cargo-->
                     <mat-form-field appearance="legacy">
                         <mat-label>Cargo</mat-label>
@@ -101,6 +92,7 @@
                         </mat-select>
                         <mat-hint align="end">Selecione o cargo</mat-hint>
                     </mat-form-field>
+                    <!--end:Cargo-->
                     <div class="my-5 border-t"></div>
                     <!--start:telefones-->
                     <div class="sm:col-span-4 mt-2.5">
@@ -155,7 +147,7 @@
             <!-- start:Submit -->
             <button
                 class="ml-1 items-center"
-                [disabled]="accountForm.invalid"
+                [disabled]="accountForm.invalid || accountForm.disabled"
                 class="fuse-mat-button-large mt-10"
                 mat-stroked-button
                 (click)="submit()"
@@ -163,7 +155,7 @@
                 Salvar
             </button>
             <!-- end:Submit -->
-        </ng-template>
+        </ng-container>
     </fuse-card>
 
 </div>

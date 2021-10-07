@@ -1,3 +1,6 @@
+<ng-container *ngIf="loading;">
+    <mat-progress-bar class="mb-5" [mode]="'indeterminate'"></mat-progress-bar>
+</ng-container>
 <div mat-dialog-content>
     <fuse-card class="flex-col w-full max-w-300 p-6 sm:py-12 sm:px-10 filter-pricing border-2 border-gray-100">
         <ng-container *ngIf="!userEdit; else editMode">
@@ -14,20 +17,7 @@
         </ng-template>
         <!-- Divider -->
         <div class="w-15 h-0.5 mt-3 mb-3 rounded bg-accent"></div>
-        <!-- Features -->
-        <ng-container *ngIf="loading; else loaded">
-            <ng-container *ngIf="loading;">
-                <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
-                <fuse-alert
-                    class="mt-2.5"
-                    [type]="'info'"
-                    [appearance]="'border'">
-                    <span fuseAlertTitle>Aguarde...</span>
-                    {{message}}
-                </fuse-alert>
-            </ng-container>
-        </ng-container>
-        <ng-template #loaded>
+        <ng-container>
 
             <div class="flex flex-col mt-2.5">
 
@@ -102,6 +92,26 @@
                         <mat-hint align="end">Selecione o cargo</mat-hint>
                     </mat-form-field>
                     <!--end: cargo-->
+
+
+                    <!--start:Descrição-->
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="descricao">Descrição</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:annotation'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="descricao"
+                                matInput
+                                [formControlName]="'descricao'">
+
+                        </mat-form-field>
+                        <mat-error *ngIf="accountForm.get('descricao').hasError('descricao')">
+                            Insira uma descrição válida
+                        </mat-error>
+                    <!--end:Descrição-->
+
                     <div class="my-5 border-t"></div>
                     <!--start: CEP-->
                     <div class="sm:col-span-4 mt-2.5">
@@ -273,14 +283,14 @@
             <!-- CTA -->
             <button
                 class="ml-1 items-center"
-                [disabled]="accountForm.invalid"
+                [disabled]="accountForm.invalid || accountForm.disabled"
                 class="fuse-mat-button-large mt-10"
                 mat-stroked-button
                 (click)="submit()"
                 [color]="'primary'">
                 Salvar
             </button>
-        </ng-template>
+        </ng-container>
     </fuse-card>
 
 </div>

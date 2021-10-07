@@ -72,18 +72,19 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
      * @return void
      */
     submit(): void {
+        this.accountForm.disable();
         //Prepara o usuário
         const result = this.prepareUser();
         if (result) {
             //Exibe o alerta de salvando dados
             this.loading = true;
-            this.message = 'Salvando';
             this._changeDetectorRef.markForCheck();
 
             //Atualiza o usuário
             if (this.userEdit) {
                 this.userSub = this._edrivingServices.update(this.edrivingUserPost).subscribe((res: any) => {
                     if (res.error) {
+                        this.accountForm.enable();
                         this.openSnackBar(res.error, 'warn');
                         this.closeAlert();
                         return;
@@ -95,6 +96,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                         this.user.email = res.email;
                         this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
                     }
+                    this.accountForm.enable();
                     this.closeAlert();
                     this.dialogRef.close(res);
                     return;
@@ -105,9 +107,11 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                 this.userSub = this._edrivingServices.create(this.edrivingUserPost).subscribe((res: any) => {
                     if (res.error) {
                         this.openSnackBar(res.error, 'warn');
+                        this.accountForm.enable();
                         this.closeAlert();
                         return;
                     }
+                    this.accountForm.enable();
                     this.closeAlert();
                     this.dialogRef.close(res);
                 });
@@ -195,21 +199,21 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         }
         //Cria um formulário para adição de um usuário
         this.accountForm = this._formBuilder.group({
-            nome: ['',
+            nome: ['Nome Apagar',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(100)]
                 )],
-            cpf: ['',
+            cpf: ['424.185.420-68',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(11),
                     Validators.maxLength(14),
                     NgBrazilValidators.cpf])],
-            email: ['',
+            email: ['apagar22@email.com',
                 Validators.compose([
                     Validators.required,
                     Validators.email,
@@ -225,7 +229,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         // Create a phone number form group
         this.phoneArray.push(
             this._formBuilder.group({
-                telefone: ['', Validators.compose([
+                telefone: ['61986618601', Validators.compose([
                     Validators.required,
                     Validators.nullValidator
                 ])]
@@ -251,6 +255,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
 
         if (this.accountForm.invalid) {
             this.openSnackBar('Dados Inválidos', 'warn');
+            this.accountForm.enable();
             return false;
         }
 
@@ -258,16 +263,18 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         formData.telefones.forEach((item) => {
             if (item.telefone === null || item.telefone === '' || item.telefone.length < 11) {
                 this.openSnackBar('Insira um telefone', 'warn');
+                this.accountForm.enable();
                 result = false;
             }
         });
 
         if (this.cargoId === undefined || this.cargoId === 0) {
             this.openSnackBar('Selecione um Cargo', 'warn');
+            this.accountForm.enable();
             result = false;
         }
 
-        if (this.userEdit.id) {
+        if (this.userEdit) {
             this.edrivingUserPost.id = this.userEdit.id;
         }
         if (!this.userEdit) {

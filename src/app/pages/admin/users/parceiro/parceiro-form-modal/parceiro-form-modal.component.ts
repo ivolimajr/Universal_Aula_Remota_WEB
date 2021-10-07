@@ -82,16 +82,17 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
     }
 
     submit(): void {
+        this.accountForm.disable();
         const result = this.prepareUser();
         if (result) {
             //Exibe o alerta de salvando dados
             this.loading = true;
-            this.message = 'Salvando';
             this._changeDetectorRef.markForCheck();
 
             if (this.userEdit) {
                 this.userSub = this._parceiroServices.update(this.parceiroUserPost).subscribe((res: any) => {
                     if (res.error) {
+                        this.accountForm.enable();
                         this.openSnackBar(res.error, 'warn');
                         this.closeAlert();
                         return;
@@ -103,6 +104,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                         this.user.email = res.email;
                         this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
                     }
+                    this.accountForm.enable();
                     this.closeAlert();
                     this.dialogRef.close(res);
                     return;
@@ -110,10 +112,12 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
             } else {
                 this.userSub = this._parceiroServices.create(this.parceiroUserPost).subscribe((res: any) => {
                     if (res.error) {
+                        this.accountForm.enable();
                         this.openSnackBar(res.error, 'warn');
                         this.closeAlert();
                         return;
                     }
+                    this.accountForm.enable();
                     this.closeAlert();
                     this.dialogRef.close(res);
                 });
@@ -228,8 +232,9 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
-                    Validators.minLength(14),
-                    Validators.maxLength(14)])],
+                    Validators.minLength(18),
+                    Validators.maxLength(18),
+                NgBrazilValidators.cnpj])],
             descricao: ['',
                 Validators.compose([
                     Validators.required,
@@ -311,18 +316,21 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
 
         if (this.accountForm.invalid) {
             this.openSnackBar('Dados Inválidos', 'warn');
+            this.accountForm.enable();
             return false;
         }
         //Verifica se os telefones informados são válidos
         formData.telefones.forEach((item) => {
             if (item.telefone === null || item.telefone === '' || item.telefone.length < 11) {
                 this.openSnackBar('Insira um telefone', 'warn');
+                this.accountForm.enable();
                 result = false;
             }
         });
 
         if (this.cargoId === undefined || this.cargoId === 0) {
             this.openSnackBar('Selecione um Cargo', 'warn');
+            this.accountForm.enable();
             result = false;
         }
 

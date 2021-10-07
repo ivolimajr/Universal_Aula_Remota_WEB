@@ -32,6 +32,7 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
     displayedColumns: string[] = ['nome', 'email', 'id'];
     dataSource = new MatTableDataSource<ParceiroUsuario>(ELEMENT_DATA);
     loading: boolean = true;
+    isDeleting: boolean = false;
     showAlert: boolean = false;
     _users$ = this._parceiroServices.getAll();
     private dataSub: Subscription;
@@ -106,6 +107,8 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
      * @return void
      */
     removeUser(id: number, email: string): void {
+        this.isDeleting = true;
+        this._changeDetectorRef.markForCheck();
         //Se o id informado for nulo, ou se o usuário for remover ele mesmo, é retornado um erro
         if (email !== this._authServices.getUserInfoFromStorage().email) {
             //Exibe o alerta de confirmação
@@ -115,6 +118,8 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
             });
             dialogRef.afterClosed().subscribe((result) => {
                 if (!result) {
+                    this.isDeleting = false;
+                    this._changeDetectorRef.markForCheck();
                     return;
                 }
                 //Se a confirmação do alerta for um OK, remove o usuário
@@ -122,6 +127,8 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
             });
             return;
         }
+        this.isDeleting = false;
+        this._changeDetectorRef.markForCheck();
         this.openSnackBar('Remoção Inválida');
         return;
     }
@@ -159,11 +166,14 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
      */
     private deleteFromApi(id: number): void {
         this.userSub = this._parceiroServices.delete(id).subscribe((res: any)=>{
-            console.log(res);
             if (res.error) {
+                this.isDeleting = false;
+                this._changeDetectorRef.markForCheck();
                 this.openSnackBar(res.error,'warn');
                 return;
             }
+            this.isDeleting = false;
+            this._changeDetectorRef.markForCheck();
             this.openSnackBar('Removido');
             this.getUsers();
             return;
