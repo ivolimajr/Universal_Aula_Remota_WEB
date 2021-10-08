@@ -77,9 +77,9 @@ export class AutoescolaService {
             formData.append(name, item.telefone);
             i++;
         });
-        files.forEach((item) => {
+        data.arquivos.forEach((item) => {
             const name = 'arquivos';
-            formData.append(name, item);
+            formData.append(name, item.arquivo);
         });
 
         return this._httpClient.post(URL_AUTOESCOLA, formData).pipe(

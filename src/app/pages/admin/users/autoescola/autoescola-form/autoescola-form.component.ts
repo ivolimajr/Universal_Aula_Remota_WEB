@@ -10,6 +10,7 @@ import {AutoEscolaPost} from '../../../../../shared/models/autoEscola.model';
 import {AutoescolaService} from '../../../../../shared/services/http/autoescola.service';
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
 import {MatDialog} from '@angular/material/dialog';
+import {Arquivo} from '../../../../../shared/models/arquivo.model';
 
 @Component({
     selector: 'app-autoescola-form',
@@ -18,19 +19,25 @@ import {MatDialog} from '@angular/material/dialog';
 export class AutoescolaFormComponent implements OnInit, OnDestroy {
 
     verticalStepperForm: FormGroup;
+    accountForm: FormGroup;
+    addressForm: FormGroup;
+    contactForm: FormGroup;
+    filesForm: FormGroup;
+
     masks = MASKS;
     loading: boolean = false; //Inicia o componente com um lading
+    saving: boolean = false;
     message: string = null; //Mensagem quando estiver salvando ou editando um usuário
     estados = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
         'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
     public id: number = parseInt(this.routeAcitve.snapshot.paramMap.get('id'), 10);
-    private phoneArray = [];
-    // eslint-disable-next-line @typescript-eslint/member-ordering
     files: Set<File>;
+    private phoneArray = [];
     private userPost = new AutoEscolaPost();
     private cepSub: Subscription;
     private userSub: Subscription;
     private fileArray = [];
+    private fileModel: Array<Arquivo> = [];
 
     constructor(
         public dialog: MatDialog,
@@ -68,7 +75,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         });
 
         // Adiciona o formGroup ao array de telefones
-        (this.verticalStepperForm.get('step3').get('telefones') as FormArray).push(phoneNumberFormGroup);
+        (this.contactForm.get('telefones') as FormArray).push(phoneNumberFormGroup);
         this._changeDetectorRef.markForCheck();
     }
 
@@ -79,7 +86,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
      * @param index do array de telefones a ser removido
      */
     removePhoneNumber(id: number, index: number): void {
-        const phoneNumbersFormArray = this.verticalStepperForm.get('step3').get('telefones') as FormArray;
+        const phoneNumbersFormArray = this.contactForm.get('telefones') as FormArray;
         if (phoneNumbersFormArray.length === 1) {
             return;
         }
@@ -102,7 +109,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         });
 
         // Adiciona o formGroup ao array de telefones
-        (this.verticalStepperForm.get('step4').get('arquivos') as FormArray).push(phoneNumberFormGroup);
+        (this.filesForm.get('arquivos') as FormArray).push(phoneNumberFormGroup);
         this._changeDetectorRef.markForCheck();
     }
 
@@ -125,15 +132,12 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             //Se a confirmação do alerta for um OK, remove o usuário
             this.deleteFileFromApi(id);
         });
-        return;
-        /*
-        const phoneNumbersFormArray = this.verticalStepperForm.get('step4').get('arquivos') as FormArray;
+        const phoneNumbersFormArray = this.filesForm.get('arquivos') as FormArray;
         if (phoneNumbersFormArray.length === 1) {
             return;
         }
         phoneNumbersFormArray.removeAt(index);
         this._changeDetectorRef.markForCheck();
-        */
     }
 
     /**
@@ -143,7 +147,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
      * @param index do array de telefones a ser removido
      */
     removeFileField(id: number, index: number): void {
-        const phoneNumbersFormArray = this.verticalStepperForm.get('step4').get('arquivos') as FormArray;
+        const phoneNumbersFormArray = this.filesForm.get('arquivos') as FormArray;
         if (phoneNumbersFormArray.length === 1) {
             return;
         }
@@ -152,33 +156,30 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
     }
 
     submit(): void {
-        this.verticalStepperForm.disable();
-        const result = this.prepareUser();
-        if (result) {
-            //Exibe o alerta de salvando dados
-            this.loading = true;
-            this.message = 'Salvando';
-            this._changeDetectorRef.markForCheck();
+        //Exibe o alerta de salvando dados
+        this.loading = true;
+        this.saving = true;
+        this.message = 'Salvando';
+        this._changeDetectorRef.markForCheck();
 
-            if (!this.id) {
-                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                this.userSub = this._autoEscolaService.create(this.userPost, this.files).subscribe((res: any) => {
-                    console.log(res);
-                    if (res.error) {
-                        this.openSnackBar(res.error, 'warn');
-                        this.closeAlert();
-                        this.verticalStepperForm.enable();
-                        return;
-                    }
+        if (!this.id) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            this.userSub = this._autoEscolaService.create(this.userPost, this.files).subscribe((res: any) => {
+                if (res.error) {
+                    this.saving = false;
+                    this.openSnackBar(res.error, 'warn');
                     this.closeAlert();
-                    this.openSnackBar('Salvo');
-                    this._router.navigate(['usuario/auto-escola']);
-                });
-            } else {
-                console.log(this.userPost);
+                    return;
+                }
+                this.saving = false;
                 this.closeAlert();
                 this.openSnackBar('Salvo');
-            }
+                this._router.navigate(['usuario/auto-escola']);
+            });
+        } else {
+            this.saving = false;
+            this.closeAlert();
+            this.openSnackBar('Salvo');
         }
     }
 
@@ -195,7 +196,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             return;
         }
         this.cepSub = this._cepService.buscar(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
-            this.verticalStepperForm.get('step2').patchValue({
+            this.addressForm.patchValue({
                 bairro: res.bairro,
                 enderecoLogradouro: res.logradouro,
                 cidade: res.localidade,
@@ -206,7 +207,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    onChange(event): void {
+    onPutFile(event): void {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const selectedFiles = <FileList>event.srcElement.files;
         const fileNames = [];
@@ -214,6 +215,68 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         for (let i = 0; i < selectedFiles.length; i++) {
             fileNames.push(selectedFiles[i].name);
             this.files.add(selectedFiles[i]);
+        }
+    }
+
+    setPersonalData(): void {
+
+        if (this.accountForm.valid) {
+            const data = this.accountForm.value;
+
+            if (this.id) {
+                this.userPost.id = this.id;
+            }
+
+            this.userPost.razaoSocial = data.razaoSocial;
+            this.userPost.nomeFantasia = data.nomeFantasia;
+            this.userPost.inscricaoEstadual = data.inscricaoEstadual.replace(/[^0-9,]*/g, '').replace('-', '').replace('/', '');
+            this.userPost.dataFundacao = data.dataFundacao;
+            this.userPost.email = data.email;
+            this.userPost.descricao = data.descricao;
+            this.userPost.site = data.site;
+            this.userPost.cnpj = data.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
+            if (!this.id) {
+                this.userPost.senha = 'Pay@2021';
+            }
+        }
+
+        if (this.addressForm.valid) {
+            const data = this.addressForm.value;
+
+            this.userPost.uf = data.uf;
+            this.userPost.cep = data.cep.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
+            this.userPost.enderecoLogradouro = data.enderecoLogradouro;
+            this.userPost.bairro = data.bairro;
+            this.userPost.cidade = data.cidade;
+            this.userPost.numero = data.numero;
+        }
+        if (this.contactForm.valid) {
+
+            const data = this.contactForm.value;
+
+            //Verifica se os telefones informados são válidos
+            data.telefones.forEach((item) => {
+                if (item.telefone === null || item.telefone === '' || item.telefone.length < 11) {
+                    this.openSnackBar('Insira um telefone', 'warn');
+                    return;
+                }
+            });
+
+            //Step3
+            data.telefones.forEach((item) => {
+                if (item.telefone.length !== 11) {
+                    item.telefone = item.telefone.replace(/[^0-9,]*/g, '').replace(',', '.');
+                }
+            });
+            this.userPost.telefones = data.telefones;
+        }
+        if (this.filesForm.valid) {
+            this.files.forEach((item) => {
+                const file = new Arquivo();
+                file.arquivo = item;
+                this.fileModel.push(file);
+            });
+            this.userPost.arquivos = this.fileModel;
         }
     }
 
@@ -232,105 +295,101 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             this.prepareEditUser();
             return;
         }
-
-        // Vertical stepper form
-        this.verticalStepperForm = this._formBuilder.group({
-            step1: this._formBuilder.group({
-                razaoSocial: ['Dora e Ricardo Telecomunicações Ltda',
-                    Validators.compose([
-                        Validators.required,
-                        Validators.maxLength(150)
-                    ])],
-                nomeFantasia: ['Antonio Filmagens Ltda',
-                    Validators.compose([
-                        Validators.required,
-                        Validators.maxLength(150)
-                    ])],
-                inscricaoEstadual: ['669.503.958.773',
-                    Validators.compose([
-                        Validators.required,
-                        Validators.minLength(8),
-                        Validators.maxLength(30)
-                    ])],
-                dataFundacao: ['2021-01-30',
+        this.accountForm = this._formBuilder.group({
+            razaoSocial: ['Dora e Ricardo Telecomunicações Ltda',
+                Validators.compose([
                     Validators.required,
-                ],
-                email: ['autoescola2@edriving.com',
-                    Validators.compose([
-                        Validators.required,
-                        Validators.email,
-                        Validators.maxLength(70)
-                    ])],
-                descricao: ['Auto Escola Brasil',
-                    Validators.compose([
-                        Validators.required,
-                        Validators.maxLength(150)
-                    ])],
-                site: ['cacoesltda.com.br',
-                    Validators.compose([
-                        Validators.required,
-                        Validators.maxLength(100)
-                    ])],
-                cnpj: ['51862639000117',
-                    Validators.compose([
-                        Validators.required,
-                        Validators.maxLength(18),
-                        NgBrazilValidators.cnpj
-                    ])],
-            }),
-            step2: this._formBuilder.group({
-                cep: ['14786-006',
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(8),
-                        Validators.maxLength(10),
-                        NgBrazilValidators.cep])],
-                enderecoLogradouro: ['Travessa SF-2',
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(3),
-                        Validators.maxLength(150)])],
-                bairro: ['São Francisco',
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(3),
-                        Validators.maxLength(150)])],
-                uf: ['DF', Validators.compose([
+                    Validators.maxLength(150)
+                ])],
+            nomeFantasia: ['Antonio Filmagens Ltda',
+                Validators.compose([
+                    Validators.required,
+                    Validators.maxLength(150)
+                ])],
+            inscricaoEstadual: ['669.503.958.773',
+                Validators.compose([
+                    Validators.required,
+                    Validators.minLength(8),
+                    Validators.maxLength(30)
+                ])],
+            dataFundacao: ['2021-01-30',
+                Validators.required,
+            ],
+            email: ['autoescola2@edriving.com',
+                Validators.compose([
+                    Validators.required,
+                    Validators.email,
+                    Validators.maxLength(70)
+                ])],
+            descricao: ['Auto Escola Brasil',
+                Validators.compose([
+                    Validators.required,
+                    Validators.maxLength(150)
+                ])],
+            site: ['cacoesltda.com.br',
+                Validators.compose([
+                    Validators.required,
+                    Validators.maxLength(100)
+                ])],
+            cnpj: ['51862639000117',
+                Validators.compose([
+                    Validators.required,
+                    Validators.maxLength(18),
+                    NgBrazilValidators.cnpj
+                ])],
+        });
+        this.addressForm = this._formBuilder.group({
+            cep: ['70702-406',
+                Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
-                    Validators.minLength(2),
-                    Validators.maxLength(2)
-                ])],
-                cidade: ['Barretos',
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(3),
-                        Validators.maxLength(150)])],
-                numero: ['240',
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(1),
-                        Validators.maxLength(50)])],
-            }),
-            step3: this._formBuilder.group({
-                telefones: this._formBuilder.array([],
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator
-                    ]))
-            }),
-            step4: this._formBuilder.group({
-                arquivos: this._formBuilder.array([],
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator
-                    ]))
-            })
+                    Validators.minLength(8),
+                    Validators.maxLength(10),
+                    NgBrazilValidators.cep])],
+            enderecoLogradouro: ['Travessa SF-2',
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(3),
+                    Validators.maxLength(150)])],
+            bairro: ['São Francisco',
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(3),
+                    Validators.maxLength(150)])],
+            uf: ['DF', Validators.compose([
+                Validators.required,
+                Validators.nullValidator,
+                Validators.minLength(2),
+                Validators.maxLength(2)
+            ])],
+            cidade: ['Barretos',
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(3),
+                    Validators.maxLength(150)])],
+            numero: ['240',
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(1),
+                    Validators.maxLength(50)])],
+        });
+        this.contactForm = this._formBuilder.group({
+            telefones: this._formBuilder.array([],
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator
+                ]))
+        });
+        this.filesForm = this._formBuilder.group({
+            arquivos: this._formBuilder.array([],
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator
+                ]))
         });
 
         // Create a phone number form group
@@ -345,7 +404,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
 
         // Adiciona o array de telefones ao fomrGroup
         this.phoneArray.forEach((item) => {
-            (this.verticalStepperForm.get('step3').get('telefones') as FormArray).push(item);
+            (this.contactForm.get('telefones') as FormArray).push(item);
         });
 
         // Create a phone number form group
@@ -360,7 +419,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
 
         // Adiciona o array de telefones ao fomrGroup
         this.fileArray.forEach((item) => {
-            (this.verticalStepperForm.get('step4').get('arquivos') as FormArray).push(item);
+            (this.filesForm.get('arquivos') as FormArray).push(item);
         });
 
         this._changeDetectorRef.markForCheck();
@@ -375,65 +434,6 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             verticalPosition: 'top',
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
-    }
-
-    private prepareUser(): boolean {
-        let result = true;
-
-        if (this.verticalStepperForm.invalid) {
-            this.openSnackBar('Dados Inválidos', 'warn');
-            result = false;
-        }
-
-        const formDataStepOne = this.verticalStepperForm.value.step1;
-        const formDataStepTwo = this.verticalStepperForm.value.step2;
-        const formDataStepThree = this.verticalStepperForm.value.step3;
-        const formDataStepFour = this.verticalStepperForm.value.step4;
-
-        //Verifica se os telefones informados são válidos
-        formDataStepThree.telefones.forEach((item) => {
-            if (item.telefone === null || item.telefone === '' || item.telefone.length < 11) {
-                this.openSnackBar('Insira um telefone', 'warn');
-                result = false;
-            }
-        });
-
-        if (this.id) {this.userPost.id = this.id;}
-        //Step1
-        this.userPost.razaoSocial = formDataStepOne.razaoSocial;
-        this.userPost.nomeFantasia = formDataStepOne.nomeFantasia;
-        this.userPost.inscricaoEstadual = formDataStepOne.inscricaoEstadual.replace(/[^0-9,]*/g, '').replace('-', '').replace('/', '');
-        this.userPost.dataFundacao = formDataStepOne.dataFundacao;
-        this.userPost.email = formDataStepOne.email;
-        this.userPost.descricao = formDataStepOne.descricao;
-        this.userPost.site = formDataStepOne.site;
-        this.userPost.cnpj = formDataStepOne.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
-        //Step2
-        this.userPost.uf = formDataStepTwo.uf;
-        this.userPost.cep = formDataStepTwo.cep.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
-        this.userPost.enderecoLogradouro = formDataStepTwo.enderecoLogradouro;
-        this.userPost.bairro = formDataStepTwo.bairro;
-        this.userPost.cidade = formDataStepTwo.cidade;
-        this.userPost.numero = formDataStepTwo.numero;
-        this.userPost.senha = 'Pay@2021';
-        //Step3
-        formDataStepThree.telefones.forEach((item) => {
-            if (item.telefone.length !== 11) {
-                item.telefone = item.telefone.replace(/[^0-9,]*/g, '').replace(',', '.');
-            }
-        });
-        this.userPost.telefones = formDataStepThree.telefones;
-
-        //Step4
-        if (this.fileArray) {
-            this.userPost.arquivos = this.fileArray;
-            this.userPost.arquivos.push(...formDataStepFour.arquivos);
-        } else {
-            this.userPost.arquivos = formDataStepFour.arquivos;
-        }
-
-
-        return result;
     }
 
     private prepareEditUser(): void {
