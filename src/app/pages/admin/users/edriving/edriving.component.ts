@@ -141,6 +141,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
         }
         this._changeDetectorRef.markForCheck();
     }
+
     /**
      * Lista os usuários
      *

@@ -14,6 +14,7 @@ import {LocalStorageService} from '../../../../../shared/services/storage/localS
 import {AuthService} from '../../../../../shared/services/auth/auth.service';
 import {environment} from '../../../../../../environments/environment';
 import {CepService} from '../../../../../shared/services/http/cep.service';
+import {UserService} from '../../../../../shared/services/http/user.service';
 
 @Component({
     selector: 'app-parceiro-form-modal',
@@ -53,6 +54,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
         public dialogRef: MatDialogRef<ParceiroFormModalComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
         private _parceiroServices: ParceiroService,
+        private _userServices: UserService,
         private _authServices: AuthService,
         private _cepService: CepService,
         private _storageServices: LocalStorageService
@@ -139,13 +141,25 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
      * @param index do array de telefones a ser removido
      */
     removePhoneNumber(id: number, index: number): void {
+        this.loading = true;
+        this._changeDetectorRef.markForCheck();
         const phoneNumbersFormArray = this.accountForm.get('telefones') as FormArray;
         if (phoneNumbersFormArray.length === 1) {
             this.openSnackBar('Remoção Inválida', 'warn');
-            return;
+            return this.closeAlert();
         }
-        phoneNumbersFormArray.removeAt(index);
-        this._changeDetectorRef.markForCheck();
+        this._userServices.removePhonenumber(id).subscribe((res) => {
+            if (res === true) {
+                this.openSnackBar('Removido');
+                phoneNumbersFormArray.removeAt(index);
+                return this.closeAlert();
+            }
+            if (res === false) {
+                this.openSnackBar('Remoção Inválida', 'warn');
+                return this.closeAlert();
+            }
+
+        });
     }
 
     /**

@@ -62,6 +62,7 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
         this.dataSource.sort = this.sort;
         this.getUsers();
     }
+
     /**
      * Atualiza ou adiciona um novo usuário do tipo Edriving
      *
@@ -143,6 +144,7 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
         }
         this._changeDetectorRef.markForCheck();
     }
+
     /**
      * Lista os usuários
      *

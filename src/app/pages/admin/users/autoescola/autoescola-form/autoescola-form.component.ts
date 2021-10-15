@@ -155,6 +155,9 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
+    /**
+     * Atualiza ou cria um novo usuário do tipo AutoEscola
+     */
     submit(): void {
         //Exibe o alerta de salvando dados
         this.loading = true;
@@ -162,8 +165,8 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         this.message = 'Salvando';
         this._changeDetectorRef.markForCheck();
 
+        //Se não tiver um ID, significa que está criando um novo usuário
         if (!this.id) {
-            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             this.userSub = this._autoEscolaService.create(this.userPost, this.files).subscribe((res: any) => {
                 if (res.error) {
                     this.saving = false;
@@ -183,13 +186,20 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    //Fecha o alerta na tela
+    /**
+     * Fecha todos os alertas e loadings da tela
+     */
     closeAlert(): void {
         this.loading = false;
         this.message = null;
         this._changeDetectorRef.markForCheck();
     }
 
+    /**
+     * Consulta o cep pela API dos correios
+     *
+     * @param event
+     */
     buscaCep(event): void {
         if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
             this.openSnackBar('Cep inválido');
@@ -207,6 +217,12 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         });
     }
 
+    /**
+     * Evento de captura de upload de arquivo
+     * Popula o array de arquivos this.files com arquivo e nome do arquivo
+     *
+     * @param event
+     */
     onPutFile(event): void {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const selectedFiles = <FileList>event.srcElement.files;
@@ -218,8 +234,14 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Define os dados pessoais no objeto para envio
+     *
+     * @userPost: é o objeto do tipo usuario AutoEscola que será enviado para o BackEnd
+     */
     setPersonalData(): void {
 
+        //Dados da instituição
         if (this.accountForm.valid) {
             const data = this.accountForm.value;
 
@@ -239,7 +261,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                 this.userPost.senha = 'Pay@2021';
             }
         }
-
+        // Dados de endereço
         if (this.addressForm.valid) {
             const data = this.addressForm.value;
 
@@ -250,6 +272,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             this.userPost.cidade = data.cidade;
             this.userPost.numero = data.numero;
         }
+        // dados de contato
         if (this.contactForm.valid) {
 
             const data = this.contactForm.value;
@@ -262,7 +285,6 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                 }
             });
 
-            //Step3
             data.telefones.forEach((item) => {
                 if (item.telefone.length !== 11) {
                     item.telefone = item.telefone.replace(/[^0-9,]*/g, '').replace(',', '.');
@@ -270,6 +292,8 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             });
             this.userPost.telefones = data.telefones;
         }
+
+        //Dados de arquivos de upload
         if (this.filesForm.valid) {
             this.files.forEach((item) => {
                 const file = new Arquivo();
@@ -289,6 +313,10 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Monta todos os formulários
+     * @private
+     */
     private loadForm(): void {
 
         if (this.id) {
@@ -436,108 +464,114 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         });
     }
 
+    /**
+     * Monta todos os formulário para edição do usuário
+     * @private
+     */
     private prepareEditUser(): void {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
         this._autoEscolaService.getOne(this.id).subscribe((res: any) => {
-            console.log(res);
             if (res.error) {
                 this.openSnackBar(res.error, 'warn');
                 return;
             }
-            this.verticalStepperForm = this._formBuilder.group({
-                step1: this._formBuilder.group({
-                    razaoSocial: [res.razaoSocial,
-                        Validators.compose([
-                            Validators.required,
-                            Validators.maxLength(150)
-                        ])],
-                    nomeFantasia: [res.nomeFantasia,
-                        Validators.compose([
-                            Validators.required,
-                            Validators.maxLength(150)
-                        ])],
-                    inscricaoEstadual: [res.inscricaoEstadual,
-                        Validators.compose([
-                            Validators.required,
-                            Validators.minLength(8),
-                            Validators.maxLength(30)
-                        ])],
-                    dataFundacao: [formatDate(res.dataFundacao, 'yyyy-MM-dd', 'en'),
+            this.accountForm = this._formBuilder.group({
+                razaoSocial: [res.razaoSocial,
+                    Validators.compose([
                         Validators.required,
-                    ],
-                    email: [res.email,
-                        Validators.compose([
-                            Validators.required,
-                            Validators.email,
-                            Validators.maxLength(70)
-                        ])],
-                    descricao: [res.descricao,
-                        Validators.compose([
-                            Validators.required,
-                            Validators.maxLength(150)
-                        ])],
-                    site: [res.site,
-                        Validators.compose([
-                            Validators.required,
-                            Validators.maxLength(100)
-                        ])],
-                    cnpj: [res.cnpj,
-                        Validators.compose([
-                            Validators.required,
-                            Validators.maxLength(18),
-                            NgBrazilValidators.cnpj
-                        ])],
-                }),
-                step2: this._formBuilder.group({
-                    cep: [res.endereco.cep,
-                        Validators.compose([
-                            Validators.required,
-                            Validators.nullValidator,
-                            Validators.minLength(8),
-                            Validators.maxLength(10),
-                            NgBrazilValidators.cep])],
-                    enderecoLogradouro: [res.endereco.enderecoLogradouro,
-                        Validators.compose([
-                            Validators.required,
-                            Validators.nullValidator,
-                            Validators.minLength(3),
-                            Validators.maxLength(150)])],
-                    bairro: [res.endereco.bairro,
-                        Validators.compose([
-                            Validators.required,
-                            Validators.nullValidator,
-                            Validators.minLength(3),
-                            Validators.maxLength(150)])],
-                    uf: [res.endereco.uf, Validators.compose([
+                        Validators.maxLength(150)
+                    ])],
+                nomeFantasia: [res.nomeFantasia,
+                    Validators.compose([
+                        Validators.required,
+                        Validators.maxLength(150)
+                    ])],
+                inscricaoEstadual: [res.inscricaoEstadual,
+                    Validators.compose([
+                        Validators.required,
+                        Validators.minLength(8),
+                        Validators.maxLength(30)
+                    ])],
+                dataFundacao: [formatDate(res.dataFundacao, 'yyyy-MM-dd', 'en'),
+                    Validators.required,
+                ],
+                email: [res.email,
+                    Validators.compose([
+                        Validators.required,
+                        Validators.email,
+                        Validators.maxLength(70)
+                    ])],
+                descricao: [res.descricao,
+                    Validators.compose([
+                        Validators.required,
+                        Validators.maxLength(150)
+                    ])],
+                site: [res.site,
+                    Validators.compose([
+                        Validators.required,
+                        Validators.maxLength(100)
+                    ])],
+                cnpj: [res.cnpj,
+                    Validators.compose([
+                        Validators.required,
+                        Validators.maxLength(18),
+                        NgBrazilValidators.cnpj
+                    ])],
+            });
+            this.addressForm = this._formBuilder.group({
+                cep: [res.endereco.cep,
+                    Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator,
+                        Validators.minLength(8),
+                        Validators.maxLength(10),
+                        NgBrazilValidators.cep])],
+                enderecoLogradouro: [res.endereco.enderecoLogradouro,
+                    Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator,
+                        Validators.minLength(3),
+                        Validators.maxLength(150)])],
+                bairro: [res.endereco.bairro,
+                    Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator,
+                        Validators.minLength(3),
+                        Validators.maxLength(150)])],
+                uf: [res.endereco.uf,
+                    Validators.compose([
                         Validators.required,
                         Validators.nullValidator,
                         Validators.minLength(2),
                         Validators.maxLength(2)
                     ])],
-                    cidade: [res.endereco.cidade,
-                        Validators.compose([
-                            Validators.required,
-                            Validators.nullValidator,
-                            Validators.minLength(3),
-                            Validators.maxLength(150)])],
-                    numero: [res.endereco.numero,
-                        Validators.compose([
-                            Validators.required,
-                            Validators.nullValidator,
-                            Validators.minLength(1),
-                            Validators.maxLength(50)])],
-                }),
-                step3: this._formBuilder.group({
-                    telefones: this._formBuilder.array([],
-                        Validators.compose([
-                            Validators.required,
-                            Validators.nullValidator
-                        ]))
-                }),
-                step4: this._formBuilder.group({
-                    arquivos: this._formBuilder.array([])
-                })
+                cidade: [res.endereco.cidade,
+                    Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator,
+                        Validators.minLength(3),
+                        Validators.maxLength(150)])],
+                numero: [res.endereco.numero,
+                    Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator,
+                        Validators.minLength(1),
+                        Validators.maxLength(50)])],
+            });
+            this.contactForm = this._formBuilder.group({
+                telefones: this._formBuilder.array([],
+                    Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator
+                    ]))
+            });
+            this.filesForm = this._formBuilder.group({
+                arquivos: this._formBuilder.array([],
+                    Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator
+                    ]))
             });
 
             if (res.telefones.length > 0) {
@@ -566,9 +600,38 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             }
             // Adiciona o array de telefones ao fomrGroup
             this.phoneArray.forEach((item) => {
-                (this.verticalStepperForm.get('step3').get('telefones') as FormArray).push(item);
+                (this.contactForm.get('telefones') as FormArray).push(item);
             });
 
+            // Create a phone number form group
+            if (res.arquivos.length > 0) {
+                // Create a phone number form group
+                this.fileArray.push(
+                    this._formBuilder.group({
+                        id: [0],
+                        arquivo: ['']
+                    })
+                );
+            } else {
+                // Create a phone number form group
+                this.fileArray.push(
+                    this._formBuilder.group({
+                        id: [0],
+                        arquivo: ['', Validators.compose([
+                            Validators.required,
+                            Validators.nullValidator
+                        ])]
+                    })
+                );
+
+            }
+
+            // Adiciona o array de telefones ao fomrGroup
+            this.fileArray.forEach((item) => {
+                (this.filesForm.get('arquivos') as FormArray).push(item);
+            });
+
+            this.fileArray = [];
             this.fileArray = res.arquivos;
 
             this.loading = false;
@@ -579,6 +642,11 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
 
     }
 
+    /**
+     * Remove um arquivo da API
+     * @param id
+     * @private
+     */
     private deleteFileFromApi(id: number): void {
 
     }

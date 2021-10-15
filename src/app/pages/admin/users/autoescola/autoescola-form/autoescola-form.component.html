@@ -307,7 +307,8 @@
                                                         <input
                                                             matInput
                                                             [placeholder]="'telefone'"
-                                                            telefone [textMask]="{mask: masks.telefone.textMaskFunction}"
+                                                            telefone
+                                                            [textMask]="{mask: masks.telefone.textMaskFunction}"
                                                             [formControl]="item.get('telefone')"
                                                             [value]="item.value.telefone ?? ''">
                                                     </mat-form-field>
@@ -329,8 +330,9 @@
                                                 </div>
                                             </ng-container>
                                         </div>
-                                        <div class="group inline-flex items-center mt-2 py-2 rounded cursor-pointer"
-                                             (click)="addPhoneNumberField()">
+                                        <div
+                                            class="group inline-flex items-center mt-2 py-2 rounded cursor-pointer w-1/2"
+                                            (click)="addPhoneNumberField()">
                                             <mat-icon
                                                 class="icon-size-5 text-green-500"
                                                 [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
@@ -388,9 +390,12 @@
                                                             class="icon-size-25 text-red-500"
                                                             [svgIcon]="'heroicons_solid:trash'"></mat-icon>
                                                     </button>
-                                                    <div class="text-sm text-center break-all text-secondary w-30 mt-1.5">
-                                                        {{item.nome}}
-                                                    </div>
+                                                    <a href="{{item.destino}}" target="_blank">
+                                                        <div
+                                                            class="text-sm text-center break-all text-secondary w-30 mt-1.5">
+                                                            {{item.nome}}
+                                                        </div>
+                                                    </a>
                                                 </div>
                                             </ng-container>
                                         </div>
@@ -475,7 +480,8 @@
                                             <ul>
                                                 <li class="mt-1"><b>Razão Social: </b>{{userPost.razaoSocial}}</li>
                                                 <li class="mt-1"><b>Nome Fantasia: </b>{{userPost.nomeFantasia}}</li>
-                                                <li class="mt-1"><b>Inscrição Estadual: </b>{{userPost.inscricaoEstadual}}</li>
+                                                <li class="mt-1"><b>Inscrição
+                                                    Estadual: </b>{{userPost.inscricaoEstadual}}</li>
                                                 <li class="mt-1"><b>Email: </b>{{userPost.email}}</li>
                                                 <li class="mt-1"><b>Site: </b> {{userPost.site}}</li>
                                                 <li class="mt-1"><b>CNPJ: </b>{{userPost.cnpj}}</li>
@@ -484,7 +490,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="flex flex-col h-auto max-w-120 w-full overflow-hidden sm:border-0 md:border-l-2">
+                                    <div
+                                        class="flex flex-col h-auto max-w-120 w-full overflow-hidden sm:border-0 md:border-l-2">
                                         <div class="text-2xl font-semibold leading-tight md:ml-3">Endereço</div>
                                         <div class="mt-4 md:ml-3">
                                             <ul>
@@ -510,11 +517,15 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="flex flex-col h-auto max-w-120 w-full overflow-hidden  sm:border-0 md:border-l-2">
-                                        <div class="text-2xl font-semibold leading-tight ml-2">Contato</div>
+                                    <div
+                                        class="flex flex-col h-auto max-w-120 w-full overflow-hidden  sm:border-0 md:border-l-2">
+                                        <div class="text-2xl font-semibold leading-tight ml-2">Anexos</div>
                                         <div class="mt-4 ml-2">
                                             <ul *ngFor="let item of userPost.arquivos">
-                                                <li class="mt-1"><b>Documento: </b>{{item.arquivo.name}}</li>
+                                                <li class="mt-1"><b>Doc: </b>{{item.arquivo.name}}</li>
+                                            </ul>
+                                            <ul *ngFor="let item of fileArray">
+                                                <li class="mt-1"><b>Doc: </b>{{item.nome}}</li>
                                             </ul>
                                         </div>
                                     </div>

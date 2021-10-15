@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {of, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../../@fuse/components/alert';
@@ -13,6 +13,7 @@ import {LocalStorageService} from '../../../../../shared/services/storage/localS
 import {Usuario} from '../../../../../shared/models/usuario.model';
 import {environment} from '../../../../../../environments/environment';
 import {AuthService} from '../../../../../shared/services/auth/auth.service';
+import {UserService} from '../../../../../shared/services/http/user.service';
 
 @Component({
     selector: 'app-edrivin-form-modal',
@@ -49,6 +50,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         public dialogRef: MatDialogRef<EdrivingFormModalComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
         private _edrivingServices: EdrivingService,
+        private _userServices: UserService,
         private _authServices: AuthService,
         private _storageServices: LocalStorageService
     ) {
@@ -133,13 +135,25 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
      * @param index do array de telefones a ser removido
      */
     removePhoneNumber(id: number, index: number): void {
+        this.loading = true;
+        this._changeDetectorRef.markForCheck();
         const phoneNumbersFormArray = this.accountForm.get('telefones') as FormArray;
         if (phoneNumbersFormArray.length === 1) {
             this.openSnackBar('Remoção Inválida', 'warn');
-            return;
+            return this.closeAlert();
         }
-        phoneNumbersFormArray.removeAt(index);
-        this._changeDetectorRef.markForCheck();
+        this._userServices.removePhonenumber(id).subscribe((res) => {
+            if (res === true) {
+                this.openSnackBar('Removido');
+                phoneNumbersFormArray.removeAt(index);
+                return this.closeAlert();
+            }
+            if (res === false) {
+                this.openSnackBar('Remoção Inválida', 'warn');
+                return this.closeAlert();
+            }
+
+        });
     }
 
     /**
@@ -148,7 +162,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
      * @return void
      */
     addPhoneNumberField(): void {
-        const phoneNumberFormGroup =  this._formBuilder.group({
+        const phoneNumberFormGroup = this._formBuilder.group({
             telefone: ['', Validators.compose([
                 Validators.required,
                 Validators.nullValidator
@@ -165,10 +179,10 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
     };
 
     ngOnDestroy(): void {
-        if(this.userSub){
+        if (this.userSub) {
             this.userSub.unsubscribe();
         }
-        if(this.cargoSub){
+        if (this.cargoSub) {
             this.cargoSub.unsubscribe();
         }
     }
@@ -261,7 +275,8 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
 
         //Verifica se os telefones informados são válidos
         formData.telefones.forEach((item) => {
-            if (item.telefone === null || item.telefone === '' || item.telefone.length < 11) {
+            console.log(item);
+            if (item.telefone === null || item.telefone === '' || item.telefone.length < 10) {
                 this.openSnackBar('Insira um telefone', 'warn');
                 this.accountForm.enable();
                 result = false;
@@ -299,68 +314,68 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         this.message = 'Buscando dados.';
         this._changeDetectorRef.markForCheck();
 
-            this.accountForm = this._formBuilder.group({
-                nome: [this.userEdit.nome,
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(5),
-                        Validators.maxLength(100)]
-                    )],
-                cpf: [this.userEdit.cpf,
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(11),
-                        Validators.maxLength(11)])],
-                email: [this.userEdit.email,
-                    Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(5),
-                        Validators.maxLength(70)])],
-                telefones: this._formBuilder.array([], Validators.compose([
+        this.accountForm = this._formBuilder.group({
+            nome: [this.userEdit.nome,
+                Validators.compose([
                     Validators.required,
-                    Validators.nullValidator
-                ])),
-            });
-            this.cargoId = this.userEdit.cargoId;
-            this.selected = this.userEdit.cargo.id.toString();
+                    Validators.nullValidator,
+                    Validators.minLength(5),
+                    Validators.maxLength(100)]
+                )],
+            cpf: [this.userEdit.cpf,
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(11),
+                    Validators.maxLength(11)])],
+            email: [this.userEdit.email,
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(5),
+                    Validators.maxLength(70)])],
+            telefones: this._formBuilder.array([], Validators.compose([
+                Validators.required,
+                Validators.nullValidator
+            ])),
+        });
+        this.cargoId = this.userEdit.cargoId;
+        this.selected = this.userEdit.cargo.id.toString();
 
-            //Só monta o array de telefones se houver telefones de contato cadastrado
-            if (this.userEdit.telefones.length > 0) {
-                // Iterate through them
-                this.userEdit.telefones.forEach((phoneNumber) => {
+        //Só monta o array de telefones se houver telefones de contato cadastrado
+        if (this.userEdit.telefones.length > 0) {
+            // Iterate through them
+            this.userEdit.telefones.forEach((phoneNumber) => {
 
-                    //Cria um formGroup de telefone
-                    this.phoneArray.push(
-                        this._formBuilder.group({
-                            id: [phoneNumber.id],
-                            telefone: [phoneNumber.telefone,Validators.compose([
+                //Cria um formGroup de telefone
+                this.phoneArray.push(
+                    this._formBuilder.group({
+                        id: [phoneNumber.id],
+                        telefone: [phoneNumber.telefone, Validators.compose([
                             Validators.required,
                             Validators.nullValidator
                         ])]
                     }));
-                });
-            } else {
-                // Create a phone number form group
-                this.phoneArray.push(
-                    this._formBuilder.group({
-                        id: [0],
-                        telefone: ['', Validators.compose([
-                            Validators.required,
-                            Validators.nullValidator
-                        ])]
-                    })
-                );
-            }
-            // Adiciona o array de telefones ao fomrGroup
-            this.phoneArray.forEach((item) => {
-                (this.accountForm.get('telefones') as FormArray).push(item);
             });
-            this.edrivingUserPost.id = this.userEdit.id;
-            this.closeAlert();
-            this.phoneArray = [];
+        } else {
+            // Create a phone number form group
+            this.phoneArray.push(
+                this._formBuilder.group({
+                    id: [0],
+                    telefone: ['', Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator
+                    ])]
+                })
+            );
+        }
+        // Adiciona o array de telefones ao fomrGroup
+        this.phoneArray.forEach((item) => {
+            (this.accountForm.get('telefones') as FormArray).push(item);
+        });
+        this.edrivingUserPost.id = this.userEdit.id;
+        this.closeAlert();
+        this.phoneArray = [];
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {
