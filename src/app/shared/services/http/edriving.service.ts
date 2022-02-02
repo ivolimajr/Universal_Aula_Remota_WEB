@@ -39,7 +39,7 @@ export class EdrivingService {
      */
     getAll(): Observable<EdrivingUsuario[]> {
         return this._httpClient.get<EdrivingUsuario[]>(URL_EDRIVING).pipe(
-            switchMap((response: EdrivingUsuario[]) => of(response['items'])),
+            switchMap((response: EdrivingUsuario[]) => of(response)),
             catchError(e => of(e))
         );
     }
@@ -98,7 +98,7 @@ export class EdrivingService {
      */
     getCargos(): Observable<Cargo[]> {
         return this._httpClient.get(URL_EDRIVING_CARGO).pipe(
-            switchMap((response: any) => of(response['items'])),
+            switchMap((response: any) => of(response)),
             catchError(e => of(e))
         );
     }

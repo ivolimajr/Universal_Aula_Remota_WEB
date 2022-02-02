@@ -40,7 +40,7 @@ export class ParceiroService {
      */
     getAll(): Observable<ParceiroUsuario[]> {
         return this._httpClient.get<ParceiroUsuario[]>(URL_PARCEIRO).pipe(
-            switchMap((response: ParceiroUsuario[]) => of(response['items'])),
+            switchMap((response: ParceiroUsuario[]) => of(response)),
             catchError(e => of(e))
         );
     }
@@ -100,7 +100,7 @@ export class ParceiroService {
      */
     getCargos(): Observable<Cargo[]> {
         return this._httpClient.get(URL_PARCEIRO_CARGO).pipe(
-            switchMap((response: any) => of(response['items'])),
+            switchMap((response: any) => of(response)),
             catchError(e => of(e))
         );
     }
