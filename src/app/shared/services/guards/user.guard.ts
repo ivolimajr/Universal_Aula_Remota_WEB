@@ -13,19 +13,21 @@ import {
 import {Observable, of} from 'rxjs';
 import {AuthService} from 'app/shared/services/auth/auth.service';
 import {switchMap} from 'rxjs/operators';
+import {RoleModel} from '../../models/role.model';
+import {RolesConstants} from '../../constants';
 
 @Injectable({
     providedIn: 'root'
 })
 export class PlataformaGuard implements CanActivate, CanActivateChild, CanLoad {
 
-    private nivelAcesso: number = null;
+    private roles: Array<RoleModel> = null;
 
     constructor(
         private _authService: AuthService,
         private _router: Router
     ) {
-        this.nivelAcesso = this._authService.getUserInfoFromStorage().nivelAcesso;
+        this.roles = this._authService.getUserInfoFromStorage().roles;
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
@@ -61,7 +63,7 @@ export class PlataformaGuard implements CanActivate, CanActivateChild, CanLoad {
                     }
 
                     // Allow the access
-                    if(this.nivelAcesso >= 10 && this.nivelAcesso < 20){
+                    if(this.roles.find(r => r.role === RolesConstants.EDRIVING)){
                         return of(true);
                     }
 
@@ -79,13 +81,13 @@ export class PlataformaGuard implements CanActivate, CanActivateChild, CanLoad {
 })
 export class ParceiroGuard implements CanActivate,  CanActivateChild, CanLoad {
 
-    private nivelAcesso: number = null;
+    private roles: Array<RoleModel> = null;
 
     constructor(
         private _authService: AuthService,
         private _router: Router
     ) {
-        this.nivelAcesso = this._authService.getUserInfoFromStorage().nivelAcesso;
+        this.roles = this._authService.getUserInfoFromStorage().roles;
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
@@ -121,7 +123,7 @@ export class ParceiroGuard implements CanActivate,  CanActivateChild, CanLoad {
                     }
 
                     // Allow the access
-                    if((this.nivelAcesso >= 10 && this.nivelAcesso < 20) || (this.nivelAcesso >= 20 && this.nivelAcesso < 30)){
+                    if(this.roles.find(r => r.role === RolesConstants.EDRIVING) || this.roles.find(r => r.role === RolesConstants.PARCEIRO)){
                         return of(true);
                     }
 

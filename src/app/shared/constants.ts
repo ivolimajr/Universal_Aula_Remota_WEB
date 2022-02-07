@@ -1,4 +1,4 @@
-export class Roles
+export class RolesConstants
 {
     static readonly APIUSER= 'APIUSER';
     static readonly EDRIVING= 'EDRIVING';
@@ -9,14 +9,14 @@ export class Roles
     static readonly ADMINISTRATIVO= 'ADMINISTRATIVO';
 }
 
-export class EdrivingCargos
+export class EdrivingCargosConstants
 {
     static readonly DIRETOR= 'DIRETOR';
     static readonly ANALISTA= 'ANALISTA';
     static readonly ADMINISTRATIVO= 'ADMINISTRATIVO';
 };
 
-export class ParceiroCargos
+export class ParceiroCargosConstants
 {
     static readonly DIRETOR= 'DIRETOR';
     static readonly ANALISTA= 'ANALISTA';

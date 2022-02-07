@@ -11,6 +11,7 @@ import {BooleanInput} from '@angular/cdk/coercion';
 import {Subject} from 'rxjs';
 import {Usuario} from 'app/shared/models/usuario.model';
 import {AuthService} from '../../../shared/services/auth/auth.service';
+import {RolesConstants} from '../../../shared/constants';
 
 @Component({
     selector: 'user-menu',
@@ -60,10 +61,9 @@ export class UserMenuComponent implements OnInit, OnDestroy {
     }
 
     goPaginaPerfil(): void {
-        if (this.user.nivelAcesso >= 10 || this.user.nivelAcesso < 20) {
+        if (this.user.roles.find(r => r.role = RolesConstants.EDRIVING)) {
             this._router.navigateByUrl('perfil');
         }
-
     }
 
     /**

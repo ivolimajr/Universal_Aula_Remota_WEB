@@ -8,6 +8,8 @@ import {
     plataformaNavigation
 } from 'app/shared/services/initialData/navigation/data';
 import {AuthService} from '../../auth/auth.service';
+import {RoleModel} from '../../../models/role.model';
+import {RolesConstants} from '../../../constants';
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +19,7 @@ export class NavServices {
     private readonly _defaultNavigation: FuseNavigationItem[] = defaultNavigation;
     private readonly _plataformaNavigation: FuseNavigationItem[] = plataformaNavigation;
     private readonly _parceiroNavigation: FuseNavigationItem[] = parceiroNavigation;
-    private nivelAcesso: number = 0;
+    private roles: Array<RoleModel> = null;
 
     /**
      * Constructor
@@ -47,11 +49,11 @@ export class NavServices {
                 this._dataNavigation = [];
 
                 if (this._authServices.getUserInfoFromStorage()) {
-                    this.nivelAcesso = this._authServices.getUserInfoFromStorage().nivelAcesso;
+                    this.roles = this._authServices.getUserInfoFromStorage().roles;
                 }
 
                 //Montagem do menu para os usuário da plataforma do tipo Edriving
-                if (this.nivelAcesso >= 10 && this.nivelAcesso < 20) {
+                if (this.roles.find(r => r.role === RolesConstants.EDRIVING)) {
                     this._dataNavigation.push(...this._defaultNavigation);
                     this._dataNavigation.push(...this._plataformaNavigation);
                     this._dataNavigation.push(...this._parceiroNavigation);
@@ -68,7 +70,7 @@ export class NavServices {
                 }
 
                 //Montagem do menu para os usuários do tipo parceiro
-                if (this.nivelAcesso >= 20 && this.nivelAcesso < 30) {
+                if (this.roles.find(r => r.role === RolesConstants.EDRIVING) && this.roles.find(r => r.role === RolesConstants.PARCEIRO)) {
                     this._dataNavigation.push(...this._defaultNavigation);
                     this._dataNavigation.push(...this._parceiroNavigation);
                     // Return the response

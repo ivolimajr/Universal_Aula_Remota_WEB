@@ -5,7 +5,6 @@ export class Usuario {
     nome: string;
     email: string;
     status: number;
-    nivelAcesso: number;
     password?: string;
     roles: Array<RoleModel>;
 }

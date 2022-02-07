@@ -6,7 +6,8 @@ import {UserService} from 'app/shared/services/http/user.service';
 import {LocalStorageService} from '../storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
 import {Usuario, UsuarioLogin} from '../../models/usuario.model';
-import {RefreshToken, TokenResult} from 'app/shared/models/token.model';
+import {TokenResult} from 'app/shared/models/token.model';
+import {RolesConstants} from '../../constants';
 
 const API_TOKEN_URL = `${environment.apiUrl}/ApiAuth`;
 const API_LOGIN_URL = `${environment.apiUrl}/Usuario/Login`;
@@ -61,9 +62,7 @@ export class AuthService {
         }
 
         return this._httpClient.post(API_LOGIN_URL, credentials).pipe(
-            switchMap((response: any) => {
-                console.log(response);
-                /*
+            switchMap((response: Usuario) => {
                 this.storageServices.setValueFromLocalStorage(environment.authStorage, response);
 
                 //Define os atributos de login e senha para salvar no Storage para verificações.
@@ -76,10 +75,9 @@ export class AuthService {
                 this._authenticated = true;
 
                 //Definie o userState
-                this.user = response.user;
+                this.user = response;
 
                 // Retorna um novo observable com a resposta
-                */
                 return of(response);
             }),
             catchError(e => of(e))

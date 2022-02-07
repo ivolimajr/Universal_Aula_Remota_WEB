@@ -17,6 +17,7 @@ import {AuthService} from '../../shared/services/auth/auth.service';
 import {ParceiroUsuario} from '../../shared/models/parceiro.model';
 import {ParceiroService} from '../../shared/services/http/parceiro.service';
 import {Endereco} from '../../shared/models/endereco.model';
+import {RolesConstants} from '../../shared/constants';
 
 @Component({
     selector: 'app-perfil',
@@ -162,7 +163,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
         //pega os dados do usuário que estão no localstorage
         this.authSub = this._authService.user$.subscribe((res) => {
             //verifica se o usuário tem perfil de edriving - perfil que gerencia a plataforma
-            if (res.nivelAcesso >= 10 && res.nivelAcesso < 20) {
+            if (res.roles.find(r => r.role === RolesConstants.EDRIVING) ) {
                 //busca o usuário na API
                 this.userSub = this._edrivingServices.getOne(res.id).subscribe((result) => {
                     this.edrivingUser = result;
@@ -175,7 +176,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
                 });
             }
             //verifica se o usuário tem perfil de edriving - perfil que gerencia a plataforma
-            if (res.nivelAcesso >= 20 && res.nivelAcesso < 30) {
+            if (res.roles.find(r => r.role === RolesConstants.PARCEIRO) ) {
                 //busca o usuário na API
                 this.userSub = this._parceiroServices.getOne(res.id).subscribe((result) => {
                     this.parceiroUser = result;
