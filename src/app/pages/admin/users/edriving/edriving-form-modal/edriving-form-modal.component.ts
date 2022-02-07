@@ -138,6 +138,10 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
         const phoneNumbersFormArray = this.accountForm.get('telefones') as FormArray;
+        if(id === 0  && phoneNumbersFormArray.length > 1){
+            phoneNumbersFormArray.removeAt(index);
+            return this.closeAlert();
+        }
         if (phoneNumbersFormArray.length === 1) {
             this.openSnackBar('Remoção Inválida', 'warn');
             return this.closeAlert();
