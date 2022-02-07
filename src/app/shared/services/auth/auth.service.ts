@@ -7,9 +7,8 @@ import {LocalStorageService} from '../storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
 import {Usuario, UsuarioLogin} from '../../models/usuario.model';
 import {RefreshToken, TokenResult} from 'app/shared/models/token.model';
-import {NavServices} from "../initialData/navigation/navService";
 
-const API_TOKEN_URL = `${environment.apiUrl}/Auth`;
+const API_TOKEN_URL = `${environment.apiUrl}/ApiAuth`;
 const API_LOGIN_URL = `${environment.apiUrl}/Usuario/Login`;
 const USERNAME = environment.auth.clientId;
 const PASSWORD = environment.auth.clientSecret;
@@ -63,6 +62,8 @@ export class AuthService {
 
         return this._httpClient.post(API_LOGIN_URL, credentials).pipe(
             switchMap((response: any) => {
+                console.log(response);
+                /*
                 this.storageServices.setValueFromLocalStorage(environment.authStorage, response);
 
                 //Define os atributos de login e senha para salvar no Storage para verificações.
@@ -78,6 +79,7 @@ export class AuthService {
                 this.user = response.user;
 
                 // Retorna um novo observable com a resposta
+                */
                 return of(response);
             }),
             catchError(e => of(e))

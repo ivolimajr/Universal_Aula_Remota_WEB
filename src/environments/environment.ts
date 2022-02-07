@@ -9,7 +9,7 @@ export const environment = {
     // apiUrl: 'http://localhost:5000/api/v1',
     privateStorageKey: 'Sapien_ulla_ultricies',
     auth: {
-        clientId: 'EDRIVING@EDRIVING.EDU.BR',
+        clientId: 'APIUSER@EDRIVING.EDU.BR',
         clientSecret: 'Senha@123',
     }
 };
