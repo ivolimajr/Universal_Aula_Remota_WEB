@@ -122,7 +122,7 @@ export class AuthService {
      * @return consome a API e retorna o Observable do TokenResult
      */
     getApiTokenFromApi(): Observable<TokenResult> {
-        return this._httpClient.post<TokenResult>(`${API_TOKEN_URL}/getToken`, {USERNAME, PASSWORD});
+        return this._httpClient.post<TokenResult>(`${API_TOKEN_URL}/TokenGenerate`, {USERNAME, PASSWORD});
     }
     /***
      *Método responsável por buscar o token de autenticação na API

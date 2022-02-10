@@ -5,9 +5,8 @@
     </ng-container>
 
     <!-- Main -->
-    <div
-        class="flex-auto -mt-16 p-6 sm:p-10 rounded-t-2xl shadow overflow-y-auto bg-card"
-        cdkScrollable>
+    <div class="flex-auto -mt-16 p-6 sm:p-10 rounded-t-2xl shadow overflow-y-auto bg-card"
+         cdkScrollable>
 
         <!-- CONTENT GOES HERE -->
         <div class="h-400 min-h-400 max-h-400">
@@ -174,7 +173,6 @@
                                         </button>
                                     </div>
                                 </form>
-
                             </mat-step>
                             <!--end:Step-DadosEmpresa-->
 
@@ -472,20 +470,18 @@
                             <mat-step>
                                 <ng-template matStepLabel>Resumo</ng-template>
 
-                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:mt-10">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
 
-                                    <div class="flex flex-col h-auto max-w-200 w-full overflow-hidden">
+                                    <div class="flex flex-col h-auto w-full max-w-300 overflow-hidden">
                                         <div class="text-2xl font-semibold leading-tight">Informações Básicas</div>
-                                        <div class="mt-4">
+                                        <div class="mt-4  justify-center ql-align-center justify-items-center">
                                             <ul>
-                                                <li class="mt-1"><b>Razão Social: </b>{{userPost.razaoSocial}}</li>
-                                                <li class="mt-1"><b>Nome Fantasia: </b>{{userPost.nomeFantasia}}</li>
-                                                <li class="mt-1"><b>Inscrição
-                                                    Estadual: </b>{{userPost.inscricaoEstadual}}</li>
-                                                <li class="mt-1"><b>Email: </b>{{userPost.email}}</li>
-                                                <li class="mt-1"><b>Site: </b> {{userPost.site}}</li>
-                                                <li class="mt-1"><b>CNPJ: </b>{{userPost.cnpj}}</li>
-                                                <li class="mt-1"><b>Descrição: </b>{{userPost.descricao}}</li>
+                                                 <li class="mt-1"><b>Razão Social: </b>{{userPost.razaoSocial}}</li>
+                                                 <li class="mt-1"><b>Inscrição Estadual: </b>{{userPost.inscricaoEstadual}}</li>
+                                                 <li class="mt-1"><b>Email: </b>{{userPost.email}}</li>
+                                                 <li class="mt-1"><b>Site: </b> {{userPost.site}}</li>
+                                                 <li class="mt-1"><b>CNPJ: </b>{{userPost.cnpj}}</li>
+                                                 <li class="mt-1"><b>Descrição: </b>{{userPost.descricao}}</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -503,23 +499,15 @@
                                                 <li class="mt-1"><b>N°: </b>{{userPost.numero}}</li>
                                             </ul>
                                         </div>
-                                    </div>
-                                </div>
-
-                                <div class="w-auto h-0.5 mt-3 mb-3 rounded bg-accent-300"></div>
-
-                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:mt-10">
-                                    <div class="flex flex-col h-auto max-w-120 w-full overflow-hidden">
-                                        <div class="text-2xl font-semibold leading-tight ml-2">Contato</div>
-                                        <div class="mt-4 ml-2">
-                                            <ul *ngFor="let item of userPost.telefones">
-                                                <li class="mt-1"><b>Telefone: </b>{{item.telefone}}</li>
-                                            </ul>
+                                        <div class="flex flex-col h-auto max-w-120 w-full overflow-hidden mt-5">
+                                            <div class="text-2xl font-semibold leading-tight ml-2">Contato</div>
+                                            <div class="mt-4 ml-2">
+                                                <ul *ngFor="let item of userPost.telefones">
+                                                    <li class="mt-1"><b>Telefone: </b>{{item.telefone}}</li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div
-                                        class="flex flex-col h-auto max-w-120 w-full overflow-hidden  sm:border-0 md:border-l-2">
-                                        <div class="text-2xl font-semibold leading-tight ml-2">Anexos</div>
+                                        <div class="text-2xl font-semibold leading-tight ml-2 mt-5">Anexos</div>
                                         <div class="mt-4 ml-2">
                                             <ul *ngFor="let item of userPost.arquivos">
                                                 <li class="mt-1"><b>Doc: </b>{{item.arquivo.name}}</li>
@@ -531,7 +519,9 @@
                                     </div>
                                 </div>
 
-                                <div class="flex justify-end mt-8">
+                                <div class="w-auto h-0.5 mt-3 mb-3 rounded bg-accent-300"></div>
+
+                                <div class="flex justify-end mt-3">
                                     <button
                                         class="px-8 mr-2"
                                         mat-flat-button
