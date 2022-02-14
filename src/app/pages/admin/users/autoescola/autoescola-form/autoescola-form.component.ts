@@ -180,9 +180,19 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                 this._router.navigate(['usuario/auto-escola']);
             });
         } else {
-            this.saving = false;
-            this.closeAlert();
-            this.openSnackBar('Salvo');
+            this.userSub = this._autoEscolaService.update(this.userPost).subscribe((res: any) => {
+                console.log(res);
+                if (res.error) {
+                    this.saving = false;
+                    this.openSnackBar(res.error, 'warn');
+                    this.closeAlert();
+                    return;
+                }
+                this.saving = false;
+                this.closeAlert();
+                this.openSnackBar('Atualizado');
+                this._router.navigate(['usuario/auto-escola']);
+            });
         }
     }
 
@@ -240,7 +250,6 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
      * @userPost: é o objeto do tipo usuario AutoEscola que será enviado para o BackEnd
      */
     setPersonalData(): void {
-
         //Dados da instituição
         if (this.accountForm.valid) {
             const data = this.accountForm.value;
@@ -296,9 +305,12 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         //Dados de arquivos de upload
         if (this.filesForm.valid) {
             this.files.forEach((item) => {
-                const file = new Arquivo();
-                file.arquivo = item;
-                this.fileModel.push(file);
+                if (!this.fileModel.find(f => f.arquivo.name === item.name)) {
+                    const file = new Arquivo();
+                    file.arquivo = item;
+                    file.name = item.name;
+                    this.fileModel.push(file);
+                }
             });
             this.userPost.arquivos = this.fileModel;
         }
@@ -315,6 +327,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
 
     /**
      * Monta todos os formulários
+     *
      * @private
      */
     private loadForm(): void {
@@ -466,6 +479,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
 
     /**
      * Monta todos os formulário para edição do usuário
+     *
      * @private
      */
     private prepareEditUser(): void {
@@ -603,9 +617,16 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                 (this.contactForm.get('telefones') as FormArray).push(item);
             });
 
-            // Create a phone number form group
+            // Create a files form group
             if (res.arquivos.length > 0) {
-                // Create a phone number form group
+                res.arquivos.forEach((item)=>{
+                   const file = new Arquivo();
+                   file.id = item.id;
+                   file.name = item.nome;
+                   this.fileModel.push(file);
+                });
+
+                // Create a files form group
                 this.fileArray.push(
                     this._formBuilder.group({
                         id: [0],
@@ -644,6 +665,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
 
     /**
      * Remove um arquivo da API
+     *
      * @param id
      * @private
      */

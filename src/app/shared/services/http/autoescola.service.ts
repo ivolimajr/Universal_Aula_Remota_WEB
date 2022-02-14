@@ -96,10 +96,31 @@ export class AutoescolaService {
      * @return retorna o usuário atualizado ou error
      */
     update(data: AutoEscolaPost): Observable<AutoEscolaPost> {
+        console.log(data);
         if (data.id === 0 || data.id == null) {
             return of(null);
         }
-        return this._httpClient.put(URL_AUTOESCOLA, data).pipe(
+        this.header = this.header.set('Authorization', 'Bearer ' + this.accessToken);
+        const formData = new FormData();
+
+        for (const key in data){
+            if(key !== 'arquivos' && key !== 'telefones'){
+                formData.append(key, data[key]);
+            }
+        }
+
+        let i = 0;
+        data.telefones.forEach((item) => {
+            const name = 'telefones[' + i + '][telefone]';
+            formData.append(name, item.telefone);
+            i++;
+        });
+        data.arquivos.forEach((item) => {
+            const name = 'arquivos';
+            formData.append(name, item.arquivo);
+        });
+
+        return this._httpClient.put(URL_AUTOESCOLA, formData).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))
         );

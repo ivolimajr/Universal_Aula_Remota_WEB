@@ -476,12 +476,12 @@
                                         <div class="text-2xl font-semibold leading-tight">Informações Básicas</div>
                                         <div class="mt-4  justify-center ql-align-center justify-items-center">
                                             <ul>
-                                                 <li class="mt-1"><b>Razão Social: </b>{{userPost.razaoSocial}}</li>
-                                                 <li class="mt-1"><b>Inscrição Estadual: </b>{{userPost.inscricaoEstadual}}</li>
-                                                 <li class="mt-1"><b>Email: </b>{{userPost.email}}</li>
-                                                 <li class="mt-1"><b>Site: </b> {{userPost.site}}</li>
-                                                 <li class="mt-1"><b>CNPJ: </b>{{userPost.cnpj}}</li>
-                                                 <li class="mt-1"><b>Descrição: </b>{{userPost.descricao}}</li>
+                                                 <li class="mt-3"><b>Razão Social: </b>{{userPost.razaoSocial}}</li>
+                                                 <li class="mt-3"><b>Inscrição Estadual: </b>{{userPost.inscricaoEstadual}}</li>
+                                                 <li class="mt-3"><b>Email: </b>{{userPost.email}}</li>
+                                                 <li class="mt-3"><b>Site: </b> {{userPost.site}}</li>
+                                                 <li class="mt-3"><b>CNPJ: </b>{{userPost.cnpj}}</li>
+                                                 <li class="mt-3"><b>Descrição: </b>{{userPost.descricao}}</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -510,7 +510,7 @@
                                         <div class="text-2xl font-semibold leading-tight ml-2 mt-5">Anexos</div>
                                         <div class="mt-4 ml-2">
                                             <ul *ngFor="let item of userPost.arquivos">
-                                                <li class="mt-1"><b>Doc: </b>{{item.arquivo.name}}</li>
+                                                <li class="mt-1"><b>Doc: </b>{{item.name}}</li>
                                             </ul>
                                             <ul *ngFor="let item of fileArray">
                                                 <li class="mt-1"><b>Doc: </b>{{item.nome}}</li>
