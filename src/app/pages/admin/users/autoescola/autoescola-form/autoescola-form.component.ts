@@ -10,7 +10,7 @@ import {AutoEscolaPost} from '../../../../../shared/models/autoEscola.model';
 import {AutoescolaService} from '../../../../../shared/services/http/autoescola.service';
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
 import {MatDialog} from '@angular/material/dialog';
-import {Arquivo} from '../../../../../shared/models/arquivo.model';
+import {Arquivo, ArquivoUpdate} from '../../../../../shared/models/arquivo.model';
 
 @Component({
     selector: 'app-autoescola-form',
@@ -38,6 +38,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
     private userSub: Subscription;
     private fileArray = [];
     private fileModel: Array<Arquivo> = [];
+    private filesUpdate: Array<ArquivoUpdate> = [];
 
     constructor(
         public dialog: MatDialog,
@@ -313,6 +314,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                 }
             });
             this.userPost.arquivos = this.fileModel;
+            console.log(this.userPost);
         }
     }
 
@@ -619,12 +621,8 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
 
             // Create a files form group
             if (res.arquivos.length > 0) {
-                res.arquivos.forEach((item)=>{
-                   const file = new Arquivo();
-                   file.id = item.id;
-                   file.name = item.nome;
-                   this.fileModel.push(file);
-                });
+
+                this.filesUpdate = res.arquivos;
 
                 // Create a files form group
                 this.fileArray.push(
@@ -659,8 +657,6 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             this._changeDetectorRef.markForCheck();
             this.phoneArray = [];
         });
-
-
     }
 
     /**

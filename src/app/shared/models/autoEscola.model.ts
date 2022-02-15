@@ -1,7 +1,7 @@
 import {Endereco} from './endereco.model';
 import {Usuario} from './usuario.model';
 import {Telefone} from './telefone.model';
-import {Arquivo} from './arquivo.model';
+import {Arquivo, ArquivoUpdate} from './arquivo.model';
 
 export class AutoEscolaUsuario {
     id: number;

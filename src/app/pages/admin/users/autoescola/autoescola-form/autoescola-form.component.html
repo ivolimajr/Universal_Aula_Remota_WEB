@@ -121,6 +121,7 @@
                                         <!--start:email-->
                                         <mat-form-field class="flex-auto gt-xs:pl-3">
                                             <input
+                                                readonly
                                                 matInput
                                                 [formControlName]="'email'"
                                                 [placeholder]="'e-mail'"
@@ -512,7 +513,7 @@
                                             <ul *ngFor="let item of userPost.arquivos">
                                                 <li class="mt-1"><b>Doc: </b>{{item.name}}</li>
                                             </ul>
-                                            <ul *ngFor="let item of fileArray">
+                                            <ul *ngFor="let item of filesUpdate">
                                                 <li class="mt-1"><b>Doc: </b>{{item.nome}}</li>
                                             </ul>
                                         </div>
