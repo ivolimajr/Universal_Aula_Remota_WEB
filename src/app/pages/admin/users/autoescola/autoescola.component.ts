@@ -146,7 +146,6 @@ export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
      */
     private deleteFromApi(id: number): void {
         this.userSub = this._autoEscolaServices.delete(id).subscribe((res: any)=>{
-            console.log(res);
             if (res.error) {
                 this.isDeleting = false;
                 this._changeDetectorRef.markForCheck();

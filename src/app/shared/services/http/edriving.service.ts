@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {EdrivingUsuario, EdrivingPost} from '../../models/edriving.model';
+import {EdrivingPost, EdrivingUsuario} from '../../models/edriving.model';
 import {Observable, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
@@ -27,10 +27,7 @@ export class EdrivingService {
     getOne(id: number): Observable<EdrivingUsuario> {
         return this._httpClient.get<EdrivingUsuario>(URL_EDRIVING + '/' + id).pipe(
             switchMap((response: any) => of(response)),
-            catchError((e) => {
-                console.log(e);
-                return of(e);
-            })
+            catchError(e => of(e))
         );
     }
 
@@ -91,6 +88,7 @@ export class EdrivingService {
             catchError(e => of(e))
         );
     }
+
     /**
      * Busca todos os cargos referente ao usuário do tipo Edriving
      *

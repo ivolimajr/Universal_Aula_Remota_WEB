@@ -279,7 +279,6 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
 
         //Verifica se os telefones informados são válidos
         formData.telefones.forEach((item) => {
-            console.log(item);
             if (item.telefone === null || item.telefone === '' || item.telefone.length < 10) {
                 this.openSnackBar('Insira um telefone', 'warn');
                 this.accountForm.enable();

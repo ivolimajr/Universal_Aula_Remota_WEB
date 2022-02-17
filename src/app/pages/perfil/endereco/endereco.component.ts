@@ -61,7 +61,6 @@ export class EnderecoComponent implements OnInit, OnDestroy {
         }
 
         this.userSub = this._userService.updateAddress(this.enderecoUser).subscribe((res: any) => {
-            console.log(res);
             if (res.error) {
                 this.openSnackBar(res.error.detail, 'warn');
                 this.addressForm.enable();

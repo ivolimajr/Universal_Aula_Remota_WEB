@@ -11,6 +11,7 @@ import {AutoescolaService} from '../../../../../shared/services/http/autoescola.
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
 import {MatDialog} from '@angular/material/dialog';
 import {Arquivo, ArquivoUpdate} from '../../../../../shared/models/arquivo.model';
+import {UserService} from '../../../../../shared/services/http/user.service';
 
 @Component({
     selector: 'app-autoescola-form',
@@ -48,6 +49,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _cepService: CepService,
         private _autoEscolaService: AutoescolaService,
+        private _userServices: UserService,
         private _formBuilder: FormBuilder,
     ) {
         this.files = new Set();
@@ -88,11 +90,26 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
      */
     removePhoneNumber(id: number, index: number): void {
         const phoneNumbersFormArray = this.contactForm.get('telefones') as FormArray;
-        if (phoneNumbersFormArray.length === 1) {
-            return;
+        if (id === 0 && phoneNumbersFormArray.length > 1) {
+            phoneNumbersFormArray.removeAt(index);
+            return this.closeAlert();
         }
-        phoneNumbersFormArray.removeAt(index);
-        this._changeDetectorRef.markForCheck();
+        if (phoneNumbersFormArray.length === 1) {
+            this.openSnackBar('Remoção Inválida', 'warn');
+            return this.closeAlert();
+        }
+        this._userServices.removePhonenumber(id).subscribe((res) => {
+            if (res === true) {
+                this.openSnackBar('Removido');
+                phoneNumbersFormArray.removeAt(index);
+                return this.closeAlert();
+            }
+            if (res === false) {
+                this.openSnackBar('Remoção Inválida', 'warn');
+                return this.closeAlert();
+            }
+
+        });
     }
 
     /**
@@ -182,7 +199,6 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             });
         } else {
             this.userSub = this._autoEscolaService.update(this.userPost).subscribe((res: any) => {
-                console.log(res);
                 if (res.error) {
                     this.saving = false;
                     this.openSnackBar(res.error, 'warn');
@@ -314,7 +330,6 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                 }
             });
             this.userPost.arquivos = this.fileModel;
-            console.log(this.userPost);
         }
     }
 

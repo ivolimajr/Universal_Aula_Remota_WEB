@@ -31,6 +31,21 @@ export class UserService {
             catchError(e => of(e.error))
         );
     }
+    /**
+     * Remove um arquivo de um usuário
+     *
+     * @param id do arquivo a ser removido
+     * @return retorna um booleano ou error
+     */
+    removeFile(id: number): Observable<boolean> {
+        if (id === 0 || id == null) {
+            return of(false);
+        }
+        return this._httpClient.delete(URL_USER_API + '/RemoveArquivo/' + id).pipe(
+            switchMap((response: any) => of(response)),
+            catchError(e => of(e.error))
+        );
+    }
 
     /**
      * Atualiza a senha de qualquer usuário

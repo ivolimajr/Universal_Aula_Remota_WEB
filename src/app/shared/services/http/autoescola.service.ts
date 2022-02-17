@@ -37,10 +37,7 @@ export class AutoescolaService {
     getOne(id: number): Observable<AutoEscolaUsuario> {
         return this._httpClient.get<AutoEscolaUsuario>(URL_AUTOESCOLA + '/' + id).pipe(
             switchMap((response: any) => of(response)),
-            catchError((e) => {
-                console.log(e);
-                return of(e);
-            })
+            catchError(e => of(e))
         );
     }
 
@@ -96,7 +93,6 @@ export class AutoescolaService {
      * @return retorna o usuário atualizado ou error
      */
     update(data: AutoEscolaPost): Observable<AutoEscolaPost> {
-        console.log(data);
         if (data.id === 0 || data.id == null) {
             return of(null);
         }

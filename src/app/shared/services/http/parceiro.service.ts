@@ -28,10 +28,7 @@ export class ParceiroService {
 
         return this._httpClient.get<ParceiroUsuario>(URL_PARCEIRO + '/' + id).pipe(
             switchMap((response: any) => of(response)),
-            catchError((e) => {
-                console.log(e);
-                return of(e);
-            })
+            catchError(e => of(e))
         );
     }
 
