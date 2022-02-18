@@ -5,7 +5,7 @@ import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {formatDate} from '@angular/common';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CepService} from '../../../../../shared/services/http/cep.service';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {AutoEscolaPost} from '../../../../../shared/models/autoEscola.model';
 import {AutoescolaService} from '../../../../../shared/services/http/autoescola.service';
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
@@ -27,6 +27,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
 
     masks = MASKS;
     loading: boolean = false; //Inicia o componente com um lading
+    loadingForm: boolean = false; //Inicia o componente com um lading
     saving: boolean = false;
     message: string = null; //Mensagem quando estiver salvando ou editando um usuário
     estados = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
@@ -138,24 +139,37 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
      * @param index do array de telefones a ser removido
      */
     removeFileFieldFromApi(id: number, index: number): void {
+        this.loadingForm = true;
+        this.filesForm.invalid;
+        this.filesForm.disabled;
+        this._changeDetectorRef.markForCheck();
         //Exibe o alerta de confirmação
         const dialogRef = this.dialog.open(AlertModalComponent, {
             width: '280px',
-            data: {title: 'Documento será removido, confirma ?'}
+            data: {title: 'Confirma remoção do documento?'}
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (!result) {
+                this.loadingForm = false;
+                this._changeDetectorRef.markForCheck();
                 return;
             }
             //Se a confirmação do alerta for um OK, remove o usuário
-            this.deleteFileFromApi(id);
+            this.deleteFileFromApi(id).subscribe((res: any) => {
+                if (res === true) {
+                    const formArray = this.filesForm.get('arquivos') as FormArray;
+                    formArray.removeAt(index);
+                    this.loadingForm = false;
+                    this._changeDetectorRef.markForCheck();
+                    this.openSnackBar('Removido');
+                    return this.closeAlert();
+                }
+                this.openSnackBar(res.detail, 'warn');
+                this.loadingForm = false;
+                this._changeDetectorRef.markForCheck();
+                return this.closeAlert();;
+            });
         });
-        const phoneNumbersFormArray = this.filesForm.get('arquivos') as FormArray;
-        if (phoneNumbersFormArray.length === 1) {
-            return;
-        }
-        phoneNumbersFormArray.removeAt(index);
-        this._changeDetectorRef.markForCheck();
     }
 
     /**
@@ -680,7 +694,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
      * @param id
      * @private
      */
-    private deleteFileFromApi(id: number): void {
-
+    private deleteFileFromApi(id: number): Observable<boolean> {
+        return this._userServices.removeFile(id);
     }
 }

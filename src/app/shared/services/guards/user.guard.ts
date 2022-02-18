@@ -34,6 +34,7 @@ export class PlataformaGuard implements CanActivate, CanActivateChild, CanLoad {
         const redirectUrl = state.url === '/sign-out' ? '/' : state.url;
         return this._check(redirectUrl);
     }
+
     canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         const redirectUrl = state.url === '/sign-out' ? '/' : state.url;
         return this._check(redirectUrl);
@@ -63,7 +64,11 @@ export class PlataformaGuard implements CanActivate, CanActivateChild, CanLoad {
                     }
 
                     // Allow the access
-                    if(this.roles.find(r => r.role === RolesConstants.EDRIVING)){
+                    // if (this.roles.find(r => r.role === "EDRIVING")) {
+                    if (this.roles.find(r => r.role === RolesConstants.EDRIVING)) {
+                        return of(true);
+                    }
+                    if (this.roles.find(r => r.role === RolesConstants.AUTOESCOLA)) {
                         return of(true);
                     }
 
@@ -79,7 +84,7 @@ export class PlataformaGuard implements CanActivate, CanActivateChild, CanLoad {
 @Injectable({
     providedIn: 'root'
 })
-export class ParceiroGuard implements CanActivate,  CanActivateChild, CanLoad {
+export class ParceiroGuard implements CanActivate, CanActivateChild, CanLoad {
 
     private roles: Array<RoleModel> = null;
 
@@ -94,6 +99,7 @@ export class ParceiroGuard implements CanActivate,  CanActivateChild, CanLoad {
         const redirectUrl = state.url === '/sign-out' ? '/' : state.url;
         return this._check(redirectUrl);
     }
+
     canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         const redirectUrl = state.url === '/sign-out' ? '/' : state.url;
         return this._check(redirectUrl);
@@ -123,7 +129,7 @@ export class ParceiroGuard implements CanActivate,  CanActivateChild, CanLoad {
                     }
 
                     // Allow the access
-                    if(this.roles.find(r => r.role === RolesConstants.EDRIVING) || this.roles.find(r => r.role === RolesConstants.PARCEIRO)){
+                    if (this.roles.find(r => r.role === RolesConstants.EDRIVING) || this.roles.find(r => r.role === RolesConstants.PARCEIRO)) {
                         return of(true);
                     }
 

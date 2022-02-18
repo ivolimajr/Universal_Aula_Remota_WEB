@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {Subscription} from 'rxjs';
+import {Observable, of, Subscription} from 'rxjs';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../../@fuse/components/alert';
@@ -14,6 +14,7 @@ import {Usuario} from '../../../../../shared/models/usuario.model';
 import {environment} from '../../../../../../environments/environment';
 import {AuthService} from '../../../../../shared/services/auth/auth.service';
 import {UserService} from '../../../../../shared/services/http/user.service';
+import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
 
 @Component({
     selector: 'app-edrivin-form-modal',
@@ -135,10 +136,8 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
      * @param index do array de telefones a ser removido
      */
     removePhoneNumber(id: number, index: number): void {
-        this.loading = true;
-        this._changeDetectorRef.markForCheck();
         const phoneNumbersFormArray = this.accountForm.get('telefones') as FormArray;
-        if(id === 0  && phoneNumbersFormArray.length > 1){
+        if (id === 0 && phoneNumbersFormArray.length > 1) {
             phoneNumbersFormArray.removeAt(index);
             return this.closeAlert();
         }
@@ -146,17 +145,27 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
             this.openSnackBar('Remoção Inválida', 'warn');
             return this.closeAlert();
         }
-        this._userServices.removePhonenumber(id).subscribe((res) => {
-            if (res === true) {
-                this.openSnackBar('Removido');
-                phoneNumbersFormArray.removeAt(index);
-                return this.closeAlert();
+        this.loading = true;
+        this._changeDetectorRef.markForCheck();
+        const dialogRef = this.dialog.open(AlertModalComponent, {
+            width: '280px',
+            data: {title: 'Confirma remoção do telefone?'}
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (!result) {
+                this.loading = false;
+                this._changeDetectorRef.markForCheck();
+                return;
             }
-            if (res === false) {
+            this.removePhoneFromApi(id).subscribe((res: any)=>{
+                if(res){
+                    this.openSnackBar('Removido');
+                    phoneNumbersFormArray.removeAt(index);
+                    return this.closeAlert();
+                }
                 this.openSnackBar('Remoção Inválida', 'warn');
                 return this.closeAlert();
-            }
-
+            });
         });
     }
 
@@ -388,5 +397,9 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
             verticalPosition: 'top',
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
+    }
+
+    private removePhoneFromApi(id: number): Observable<boolean> {
+       return this._userServices.removePhonenumber(id);
     }
 }

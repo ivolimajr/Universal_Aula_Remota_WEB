@@ -37,3 +37,13 @@ export const parceiroNavigation: FuseNavigationItem[] =[
         link: '/usuario/auto-escola'
     }
 ];
+
+export const autoEscolaNavigation: FuseNavigationItem[] =[
+    {
+        id: 'autoescola',
+        title: 'Auto Escolas',
+        type: 'basic',
+        icon: 'heroicons_outline:truck',
+        link: '/usuario/auto-escola'
+    }
+];

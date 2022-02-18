@@ -3,6 +3,7 @@ import {cloneDeep} from 'lodash-es';
 import {FuseNavigationItem} from '@fuse/components/navigation';
 import {FuseMockApiService} from '@fuse/lib/mock-api';
 import {
+    autoEscolaNavigation,
     defaultNavigation,
     parceiroNavigation,
     plataformaNavigation
@@ -19,6 +20,7 @@ export class NavServices {
     private readonly _defaultNavigation: FuseNavigationItem[] = defaultNavigation;
     private readonly _plataformaNavigation: FuseNavigationItem[] = plataformaNavigation;
     private readonly _parceiroNavigation: FuseNavigationItem[] = parceiroNavigation;
+    private readonly _autoEscolaNavigation: FuseNavigationItem[] = autoEscolaNavigation;
     private roles: Array<RoleModel> = null;
 
     /**
@@ -45,7 +47,6 @@ export class NavServices {
         this._fuseMockApiService
             .onGet('api/common/navigation')
             .reply(() => {
-
                 this._dataNavigation = [];
 
                 if (this._authServices.getUserInfoFromStorage()) {
@@ -56,6 +57,22 @@ export class NavServices {
                 if (this.roles.find(r => r.role === RolesConstants.EDRIVING)) {
                     this._dataNavigation.push(...this._defaultNavigation);
                     this._dataNavigation.push(...this._plataformaNavigation);
+                    this._dataNavigation.push(...this._parceiroNavigation);
+                    this._dataNavigation.push(...this._autoEscolaNavigation);
+                    // Return the response
+                    return [
+                        200,
+                        {
+                            compact: cloneDeep(this._dataNavigation),
+                            default: cloneDeep(this._dataNavigation),
+                            futuristic: cloneDeep(this._dataNavigation),
+                            horizontal: cloneDeep(this._dataNavigation)
+                        }
+                    ];
+                }
+                //Montagem do menu para os usuários do tipo parceiro
+                if (this.roles.find(r => r.role === RolesConstants.EDRIVING) || this.roles.find(r => r.role === RolesConstants.PARCEIRO)) {
+                    this._dataNavigation.push(...this._defaultNavigation);
                     this._dataNavigation.push(...this._parceiroNavigation);
                     // Return the response
                     return [
@@ -68,11 +85,10 @@ export class NavServices {
                         }
                     ];
                 }
-
-                //Montagem do menu para os usuários do tipo parceiro
-                if (this.roles.find(r => r.role === RolesConstants.EDRIVING) && this.roles.find(r => r.role === RolesConstants.PARCEIRO)) {
+                //Montagem do menu para os usuários do tipo autoEscola
+                if (this.roles.find(r => r.role === RolesConstants.EDRIVING) || this.roles.find(r => r.role === RolesConstants.AUTOESCOLA)) {
                     this._dataNavigation.push(...this._defaultNavigation);
-                    this._dataNavigation.push(...this._parceiroNavigation);
+                    this._dataNavigation.push(...this._autoEscolaNavigation);
                     // Return the response
                     return [
                         200,

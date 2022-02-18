@@ -372,6 +372,9 @@
                                 <form [formGroup]="filesForm">
 
                                     <ng-template matStepLabel>Documentos</ng-template>
+                                    <ng-container *ngIf="loadingForm;">
+                                        <mat-progress-bar class="mb-5" [mode]="'indeterminate'"></mat-progress-bar>
+                                    </ng-container>
                                     <!--start:EditMode-->
                                     <div class="my-6 font-medium" *ngIf="fileArray.length">
                                         <div class="flex flex-wrap">
