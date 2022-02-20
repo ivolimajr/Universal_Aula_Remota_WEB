@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {EdrivingPost, EdrivingUsuario} from '../../models/edriving.model';
+import {EdrivingPost, EdrivingUser} from '../../models/edriving.model';
 import {Observable, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
-import {Cargo} from '../../models/cargo.model';
+import {Level} from '../../models/cargo.model';
 
 
 const URL_EDRIVING = `${environment.apiUrl}/Edriving`;
@@ -24,8 +24,8 @@ export class EdrivingService {
      * @param id do usuário a ser consultado
      * @return retorna um usuário ou o error
      */
-    getOne(id: number): Observable<EdrivingUsuario> {
-        return this._httpClient.get<EdrivingUsuario>(URL_EDRIVING + '/' + id).pipe(
+    getOne(id: number): Observable<EdrivingUser> {
+        return this._httpClient.get<EdrivingUser>(URL_EDRIVING + '/' + id).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))
         );
@@ -34,9 +34,9 @@ export class EdrivingService {
     /**
      * @return o array de items contendo todos os usuários do tipo Edriving
      */
-    getAll(): Observable<EdrivingUsuario[]> {
-        return this._httpClient.get<EdrivingUsuario[]>(URL_EDRIVING).pipe(
-            switchMap((response: EdrivingUsuario[]) => of(response)),
+    getAll(): Observable<EdrivingUser[]> {
+        return this._httpClient.get<EdrivingUser[]>(URL_EDRIVING).pipe(
+            switchMap((response: EdrivingUser[]) => of(response)),
             catchError(e => of(e))
         );
     }
@@ -94,7 +94,7 @@ export class EdrivingService {
      *
      * @return retorna uma lista de cargos
      */
-    getCargos(): Observable<Cargo[]> {
+    getCargos(): Observable<Level[]> {
         return this._httpClient.get(URL_EDRIVING_CARGO).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))

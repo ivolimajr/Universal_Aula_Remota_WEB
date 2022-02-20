@@ -13,8 +13,8 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {fuseAnimations} from '../../../../@fuse/animations';
-import {Usuario} from '../../../shared/models/usuario.model';
-import {ParceiroPost, ParceiroUsuario} from '../../../shared/models/parceiro.model';
+import {User} from '../../../shared/models/usuario.model';
+import {PartnnerPost, PartnnerUser} from '../../../shared/models/parceiro.model';
 import {UserService} from '../../../shared/services/http/user.service';
 import {AuthService} from '../../../shared/services/auth/auth.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
@@ -30,12 +30,12 @@ import {environment} from '../../../../environments/environment';
     animations: fuseAnimations
 })
 export class ParceiroComponent implements OnInit, OnDestroy {
-    @Input() parceiroUser: ParceiroUsuario;
+    @Input() parceiroUser: PartnnerUser;
 
     accountForm: FormGroup;
-    user: Usuario;
+    user: User;
     masks = MASKS;
-    private parceiroUserPost = new ParceiroPost();
+    private parceiroUserPost = new PartnnerPost();
     private userSub: Subscription;
     private phoneSub: Subscription;
 
@@ -81,7 +81,7 @@ export class ParceiroComponent implements OnInit, OnDestroy {
 
             //Atualiza os dados do localStorage
             this.user = this._authServices.getUserInfoFromStorage();
-            this.user.nome = res.nome;
+            this.user.name = res.nome;
             this.user.email = res.email;
             this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
 
@@ -143,7 +143,7 @@ export class ParceiroComponent implements OnInit, OnDestroy {
      * @param index do array de telefones a ser removido
      */
     removePhoneNumber(id: number, index: number): void {
-        if (this.parceiroUser.telefones.length === 1) {
+        if (this.parceiroUser.phonesNumbers.length === 1) {
             this.dialog.open(AlertModalComponent, {
                 width: '280px',
                 data: {content: 'Usuário não pode ficar sem contato.', oneButton: true}
@@ -190,16 +190,16 @@ export class ParceiroComponent implements OnInit, OnDestroy {
             return false;
         }
         //Se todos os dados forem válidos, monta o objeto para atualizar
-        this.parceiroUserPost.nome = formData.nome;
+        this.parceiroUserPost.name = formData.nome;
         this.parceiroUserPost.email = formData.email;
-        this.parceiroUserPost.descricao = formData.descricao;
+        this.parceiroUserPost.description = formData.descricao;
         this.parceiroUserPost.cnpj = formData.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
         formData.telefones.forEach((item) => {
             if (item.telefone.length !== 11) {
                 item.telefone = item.telefone.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
-        this.parceiroUserPost.telefones = formData.telefones;
+        this.parceiroUserPost.phonesNumbers = formData.telefones;
         return true;
     }
 
@@ -211,7 +211,7 @@ export class ParceiroComponent implements OnInit, OnDestroy {
      */
     private prepareForm(): void {
         this.accountForm = this._formBuilder.group({
-            nome: [this.parceiroUser.nome,
+            nome: [this.parceiroUser.name,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -230,13 +230,13 @@ export class ParceiroComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(14),
                     Validators.maxLength(14)])],
-            descricao: [this.parceiroUser.descricao,
+            descricao: [this.parceiroUser.description,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(100)])],
-            cargoId: [this.parceiroUser.cargoId,
+            cargoId: [this.parceiroUser.levelId,
                 Validators.compose([
                     Validators.required])],
             telefones: this._formBuilder.array([], Validators.compose([
@@ -249,15 +249,15 @@ export class ParceiroComponent implements OnInit, OnDestroy {
         const phoneNumbersFormGroups = [];
 
         //Só monta o array de telefones se houver telefones de contato cadastrado
-        if (this.parceiroUser.telefones.length > 0) {
+        if (this.parceiroUser.phonesNumbers.length > 0) {
             // Iterate through them
-            this.parceiroUser.telefones.forEach((phoneNumber) => {
+            this.parceiroUser.phonesNumbers.forEach((phoneNumber) => {
 
                 //Cria um formGroup de telefone
                 phoneNumbersFormGroups.push(
                     this._formBuilder.group({
                         id: [phoneNumber.id],
-                        telefone: [phoneNumber.telefone,
+                        telefone: [phoneNumber.phoneNumber,
                             Validators.compose([
                                 Validators.required,
                                 Validators.nullValidator

@@ -1,8 +1,8 @@
 import {RoleModel} from './role.model';
 
-export class Usuario {
+export class User {
     id?: number;
-    nome: string;
+    name: string;
     email: string;
     status: number;
     password?: string;

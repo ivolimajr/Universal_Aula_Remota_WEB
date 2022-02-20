@@ -12,11 +12,11 @@ import {Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {FuseMediaWatcherService} from '@fuse/services/media-watcher';
 import {EdrivingService} from '../../shared/services/http/edriving.service';
-import {EdrivingUsuario} from '../../shared/models/edriving.model';
+import {EdrivingUser} from '../../shared/models/edriving.model';
 import {AuthService} from '../../shared/services/auth/auth.service';
-import {ParceiroUsuario} from '../../shared/models/parceiro.model';
+import {PartnnerUser} from '../../shared/models/parceiro.model';
 import {ParceiroService} from '../../shared/services/http/parceiro.service';
-import {Endereco} from '../../shared/models/endereco.model';
+import {AddressModel} from '../../shared/models/endereco.model';
 import {RolesConstants} from '../../shared/constants';
 
 @Component({
@@ -33,9 +33,9 @@ export class PerfilComponent implements OnInit, OnDestroy {
     panels: any[] = [];
     selectedPanel: string = 'dadosPessoais';
 
-    edrivingUser: EdrivingUsuario = null;
-    parceiroUser: ParceiroUsuario = null;
-    enderecoUser: Endereco = null;
+    edrivingUser: EdrivingUser = null;
+    parceiroUser: PartnnerUser = null;
+    enderecoUser: AddressModel = null;
     loading: boolean = true;
     idUser: number;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -180,7 +180,7 @@ export class PerfilComponent implements OnInit, OnDestroy {
                 //busca o usuário na API
                 this.userSub = this._parceiroServices.getOne(res.id).subscribe((result) => {
                     this.parceiroUser = result;
-                    this.enderecoUser = result.endereco;
+                    this.enderecoUser = result.address;
                     //Set o id do usuário para alterar a senha
                     this.idUser = result.id;
                     //carrega o painel A

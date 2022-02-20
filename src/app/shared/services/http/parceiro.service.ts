@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {ParceiroPost, ParceiroUsuario} from '../../models/parceiro.model';
+import {PartnnerPost, PartnnerUser} from '../../models/parceiro.model';
 import {Observable, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
-import {Cargo} from '../../models/cargo.model';
+import {Level} from '../../models/cargo.model';
 
 
 const URL_PARCEIRO = `${environment.apiUrl}/Parceiro`;
@@ -24,9 +24,9 @@ export class ParceiroService {
      * @param id do usuário a ser consultado
      * @return retorna um usuário ou o error
      */
-    getOne(id: number): Observable<ParceiroUsuario> {
+    getOne(id: number): Observable<PartnnerUser> {
 
-        return this._httpClient.get<ParceiroUsuario>(URL_PARCEIRO + '/' + id).pipe(
+        return this._httpClient.get<PartnnerUser>(URL_PARCEIRO + '/' + id).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))
         );
@@ -35,9 +35,9 @@ export class ParceiroService {
     /**
      * @return o array de items contendo todos os usuários do tipo Edriving
      */
-    getAll(): Observable<ParceiroUsuario[]> {
-        return this._httpClient.get<ParceiroUsuario[]>(URL_PARCEIRO).pipe(
-            switchMap((response: ParceiroUsuario[]) => of(response)),
+    getAll(): Observable<PartnnerUser[]> {
+        return this._httpClient.get<PartnnerUser[]>(URL_PARCEIRO).pipe(
+            switchMap((response: PartnnerUser[]) => of(response)),
             catchError(e => of(e))
         );
     }
@@ -48,7 +48,7 @@ export class ParceiroService {
      * @param data model do usuario
      * @return retorna o usuário ou error
      */
-    create(data: ParceiroPost): Observable<ParceiroUsuario> {
+    create(data: PartnnerPost): Observable<PartnnerUser> {
         return this._httpClient.post(URL_PARCEIRO, data).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))
@@ -62,7 +62,7 @@ export class ParceiroService {
      * @param data model do usuario
      * @return retorna o usuário atualizado ou error
      */
-    update(data: ParceiroPost): Observable<ParceiroUsuario> {
+    update(data: PartnnerPost): Observable<PartnnerUser> {
         if (data.id === 0 || data.id == null) {
             return of(null);
         }
@@ -95,7 +95,7 @@ export class ParceiroService {
      *
      * @return retorna uma lista de cargos
      */
-    getCargos(): Observable<Cargo[]> {
+    getCargos(): Observable<Level[]> {
         return this._httpClient.get(URL_PARCEIRO_CARGO).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))

@@ -44,7 +44,7 @@ export class AuthUnlockSessionComponent implements OnInit {
     ngOnInit(): void {
         // Get the user's name
         this._authService.user$.subscribe((user) => {
-            this.name = user.nome;
+            this.name = user.name;
             this._email = user.email;
         });
 

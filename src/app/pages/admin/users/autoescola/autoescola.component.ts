@@ -10,10 +10,10 @@ import {FuseAlertType} from '../../../../../@fuse/components/alert';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
 import {AutoescolaService} from '../../../../shared/services/http/autoescola.service';
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
-import {AutoEscolaUsuario} from '../../../../shared/models/autoEscola.model';
+import {DrivingSchool} from '../../../../shared/models/autoEscola.model';
 import {Router} from '@angular/router';
 
-const ELEMENT_DATA: AutoEscolaUsuario[] = [];
+const ELEMENT_DATA: DrivingSchool[] = [];
 
 @Component({
   selector: 'app-autoescola',
@@ -29,7 +29,7 @@ export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
     };
 
     displayedColumns: string[] = ['razaoSocial', 'email', 'id'];
-    dataSource = new MatTableDataSource<AutoEscolaUsuario>(ELEMENT_DATA);
+    dataSource = new MatTableDataSource<DrivingSchool>(ELEMENT_DATA);
     loading: boolean = true;
     isDeleting: boolean = false;
     showAlert: boolean = false;
@@ -42,7 +42,7 @@ export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatPaginator) paginator: MatPaginator;
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    @ViewChild(MatTable) table: MatTable<AutoEscolaUsuario>;
+    @ViewChild(MatTable) table: MatTable<DrivingSchool>;
 
   constructor(
       public dialog: MatDialog,
@@ -67,7 +67,7 @@ export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
      * @param id -> se tiver ID exibe e atualiza, caso contrário, adiciona
      * @return void
      */
-    setUser(user: AutoEscolaUsuario): void {
+    setUser(user: DrivingSchool): void {
 
         //Atualiza um usuário
         if (user) {
@@ -131,7 +131,7 @@ export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
      * @return void
      */
     private getUsers(): void {
-        this.dataSub = this._users$.subscribe((items: AutoEscolaUsuario[]) => {
+        this.dataSub = this._users$.subscribe((items: DrivingSchool[]) => {
             this.dataSource.data = items;
             this.loading = false;
             this._changeDetectorRef.markForCheck();

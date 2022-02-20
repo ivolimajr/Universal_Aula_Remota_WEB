@@ -1,4 +1,4 @@
-export class Cargo {
+export class Level {
     id?: number;
-    cargo: string;
+    level: string;
 }

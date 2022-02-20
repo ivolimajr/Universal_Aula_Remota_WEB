@@ -6,11 +6,11 @@ import {formatDate} from '@angular/common';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CepService} from '../../../../../shared/services/http/cep.service';
 import {Observable, Subscription} from 'rxjs';
-import {AutoEscolaPost} from '../../../../../shared/models/autoEscola.model';
+import {DrivingSchoolPost} from '../../../../../shared/models/autoEscola.model';
 import {AutoescolaService} from '../../../../../shared/services/http/autoescola.service';
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
 import {MatDialog} from '@angular/material/dialog';
-import {Arquivo, ArquivoUpdate} from '../../../../../shared/models/arquivo.model';
+import {FileModel, FileModelUpdate} from '../../../../../shared/models/arquivo.model';
 import {UserService} from '../../../../../shared/services/http/user.service';
 
 @Component({
@@ -30,17 +30,17 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
     loadingForm: boolean = false; //Inicia o componente com um lading
     saving: boolean = false;
     message: string = null; //Mensagem quando estiver salvando ou editando um usuário
-    estados = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
+    states = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
         'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
     public id: number = parseInt(this.routeAcitve.snapshot.paramMap.get('id'), 10);
     files: Set<File>;
     private phoneArray = [];
-    private userPost = new AutoEscolaPost();
+    private edrivingSchoolPost = new DrivingSchoolPost();
     private cepSub: Subscription;
     private userSub: Subscription;
     private fileArray = [];
-    private fileModel: Array<Arquivo> = [];
-    private filesUpdate: Array<ArquivoUpdate> = [];
+    private fileModel: Array<FileModel> = [];
+    private filesUpdate: Array<FileModelUpdate> = [];
 
     constructor(
         public dialog: MatDialog,
@@ -71,15 +71,15 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
      */
     addPhoneNumberField(): void {
 
-        const phoneNumberFormGroup = this._formBuilder.group({
-            telefone: ['', Validators.compose([
+        const phonesFormArray = this._formBuilder.group({
+            phoneNumber: ['', Validators.compose([
                 Validators.required,
                 Validators.nullValidator
             ])]
         });
 
         // Adiciona o formGroup ao array de telefones
-        (this.contactForm.get('telefones') as FormArray).push(phoneNumberFormGroup);
+        (this.contactForm.get('phonesNumbers') as FormArray).push(phonesFormArray);
         this._changeDetectorRef.markForCheck();
     }
 
@@ -90,19 +90,19 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
      * @param index do array de telefones a ser removido
      */
     removePhoneNumber(id: number, index: number): void {
-        const phoneNumbersFormArray = this.contactForm.get('telefones') as FormArray;
-        if (id === 0 && phoneNumbersFormArray.length > 1) {
-            phoneNumbersFormArray.removeAt(index);
+        const phonesFormArray = this.contactForm.get('phonesNumbers') as FormArray;
+        if (id === 0 && phonesFormArray.length > 1) {
+            phonesFormArray.removeAt(index);
             return this.closeAlert();
         }
-        if (phoneNumbersFormArray.length === 1) {
+        if (phonesFormArray.length === 1) {
             this.openSnackBar('Remoção Inválida', 'warn');
             return this.closeAlert();
         }
         this._userServices.removePhonenumber(id).subscribe((res) => {
             if (res === true) {
                 this.openSnackBar('Removido');
-                phoneNumbersFormArray.removeAt(index);
+                phonesFormArray.removeAt(index);
                 return this.closeAlert();
             }
             if (res === false) {
@@ -120,15 +120,15 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
      */
     addFileField(): void {
 
-        const phoneNumberFormGroup = this._formBuilder.group({
-            arquivo: ['', Validators.compose([
+        const filesFormArray = this._formBuilder.group({
+            file: ['', Validators.compose([
                 Validators.required,
                 Validators.nullValidator
             ])]
         });
 
         // Adiciona o formGroup ao array de telefones
-        (this.filesForm.get('arquivos') as FormArray).push(phoneNumberFormGroup);
+        (this.filesForm.get('files') as FormArray).push(filesFormArray);
         this._changeDetectorRef.markForCheck();
     }
 
@@ -138,7 +138,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
      * @param id do telefone a ser removido
      * @param index do array de telefones a ser removido
      */
-    removeFileFieldFromApi(id: number, index: number): void {
+    removeFileFieldFromApi(id: number, index): void {
         this.loadingForm = true;
         this.filesForm.invalid;
         this.filesForm.disabled;
@@ -154,11 +154,13 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                 this._changeDetectorRef.markForCheck();
                 return;
             }
-            //Se a confirmação do alerta for um OK, remove o usuário
+
+            // Se a confirmação do alerta for um OK, remove o usuário
             this.deleteFileFromApi(id).subscribe((res: any) => {
                 if (res === true) {
-                    const formArray = this.filesForm.get('arquivos') as FormArray;
-                    formArray.removeAt(index);
+                    if (index > -1) {
+                        this.fileArray.splice(index, 1);
+                    }
                     this.loadingForm = false;
                     this._changeDetectorRef.markForCheck();
                     this.openSnackBar('Removido');
@@ -179,7 +181,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
      * @param index do array de telefones a ser removido
      */
     removeFileField(id: number, index: number): void {
-        const phoneNumbersFormArray = this.filesForm.get('arquivos') as FormArray;
+        const phoneNumbersFormArray = this.filesForm.get('files') as FormArray;
         if (phoneNumbersFormArray.length === 1) {
             return;
         }
@@ -199,7 +201,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
 
         //Se não tiver um ID, significa que está criando um novo usuário
         if (!this.id) {
-            this.userSub = this._autoEscolaService.create(this.userPost, this.files).subscribe((res: any) => {
+            this.userSub = this._autoEscolaService.create(this.edrivingSchoolPost).subscribe((res: any) => {
                 if (res.error) {
                     this.saving = false;
                     this.openSnackBar(res.error, 'warn');
@@ -212,7 +214,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                 this._router.navigate(['usuario/auto-escola']);
             });
         } else {
-            this.userSub = this._autoEscolaService.update(this.userPost).subscribe((res: any) => {
+            this.userSub = this._autoEscolaService.update(this.edrivingSchoolPost).subscribe((res: any) => {
                 if (res.error) {
                     this.saving = false;
                     this.openSnackBar(res.error, 'warn');
@@ -248,9 +250,9 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         }
         this.cepSub = this._cepService.buscar(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
             this.addressForm.patchValue({
-                bairro: res.bairro,
-                enderecoLogradouro: res.logradouro,
-                cidade: res.localidade,
+                district: res.bairro,
+                address: res.logradouro,
+                city: res.localidade,
                 cep: res.cep,
                 uf: res.uf
             });
@@ -270,8 +272,12 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         const fileNames = [];
         // eslint-disable-next-line @typescript-eslint/prefer-for-of
         for (let i = 0; i < selectedFiles.length; i++) {
-            fileNames.push(selectedFiles[i].name);
-            this.files.add(selectedFiles[i]);
+            if (selectedFiles[i].name.length < 50) {
+                fileNames.push(selectedFiles[i].name);
+                this.files.add(selectedFiles[i]);
+            } else {
+                return this.openSnackBar('Nome do arquivo muito gande', 'warn');
+            }
         }
     }
 
@@ -286,31 +292,31 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             const data = this.accountForm.value;
 
             if (this.id) {
-                this.userPost.id = this.id;
+                this.edrivingSchoolPost.id = this.id;
             }
 
-            this.userPost.razaoSocial = data.razaoSocial;
-            this.userPost.nomeFantasia = data.nomeFantasia;
-            this.userPost.inscricaoEstadual = data.inscricaoEstadual.replace(/[^0-9,]*/g, '').replace('-', '').replace('/', '');
-            this.userPost.dataFundacao = data.dataFundacao;
-            this.userPost.email = data.email;
-            this.userPost.descricao = data.descricao;
-            this.userPost.site = data.site;
-            this.userPost.cnpj = data.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
+            this.edrivingSchoolPost.corporateName = data.corporateName;
+            this.edrivingSchoolPost.fantasyName = data.fantasyName;
+            this.edrivingSchoolPost.stateRegistration = data.stateRegistration.replace(/[^0-9,]*/g, '').replace('-', '').replace('/', '');
+            this.edrivingSchoolPost.foundingDate = data.foundingDate;
+            this.edrivingSchoolPost.email = data.email;
+            this.edrivingSchoolPost.description = data.description;
+            this.edrivingSchoolPost.site = data.site;
+            this.edrivingSchoolPost.cnpj = data.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
             if (!this.id) {
-                this.userPost.senha = 'Pay@2021';
+                this.edrivingSchoolPost.password = 'Pay@2021';
             }
         }
         // Dados de endereço
         if (this.addressForm.valid) {
             const data = this.addressForm.value;
 
-            this.userPost.uf = data.uf;
-            this.userPost.cep = data.cep.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
-            this.userPost.enderecoLogradouro = data.enderecoLogradouro;
-            this.userPost.bairro = data.bairro;
-            this.userPost.cidade = data.cidade;
-            this.userPost.numero = data.numero;
+            this.edrivingSchoolPost.uf = data.uf;
+            this.edrivingSchoolPost.cep = data.cep.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
+            this.edrivingSchoolPost.address = data.address;
+            this.edrivingSchoolPost.district = data.district;
+            this.edrivingSchoolPost.city = data.city;
+            this.edrivingSchoolPost.number = data.number;
         }
         // dados de contato
         if (this.contactForm.valid) {
@@ -318,32 +324,33 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             const data = this.contactForm.value;
 
             //Verifica se os telefones informados são válidos
-            data.telefones.forEach((item) => {
-                if (item.telefone === null || item.telefone === '' || item.telefone.length < 11) {
+            data.phonesNumbers.forEach((item) => {
+                if (item.phoneNumber === null || item.phoneNumber === '' || item.phoneNumber.length < 11) {
                     this.openSnackBar('Insira um telefone', 'warn');
                     return;
                 }
             });
 
-            data.telefones.forEach((item) => {
-                if (item.telefone.length !== 11) {
-                    item.telefone = item.telefone.replace(/[^0-9,]*/g, '').replace(',', '.');
+            data.phonesNumbers.forEach((item) => {
+                if (item.phoneNumber.length !== 11) {
+                    item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
                 }
             });
-            this.userPost.telefones = data.telefones;
+            this.edrivingSchoolPost.phonesNumbers = data.phonesNumbers;
         }
 
         //Dados de arquivos de upload
         if (this.filesForm.valid) {
             this.files.forEach((item) => {
-                if (!this.fileModel.find(f => f.arquivo.name === item.name)) {
-                    const file = new Arquivo();
-                    file.arquivo = item;
-                    file.name = item.name;
+                if (!this.fileModel.find(f => f.file.name === item.name)) {
+                    const file = new FileModel();
+                    file.file = item;
+                    file.fileName = item.name;
                     this.fileModel.push(file);
                 }
             });
-            this.userPost.arquivos = this.fileModel;
+            this.edrivingSchoolPost.files = this.fileModel;
+            console.log(this.edrivingSchoolPost);
         }
     }
 
@@ -368,23 +375,23 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             return;
         }
         this.accountForm = this._formBuilder.group({
-            razaoSocial: ['Dora e Ricardo Telecomunicações Ltda',
+            corporateName: ['Dora e Ricardo Telecomunicações Ltda',
                 Validators.compose([
                     Validators.required,
                     Validators.maxLength(150)
                 ])],
-            nomeFantasia: ['Antonio Filmagens Ltda',
+            fantasyName: ['Antonio Filmagens Ltda',
                 Validators.compose([
                     Validators.required,
                     Validators.maxLength(150)
                 ])],
-            inscricaoEstadual: ['669.503.958.773',
+            stateRegistration: ['669.503.958.773',
                 Validators.compose([
                     Validators.required,
                     Validators.minLength(8),
                     Validators.maxLength(30)
                 ])],
-            dataFundacao: ['2021-01-30',
+            foundingDate: ['2021-01-30',
                 Validators.required,
             ],
             email: ['autoescola2@edriving.com',
@@ -393,7 +400,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                     Validators.email,
                     Validators.maxLength(70)
                 ])],
-            descricao: ['Auto Escola Brasil',
+            description: ['Auto Escola Brasil',
                 Validators.compose([
                     Validators.required,
                     Validators.maxLength(150)
@@ -418,13 +425,13 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                     Validators.minLength(8),
                     Validators.maxLength(10),
                     NgBrazilValidators.cep])],
-            enderecoLogradouro: ['Travessa SF-2',
+            address: ['Travessa SF-2',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
-            bairro: ['São Francisco',
+            district: ['São Francisco',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -436,13 +443,13 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                 Validators.minLength(2),
                 Validators.maxLength(2)
             ])],
-            cidade: ['Barretos',
+            city: ['Barretos',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
-            numero: ['240',
+            number: ['240',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -450,14 +457,14 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                     Validators.maxLength(50)])],
         });
         this.contactForm = this._formBuilder.group({
-            telefones: this._formBuilder.array([],
+            phonesNumbers: this._formBuilder.array([],
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator
                 ]))
         });
         this.filesForm = this._formBuilder.group({
-            arquivos: this._formBuilder.array([],
+            files: this._formBuilder.array([],
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator
@@ -467,31 +474,31 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         // Create a phone number form group
         this.phoneArray.push(
             this._formBuilder.group({
-                telefone: ['', Validators.compose([
+                phoneNumber: ['', Validators.compose([
                     Validators.required,
                     Validators.nullValidator
                 ])]
             })
         );
 
-        // Adiciona o array de telefones ao fomrGroup
+        // Adiciona o array de telefones ao formGroup
         this.phoneArray.forEach((item) => {
-            (this.contactForm.get('telefones') as FormArray).push(item);
+            (this.contactForm.get('phonesNumbers') as FormArray).push(item);
         });
 
         // Create a phone number form group
         this.fileArray.push(
             this._formBuilder.group({
-                arquivo: [null, Validators.compose([
+                file: [null, Validators.compose([
                     Validators.required,
                     Validators.nullValidator
                 ])]
             })
         );
 
-        // Adiciona o array de telefones ao fomrGroup
+        // Adiciona o array de arquivos ao fomrGroup
         this.fileArray.forEach((item) => {
-            (this.filesForm.get('arquivos') as FormArray).push(item);
+            (this.filesForm.get('files') as FormArray).push(item);
         });
 
         this._changeDetectorRef.markForCheck();
@@ -522,23 +529,23 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                 return;
             }
             this.accountForm = this._formBuilder.group({
-                razaoSocial: [res.razaoSocial,
+                corporateName: [res.corporateName,
                     Validators.compose([
                         Validators.required,
                         Validators.maxLength(150)
                     ])],
-                nomeFantasia: [res.nomeFantasia,
+                fantasyName: [res.fantasyName,
                     Validators.compose([
                         Validators.required,
                         Validators.maxLength(150)
                     ])],
-                inscricaoEstadual: [res.inscricaoEstadual,
+                stateRegistration: [res.stateRegistration,
                     Validators.compose([
                         Validators.required,
                         Validators.minLength(8),
                         Validators.maxLength(30)
                     ])],
-                dataFundacao: [formatDate(res.dataFundacao, 'yyyy-MM-dd', 'en'),
+                foundingDate: [formatDate(res.foundingDate, 'yyyy-MM-dd', 'en'),
                     Validators.required,
                 ],
                 email: [res.email,
@@ -547,7 +554,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                         Validators.email,
                         Validators.maxLength(70)
                     ])],
-                descricao: [res.descricao,
+                description: [res.description,
                     Validators.compose([
                         Validators.required,
                         Validators.maxLength(150)
@@ -565,39 +572,39 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                     ])],
             });
             this.addressForm = this._formBuilder.group({
-                cep: [res.endereco.cep,
+                cep: [res.address.cep,
                     Validators.compose([
                         Validators.required,
                         Validators.nullValidator,
                         Validators.minLength(8),
                         Validators.maxLength(10),
                         NgBrazilValidators.cep])],
-                enderecoLogradouro: [res.endereco.enderecoLogradouro,
+                address: [res.address.address,
                     Validators.compose([
                         Validators.required,
                         Validators.nullValidator,
                         Validators.minLength(3),
                         Validators.maxLength(150)])],
-                bairro: [res.endereco.bairro,
+                district: [res.address.district,
                     Validators.compose([
                         Validators.required,
                         Validators.nullValidator,
                         Validators.minLength(3),
                         Validators.maxLength(150)])],
-                uf: [res.endereco.uf,
+                uf: [res.address.uf,
                     Validators.compose([
                         Validators.required,
                         Validators.nullValidator,
                         Validators.minLength(2),
                         Validators.maxLength(2)
                     ])],
-                cidade: [res.endereco.cidade,
+                city: [res.address.city,
                     Validators.compose([
                         Validators.required,
                         Validators.nullValidator,
                         Validators.minLength(3),
                         Validators.maxLength(150)])],
-                numero: [res.endereco.numero,
+                number: [res.address.number,
                     Validators.compose([
                         Validators.required,
                         Validators.nullValidator,
@@ -605,27 +612,27 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                         Validators.maxLength(50)])],
             });
             this.contactForm = this._formBuilder.group({
-                telefones: this._formBuilder.array([],
+                phonesNumbers: this._formBuilder.array([],
                     Validators.compose([
                         Validators.required,
                         Validators.nullValidator
                     ]))
             });
             this.filesForm = this._formBuilder.group({
-                arquivos: this._formBuilder.array([],
+                files: this._formBuilder.array([],
                     Validators.compose([
                         Validators.required,
                         Validators.nullValidator
                     ]))
             });
 
-            if (res.telefones.length > 0) {
-                res.telefones.forEach((item) => {
+            if (res.phonesNumbers.length > 0) {
+                res.phonesNumbers.forEach((item) => {
                     //Cria um formGroup de telefone
                     this.phoneArray.push(
                         this._formBuilder.group({
                             id: [item.id],
-                            telefone: [item.telefone, Validators.compose([
+                            phoneNumber: [item.phoneNumber, Validators.compose([
                                 Validators.required,
                                 Validators.nullValidator
                             ])]
@@ -636,7 +643,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                 this.phoneArray.push(
                     this._formBuilder.group({
                         id: [0],
-                        telefone: ['', Validators.compose([
+                        phoneNumber: ['', Validators.compose([
                             Validators.required,
                             Validators.nullValidator
                         ])]
@@ -645,19 +652,19 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             }
             // Adiciona o array de telefones ao fomrGroup
             this.phoneArray.forEach((item) => {
-                (this.contactForm.get('telefones') as FormArray).push(item);
+                (this.contactForm.get('phonesNumbers') as FormArray).push(item);
             });
 
             // Create a files form group
-            if (res.arquivos.length > 0) {
+            if (res.files.length > 0) {
 
-                this.filesUpdate = res.arquivos;
+                this.filesUpdate = res.files;
 
                 // Create a files form group
                 this.fileArray.push(
                     this._formBuilder.group({
                         id: [0],
-                        arquivo: ['']
+                        file: ['']
                     })
                 );
             } else {
@@ -665,7 +672,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                 this.fileArray.push(
                     this._formBuilder.group({
                         id: [0],
-                        arquivo: ['', Validators.compose([
+                        file: ['', Validators.compose([
                             Validators.required,
                             Validators.nullValidator
                         ])]
@@ -676,11 +683,11 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
 
             // Adiciona o array de telefones ao fomrGroup
             this.fileArray.forEach((item) => {
-                (this.filesForm.get('arquivos') as FormArray).push(item);
+                (this.filesForm.get('files') as FormArray).push(item);
             });
 
             this.fileArray = [];
-            this.fileArray = res.arquivos;
+            this.fileArray = res.files;
 
             this.loading = false;
             this._changeDetectorRef.markForCheck();

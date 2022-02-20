@@ -86,8 +86,8 @@
                     <!--start: cargo-->
                     <mat-form-field appearance="legacy">
                         <mat-label>Cargo</mat-label>
-                        <mat-select [(value)]="selected" required (valueChange)="onSelectCargoChange($event)">
-                            <mat-option *ngFor="let item of cargos" value="{{item.id}}">{{item.cargo}}</mat-option>
+                        <mat-select [(value)]="selectedLevel" required (valueChange)="onSelectCargoChange($event)">
+                            <mat-option *ngFor="let item of levels" value="{{item.id}}">{{item.level}}</mat-option>
                         </mat-select>
                         <mat-hint align="end">Selecione o cargo</mat-hint>
                     </mat-form-field>
@@ -181,7 +181,7 @@
                                 [svgIcon]="'heroicons_solid:credit-card'"
                                 matPrefix></mat-icon>
                             <mat-select [formControlName]="'uf'">
-                                <mat-option *ngFor="let item of estados" [value]="item">{{item}}</mat-option>
+                                <mat-option *ngFor="let item of states" [value]="item">{{item}}</mat-option>
                             </mat-select>
 
                         </mat-form-field>
@@ -234,17 +234,17 @@
                     <div class="sm:col-span-4 mt-2.5">
                         <div class="space-y-4">
                             <ng-container
-                                *ngFor="let phoneNumber of accountForm.get('telefones')['controls']; let i = index;"
-                                formArrayName="telefones">
+                                *ngFor="let phoneNumber of accountForm.get('phonesNumbers')['controls']; let i = index;"
+                                formArrayName="phonesNumbers">
                                 <div class="relative flex">
                                     <mat-form-field class="fuse-mat-no-subscript flex-auto">
                                         <mat-label>Telefone</mat-label>
                                         <input
                                             matInput
-                                            telefone [textMask]="{mask: masks.telefone.textMaskFunction}"
-                                            [placeholder]="'telefone'"
-                                            [formControl]="phoneNumber.get('telefone')"
-                                            [value]="phoneNumber.value.telefone ?? ''">
+                                            phoneNumber [textMask]="{mask: masks.telefone.textMaskFunction}"
+                                            [placeholder]="'phoneNumber'"
+                                            [formControl]="phoneNumber.get('phoneNumber')"
+                                            [value]="phoneNumber.value.phoneNumber ?? ''">
                                     </mat-form-field>
                                     <!-- Remove phone number -->
                                     <ng-container>

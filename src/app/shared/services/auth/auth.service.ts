@@ -5,7 +5,7 @@ import {catchError, switchMap} from 'rxjs/operators';
 import {UserService} from 'app/shared/services/http/user.service';
 import {LocalStorageService} from '../storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
-import {Usuario, UsuarioLogin} from '../../models/usuario.model';
+import {User, UsuarioLogin} from '../../models/usuario.model';
 import {TokenResult} from 'app/shared/models/token.model';
 import {RolesConstants} from '../../constants';
 
@@ -18,9 +18,9 @@ const PASSWORD = environment.auth.clientSecret;
 export class AuthService {
     private _authenticated: boolean = false;
     private userLogin = new UsuarioLogin();
-    private userModel: Usuario;
+    private userModel: User;
 
-    private _user: ReplaySubject<Usuario> = new ReplaySubject<Usuario>(1);
+    private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
 
     constructor(
         private _httpClient: HttpClient,
@@ -62,7 +62,7 @@ export class AuthService {
         }
 
         return this._httpClient.post(API_LOGIN_URL, credentials).pipe(
-            switchMap((response: Usuario) => {
+            switchMap((response: User) => {
                 this.storageServices.setValueFromLocalStorage(environment.authStorage, response);
 
                 //Define os atributos de login e senha para salvar no Storage para verificações.
@@ -188,7 +188,7 @@ export class AuthService {
      *
      * @param model de Usuario
      */
-    set user(value: Usuario) {
+    set user(value: User) {
         if (value) {this.storageServices.setValueFromLocalStorage(environment.authStorage, value);}
         this._user.next(value);
     }
@@ -196,7 +196,7 @@ export class AuthService {
     /**
      * Retorna um observable do usuário logado
      */
-    get user$(): Observable<Usuario> {
+    get user$(): Observable<User> {
         this.userModel = this.getUserInfoFromStorage();
         this._user.next(this.userModel);
         return this._user.asObservable();
@@ -205,14 +205,14 @@ export class AuthService {
     /**
      * Retorna o usuário do localStorage
      */
-    getUserInfoFromStorage(): Usuario {
+    getUserInfoFromStorage(): User {
         return this.userModel = this.storageServices.getValueFromLocalStorage(environment.authStorage);
     }
 
     /**
      * Retorna os dados de Login (usuario e senha) do LocalStorage
      */
-    getLoginFromStorage(): Usuario {
+    getLoginFromStorage(): User {
         return this.userModel = this.storageServices.getValueFromLocalStorage(environment.dataStorage);
     }
 }

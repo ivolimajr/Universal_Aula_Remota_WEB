@@ -1,36 +1,36 @@
-import {Cargo} from './cargo.model';
-import {Usuario} from './usuario.model';
-import {Telefone} from './Telefone.model';
-import {Endereco} from './endereco.model';
+import {Level} from './cargo.model';
+import {User} from './usuario.model';
+import {PhoneNumberModel} from './Telefone.model';
+import {AddressModel} from './endereco.model';
 
-export class ParceiroUsuario {
+export class PartnnerUser {
     id: number;
-    nome: string;
+    name: string;
     email: string;
-    descricao: string;
+    description: string;
     cnpj: string;
-    cargoId: number;
-    cargo: Cargo;
-    enderecoId: number;
-    endereco: Endereco;
-    usuarioId: number;
-    usuario: Usuario;
-    telefones: Array<Telefone>;
+    levelId: number;
+    level: Level;
+    addressId: number;
+    address: AddressModel;
+    userId: number;
+    user: User;
+    phonesNumbers: Array<PhoneNumberModel>;
 }
 
-export class ParceiroPost {
+export class PartnnerPost {
     id?: number;
-    nome: string;
+    name: string;
     email: string;
     cnpj: string;
-    descricao: string;
-    senha: string;
-    cargoId: number;
+    description: string;
+    password: string;
+    levelId: number;
     uf: string;
     cep: string;
-    enderecoLogradouro: string;
-    bairro: string;
-    cidade: string;
-    numero: string;
-    telefones: Array<Telefone>;
+    address: string;
+    district: string;
+    city: string;
+    number: string;
+    phonesNumbers: Array<PhoneNumberModel>;
 }

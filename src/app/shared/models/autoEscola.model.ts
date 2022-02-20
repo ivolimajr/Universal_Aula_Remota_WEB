@@ -1,42 +1,42 @@
-import {Endereco} from './endereco.model';
-import {Usuario} from './usuario.model';
-import {Telefone} from './telefone.model';
-import {Arquivo, ArquivoUpdate} from './arquivo.model';
+import {AddressModel} from './endereco.model';
+import {User} from './usuario.model';
+import {PhoneNumberModel} from './telefone.model';
+import {FileModel} from './arquivo.model';
 
-export class AutoEscolaUsuario {
+export class DrivingSchool {
     id: number;
-    razaoSocial: string;
-    nomeFantasia: string;
-    inscricaoEstadual: string;
-    dataFundacao: string;
+    corporateName: string;
+    fantasyName: string;
+    stateRegistration: string;
+    foundingDate: string;
     email: string;
-    descricao: string;
+    description: string;
     site: string;
     cnpj: string;
-    enderecoId: number;
-    endereco: Endereco;
-    usuarioId: number;
-    usuario: Usuario;
-    telefones: Array<Telefone>;
+    addressId: number;
+    address: AddressModel;
+    userId: number;
+    user: User;
+    phonesNumbers: Array<PhoneNumberModel>;
 }
 
-export class AutoEscolaPost {
+export class DrivingSchoolPost {
     id: number;
-    razaoSocial: string;
-    nomeFantasia: string;
-    inscricaoEstadual: string;
-    dataFundacao: string;
+    corporateName: string;
+    fantasyName: string;
+    stateRegistration: string;
+    foundingDate: string;
     email: string;
-    descricao: string;
+    description: string;
     site: string;
     cnpj: string;
     uf: string;
     cep: string;
-    enderecoLogradouro: string;
-    bairro: string;
-    cidade: string;
-    numero: string;
-    senha: string;
-    arquivos: Array<Arquivo>;
-    telefones: Array<Telefone>;
+    address: string;
+    district: string;
+    city: string;
+    number: string;
+    password: string;
+    files: Array<FileModel>;
+    phonesNumbers: Array<PhoneNumberModel>;
 }

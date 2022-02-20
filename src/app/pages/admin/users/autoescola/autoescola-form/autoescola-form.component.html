@@ -38,6 +38,7 @@
                     <ng-container>
 
                         <mat-vertical-stepper [linear]="true">
+
                             <!--start:Step-DadosEmpresa-->
                             <mat-step [stepControl]="accountForm" #step1>
                                 <form [formGroup]="accountForm">
@@ -46,12 +47,12 @@
                                         Pode ser inserido algum texto aqui
                                     </p>
 
-                                    <!--start:razaoSocial-->
+                                    <!--start:corporateName-->
                                     <div class="flex mt-2">
                                         <mat-form-field class="flex-auto">
                                             <input
                                                 matInput
-                                                [formControlName]="'razaoSocial'"
+                                                [formControlName]="'corporateName'"
                                                 [placeholder]="'Razão Social'"
                                                 required>
                                             <mat-icon
@@ -60,14 +61,14 @@
                                                 [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
                                         </mat-form-field>
                                     </div>
-                                    <!--end:razaoSocial-->
+                                    <!--end:corporateName-->
 
                                     <div class="flex flex-col gt-xs:flex-row">
-                                        <!--start:nomeFantasia-->
+                                        <!--start:fantasyName-->
                                         <mat-form-field class="flex-auto gt-xs:pr-3">
                                             <input
                                                 matInput
-                                                [formControlName]="'nomeFantasia'"
+                                                [formControlName]="'fantasyName'"
                                                 [placeholder]="'Nome Fantasia'"
                                                 required>
                                             <mat-icon
@@ -75,7 +76,7 @@
                                                 matPrefix
                                                 [svgIcon]="'heroicons_solid:user'"></mat-icon>
                                         </mat-form-field>
-                                        <!--end:nomeFantasia-->
+                                        <!--end:fantasyName-->
 
                                         <!--start:cnpj-->
                                         <mat-form-field class="flex-auto gt-xs:pl-3">
@@ -92,11 +93,11 @@
                                         </mat-form-field>
                                         <!--end:cnpj-->
 
-                                        <!--start:inscricaoEstadual-->
+                                        <!--start:stateRegistration-->
                                         <mat-form-field class="flex-auto gt-xs:pl-3">
                                             <input
                                                 matInput
-                                                [formControlName]="'inscricaoEstadual'"
+                                                [formControlName]="'stateRegistration'"
                                                 [placeholder]="'Inscrição Estadual'"
                                                 required>
                                             <mat-icon
@@ -104,19 +105,19 @@
                                                 matPrefix
                                                 [svgIcon]="'heroicons_solid:identification'"></mat-icon>
                                         </mat-form-field>
-                                        <!--end:inscricaoEstadual-->
+                                        <!--end:stateRegistration-->
 
-                                        <!--start:dataFundacao-->
+                                        <!--start:foundingDate-->
                                         <mat-form-field class="flex-auto gt-xs:pl-3">
                                             <mat-label>Data de Abertura</mat-label>
-                                            <input matInput type="date" [formControlName]="'dataFundacao'"
+                                            <input matInput type="date" [formControlName]="'foundingDate'"
                                                    [max]="'2021-01-31'">
                                             <mat-icon
                                                 class="icon-size-5"
                                                 matPrefix
                                                 [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
                                         </mat-form-field>
-                                        <!--end:dataFundacao-->
+                                        <!--end:foundingDate-->
 
                                         <!--start:email-->
                                         <mat-form-field class="flex-auto gt-xs:pl-3">
@@ -133,19 +134,19 @@
                                         </mat-form-field>
                                         <!--end:email-->
 
-                                        <!--start:descricao-->
+                                        <!--start:description-->
                                         <mat-form-field class="flex-auto gt-xs:pl-3">
                                             <input
                                                 matInput
-                                                [formControlName]="'descricao'"
-                                                [placeholder]="'descricao'"
+                                                [formControlName]="'description'"
+                                                [placeholder]="'Descrição'"
                                                 required>
                                             <mat-icon
                                                 class="icon-size-5"
                                                 matPrefix
                                                 [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
                                         </mat-form-field>
-                                        <!--end:descricao-->
+                                        <!--end:description-->
 
                                         <!--start:site-->
                                         <mat-form-field class="flex-auto gt-xs:pl-3">
@@ -202,7 +203,7 @@
                                         <mat-form-field class="flex-auto gt-xs:pl-3">
                                             <input
                                                 matInput
-                                                [formControlName]="'enderecoLogradouro'"
+                                                [formControlName]="'address'"
                                                 [placeholder]="'Endereço'"
                                                 required>
                                             <mat-icon
@@ -215,7 +216,7 @@
                                         <mat-form-field class="flex-auto">
                                             <input
                                                 matInput
-                                                [formControlName]="'bairro'"
+                                                [formControlName]="'district'"
                                                 [placeholder]="'Bairro'"
                                                 required>
                                             <mat-icon
@@ -228,7 +229,7 @@
                                         <mat-form-field class="fuse-mat-textarea flex-auto">
                                             <input
                                                 matInput
-                                                [formControlName]="'numero'"
+                                                [formControlName]="'number'"
                                                 [placeholder]="'Número'"
                                                 required>
                                             <mat-icon
@@ -245,7 +246,7 @@
                                                 [svgIcon]="'heroicons_solid:location-marker'"
                                                 matPrefix></mat-icon>
                                             <mat-select [formControlName]="'uf'">
-                                                <mat-option *ngFor="let item of estados"
+                                                <mat-option *ngFor="let item of states"
                                                             [value]="item">{{item}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>
@@ -254,7 +255,7 @@
                                         <mat-form-field class="fuse-mat-textarea flex-auto">
                                             <input
                                                 matInput
-                                                [formControlName]="'cidade'"
+                                                [formControlName]="'city'"
                                                 [placeholder]="'Cidade'"
                                                 required>
                                             <mat-icon
@@ -298,18 +299,18 @@
                                     <div class="flex flex-col gt-sm:flex-row">
                                         <div class="flex flex-col">
                                             <ng-container
-                                                *ngFor="let item of contactForm.get('telefones')['controls']; let i = index;"
-                                                formArrayName="telefones">
+                                                *ngFor="let item of contactForm.get('phonesNumbers')['controls']; let i = index;"
+                                                formArrayName="phonesNumbers">
                                                 <div class="relative flex w-1/2">
                                                     <mat-form-field class="fuse-mat-no-subscript flex-auto">
                                                         <mat-label>Telefone</mat-label>
                                                         <input
                                                             matInput
-                                                            [placeholder]="'telefone'"
+                                                            [placeholder]="'Telefone'"
                                                             telefone
                                                             [textMask]="{mask: masks.telefone.textMaskFunction}"
-                                                            [formControl]="item.get('telefone')"
-                                                            [value]="item.value.telefone ?? ''">
+                                                            [formControl]="item.get('phoneNumber')"
+                                                            [value]="item.value.phoneNumber ?? ''">
                                                     </mat-form-field>
                                                     <!-- Remove phone number -->
                                                     <ng-container>
@@ -392,10 +393,10 @@
                                                             class="icon-size-25 text-red-500"
                                                             [svgIcon]="'heroicons_solid:trash'"></mat-icon>
                                                     </button>
-                                                    <a href="{{item.destino}}" target="_blank">
+                                                    <a href="{{item.destiny}}" target="_blank">
                                                         <div
                                                             class="text-sm text-center break-all text-secondary w-30 mt-1.5">
-                                                            {{item.nome}}
+                                                            {{item.fileName}}
                                                         </div>
                                                     </a>
                                                 </div>
@@ -406,8 +407,8 @@
                                     <div class="flex flex-col gt-sm:flex-row mt-5">
                                         <div class="flex flex-col">
                                             <ng-container
-                                                *ngFor="let file of filesForm.get('arquivos')['controls']; let i = index;"
-                                                formArrayName="arquivos">
+                                                *ngFor="let file of filesForm.get('files')['controls']; let i = index;"
+                                                formArrayName="files">
                                                 <div class="relative flex">
                                                     <input
                                                         type="file"
@@ -415,7 +416,7 @@
                                                         accept=".pdf"
                                                         (change)="onPutFile($event)"
                                                         [placeholder]="'arquivos'"
-                                                        [formControl]="file.get('arquivo')">
+                                                        [formControl]="file.get('file')">
                                                     <!-- Remove phone number -->
                                                     <ng-container>
                                                         <div
@@ -434,7 +435,7 @@
                                                 </div>
                                             </ng-container>
                                         </div>
-                                        <!--end:telefones-->
+                                        <!--end:arquivos-->
                                         <div
                                             class="group inline-flex items-center mt-2 py-2 rounded cursor-pointer"
                                             (click)="addFileField()">
@@ -480,13 +481,14 @@
                                         <div class="text-2xl font-semibold leading-tight">Informações Básicas</div>
                                         <div class="mt-4  justify-center ql-align-center justify-items-center">
                                             <ul>
-                                                 <li class="mt-3"><b>Razão Social: </b>{{userPost.razaoSocial}}</li>
-                                                 <li class="mt-3"><b>Nome Fantasia: </b>{{userPost.nomeFantasia}}</li>
-                                                 <li class="mt-3"><b>Inscrição Estadual: </b>{{userPost.inscricaoEstadual}}</li>
-                                                 <li class="mt-3"><b>Email: </b>{{userPost.email}}</li>
-                                                 <li class="mt-3"><b>Site: </b> {{userPost.site}}</li>
-                                                 <li class="mt-3"><b>CNPJ: </b>{{userPost.cnpj}}</li>
-                                                 <li class="mt-3"><b>Descrição: </b>{{userPost.descricao}}</li>
+                                                <li class="mt-3"><b>Razão Social: </b>{{edrivingSchoolPost.corporateName}}</li>
+                                                <li class="mt-3"><b>Nome Fantasia: </b>{{edrivingSchoolPost.fantasyName}}</li>
+                                                <li class="mt-3"><b>Inscrição
+                                                    Estadual: </b>{{edrivingSchoolPost.stateRegistration}}</li>
+                                                <li class="mt-3"><b>Email: </b>{{edrivingSchoolPost.email}}</li>
+                                                <li class="mt-3"><b>Site: </b> {{edrivingSchoolPost.site}}</li>
+                                                <li class="mt-3"><b>CNPJ: </b>{{edrivingSchoolPost.cnpj}}</li>
+                                                <li class="mt-3"><b>Descrição: </b>{{edrivingSchoolPost.description}}</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -496,29 +498,29 @@
                                         <div class="text-2xl font-semibold leading-tight md:ml-3">Endereço</div>
                                         <div class="mt-4 md:ml-3">
                                             <ul>
-                                                <li class="mt-1"><b>Endereço: </b>{{userPost.enderecoLogradouro}}</li>
-                                                <li class="mt-1"><b>Bairro: </b>{{userPost.bairro}}</li>
-                                                <li class="mt-1"><b>Cidade: </b>{{userPost.cidade}}</li>
-                                                <li class="mt-1"><b>Cep: </b>{{userPost.cep}}</li>
-                                                <li class="mt-1"><b>UF: </b> {{userPost.uf}}</li>
-                                                <li class="mt-1"><b>N°: </b>{{userPost.numero}}</li>
+                                                <li class="mt-1"><b>Endereço: </b>{{edrivingSchoolPost.address}}</li>
+                                                <li class="mt-1"><b>Bairro: </b>{{edrivingSchoolPost.district}}</li>
+                                                <li class="mt-1"><b>Cidade: </b>{{edrivingSchoolPost.city}}</li>
+                                                <li class="mt-1"><b>Cep: </b>{{edrivingSchoolPost.cep}}</li>
+                                                <li class="mt-1"><b>UF: </b> {{edrivingSchoolPost.uf}}</li>
+                                                <li class="mt-1"><b>N°: </b>{{edrivingSchoolPost.number}}</li>
                                             </ul>
                                         </div>
                                         <div class="flex flex-col h-auto max-w-120 w-full overflow-hidden mt-5">
                                             <div class="text-2xl font-semibold leading-tight ml-2">Contato</div>
                                             <div class="mt-4 ml-2">
-                                                <ul *ngFor="let item of userPost.telefones">
-                                                    <li class="mt-1"><b>Telefone: </b>{{item.telefone}}</li>
+                                                <ul *ngFor="let item of edrivingSchoolPost.phonesNumbers">
+                                                    <li class="mt-1"><b>Telefone: </b>{{item.phoneNumber}}</li>
                                                 </ul>
                                             </div>
                                         </div>
                                         <div class="text-2xl font-semibold leading-tight ml-2 mt-5">Anexos</div>
                                         <div class="mt-4 ml-2">
-                                            <ul *ngFor="let item of userPost.arquivos">
-                                                <li class="mt-1"><b>Doc: </b>{{item.name}}</li>
+                                            <ul *ngFor="let item of edrivingSchoolPost.files">
+                                                <li class="mt-1"><b>Doc: </b>{{item.fileName}}</li>
                                             </ul>
                                             <ul *ngFor="let item of filesUpdate">
-                                                <li class="mt-1"><b>Doc: </b>{{item.nome}}</li>
+                                                <li class="mt-1"><b>Doc: </b>{{item.fileName}}</li>
                                             </ul>
                                         </div>
                                     </div>

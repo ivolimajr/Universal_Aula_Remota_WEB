@@ -1,9 +1,9 @@
-export class Endereco {
+export class AddressModel {
     id?: number;
     uf: string;
     cep: string;
-    enderecoLogradouro: string;
-    bairro: string;
-    cidade: string;
-    numero: string;
+    address: string;
+    district: string;
+    city: string;
+    number: string;
 }

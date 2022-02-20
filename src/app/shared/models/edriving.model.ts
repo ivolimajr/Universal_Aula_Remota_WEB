@@ -1,26 +1,26 @@
-import {Cargo} from './cargo.model';
-import {Usuario} from './usuario.model';
-import {Telefone} from './Telefone.model';
+import {Level} from './cargo.model';
+import {User} from './usuario.model';
+import {PhoneNumberModel} from './Telefone.model';
 
-export class EdrivingUsuario {
+export class EdrivingUser {
     id: number;
-    nome: string;
+    name: string;
     cpf: string;
     email: string;
-    telefones: Array<Telefone>;
-    cargoId: number;
-    cargo: Cargo;
-    usuarioId: number;
-    usuario: Usuario;
+    phonesNumbers: Array<PhoneNumberModel>;
+    levelId: number;
+    level: Level;
+    userId: number;
+    user: User;
 }
 
 export class EdrivingPost {
     id?: number;
-    nome: string;
+    name: string;
     cpf: string;
     email: string;
-    telefones: Array<Telefone>;
-    cargoId: number;
+    phonesNumbers: Array<PhoneNumberModel>;
+    levelId: number;
     status: number;
-    senha?: string;
+    password?: string;
 }

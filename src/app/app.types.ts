@@ -1,5 +1,5 @@
 import {FuseNavigationItem} from '@fuse/components/navigation';
-import {Usuario} from 'app/shared/models/usuario.model';
+import {User} from 'app/shared/models/usuario.model';
 
 export interface InitialData {
     navigation: {

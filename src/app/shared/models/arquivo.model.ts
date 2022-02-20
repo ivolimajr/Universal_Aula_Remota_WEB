@@ -1,12 +1,12 @@
-export class Arquivo {
+export class FileModel {
     id?: number;
-    name: string;
-    arquivo: File;
+    fileName: string;
+    file: File;
 }
 
-export class ArquivoUpdate{
+export class FileModelUpdate {
     id: number;
-    nome: string;
-    formado: string;
-    destino: string;
+    fileName: string;
+    extension: string;
+    destiny: string;
 }

@@ -1,4 +1,5 @@
-export class Telefone {
+export class PhoneNumberModel {
     id: number;
-    telefone: string;
+    phoneNumber: string;
 }
+

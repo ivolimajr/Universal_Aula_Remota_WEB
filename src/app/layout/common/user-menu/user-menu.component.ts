@@ -9,7 +9,7 @@ import {
 import {Router} from '@angular/router';
 import {BooleanInput} from '@angular/cdk/coercion';
 import {Subject} from 'rxjs';
-import {Usuario} from 'app/shared/models/usuario.model';
+import {User} from 'app/shared/models/usuario.model';
 import {AuthService} from '../../../shared/services/auth/auth.service';
 import {RolesConstants} from '../../../shared/constants';
 
@@ -25,7 +25,7 @@ export class UserMenuComponent implements OnInit, OnDestroy {
     static ngAcceptInputType_showAvatar: BooleanInput;
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    user: Usuario;
+    user: User;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 

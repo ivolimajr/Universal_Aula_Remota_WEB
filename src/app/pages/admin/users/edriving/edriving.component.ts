@@ -8,11 +8,11 @@ import {Subscription} from 'rxjs';
 import {fuseAnimations} from '../../../../../@fuse/animations';
 import {EdrivingFormModalComponent} from './edriving-form-modal/edriving-form-modal.component';
 import {EdrivingService} from '../../../../shared/services/http/edriving.service';
-import {EdrivingUsuario} from '../../../../shared/models/edriving.model';
+import {EdrivingUser} from '../../../../shared/models/edriving.model';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
 
-const ELEMENT_DATA: EdrivingUsuario[] = [];
+const ELEMENT_DATA: EdrivingUser[] = [];
 
 @Component({
     selector: 'app-edriving',
@@ -24,7 +24,7 @@ const ELEMENT_DATA: EdrivingUsuario[] = [];
 export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
 
     displayedColumns: string[] = ['nome', 'email', 'id']; //Exibe as colunas da tabela
-    dataSource = new MatTableDataSource<EdrivingUsuario>(ELEMENT_DATA); //Dados da tabela
+    dataSource = new MatTableDataSource<EdrivingUser>(ELEMENT_DATA); //Dados da tabela
     loading: boolean = true;
     isDeleting: boolean = false;
     _users$ = this._edrivingServices.getAll(); //Observable dos usuário
@@ -36,7 +36,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatPaginator) paginator: MatPaginator;
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    @ViewChild(MatTable) table: MatTable<EdrivingUsuario>;
+    @ViewChild(MatTable) table: MatTable<EdrivingUser>;
 
     constructor(
         public dialog: MatDialog,
@@ -62,7 +62,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
      * @param id -> se tiver ID exibe e atualiza, caso contrário, adiciona
      * @return void
      */
-    setUser(user: EdrivingUsuario): void {
+    setUser(user: EdrivingUser): void {
 
         //Atualiza um usuário
         if (user) {
@@ -149,7 +149,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
      * @return void
      */
     private getUsers(): void {
-        this.dataSub = this._users$.subscribe((items: EdrivingUsuario[]) => {
+        this.dataSub = this._users$.subscribe((items: EdrivingUser[]) => {
             this.dataSource.data = items;
             this.loading = false;
             this._changeDetectorRef.markForCheck();

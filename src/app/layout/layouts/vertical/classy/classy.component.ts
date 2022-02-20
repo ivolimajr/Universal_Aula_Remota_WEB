@@ -6,7 +6,7 @@ import {FuseMediaWatcherService} from '@fuse/services/media-watcher';
 import {FuseNavigationService, FuseVerticalNavigationComponent} from '@fuse/components/navigation';
 import {InitialData} from 'app/app.types';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
-import {Usuario} from '../../../../shared/models/usuario.model';
+import {User} from '../../../../shared/models/usuario.model';
 
 @Component({
     selector: 'classy-layout',
@@ -15,7 +15,7 @@ import {Usuario} from '../../../../shared/models/usuario.model';
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy {
     data: InitialData;
-    user: Usuario;
+    user: User;
     isScreenSmall: boolean;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 

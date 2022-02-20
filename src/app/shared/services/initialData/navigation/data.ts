@@ -40,8 +40,8 @@ export const parceiroNavigation: FuseNavigationItem[] =[
 
 export const autoEscolaNavigation: FuseNavigationItem[] =[
     {
-        id: 'autoescola',
-        title: 'Auto Escolas',
+        id: 'administrativo',
+        title: 'Administrativos',
         type: 'basic',
         icon: 'heroicons_outline:truck',
         link: '/usuario/auto-escola'

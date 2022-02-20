@@ -4,7 +4,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Subscription} from 'rxjs';
-import {ParceiroUsuario} from '../../../../shared/models/parceiro.model';
+import {PartnnerUser} from '../../../../shared/models/parceiro.model';
 import {fuseAnimations} from '../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../@fuse/components/alert';
 import {MatTable, MatTableDataSource} from '@angular/material/table';
@@ -14,7 +14,7 @@ import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.c
 import {ParceiroFormModalComponent} from './parceiro-form-modal/parceiro-form-modal.component';
 
 
-const ELEMENT_DATA: ParceiroUsuario[] = [];
+const ELEMENT_DATA: PartnnerUser[] = [];
 
 @Component({
   selector: 'app-parceiro',
@@ -30,7 +30,7 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
     };
 
     displayedColumns: string[] = ['nome', 'email', 'id'];
-    dataSource = new MatTableDataSource<ParceiroUsuario>(ELEMENT_DATA);
+    dataSource = new MatTableDataSource<PartnnerUser>(ELEMENT_DATA);
     loading: boolean = true;
     isDeleting: boolean = false;
     showAlert: boolean = false;
@@ -43,7 +43,7 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatPaginator) paginator: MatPaginator;
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    @ViewChild(MatTable) table: MatTable<ParceiroUsuario>;
+    @ViewChild(MatTable) table: MatTable<PartnnerUser>;
 
     constructor(
         public dialog: MatDialog,
@@ -69,7 +69,7 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
      * @param id -> se tiver ID exibe e atualiza, caso contrário, adiciona
      * @return void
      */
-    setUser(user: ParceiroUsuario): void {
+    setUser(user: PartnnerUser): void {
 
         //Atualiza um usuário
         if (user) {
@@ -152,7 +152,7 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
      * @return void
      */
     private getUsers(): void {
-        this.dataSub = this._users$.subscribe((items: ParceiroUsuario[]) => {
+        this.dataSub = this._users$.subscribe((items: PartnnerUser[]) => {
             this.dataSource.data = items;
             this.loading = false;
             this._changeDetectorRef.markForCheck();

@@ -3,8 +3,8 @@ import {HttpBackend, HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
-import {Cargo} from '../../models/cargo.model';
-import {AutoEscolaPost, AutoEscolaUsuario} from '../../models/autoEscola.model';
+import {Level} from '../../models/cargo.model';
+import {DrivingSchoolPost, DrivingSchool} from '../../models/autoEscola.model';
 import {AuthService} from '../auth/auth.service';
 
 const URL_AUTOESCOLA = `${environment.apiUrl}/AutoEscola`;
@@ -34,8 +34,8 @@ export class AutoescolaService {
      * @param id do usuário a ser consultado
      * @return retorna um usuário ou o error
      */
-    getOne(id: number): Observable<AutoEscolaUsuario> {
-        return this._httpClient.get<AutoEscolaUsuario>(URL_AUTOESCOLA + '/' + id).pipe(
+    getOne(id: number): Observable<DrivingSchool> {
+        return this._httpClient.get<DrivingSchool>(URL_AUTOESCOLA + '/' + id).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))
         );
@@ -44,9 +44,9 @@ export class AutoescolaService {
     /**
      * @return o array de items contendo todos os usuários do tipo Edriving
      */
-    getAll(): Observable<AutoEscolaUsuario[]> {
-        return this._httpClient.get<AutoEscolaUsuario[]>(URL_AUTOESCOLA).pipe(
-            switchMap((response: AutoEscolaUsuario[]) => of(response)),
+    getAll(): Observable<DrivingSchool[]> {
+        return this._httpClient.get<DrivingSchool[]>(URL_AUTOESCOLA).pipe(
+            switchMap((response: DrivingSchool[]) => of(response)),
             catchError(e => of(e))
         );
     }
@@ -57,26 +57,26 @@ export class AutoescolaService {
      * @param data model do usuario
      * @return retorna o usuário ou error
      */
-    create(data: AutoEscolaPost, files: Set<File>): Observable<AutoEscolaPost> {
+    create(data: DrivingSchoolPost): Observable<DrivingSchoolPost> {
 
         this.header = this.header.set('Authorization', 'Bearer ' + this.accessToken);
         const formData = new FormData();
 
         for (const key in data){
-            if(key !== 'arquivos' && key !== 'telefones'){
+            if(key !== 'files' && key !== 'phonesNumbers'){
                 formData.append(key, data[key]);
             }
         }
 
         let i = 0;
-        data.telefones.forEach((item) => {
-            const name = 'telefones[' + i + '][telefone]';
-            formData.append(name, item.telefone);
+        data.phonesNumbers.forEach((item) => {
+            const name = 'phonesNumbers[' + i + '][phoneNumber]';
+            formData.append(name, item.phoneNumber);
             i++;
         });
-        data.arquivos.forEach((item) => {
-            const name = 'arquivos';
-            formData.append(name, item.arquivo);
+        data.files.forEach((item) => {
+            const name = 'files';
+            formData.append(name, item.file);
         });
 
         return this._httpClient.post(URL_AUTOESCOLA, formData).pipe(
@@ -92,7 +92,7 @@ export class AutoescolaService {
      * @param data model do usuario
      * @return retorna o usuário atualizado ou error
      */
-    update(data: AutoEscolaPost): Observable<AutoEscolaPost> {
+    update(data: DrivingSchoolPost): Observable<DrivingSchoolPost> {
         if (data.id === 0 || data.id == null) {
             return of(null);
         }
@@ -100,20 +100,20 @@ export class AutoescolaService {
         const formData = new FormData();
 
         for (const key in data){
-            if(key !== 'arquivos' && key !== 'telefones'){
+            if(key !== 'files' && key !== 'phonesNumbers'){
                 formData.append(key, data[key]);
             }
         }
 
         let i = 0;
-        data.telefones.forEach((item) => {
-            const name = 'telefones[' + i + '][telefone]';
-            formData.append(name, item.telefone);
+        data.phonesNumbers.forEach((item) => {
+            const name = 'phonesNumbers[' + i + '][phoneNumber]';
+            formData.append(name, item.phoneNumber);
             i++;
         });
-        data.arquivos.forEach((item) => {
-            const name = 'arquivos';
-            formData.append(name, item.arquivo);
+        data.files.forEach((item) => {
+            const name = 'files';
+            formData.append(name, item.file);
         });
 
         return this._httpClient.put(URL_AUTOESCOLA, formData).pipe(
@@ -145,7 +145,7 @@ export class AutoescolaService {
      *
      * @return retorna uma lista de cargos
      */
-    getCargos(): Observable<Cargo[]> {
+    getCargos(): Observable<Level[]> {
         return this._httpClient.get(URL_AUTOESCOLA_CARGO).pipe(
             switchMap((response: any) => of(response['items'])),
             catchError(e => of(e))

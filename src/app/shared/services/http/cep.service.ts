@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpBackend, HttpClient, HttpHeaders} from '@angular/common/http';
-import {Endereco} from '../../models/endereco.model';
+import {AddressModel} from '../../models/endereco.model';
 import {Observable} from 'rxjs';
 
 export interface CEPMODEL {
@@ -20,7 +20,7 @@ export class CepService {
     header = this.headers;
 
     private httpClient: HttpClient;
-    private endereco = new Endereco();
+    private endereco = new AddressModel();
 
     constructor(private httpBackend: HttpBackend) {
         this.httpClient = new HttpClient(httpBackend);

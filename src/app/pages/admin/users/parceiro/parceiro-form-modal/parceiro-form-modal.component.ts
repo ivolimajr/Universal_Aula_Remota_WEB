@@ -6,10 +6,10 @@ import {Subscription} from 'rxjs';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../../@fuse/components/alert';
-import {Cargo} from '../../../../../shared/models/cargo.model';
-import {ParceiroPost, ParceiroUsuario} from '../../../../../shared/models/parceiro.model';
+import {Level} from '../../../../../shared/models/cargo.model';
+import {PartnnerPost, PartnnerUser} from '../../../../../shared/models/parceiro.model';
 import {ParceiroService} from '../../../../../shared/services/http/parceiro.service';
-import {Usuario} from '../../../../../shared/models/usuario.model';
+import {User} from '../../../../../shared/models/usuario.model';
 import {LocalStorageService} from '../../../../../shared/services/storage/localStorage.service';
 import {AuthService} from '../../../../../shared/services/auth/auth.service';
 import {environment} from '../../../../../../environments/environment';
@@ -30,20 +30,20 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
     };
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    @Input() userEdit: ParceiroUsuario; //Se vier um ID, exibir e atualizar o usuário
+    @Input() userEdit: PartnnerUser; //Se vier um ID, exibir e atualizar o usuário
     accountForm: FormGroup;
     masks = MASKS;
     loading: boolean = true; //Inicia o componente com um lading
     message: string = null; //Mensagem quando estiver salvando ou editando um usuário
-    cargos: Cargo[];
-    cargoId: number;
-    selected: string = null; //Cargo Selecionado
-    estados = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
+    levels: Level[];
+    levelId: number;
+    selectedLevel: string = null; //Cargo Selecionado
+    states = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
         'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
-    private parceiroUserPost = new ParceiroPost();
+    private partnnerPost = new PartnnerPost();
     private phoneArray = [];
-    private user: Usuario;
-    private cargoSub: Subscription;
+    private user: User;
+    private levelSub: Subscription;
     private userSub: Subscription;
     private cepSub: Subscription;
 
@@ -65,8 +65,8 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
         if (this.userSub) {
             this.userSub.unsubscribe();
         }
-        if (this.cargoSub) {
-            this.cargoSub.unsubscribe();
+        if (this.levelSub) {
+            this.levelSub.unsubscribe();
         }
         if (this.cepSub) {
             this.cepSub.unsubscribe();
@@ -92,7 +92,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
             this._changeDetectorRef.markForCheck();
 
             if (this.userEdit) {
-                this.userSub = this._parceiroServices.update(this.parceiroUserPost).subscribe((res: any) => {
+                this.userSub = this._parceiroServices.update(this.partnnerPost).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
                         this.openSnackBar(res.error, 'warn');
@@ -102,7 +102,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                     //Se o usuário a ser atualizado for o usuário logado, atualiza os dados na storage
                     if (this.userEdit.id === this._authServices.getUserInfoFromStorage().id) {
                         this.user = this._authServices.getUserInfoFromStorage();
-                        this.user.nome = res.nome;
+                        this.user.name = res.nome;
                         this.user.email = res.email;
                         this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
                     }
@@ -112,7 +112,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                     return;
                 });
             } else {
-                this.userSub = this._parceiroServices.create(this.parceiroUserPost).subscribe((res: any) => {
+                this.userSub = this._parceiroServices.create(this.partnnerPost).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
                         this.openSnackBar(res.error, 'warn');
@@ -143,19 +143,19 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
     removePhoneNumber(id: number, index: number): void {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
-        const phoneNumbersFormArray = this.accountForm.get('telefones') as FormArray;
-        if(id === 0  && phoneNumbersFormArray.length > 1){
-            phoneNumbersFormArray.removeAt(index);
+        const phonesFormArray = this.accountForm.get('phonesNumbers') as FormArray;
+        if(id === 0  && phonesFormArray.length > 1){
+            phonesFormArray.removeAt(index);
             return this.closeAlert();
         }
-        if (phoneNumbersFormArray.length === 1) {
+        if (phonesFormArray.length === 1) {
             this.openSnackBar('Remoção Inválida', 'warn');
             return this.closeAlert();
         }
         this._userServices.removePhonenumber(id).subscribe((res) => {
             if (res === true) {
                 this.openSnackBar('Removido');
-                phoneNumbersFormArray.removeAt(index);
+                phonesFormArray.removeAt(index);
                 return this.closeAlert();
             }
             if (res === false) {
@@ -173,20 +173,20 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
      */
     addPhoneNumberField(): void {
 
-        const phoneNumberFormGroup = this._formBuilder.group({
-            telefone: ['', Validators.compose([
+        const phonesFormArray = this._formBuilder.group({
+            phoneNumber: ['', Validators.compose([
                 Validators.required,
                 Validators.nullValidator
             ])]
         });
 
         // Adiciona o formGroup ao array de telefones
-        (this.accountForm.get('telefones') as FormArray).push(phoneNumberFormGroup);
+        (this.accountForm.get('phonesNumbers') as FormArray).push(phonesFormArray);
         this._changeDetectorRef.markForCheck();
     }
 
     onSelectCargoChange(id: number): void {
-        this.cargoId = id;
+        this.levelId = id;
     };
 
     buscaCep(event): void {
@@ -210,8 +210,8 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
      * Busca os cargos dos usuário do tipo edriving
      */
     private getCargos(): void {
-        this.cargoSub = this._parceiroServices.getCargos().subscribe((res) => {
-            this.cargos = res;
+        this.levelSub = this._parceiroServices.getCargos().subscribe((res) => {
+            this.levels = res;
             this._changeDetectorRef.markForCheck();
         });
     }
@@ -299,7 +299,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
             cargoId: [0,
                 Validators.compose([
                     Validators.required])],
-            telefones: this._formBuilder.array([], Validators.compose([
+            phonesNumbers: this._formBuilder.array([], Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
             ])),
@@ -308,7 +308,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
         // Create a phone number form group
         this.phoneArray.push(
             this._formBuilder.group({
-                telefone: ['', Validators.compose([
+                phoneNumber: ['', Validators.compose([
                     Validators.required,
                     Validators.nullValidator
                 ])]
@@ -317,7 +317,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
 
         // Adiciona o array de telefones ao fomrGroup
         this.phoneArray.forEach((phoneNumbersFormGroup) => {
-            (this.accountForm.get('telefones') as FormArray).push(phoneNumbersFormGroup);
+            (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumbersFormGroup);
         });
 
         this.closeAlert();
@@ -338,44 +338,44 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
             return false;
         }
         //Verifica se os telefones informados são válidos
-        formData.telefones.forEach((item) => {
-            if (item.telefone === null || item.telefone === '' || item.telefone.length < 11) {
+        formData.phonesNumbers.forEach((item) => {
+            if (item.phoneNumber === null || item.phoneNumber === '' || item.phoneNumber.length < 11) {
                 this.openSnackBar('Insira um telefone', 'warn');
                 this.accountForm.enable();
                 result = false;
             }
         });
 
-        if (this.cargoId === undefined || this.cargoId === 0) {
+        if (this.levelId === undefined || this.levelId === 0) {
             this.openSnackBar('Selecione um Cargo', 'warn');
             this.accountForm.enable();
             result = false;
         }
 
         if (this.userEdit) {
-            this.parceiroUserPost.id = this.userEdit.id;
+            this.partnnerPost.id = this.userEdit.id;
         }
         if (!this.userEdit) {
-            this.parceiroUserPost.senha = 'Pay@2021';
+            this.partnnerPost.password = 'Pay@2021';
         }
 
-        this.parceiroUserPost.nome = formData.nome;
-        this.parceiroUserPost.email = formData.email;
-        this.parceiroUserPost.cnpj = formData.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
-        this.parceiroUserPost.descricao = formData.descricao;
-        this.parceiroUserPost.cep = formData.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
-        this.parceiroUserPost.uf = 'DF';
-        this.parceiroUserPost.enderecoLogradouro = formData.enderecoLogradouro;
-        this.parceiroUserPost.bairro = formData.bairro;
-        this.parceiroUserPost.cidade = formData.cidade;
-        this.parceiroUserPost.numero = formData.numero;
-        this.parceiroUserPost.cargoId = this.cargoId;
-        formData.telefones.forEach((item) => {
-            if (item.telefone.length !== 11) {
-                item.telefone = item.telefone.replace(/[^0-9,]*/g, '').replace(',', '.');
+        this.partnnerPost.name = formData.nome;
+        this.partnnerPost.email = formData.email;
+        this.partnnerPost.cnpj = formData.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
+        this.partnnerPost.description = formData.descricao;
+        this.partnnerPost.cep = formData.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
+        this.partnnerPost.uf = 'DF';
+        this.partnnerPost.address = formData.enderecoLogradouro;
+        this.partnnerPost.district = formData.bairro;
+        this.partnnerPost.city = formData.cidade;
+        this.partnnerPost.number = formData.numero;
+        this.partnnerPost.levelId = this.levelId;
+        formData.phonesNumbers.forEach((item) => {
+            if (item.phoneNumber.length !== 11) {
+                item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
-        this.parceiroUserPost.telefones = formData.telefones;
+        this.partnnerPost.phonesNumbers = formData.phonesNumbers;
         return result;
     }
 
@@ -386,7 +386,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
 
         this.accountForm = this._formBuilder.group({
-            nome: [this.userEdit.nome,
+            nome: [this.userEdit.name,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -405,71 +405,71 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(14),
                     Validators.maxLength(14)])],
-            descricao: [this.userEdit.descricao,
+            descricao: [this.userEdit.description,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(100)])],
-            cep: [this.userEdit.endereco.cep,
+            cep: [this.userEdit.address.cep,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(8),
                     Validators.maxLength(8),
                     NgBrazilValidators.cep])],
-            uf: [this.userEdit.endereco.uf, Validators.compose([
+            uf: [this.userEdit.address.uf, Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
                 Validators.minLength(2),
                 Validators.maxLength(2)
             ])],
-            enderecoLogradouro: [this.userEdit.endereco.enderecoLogradouro,
+            enderecoLogradouro: [this.userEdit.address.address,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
-            bairro: [this.userEdit.endereco.bairro,
+            bairro: [this.userEdit.address.district,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
-            cidade: [this.userEdit.endereco.cidade,
+            cidade: [this.userEdit.address.city,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
-            numero: [this.userEdit.endereco.numero,
+            numero: [this.userEdit.address.number,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(1),
                     Validators.maxLength(50)])],
-            cargoId: [this.userEdit.cargoId,
+            cargoId: [this.userEdit.levelId,
                 Validators.compose([
                     Validators.required])],
-            telefones: this._formBuilder.array([], Validators.compose([
+            phonesNumbers: this._formBuilder.array([], Validators.compose([
                 Validators.required,
                 Validators.nullValidator
             ])),
         });
 
-        this.cargoId = this.userEdit.cargoId;
-        this.selected = this.userEdit.cargo.id.toString();
+        this.levelId = this.userEdit.levelId;
+        this.selectedLevel = this.userEdit.level.id.toString();
 
         //Só monta o array de telefones se houver telefones de contato cadastrado
-        if (this.userEdit.telefones.length > 0) {
+        if (this.userEdit.phonesNumbers.length > 0) {
             // Iterate through them
-            this.userEdit.telefones.forEach((phoneNumber) => {
+            this.userEdit.phonesNumbers.forEach((phoneNumber) => {
 
                 //Cria um formGroup de telefone
                 this.phoneArray.push(
                     this._formBuilder.group({
                         id: [phoneNumber.id],
-                        telefone: [phoneNumber.telefone, Validators.compose([
+                        phoneNumber: [phoneNumber.phoneNumber, Validators.compose([
                             Validators.required,
                             Validators.nullValidator
                         ])]
@@ -480,7 +480,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
             this.phoneArray.push(
                 this._formBuilder.group({
                     id: [0],
-                    telefone: ['', Validators.compose([
+                    phoneNumber: ['', Validators.compose([
                         Validators.required,
                         Validators.nullValidator
                     ])]
@@ -490,9 +490,9 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
 
         // Adiciona o array de telefones ao fomrGroup
         this.phoneArray.forEach((phoneNumbersFormGroup) => {
-            (this.accountForm.get('telefones') as FormArray).push(phoneNumbersFormGroup);
+            (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumbersFormGroup);
         });
-        this.parceiroUserPost.id = this.userEdit.id;
+        this.partnnerPost.id = this.userEdit.id;
         this.closeAlert();
         this.phoneArray = [];
     }

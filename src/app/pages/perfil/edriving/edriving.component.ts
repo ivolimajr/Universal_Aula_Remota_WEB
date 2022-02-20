@@ -13,10 +13,10 @@ import {MatDialog} from '@angular/material/dialog';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Subscription} from 'rxjs';
-import {EdrivingPost, EdrivingUsuario} from '../../../shared/models/edriving.model';
+import {EdrivingPost, EdrivingUser} from '../../../shared/models/edriving.model';
 import {UserService} from '../../../shared/services/http/user.service';
 import {EdrivingService} from '../../../shared/services/http/edriving.service';
-import {Usuario} from '../../../shared/models/usuario.model';
+import {User} from '../../../shared/models/usuario.model';
 import {AuthService} from '../../../shared/services/auth/auth.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
@@ -30,10 +30,10 @@ import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.comp
     animations: fuseAnimations
 })
 export class EdrivingComponent implements OnInit, OnDestroy {
-    @Input() edrivingUser: EdrivingUsuario;
+    @Input() edrivingUser: EdrivingUser;
 
     accountForm: FormGroup;
-    user: Usuario;
+    user: User;
     masks = MASKS;
     private edrivingUserPost = new EdrivingPost();
     private userSub: Subscription;
@@ -80,7 +80,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
 
             //Atualiza os dados do localStorage
             this.user = this._authServices.getUserInfoFromStorage();
-            this.user.nome = res.nome;
+            this.user.name = res.nome;
             this.user.email = res.email;
             this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
 
@@ -142,7 +142,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
      * @param index do array de telefones a ser removido
      */
     removePhoneNumber(id: number, index: number): void {
-        if (this.edrivingUser.telefones.length === 1) {
+        if (this.edrivingUser.phonesNumbers.length === 1) {
             this.dialog.open(AlertModalComponent, {
                 width: '280px',
                 data: {content: 'Usuário não pode ficar sem contato.', oneButton: true}
@@ -186,7 +186,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
      */
     private prepareForm(): void {
         this.accountForm = this._formBuilder.group({
-            nome: [this.edrivingUser.nome,
+            nome: [this.edrivingUser.name,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -217,15 +217,15 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         const phoneNumbersFormGroups = [];
 
         //Só monta o array de telefones se houver telefones de contato cadastrado
-        if (this.edrivingUser.telefones.length > 0) {
+        if (this.edrivingUser.phonesNumbers.length > 0) {
             // Iterate through them
-            this.edrivingUser.telefones.forEach((phoneNumber) => {
+            this.edrivingUser.phonesNumbers.forEach((phoneNumber) => {
 
                 //Cria um formGroup de telefone
                 phoneNumbersFormGroups.push(
                     this._formBuilder.group({
                         id: [phoneNumber.id],
-                        telefone: [phoneNumber.telefone,
+                        telefone: [phoneNumber.phoneNumber,
                             Validators.compose([
                                 Validators.required,
                                 Validators.nullValidator
@@ -271,7 +271,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             return false;
         }
         //Se todos os dados forem válidos, monta o objeto para atualizar
-        this.edrivingUserPost.nome = formData.nome;
+        this.edrivingUserPost.name = formData.nome;
         this.edrivingUserPost.email = formData.email;
         this.edrivingUserPost.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
         formData.telefones.forEach((item) => {
@@ -279,7 +279,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
                 item.telefone = item.telefone.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
-        this.edrivingUserPost.telefones = formData.telefones;
+        this.edrivingUserPost.phonesNumbers = formData.telefones;
         return true;
     }
 

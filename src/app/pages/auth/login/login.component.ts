@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {fuseAnimations} from '@fuse/animations';
 import {AuthService} from 'app/shared/services/auth/auth.service';
-import {Usuario} from 'app/shared/models/usuario.model';
+import {User} from 'app/shared/models/usuario.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Subscription} from 'rxjs';
 
@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
 
     loginForm: FormGroup;
-    private userStorage: Usuario;
+    private userStorage: User;
     private loginSub: Subscription;
 
     constructor(

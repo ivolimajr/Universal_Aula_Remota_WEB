@@ -3,7 +3,7 @@ import {environment} from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {catchError, switchMap} from 'rxjs/operators';
-import {Endereco} from '../../models/endereco.model';
+import {AddressModel} from '../../models/endereco.model';
 
 
 const URL_USER_API = `${environment.apiUrl}/Usuario`;
@@ -70,7 +70,7 @@ export class UserService {
      * @param endereco do usuário a ser atualizado
      * @return retorna um endereco ou error
      */
-    updateAddress(endereco: Endereco): Observable<Endereco> {
+    updateAddress(endereco: AddressModel): Observable<AddressModel> {
         if (endereco.id === 0 || endereco.id == null) {
             return of(null);
         }

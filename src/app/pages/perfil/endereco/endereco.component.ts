@@ -11,7 +11,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {Subscription} from 'rxjs';
-import {Endereco} from '../../../shared/models/endereco.model';
+import {AddressModel} from '../../../shared/models/endereco.model';
 import {CepService} from '../../../shared/services/http/cep.service';
 import {UserService} from '../../../shared/services/http/user.service';
 
@@ -23,7 +23,7 @@ import {UserService} from '../../../shared/services/http/user.service';
 })
 export class EnderecoComponent implements OnInit, OnDestroy {
 
-    @Input() enderecoUser: Endereco;
+    @Input() enderecoUser: AddressModel;
     @Input() idUser: number;
     masks = MASKS;
     addressForm: FormGroup;
@@ -129,10 +129,10 @@ export class EnderecoComponent implements OnInit, OnDestroy {
         this.enderecoUser.id = formValue.id;
         this.enderecoUser.uf = formValue.uf;
         this.enderecoUser.cep = formValue.cep.replace(/[^0-9,]*/g, '');
-        this.enderecoUser.enderecoLogradouro = formValue.enderecoLogradouro;
-        this.enderecoUser.bairro = formValue.bairro;
-        this.enderecoUser.cidade = formValue.cidade;
-        this.enderecoUser.numero = formValue.numero;
+        this.enderecoUser.address = formValue.enderecoLogradouro;
+        this.enderecoUser.district = formValue.bairro;
+        this.enderecoUser.city = formValue.cidade;
+        this.enderecoUser.number = formValue.numero;
         return result;
     }
 
@@ -152,25 +152,25 @@ export class EnderecoComponent implements OnInit, OnDestroy {
                 Validators.maxLength(10),
                 NgBrazilValidators.cep
             ])],
-            enderecoLogradouro: [this.enderecoUser.enderecoLogradouro, Validators.compose([
+            enderecoLogradouro: [this.enderecoUser.address, Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
                 Validators.minLength(5),
                 Validators.maxLength(100)
             ])],
-            bairro: [this.enderecoUser.bairro, Validators.compose([
+            bairro: [this.enderecoUser.district, Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
                 Validators.minLength(5),
                 Validators.maxLength(100)
             ])],
-            cidade: [this.enderecoUser.cidade, Validators.compose([
+            cidade: [this.enderecoUser.city, Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
                 Validators.minLength(5),
                 Validators.maxLength(100)
             ])],
-            numero: [this.enderecoUser.numero, Validators.compose([
+            numero: [this.enderecoUser.number, Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
                 Validators.minLength(1),
