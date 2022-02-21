@@ -81,7 +81,7 @@
                             <!-- Account -->
                             <ng-container *ngSwitchCase="'dadosPessoais'">
                                 <app-edriving *ngIf="edrivingUser" [edrivingUser]="edrivingUser"></app-edriving>
-                                <app-parceiro *ngIf="parceiroUser" [parceiroUser]="parceiroUser"></app-parceiro>
+                                <app-parceiro *ngIf="parceiroUser" [partnnerUser]="parceiroUser"></app-parceiro>
 
                             </ng-container>
                             <!-- Security -->
@@ -90,7 +90,7 @@
                             </ng-container>
                             <!-- Plan & Billing -->
                             <ng-container *ngSwitchCase="'endereco'">
-                                <endereco [enderecoUser]="enderecoUser" [idUser]="idUser"></endereco>
+                                <endereco [addressModel]="enderecoUser" [idUser]="idUser"></endereco>
                             </ng-container>
                         </ng-container>
                     </div>

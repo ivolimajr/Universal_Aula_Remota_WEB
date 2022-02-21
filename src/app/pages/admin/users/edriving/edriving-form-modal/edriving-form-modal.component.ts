@@ -226,7 +226,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         }
         //Cria um formulário para adição de um usuário
         this.accountForm = this._formBuilder.group({
-            nome: ['Nome Apagar',
+            name: ['Nome Apagar',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -327,7 +327,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
 
         this.accountForm = this._formBuilder.group({
-            nome: [this.userEdit.name,
+            name: [this.userEdit.name,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -394,7 +394,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,
             horizontalPosition: 'center',
-            verticalPosition: 'top',
+            verticalPosition: 'bottom',
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }

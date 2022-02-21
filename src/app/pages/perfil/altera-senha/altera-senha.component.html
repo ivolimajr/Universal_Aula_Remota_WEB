@@ -8,15 +8,6 @@
             <div class="text-xl">Altere sua senha</div>
             <div class="text-secondary">Mantenha sua conta segura, atualize sua senha constantemente</div>
         </div>
-        <fuse-alert
-            class="mt-8 -mb-4"
-            *ngIf="showAlert"
-            [appearance]="'outline'"
-            [showIcon]="false"
-            [type]="alert.type"
-            [@shake]="alert.type === 'error'">
-            {{alert.message}}
-        </fuse-alert>
         <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
             <!-- Current password -->
             <div class="sm:col-span-4">
@@ -28,7 +19,7 @@
                         matPrefix></mat-icon>
                     <input
                         id="password"
-                        [formControlName]="'senhaAtual'"
+                        [formControlName]="'currentPassword'"
                         type="password"
                         #passwordField
                         matInput>
@@ -61,7 +52,7 @@
                         matPrefix></mat-icon>
                     <input
                         id="newPasswordField"
-                        [formControlName]="'novaSenha'"
+                        [formControlName]="'newPassword'"
                         type="password"
                         #newPasswordField
                         matInput>

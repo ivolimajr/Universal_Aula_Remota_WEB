@@ -233,7 +233,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
 
         //Cria um formulário para adição de um usuário
         this.accountForm = this._formBuilder.group({
-            nome: ['',
+            name: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -253,7 +253,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                     Validators.minLength(18),
                     Validators.maxLength(18),
                 NgBrazilValidators.cnpj])],
-            descricao: ['',
+            description: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -296,7 +296,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(1),
                     Validators.maxLength(50)])],
-            cargoId: [0,
+            levelId: [0,
                 Validators.compose([
                     Validators.required])],
             phonesNumbers: this._formBuilder.array([], Validators.compose([
@@ -386,7 +386,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
 
         this.accountForm = this._formBuilder.group({
-            nome: [this.userEdit.name,
+            name: [this.userEdit.name,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -405,7 +405,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(14),
                     Validators.maxLength(14)])],
-            descricao: [this.userEdit.description,
+            description: [this.userEdit.description,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -448,7 +448,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(1),
                     Validators.maxLength(50)])],
-            cargoId: [this.userEdit.levelId,
+            levelId: [this.userEdit.levelId,
                 Validators.compose([
                     Validators.required])],
             phonesNumbers: this._formBuilder.array([], Validators.compose([
@@ -501,7 +501,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,
             horizontalPosition: 'center',
-            verticalPosition: 'top',
+            verticalPosition: 'bottom',
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }

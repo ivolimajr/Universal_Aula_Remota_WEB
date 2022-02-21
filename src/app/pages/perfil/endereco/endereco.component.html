@@ -41,7 +41,7 @@
                         [svgIcon]="'heroicons_solid:location-marker'"
                         matPrefix></mat-icon>
                     <input
-                        [formControlName]="'enderecoLogradouro'"
+                        [formControlName]="'address'"
                         matInput>
                 </mat-form-field>
             </div>
@@ -55,7 +55,7 @@
                         [svgIcon]="'heroicons_solid:home'"
                         matPrefix></mat-icon>
                     <input
-                        [formControlName]="'bairro'"
+                        [formControlName]="'district'"
                         matInput>
                 </mat-form-field>
             </div>
@@ -69,7 +69,7 @@
                         [svgIcon]="'heroicons_solid:annotation'"
                         matPrefix></mat-icon>
                     <input
-                        [formControlName]="'numero'"
+                        [formControlName]="'number'"
                         matInput>
                 </mat-form-field>
             </div>
@@ -83,7 +83,7 @@
                         [svgIcon]="'heroicons_solid:location-marker'"
                         matPrefix></mat-icon>
                     <mat-select [formControlName]="'uf'">
-                        <mat-option *ngFor="let item of estados" [value]="item">{{item}}</mat-option>
+                        <mat-option *ngFor="let item of states" [value]="item">{{item}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -96,7 +96,7 @@
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:map'"
                         matPrefix></mat-icon>
-                    <input matInput [formControlName]="'cidade'">
+                    <input matInput [formControlName]="'city'">
                 </mat-form-field>
             </div>
             <!--end:cidade-->

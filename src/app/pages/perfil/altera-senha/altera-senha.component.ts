@@ -16,6 +16,7 @@ import {fuseAnimations} from '../../../../@fuse/animations';
 import {UserService} from '../../../shared/services/http/user.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
     selector: 'altera-senha',
@@ -39,6 +40,7 @@ export class AlteraSenhaComponent implements OnInit, OnDestroy {
     private authSub: Subscription;
 
     constructor(
+        private _snackBar: MatSnackBar,
         private _formBuilder: FormBuilder,
         private _changeDetectorRef: ChangeDetectorRef,
         private _authServices: AuthService,
@@ -70,14 +72,20 @@ export class AlteraSenhaComponent implements OnInit, OnDestroy {
         this.securityForm.disable();
         //Verifica se a senha atual confere
         const formData = this.securityForm.value;
-        if (formData.senhaAtual !== this._authServices.getLoginFromStorage().password) {
+        if (formData.currentPassword !== this._authServices.getLoginFromStorage().password) {
+            this.openSnackBar('Senha atual não confere', 'warn');
             this.setAlert('Senha atual não confere');
             this.securityForm.enable();
             return;
         }
         //atualiza a senha na API
-        this.authSub = this._userServices.updatePassById(this.securityForm.value).subscribe((val) => {
-            this.setAlert('Senha Atualizada', 'success');
+        this.authSub = this._userServices.updatePassById(this.securityForm.value).subscribe((res: any) => {
+            if (res.error) {
+                this.securityForm.enable();
+                this.openSnackBar(res.error.detail, 'warn');
+                return;
+            }
+            this.openSnackBar('Senha Atualizada');
             this.securityForm.enable();
             //Atualiza a senha no localStorage
             this.loginUser.email = this._authServices.getUserInfoFromStorage().email;
@@ -105,12 +113,12 @@ export class AlteraSenhaComponent implements OnInit, OnDestroy {
     private loadForm(): void {
         this.securityForm = this._formBuilder.group({
             id: [this.idUser],
-            senhaAtual: ['', Validators.compose([
+            currentPassword: ['', Validators.compose([
                 Validators.nullValidator,
                 Validators.required,
                 Validators.minLength(5),
                 Validators.maxLength(70)])],
-            novaSenha: ['', Validators.compose([
+            newPassword: ['', Validators.compose([
                 Validators.nullValidator,
                 Validators.required,
                 Validators.minLength(5),
@@ -125,5 +133,13 @@ export class AlteraSenhaComponent implements OnInit, OnDestroy {
         this.alert.message = message;
         this.showAlert = true;
         this._changeDetectorRef.markForCheck();
+    }
+    private openSnackBar(message: string, type: string = 'accent'): void {
+        this._snackBar.open(message,'',{
+            duration: 5*1000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            panelClass: ['mat-toolbar', 'mat-'+type]
+        });
     }
 }

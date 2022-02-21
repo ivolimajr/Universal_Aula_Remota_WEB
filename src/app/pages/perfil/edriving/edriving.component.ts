@@ -35,7 +35,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
     accountForm: FormGroup;
     user: User;
     masks = MASKS;
-    private edrivingUserPost = new EdrivingPost();
+    private edrivingPost = new EdrivingPost();
     private userSub: Subscription;
     private phoneSub: Subscription;
 
@@ -68,7 +68,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             return null;
         }
         this.accountForm.disable();
-        this.userSub = this._edrivingServices.update(this.edrivingUserPost).subscribe((res: any) => {
+        this.userSub = this._edrivingServices.update(this.edrivingPost).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
                 this.accountForm.enable();
@@ -87,10 +87,10 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             //Atualiza o útlimo registro do formulário de contato com o ID do telefone atualizado
 
             //Pega o último registro de telefone que veio do usuario atualizado
-            const lastPhoneIdFromUser = res.telefones[res.telefones.length - 1];
+            const lastPhoneIdFromUser = res.phonesNumbers[res.phonesNumbers.length - 1];
 
-            //Pega o último registro de telefone que contem no array de telefones
-            const lastPhoneFromPhoneArray = this.accountForm.get('telefones') as FormArray;
+            //Pega o último registro de telefone que contem no array de phonesNumbers
+            const lastPhoneFromPhoneArray = this.accountForm.get('phonesNumbers') as FormArray;
 
             //Se os IDS forem diferentes, incluir no array
             if (lastPhoneIdFromUser.id !== lastPhoneFromPhoneArray.value[lastPhoneFromPhoneArray.length - 1].id) {
@@ -101,11 +101,11 @@ export class EdrivingComponent implements OnInit, OnDestroy {
 
                 const phoneNumberFormGroup = this._formBuilder.group({
                     id: [lastPhoneIdFromUser.id],
-                    telefone: [lastPhoneIdFromUser.telefone]
+                    phoneNumber: [lastPhoneIdFromUser.phoneNumber]
                 });
 
                 // Adiciona o formGroup ao array de telefones
-                (this.accountForm.get('telefones') as FormArray).push(phoneNumberFormGroup);
+                (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumberFormGroup);
             }
 
             //Retorna a mensagem de atualizado
@@ -124,14 +124,14 @@ export class EdrivingComponent implements OnInit, OnDestroy {
     addPhoneNumberField(): void {
 
         const phoneNumberFormGroup =  this._formBuilder.group({
-            telefone: ['', Validators.compose([
+            phoneNumber: ['', Validators.compose([
                 Validators.required,
                 Validators.nullValidator
             ])]
         });
 
         // Adiciona o formGroup ao array de telefones
-        (this.accountForm.get('telefones') as FormArray).push(phoneNumberFormGroup);
+        (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumberFormGroup);
         this._changeDetectorRef.markForCheck();
     }
 
@@ -154,7 +154,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
                 if (!res) {
                     this.openSnackBar('Telefone já em uso', 'warn');
                 }
-                const phoneNumbersFormArray = this.accountForm.get('telefones') as FormArray;
+                const phoneNumbersFormArray = this.accountForm.get('phonesNumbers') as FormArray;
                 // Remove the phone number field
                 phoneNumbersFormArray.removeAt(index);
                 this._changeDetectorRef.markForCheck();
@@ -186,7 +186,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
      */
     private prepareForm(): void {
         this.accountForm = this._formBuilder.group({
-            nome: [this.edrivingUser.name,
+            name: [this.edrivingUser.name,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -207,7 +207,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
                     Validators.email,
                     Validators.minLength(5),
                     Validators.maxLength(70)])],
-            telefones: this._formBuilder.array([], Validators.compose([
+            phonesNumbers: this._formBuilder.array([], Validators.compose([
                 Validators.required,
                 Validators.nullValidator
             ])),
@@ -225,7 +225,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
                 phoneNumbersFormGroups.push(
                     this._formBuilder.group({
                         id: [phoneNumber.id],
-                        telefone: [phoneNumber.phoneNumber,
+                        phoneNumber: [phoneNumber.phoneNumber,
                             Validators.compose([
                                 Validators.required,
                                 Validators.nullValidator
@@ -239,7 +239,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             phoneNumbersFormGroups.push(
                 this._formBuilder.group({
                     id: [0],
-                    telefone: ['', Validators.compose([
+                    phoneNumber: ['', Validators.compose([
                         Validators.required,
                         Validators.nullValidator
                     ])]
@@ -249,11 +249,11 @@ export class EdrivingComponent implements OnInit, OnDestroy {
 
         // Adiciona o array de telefones ao fomrGroup
         phoneNumbersFormGroups.forEach((phoneNumbersFormGroup) => {
-            (this.accountForm.get('telefones') as FormArray).push(phoneNumbersFormGroup);
+            (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumbersFormGroup);
         });
 
         //Define o ID do usuário Edriving a ser atualizado
-        this.edrivingUserPost.id = this.edrivingUser.id;
+        this.edrivingPost.id = this.edrivingUser.id;
         this._changeDetectorRef.markForCheck();
     }
 
@@ -271,15 +271,15 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             return false;
         }
         //Se todos os dados forem válidos, monta o objeto para atualizar
-        this.edrivingUserPost.name = formData.nome;
-        this.edrivingUserPost.email = formData.email;
-        this.edrivingUserPost.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
-        formData.telefones.forEach((item) => {
-            if (item.telefone.length !== 11) {
-                item.telefone = item.telefone.replace(/[^0-9,]*/g, '').replace(',', '.');
+        this.edrivingPost.name = formData.nome;
+        this.edrivingPost.email = formData.email;
+        this.edrivingPost.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
+        formData.phonesNumbers.forEach((item) => {
+            if (item.phoneNumber.length !== 11) {
+                item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
-        this.edrivingUserPost.phonesNumbers = formData.telefones;
+        this.edrivingPost.phonesNumbers = formData.phonesNumbers;
         return true;
     }
 
@@ -287,7 +287,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,
             horizontalPosition: 'center',
-            verticalPosition: 'top',
+            verticalPosition: 'bottom',
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }

@@ -91,12 +91,12 @@ export class LoginComponent implements OnInit, OnDestroy {
         });
     }
 
-    private openSnackBar(message: string): void {
-        this._snackBar.open(message, '', {
-            duration: 5 * 1000,
+    private openSnackBar(message: string, type: string = 'accent'): void {
+        this._snackBar.open(message,'',{
+            duration: 5*1000,
             horizontalPosition: 'center',
-            verticalPosition: 'top',
-            panelClass: ['mat-toolbar', 'mat-accent']
+            verticalPosition: 'bottom',
+            panelClass: ['mat-toolbar', 'mat-'+type]
         });
     }
 

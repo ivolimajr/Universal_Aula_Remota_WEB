@@ -13,21 +13,21 @@
             <!-- Nome -->
             <div class="sm:col-span-4">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label for="nome">Nome</mat-label>
+                    <mat-label for="name">Nome</mat-label>
                     <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:user'"
                         matPrefix></mat-icon>
                     <input
-                        id="nome"
+                        id="name"
                         matInput
-                        [formControlName]="'nome'">
+                        [formControlName]="'name'">
 
                 </mat-form-field>
-                <mat-error *ngIf="accountForm.get('nome').hasError('required')">
+                <mat-error *ngIf="accountForm.get('name').hasError('required')">
                     Informe nome
                 </mat-error>
-                <mat-error *ngIf="accountForm.get('nome').hasError('nome')">
+                <mat-error *ngIf="accountForm.get('name').hasError('name')">
                     Insira um nome válido
                 </mat-error>
             </div>
@@ -81,20 +81,20 @@
         <!-- descricao -->
         <div class="sm:col-span-2">
             <mat-form-field class="fuse-mat-no-subscript w-full">
-                <mat-label for="descricao">Descrição</mat-label>
+                <mat-label for="description">Descrição</mat-label>
                 <mat-icon
                     class="icon-size-5"
                     [svgIcon]="'heroicons_solid:annotation'"
                     matPrefix></mat-icon>
                 <textarea
-                    id="descricao"
-                    [formControlName]="'descricao'"
+                    id="description"
+                    [formControlName]="'description'"
                     matInput> </textarea>
             </mat-form-field>
-            <mat-error *ngIf="accountForm.get('descricao').hasError('required')">
+            <mat-error *ngIf="accountForm.get('description').hasError('required')">
                 Informe uma descrição
             </mat-error>
-            <mat-error *ngIf="accountForm.get('descricao').hasError('descricao')">
+            <mat-error *ngIf="accountForm.get('description').hasError('description')">
                 Insira uma descrição válido
             </mat-error>
         </div>
@@ -109,8 +109,8 @@
         <div class="mt-8">
             <div class="space-y-4">
                 <ng-container
-                    *ngFor="let phoneNumber of accountForm.get('telefones')['controls']; let i = index;"
-                    formArrayName="telefones">
+                    *ngFor="let phoneNumber of accountForm.get('phonesNumbers')['controls']; let i = index;"
+                    formArrayName="phonesNumbers">
                     <div class="relative flex">
                         <mat-form-field class="fuse-mat-no-subscript flex-auto">
                             <mat-label>Telefone</mat-label>
@@ -120,10 +120,10 @@
                                 matPrefix></mat-icon>
                             <input
                                 matInput
-                                telefone [textMask]="{mask: masks.telefone.textMaskFunction}"
+                                [textMask]="{mask: masks.telefone.textMaskFunction}"
                                 [placeholder]="'telefone'"
-                                [formControl]="phoneNumber.get('telefone')"
-                                [value]="phoneNumber.value.telefone ?? ''">
+                                [formControl]="phoneNumber.get('phoneNumber')"
+                                [value]="phoneNumber.value.phoneNumber ?? ''">
                         </mat-form-field>
                         <!-- Remove phone number -->
                         <ng-container>

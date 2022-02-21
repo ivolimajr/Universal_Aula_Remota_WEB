@@ -13,21 +13,21 @@
             <!-- Nome -->
             <div class="sm:col-span-4">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label for="nome">Nome</mat-label>
+                    <mat-label for="name">Nome</mat-label>
                     <mat-icon
                         class="icon-size-5"
                         [svgIcon]="'heroicons_solid:user'"
                         matPrefix></mat-icon>
                     <input
-                        id="nome"
+                        id="name"
                         matInput
-                        [formControlName]="'nome'">
+                        [formControlName]="'name'">
 
                 </mat-form-field>
-                <mat-error *ngIf="accountForm.get('nome').hasError('required')">
-                    Informe nome
+                <mat-error *ngIf="accountForm.get('name').hasError('required')">
+                    Informe name
                 </mat-error>
-                <mat-error *ngIf="accountForm.get('nome').hasError('nome')">
+                <mat-error *ngIf="accountForm.get('name').hasError('name')">
                     Insira um nome válido
                 </mat-error>
             </div>
@@ -88,8 +88,8 @@
         <div class="mt-8">
             <div class="space-y-4">
                 <ng-container
-                    *ngFor="let phoneNumber of accountForm.get('telefones')['controls']; let i = index;"
-                    formArrayName="telefones">
+                    *ngFor="let phoneNumber of accountForm.get('phonesNumbers')['controls']; let i = index;"
+                    formArrayName="phonesNumbers">
                     <div class="relative flex">
                         <mat-form-field class="fuse-mat-no-subscript flex-auto">
                             <mat-label>Telefone</mat-label>
@@ -101,8 +101,8 @@
                                 matInput
                                 telefone [textMask]="{mask: masks.telefone.textMaskFunction}"
                                 [placeholder]="'telefone'"
-                                [formControl]="phoneNumber.get('telefone')"
-                                [value]="phoneNumber.value.telefone ?? ''">
+                                [formControl]="phoneNumber.get('phoneNumber')"
+                                [value]="phoneNumber.value.phoneNumber ?? ''">
                         </mat-form-field>
                         <!-- Remove phone number -->
                         <ng-container>

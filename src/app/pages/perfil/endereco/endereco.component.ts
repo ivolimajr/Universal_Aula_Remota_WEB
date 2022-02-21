@@ -23,13 +23,13 @@ import {UserService} from '../../../shared/services/http/user.service';
 })
 export class EnderecoComponent implements OnInit, OnDestroy {
 
-    @Input() enderecoUser: AddressModel;
+    @Input() addressModel: AddressModel;
     @Input() idUser: number;
     masks = MASKS;
     addressForm: FormGroup;
     plans: any[];
     cep: string;
-    estados = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
+    states = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
         'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
     private userSub: Subscription;
     private cepSub: Subscription;
@@ -60,7 +60,7 @@ export class EnderecoComponent implements OnInit, OnDestroy {
             return null;
         }
 
-        this.userSub = this._userService.updateAddress(this.enderecoUser).subscribe((res: any) => {
+        this.userSub = this._userService.updateAddress(this.addressModel).subscribe((res: any) => {
             if (res.error) {
                 this.openSnackBar(res.error.detail, 'warn');
                 this.addressForm.enable();
@@ -92,9 +92,9 @@ export class EnderecoComponent implements OnInit, OnDestroy {
         }
         this.cepSub = this._cepService.buscar(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
             this.addressForm.patchValue({
-                bairro: res.bairro,
-                enderecoLogradouro: res.logradouro,
-                cidade: res.localidade,
+                district: res.bairro,
+                address: res.logradouro,
+                city: res.localidade,
                 cep: res.cep,
                 uf: res.uf
             });
@@ -126,51 +126,51 @@ export class EnderecoComponent implements OnInit, OnDestroy {
             result = false;
             return result;
         }
-        this.enderecoUser.id = formValue.id;
-        this.enderecoUser.uf = formValue.uf;
-        this.enderecoUser.cep = formValue.cep.replace(/[^0-9,]*/g, '');
-        this.enderecoUser.address = formValue.enderecoLogradouro;
-        this.enderecoUser.district = formValue.bairro;
-        this.enderecoUser.city = formValue.cidade;
-        this.enderecoUser.number = formValue.numero;
+        this.addressModel.id = formValue.id;
+        this.addressModel.uf = formValue.uf;
+        this.addressModel.cep = formValue.cep.replace(/[^0-9,]*/g, '');
+        this.addressModel.address = formValue.address;
+        this.addressModel.district = formValue.district;
+        this.addressModel.city = formValue.city;
+        this.addressModel.number = formValue.number;
         return result;
     }
 
     private prepareForm(): void {
         this.addressForm = this._formBuilder.group({
-            id: [this.enderecoUser.id],
-            uf: [this.enderecoUser.uf, Validators.compose([
+            id: [this.addressModel.id],
+            uf: [this.addressModel.uf, Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
                 Validators.minLength(2),
                 Validators.maxLength(2)
             ])],
-            cep: [this.enderecoUser.cep, Validators.compose([
+            cep: [this.addressModel.cep, Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
                 Validators.minLength(8),
                 Validators.maxLength(10),
                 NgBrazilValidators.cep
             ])],
-            enderecoLogradouro: [this.enderecoUser.address, Validators.compose([
+            address: [this.addressModel.address, Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
                 Validators.minLength(5),
                 Validators.maxLength(100)
             ])],
-            bairro: [this.enderecoUser.district, Validators.compose([
+            district: [this.addressModel.district, Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
                 Validators.minLength(5),
                 Validators.maxLength(100)
             ])],
-            cidade: [this.enderecoUser.city, Validators.compose([
+            city: [this.addressModel.city, Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
                 Validators.minLength(5),
                 Validators.maxLength(100)
             ])],
-            numero: [this.enderecoUser.number, Validators.compose([
+            number: [this.addressModel.number, Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
                 Validators.minLength(1),
@@ -183,7 +183,7 @@ export class EnderecoComponent implements OnInit, OnDestroy {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,
             horizontalPosition: 'center',
-            verticalPosition: 'top',
+            verticalPosition: 'bottom',
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }

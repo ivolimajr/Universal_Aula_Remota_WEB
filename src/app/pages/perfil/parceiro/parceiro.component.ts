@@ -30,12 +30,12 @@ import {environment} from '../../../../environments/environment';
     animations: fuseAnimations
 })
 export class ParceiroComponent implements OnInit, OnDestroy {
-    @Input() parceiroUser: PartnnerUser;
+    @Input() partnnerUser: PartnnerUser;
 
     accountForm: FormGroup;
     user: User;
     masks = MASKS;
-    private parceiroUserPost = new PartnnerPost();
+    private partnnerPost = new PartnnerPost();
     private userSub: Subscription;
     private phoneSub: Subscription;
 
@@ -69,7 +69,7 @@ export class ParceiroComponent implements OnInit, OnDestroy {
             return null;
         }
     this.accountForm.disable();
-        this.userSub = this._parceiroServices.update(this.parceiroUserPost).subscribe((res: any) => {
+        this.userSub = this._parceiroServices.update(this.partnnerPost).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
                 this.openSnackBar(res.error.detail, 'warn');
@@ -77,21 +77,21 @@ export class ParceiroComponent implements OnInit, OnDestroy {
                 this._changeDetectorRef.markForCheck();
                 return;
             }
-            this.parceiroUser = res;
+            this.partnnerUser = res;
 
             //Atualiza os dados do localStorage
             this.user = this._authServices.getUserInfoFromStorage();
-            this.user.name = res.nome;
+            this.user.name = res.name;
             this.user.email = res.email;
             this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
 
             //Atualiza o útlimo registro do formulário de contato com o ID do telefone atualizado
 
             //Pega o último registro de telefone que veio do usuario atualizado
-            const lastPhoneIdFromUser = res.telefones[res.telefones.length - 1];
+            const lastPhoneIdFromUser = res.phonesNumbers[res.phonesNumbers.length - 1];
 
             //Pega o último registro de telefone que contem no array de telefones
-            const lastPhoneFromPhoneArray = this.accountForm.get('telefones') as FormArray;
+            const lastPhoneFromPhoneArray = this.accountForm.get('phonesNumbers') as FormArray;
 
             //Se os IDS forem diferentes, incluir no array
             if (lastPhoneIdFromUser.id !== lastPhoneFromPhoneArray.value[lastPhoneFromPhoneArray.length - 1].id) {
@@ -102,11 +102,11 @@ export class ParceiroComponent implements OnInit, OnDestroy {
 
                 const phoneNumberFormGroup = this._formBuilder.group({
                     id: [lastPhoneIdFromUser.id],
-                    telefone: [lastPhoneIdFromUser.telefone]
+                    phoneNumber: [lastPhoneIdFromUser.phoneNumber]
                 });
 
                 // Adiciona o formGroup ao array de telefones
-                (this.accountForm.get('telefones') as FormArray).push(phoneNumberFormGroup);
+                (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumberFormGroup);
             }
 
             //Retorna a mensagem de atualizado
@@ -125,14 +125,14 @@ export class ParceiroComponent implements OnInit, OnDestroy {
      */
     addPhoneNumberField(): void {
         const phoneNumberFormGroup =  this._formBuilder.group({
-            telefone: ['', Validators.compose([
+            phoneNumber: ['', Validators.compose([
                 Validators.required,
                 Validators.nullValidator
             ])]
         });
 
         // Adiciona o formGroup ao array de telefones
-        (this.accountForm.get('telefones') as FormArray).push(phoneNumberFormGroup);
+        (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumberFormGroup);
         this._changeDetectorRef.markForCheck();
     }
 
@@ -143,7 +143,7 @@ export class ParceiroComponent implements OnInit, OnDestroy {
      * @param index do array de telefones a ser removido
      */
     removePhoneNumber(id: number, index: number): void {
-        if (this.parceiroUser.phonesNumbers.length === 1) {
+        if (this.partnnerUser.phonesNumbers.length === 1) {
             this.dialog.open(AlertModalComponent, {
                 width: '280px',
                 data: {content: 'Usuário não pode ficar sem contato.', oneButton: true}
@@ -155,7 +155,7 @@ export class ParceiroComponent implements OnInit, OnDestroy {
                 if (!res) {
                     this.openSnackBar('Telefone já em uso', 'warn');
                 }
-                const phoneNumbersFormArray = this.accountForm.get('telefones') as FormArray;
+                const phoneNumbersFormArray = this.accountForm.get('phonesNumbers') as FormArray;
                 // Remove the phone number field
                 phoneNumbersFormArray.removeAt(index);
                 this._changeDetectorRef.markForCheck();
@@ -190,16 +190,16 @@ export class ParceiroComponent implements OnInit, OnDestroy {
             return false;
         }
         //Se todos os dados forem válidos, monta o objeto para atualizar
-        this.parceiroUserPost.name = formData.nome;
-        this.parceiroUserPost.email = formData.email;
-        this.parceiroUserPost.description = formData.descricao;
-        this.parceiroUserPost.cnpj = formData.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
-        formData.telefones.forEach((item) => {
-            if (item.telefone.length !== 11) {
-                item.telefone = item.telefone.replace(/[^0-9,]*/g, '').replace(',', '.');
+        this.partnnerPost.name = formData.nome;
+        this.partnnerPost.email = formData.email;
+        this.partnnerPost.description = formData.descricao;
+        this.partnnerPost.cnpj = formData.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
+        formData.phonesNumbers.forEach((item) => {
+            if (item.phoneNumber.length !== 11) {
+                item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
-        this.parceiroUserPost.phonesNumbers = formData.telefones;
+        this.partnnerPost.phonesNumbers = formData.phonesNumbers;
         return true;
     }
 
@@ -211,35 +211,35 @@ export class ParceiroComponent implements OnInit, OnDestroy {
      */
     private prepareForm(): void {
         this.accountForm = this._formBuilder.group({
-            nome: [this.parceiroUser.name,
+            name: [this.partnnerUser.name,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(100)]
                 )],
-            email: [this.parceiroUser.email,
+            email: [this.partnnerUser.email,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(70)])],
-            cnpj: [this.parceiroUser.cnpj,
+            cnpj: [this.partnnerUser.cnpj,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(14),
                     Validators.maxLength(14)])],
-            descricao: [this.parceiroUser.description,
+            description: [this.partnnerUser.description,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(100)])],
-            cargoId: [this.parceiroUser.levelId,
+            levelId: [this.partnnerUser.levelId,
                 Validators.compose([
                     Validators.required])],
-            telefones: this._formBuilder.array([], Validators.compose([
+            phonesNumbers: this._formBuilder.array([], Validators.compose([
                 Validators.required,
                 Validators.nullValidator
             ])),
@@ -249,15 +249,15 @@ export class ParceiroComponent implements OnInit, OnDestroy {
         const phoneNumbersFormGroups = [];
 
         //Só monta o array de telefones se houver telefones de contato cadastrado
-        if (this.parceiroUser.phonesNumbers.length > 0) {
+        if (this.partnnerUser.phonesNumbers.length > 0) {
             // Iterate through them
-            this.parceiroUser.phonesNumbers.forEach((phoneNumber) => {
+            this.partnnerUser.phonesNumbers.forEach((phoneNumber) => {
 
                 //Cria um formGroup de telefone
                 phoneNumbersFormGroups.push(
                     this._formBuilder.group({
                         id: [phoneNumber.id],
-                        telefone: [phoneNumber.phoneNumber,
+                        phoneNumber: [phoneNumber.phoneNumber,
                             Validators.compose([
                                 Validators.required,
                                 Validators.nullValidator
@@ -271,7 +271,7 @@ export class ParceiroComponent implements OnInit, OnDestroy {
             phoneNumbersFormGroups.push(
                 this._formBuilder.group({
                     id: [0],
-                    telefone: ['', Validators.compose([
+                    phoneNumber: ['', Validators.compose([
                         Validators.required,
                         Validators.nullValidator
                     ])]
@@ -281,11 +281,11 @@ export class ParceiroComponent implements OnInit, OnDestroy {
 
         // Adiciona o array de telefones ao fomrGroup
         phoneNumbersFormGroups.forEach((phoneNumbersFormGroup) => {
-            (this.accountForm.get('telefones') as FormArray).push(phoneNumbersFormGroup);
+            (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumbersFormGroup);
         });
 
         //Define o ID do usuário Edriving a ser atualizado
-        this.parceiroUserPost.id = this.parceiroUser.id;
+        this.partnnerPost.id = this.partnnerUser.id;
         this._changeDetectorRef.markForCheck();
     }
 
@@ -293,7 +293,7 @@ export class ParceiroComponent implements OnInit, OnDestroy {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,
             horizontalPosition: 'center',
-            verticalPosition: 'top',
+            verticalPosition: 'bottom',
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
