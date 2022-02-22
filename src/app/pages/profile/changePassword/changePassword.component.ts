@@ -10,24 +10,24 @@ import {
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {AuthService} from '../../../shared/services/auth/auth.service';
-import {UsuarioLogin} from '../../../shared/models/usuario.model';
+import {UsuarioLogin} from '../../../shared/models/user.model';
 import {FuseAlertType} from '../../../../@fuse/components/alert';
 import {fuseAnimations} from '../../../../@fuse/animations';
 import {UserService} from '../../../shared/services/http/user.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
-    selector: 'altera-senha',
-    templateUrl: './altera-senha.component.html',
+    selector: 'app-changePassword',
+    templateUrl: './changePassword.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations
 })
 
 
-export class AlteraSenhaComponent implements OnInit, OnDestroy {
+export class ChangePasswordComponent implements OnInit, OnDestroy {
     @Input() idUser: number;
     alert: { type: FuseAlertType; message: string } = {
         type: 'error',

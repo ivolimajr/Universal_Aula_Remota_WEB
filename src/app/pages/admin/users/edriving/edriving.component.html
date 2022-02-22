@@ -1,7 +1,7 @@
 <ng-container *ngIf="loading;">
     <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
 </ng-container>
-<div class="flex flex-col flex-auto min-w-0" *ngIf="!loading">
+<div class="flex flex-col flex-auto" *ngIf="!loading">
 
     <!-- Main -->
     <div class="flex-auto p-6 sm:p-10">
@@ -29,11 +29,10 @@
         </div>
 
         <div class="relative flex flex-col">
-            <div>
                 <ng-container *ngIf="isDeleting;">
                     <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
                 </ng-container>
-                <table class="mat-elevation-z8" mat-table [dataSource]="dataSource" matSort>
+                <table class="mat-elevation-z8 min-w-full" mat-table [dataSource]="dataSource" matSort>
                     <!-- Position Column -->
                     <ng-container matColumnDef="nome">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
@@ -76,9 +75,9 @@
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
-            </div>
             <div>
                 <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                               [pageSize]="20"
                                showFirstLastButtons
                                aria-label="Select page of periodic elements">
                 </mat-paginator>

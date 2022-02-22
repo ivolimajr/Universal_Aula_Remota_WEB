@@ -11,17 +11,17 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {Subscription} from 'rxjs';
-import {AddressModel} from '../../../shared/models/endereco.model';
+import {AddressModel} from '../../../shared/models/address.model';
 import {CepService} from '../../../shared/services/http/cep.service';
 import {UserService} from '../../../shared/services/http/user.service';
 
 @Component({
-    selector: 'endereco',
-    templateUrl: './endereco.component.html',
+    selector: 'app-address',
+    templateUrl: './address.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EnderecoComponent implements OnInit, OnDestroy {
+export class AddressComponent implements OnInit, OnDestroy {
 
     @Input() addressModel: AddressModel;
     @Input() idUser: number;

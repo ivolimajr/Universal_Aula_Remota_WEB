@@ -4,22 +4,23 @@ import {FuseAlertModule} from '@fuse/components/alert';
 import {FuseAutogrowModule} from '@fuse/directives/autogrow';
 import {SharedModule} from 'app/shared/shared.module';
 import {EdrivingComponent} from './edriving/edriving.component';
-import {PerfilComponent} from './perfil.component';
-import {perfilRoutes} from './perfil.routing';
-import {AlteraSenhaComponent} from './altera-senha/altera-senha.component';
-import {EnderecoComponent} from './endereco/endereco.component';
+import {ProfileComponent} from './profile.component';
+import {perfilRoutes} from './profile.routing';
+import {ChangePasswordComponent} from './changePassword/changePassword.component';
+import {AddressComponent} from './address/address.component';
 import {CustomMaterialModule} from '../../shared/material.module';
 import {TextMaskModule} from 'angular2-text-mask';
-import { ParceiroComponent } from './parceiro/parceiro.component';
+import { PartnnerComponent } from './partnner/partnner.component';
 
 
 @NgModule({
     declarations: [
         EdrivingComponent,
-        PerfilComponent,
-        AlteraSenhaComponent,
-        EnderecoComponent,
-        ParceiroComponent
+        PartnnerComponent,
+        ChangePasswordComponent,
+        AddressComponent,
+        PartnnerComponent,
+        ProfileComponent
     ],
     imports: [
         RouterModule.forChild(perfilRoutes),
@@ -30,5 +31,5 @@ import { ParceiroComponent } from './parceiro/parceiro.component';
         TextMaskModule,
     ]
 })
-export class PerfilModule {
+export class ProfileModule {
 }

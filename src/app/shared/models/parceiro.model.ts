@@ -1,7 +1,7 @@
-import {Level} from './cargo.model';
-import {User} from './usuario.model';
-import {PhoneNumberModel} from './Telefone.model';
-import {AddressModel} from './endereco.model';
+import {Level} from './level.model';
+import {User} from './user.model';
+import {PhoneNumberModel} from './phoneNumber.model';
+import {AddressModel} from './address.model';
 
 export class PartnnerUser {
     id: number;

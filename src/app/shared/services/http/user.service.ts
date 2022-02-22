@@ -3,10 +3,10 @@ import {environment} from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {catchError, switchMap} from 'rxjs/operators';
-import {AddressModel} from '../../models/endereco.model';
+import {AddressModel} from '../../models/address.model';
 
 
-const URL_USER_API = `${environment.apiUrl}/Usuario`;
+const URL_USER_API = `${environment.apiUrl}/User`;
 
 @Injectable({
     providedIn: 'root'

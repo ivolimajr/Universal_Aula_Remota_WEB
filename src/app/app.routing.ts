@@ -72,7 +72,7 @@ export const appRoutes: Route[] = [
         },
         children: [
             {path: 'inicio', loadChildren: () => import('app/pages/admin/home/home.module').then(m => m.HomeModule)},
-            {path: 'perfil', loadChildren: () => import('app/pages/perfil/perfil.module').then(m => m.PerfilModule)},
+            {path: 'perfil', loadChildren: () => import('app/pages/profile/profile.module').then(m => m.ProfileModule)},
             {
                 path: 'usuario',
                 loadChildren: () => import('app/pages/admin/users/users.module').then(m => m.UsersModule)

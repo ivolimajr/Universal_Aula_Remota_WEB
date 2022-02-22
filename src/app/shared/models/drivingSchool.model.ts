@@ -1,7 +1,7 @@
-import {AddressModel} from './endereco.model';
-import {User} from './usuario.model';
-import {PhoneNumberModel} from './telefone.model';
-import {FileModel} from './arquivo.model';
+import {AddressModel} from './address.model';
+import {User} from './user.model';
+import {PhoneNumberModel} from './phoneNumber.model';
+import {FileModel} from './file.model';
 
 export class DrivingSchool {
     id: number;

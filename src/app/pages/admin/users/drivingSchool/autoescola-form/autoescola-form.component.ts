@@ -6,11 +6,11 @@ import {formatDate} from '@angular/common';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CepService} from '../../../../../shared/services/http/cep.service';
 import {Observable, Subscription} from 'rxjs';
-import {DrivingSchoolPost} from '../../../../../shared/models/autoEscola.model';
+import {DrivingSchoolPost} from '../../../../../shared/models/drivingSchool.model';
 import {AutoescolaService} from '../../../../../shared/services/http/autoescola.service';
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
 import {MatDialog} from '@angular/material/dialog';
-import {FileModel, FileModelUpdate} from '../../../../../shared/models/arquivo.model';
+import {FileModel, FileModelUpdate} from '../../../../../shared/models/file.model';
 import {UserService} from '../../../../../shared/services/http/user.service';
 
 @Component({

@@ -16,16 +16,16 @@ import {EdrivingUser} from '../../shared/models/edriving.model';
 import {AuthService} from '../../shared/services/auth/auth.service';
 import {PartnnerUser} from '../../shared/models/parceiro.model';
 import {ParceiroService} from '../../shared/services/http/parceiro.service';
-import {AddressModel} from '../../shared/models/endereco.model';
+import {AddressModel} from '../../shared/models/address.model';
 import {RolesConstants} from '../../shared/constants';
 
 @Component({
     selector: 'app-perfil',
-    templateUrl: './perfil.component.html',
+    templateUrl: './profile.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PerfilComponent implements OnInit, OnDestroy {
+export class ProfileComponent implements OnInit, OnDestroy {
     @ViewChild('drawer') drawer: MatDrawer;
 
     drawerMode: 'over' | 'side' = 'side';

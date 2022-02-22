@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpBackend, HttpClient, HttpHeaders} from '@angular/common/http';
-import {AddressModel} from '../../models/endereco.model';
+import {AddressModel} from '../../models/address.model';
 import {Observable} from 'rxjs';
 
 export interface CEPMODEL {

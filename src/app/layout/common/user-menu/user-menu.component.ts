@@ -9,7 +9,7 @@ import {
 import {Router} from '@angular/router';
 import {BooleanInput} from '@angular/cdk/coercion';
 import {Subject} from 'rxjs';
-import {User} from 'app/shared/models/usuario.model';
+import {User} from 'app/shared/models/user.model';
 import {AuthService} from '../../../shared/services/auth/auth.service';
 import {RolesConstants} from '../../../shared/constants';
 

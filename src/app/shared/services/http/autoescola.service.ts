@@ -3,12 +3,12 @@ import {HttpBackend, HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
-import {Level} from '../../models/cargo.model';
-import {DrivingSchoolPost, DrivingSchool} from '../../models/autoEscola.model';
+import {Level} from '../../models/level.model';
+import {DrivingSchoolPost, DrivingSchool} from '../../models/drivingSchool.model';
 import {AuthService} from '../auth/auth.service';
 
-const URL_AUTOESCOLA = `${environment.apiUrl}/AutoEscola`;
-const URL_AUTOESCOLA_CARGO = `${environment.apiUrl}/AutoescolaCargo`;
+const URL_AUTOESCOLA = `${environment.apiUrl}/DrivingSchool`;
+const URL_AUTOESCOLA_CARGO = `${environment.apiUrl}/DrivingSchoolLevel`;
 
 @Injectable({
     providedIn: 'root'

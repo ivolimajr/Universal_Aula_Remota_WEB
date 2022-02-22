@@ -6,10 +6,10 @@ import {Subscription} from 'rxjs';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../../@fuse/components/alert';
-import {Level} from '../../../../../shared/models/cargo.model';
+import {Level} from '../../../../../shared/models/level.model';
 import {PartnnerPost, PartnnerUser} from '../../../../../shared/models/parceiro.model';
 import {ParceiroService} from '../../../../../shared/services/http/parceiro.service';
-import {User} from '../../../../../shared/models/usuario.model';
+import {User} from '../../../../../shared/models/user.model';
 import {LocalStorageService} from '../../../../../shared/services/storage/localStorage.service';
 import {AuthService} from '../../../../../shared/services/auth/auth.service';
 import {environment} from '../../../../../../environments/environment';
@@ -196,9 +196,9 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
         }
         this.cepSub = this._cepService.buscar(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
             this.accountForm.patchValue({
-                bairro: res.bairro,
-                enderecoLogradouro: res.logradouro,
-                cidade: res.localidade,
+                district: res.bairro,
+                address: res.logradouro,
+                city: res.localidade,
                 cep: res.cep,
                 uf: res.uf
             });
@@ -266,13 +266,13 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                     Validators.minLength(8),
                     Validators.maxLength(10),
                     NgBrazilValidators.cep])],
-            enderecoLogradouro: ['',
+            address: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
-            bairro: ['',
+            district: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -284,13 +284,13 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                 Validators.minLength(2),
                 Validators.maxLength(2)
             ])],
-            cidade: ['',
+            city: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
-            numero: ['',
+            number: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -359,16 +359,16 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
             this.partnnerPost.password = 'Pay@2021';
         }
 
-        this.partnnerPost.name = formData.nome;
+        this.partnnerPost.name = formData.name;
         this.partnnerPost.email = formData.email;
         this.partnnerPost.cnpj = formData.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
-        this.partnnerPost.description = formData.descricao;
+        this.partnnerPost.description = formData.description;
         this.partnnerPost.cep = formData.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
-        this.partnnerPost.uf = 'DF';
-        this.partnnerPost.address = formData.enderecoLogradouro;
-        this.partnnerPost.district = formData.bairro;
-        this.partnnerPost.city = formData.cidade;
-        this.partnnerPost.number = formData.numero;
+        this.partnnerPost.uf = formData.uf;
+        this.partnnerPost.address = formData.address;
+        this.partnnerPost.district = formData.district;
+        this.partnnerPost.city = formData.city;
+        this.partnnerPost.number = formData.number;
         this.partnnerPost.levelId = this.levelId;
         formData.phonesNumbers.forEach((item) => {
             if (item.phoneNumber.length !== 11) {
@@ -424,25 +424,25 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                 Validators.minLength(2),
                 Validators.maxLength(2)
             ])],
-            enderecoLogradouro: [this.userEdit.address.address,
+            address: [this.userEdit.address.address,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
-            bairro: [this.userEdit.address.district,
+            district: [this.userEdit.address.district,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
-            cidade: [this.userEdit.address.city,
+            city: [this.userEdit.address.city,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
-            numero: [this.userEdit.address.number,
+            number: [this.userEdit.address.number,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,

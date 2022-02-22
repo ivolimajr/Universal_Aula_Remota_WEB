@@ -1,6 +1,6 @@
-import {Level} from './cargo.model';
-import {User} from './usuario.model';
-import {PhoneNumberModel} from './Telefone.model';
+import {Level} from './level.model';
+import {User} from './user.model';
+import {PhoneNumberModel} from './phoneNumber.model';
 
 export class EdrivingUser {
     id: number;

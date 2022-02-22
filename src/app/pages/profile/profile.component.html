@@ -81,16 +81,16 @@
                             <!-- Account -->
                             <ng-container *ngSwitchCase="'dadosPessoais'">
                                 <app-edriving *ngIf="edrivingUser" [edrivingUser]="edrivingUser"></app-edriving>
-                                <app-parceiro *ngIf="parceiroUser" [partnnerUser]="parceiroUser"></app-parceiro>
+                                <app-partnner *ngIf="parceiroUser" [partnnerUser]="parceiroUser"></app-partnner>
 
                             </ng-container>
                             <!-- Security -->
                             <ng-container *ngSwitchCase="'seguranca'">
-                                <altera-senha [idUser]="idUser"></altera-senha>
+                                <app-changePassword [idUser]="idUser"></app-changePassword>
                             </ng-container>
                             <!-- Plan & Billing -->
                             <ng-container *ngSwitchCase="'endereco'">
-                                <endereco [addressModel]="enderecoUser" [idUser]="idUser"></endereco>
+                                <app-address [addressModel]="enderecoUser" [idUser]="idUser"></app-address>
                             </ng-container>
                         </ng-container>
                     </div>

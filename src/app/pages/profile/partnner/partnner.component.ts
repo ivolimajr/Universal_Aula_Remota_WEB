@@ -7,35 +7,35 @@ import {
     OnInit,
     ViewEncapsulation
 } from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {fuseAnimations} from '@fuse/animations';
+import {MASKS} from 'ng-brazil';
 import {MatDialog} from '@angular/material/dialog';
-import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
-import {EdrivingPost, EdrivingUser} from '../../../shared/models/edriving.model';
+import {fuseAnimations} from '../../../../@fuse/animations';
+import {User} from '../../../shared/models/user.model';
+import {PartnnerPost, PartnnerUser} from '../../../shared/models/parceiro.model';
 import {UserService} from '../../../shared/services/http/user.service';
-import {EdrivingService} from '../../../shared/services/http/edriving.service';
-import {User} from '../../../shared/models/usuario.model';
 import {AuthService} from '../../../shared/services/auth/auth.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
-import {environment} from '../../../../environments/environment';
+import {ParceiroService} from '../../../shared/services/http/parceiro.service';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
+import {environment} from '../../../../environments/environment';
 
 @Component({
-    selector: 'app-edriving',
-    templateUrl: './edriving.component.html',
+    selector: 'app-partnner',
+    templateUrl: './partnner.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations
 })
-export class EdrivingComponent implements OnInit, OnDestroy {
-    @Input() edrivingUser: EdrivingUser;
+export class PartnnerComponent implements OnInit, OnDestroy {
+    @Input() partnnerUser: PartnnerUser;
 
     accountForm: FormGroup;
     user: User;
     masks = MASKS;
-    private edrivingPost = new EdrivingPost();
+    private partnnerPost = new PartnnerPost();
     private userSub: Subscription;
     private phoneSub: Subscription;
 
@@ -45,7 +45,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         private _formBuilder: FormBuilder,
         private _userService: UserService,
         private _authServices: AuthService,
-        private _edrivingServices: EdrivingService,
+        private _parceiroServices: ParceiroService,
         private _changeDetectorRef: ChangeDetectorRef,
         private _storageServices: LocalStorageService
     ) {
@@ -56,6 +56,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         this.prepareForm();
     }
 
+
     /**
      * Atualiza o usuário do tipo Edriving
      *
@@ -64,23 +65,23 @@ export class EdrivingComponent implements OnInit, OnDestroy {
     update(): void {
 
         //Verifica se o formulário é valido
-        if (this.prepareFormToSend() === false) {
+        if (this.checkFormToSend() === false) {
             return null;
         }
-        this.accountForm.disable();
-        this.userSub = this._edrivingServices.update(this.edrivingPost).subscribe((res: any) => {
+    this.accountForm.disable();
+        this.userSub = this._parceiroServices.update(this.partnnerPost).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
-                this.accountForm.enable();
                 this.openSnackBar(res.error.detail, 'warn');
+                this.accountForm.enable();
                 this._changeDetectorRef.markForCheck();
                 return;
             }
-            this.edrivingUser = res;
+            this.partnnerUser = res;
 
             //Atualiza os dados do localStorage
             this.user = this._authServices.getUserInfoFromStorage();
-            this.user.name = res.nome;
+            this.user.name = res.name;
             this.user.email = res.email;
             this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
 
@@ -89,7 +90,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             //Pega o último registro de telefone que veio do usuario atualizado
             const lastPhoneIdFromUser = res.phonesNumbers[res.phonesNumbers.length - 1];
 
-            //Pega o último registro de telefone que contem no array de phonesNumbers
+            //Pega o último registro de telefone que contem no array de telefones
             const lastPhoneFromPhoneArray = this.accountForm.get('phonesNumbers') as FormArray;
 
             //Se os IDS forem diferentes, incluir no array
@@ -116,13 +117,13 @@ export class EdrivingComponent implements OnInit, OnDestroy {
 
     }
 
+
     /**
      * Adiciona mais um campo no formulário de contato
      *
      * @return void
      */
     addPhoneNumberField(): void {
-
         const phoneNumberFormGroup =  this._formBuilder.group({
             phoneNumber: ['', Validators.compose([
                 Validators.required,
@@ -142,7 +143,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
      * @param index do array de telefones a ser removido
      */
     removePhoneNumber(id: number, index: number): void {
-        if (this.edrivingUser.phonesNumbers.length === 1) {
+        if (this.partnnerUser.phonesNumbers.length === 1) {
             this.dialog.open(AlertModalComponent, {
                 width: '280px',
                 data: {content: 'Usuário não pode ficar sem contato.', oneButton: true}
@@ -174,9 +175,33 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         }
         this._changeDetectorRef.markForCheck();
     }
-    // -----------------------------------------------------------------------------------------------------
-    // @ Private methods
-    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * Valida os dados vindo do formulário antes de enviar para API
+     *
+     * @private
+     * @return um boleano
+     */
+    private checkFormToSend(): boolean {
+        const formData = this.accountForm.value;
+
+        if (this.accountForm.invalid) {
+            this.openSnackBar('Dados Inválidos', 'warn');
+            return false;
+        }
+        //Se todos os dados forem válidos, monta o objeto para atualizar
+        this.partnnerPost.name = formData.nome;
+        this.partnnerPost.email = formData.email;
+        this.partnnerPost.description = formData.descricao;
+        this.partnnerPost.cnpj = formData.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
+        formData.phonesNumbers.forEach((item) => {
+            if (item.phoneNumber.length !== 11) {
+                item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
+            }
+        });
+        this.partnnerPost.phonesNumbers = formData.phonesNumbers;
+        return true;
+    }
 
     /**
      * monta o formulário com os validadores
@@ -186,27 +211,34 @@ export class EdrivingComponent implements OnInit, OnDestroy {
      */
     private prepareForm(): void {
         this.accountForm = this._formBuilder.group({
-            name: [this.edrivingUser.name,
+            name: [this.partnnerUser.name,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(100)]
                 )],
-            cpf: [this.edrivingUser.cpf,
+            email: [this.partnnerUser.email,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
-                    Validators.minLength(11),
-                    Validators.maxLength(14),
-                    NgBrazilValidators.cpf])],
-            email: [this.edrivingUser.email,
-                Validators.compose([
-                    Validators.required,
-                    Validators.nullValidator,
-                    Validators.email,
                     Validators.minLength(5),
                     Validators.maxLength(70)])],
+            cnpj: [this.partnnerUser.cnpj,
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(14),
+                    Validators.maxLength(14)])],
+            description: [this.partnnerUser.description,
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.minLength(5),
+                    Validators.maxLength(100)])],
+            levelId: [this.partnnerUser.levelId,
+                Validators.compose([
+                    Validators.required])],
             phonesNumbers: this._formBuilder.array([], Validators.compose([
                 Validators.required,
                 Validators.nullValidator
@@ -217,9 +249,9 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         const phoneNumbersFormGroups = [];
 
         //Só monta o array de telefones se houver telefones de contato cadastrado
-        if (this.edrivingUser.phonesNumbers.length > 0) {
+        if (this.partnnerUser.phonesNumbers.length > 0) {
             // Iterate through them
-            this.edrivingUser.phonesNumbers.forEach((phoneNumber) => {
+            this.partnnerUser.phonesNumbers.forEach((phoneNumber) => {
 
                 //Cria um formGroup de telefone
                 phoneNumbersFormGroups.push(
@@ -253,34 +285,8 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         });
 
         //Define o ID do usuário Edriving a ser atualizado
-        this.edrivingPost.id = this.edrivingUser.id;
+        this.partnnerPost.id = this.partnnerUser.id;
         this._changeDetectorRef.markForCheck();
-    }
-
-    /**
-     * Valida os dados vindo do formulário antes de enviar para API
-     *
-     * @private
-     * @return um boleano
-     */
-    private prepareFormToSend(): boolean {
-        const formData = this.accountForm.value;
-
-        if (this.accountForm.invalid) {
-            this.openSnackBar('Dados Inválidos', 'warn');
-            return false;
-        }
-        //Se todos os dados forem válidos, monta o objeto para atualizar
-        this.edrivingPost.name = formData.nome;
-        this.edrivingPost.email = formData.email;
-        this.edrivingPost.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
-        formData.phonesNumbers.forEach((item) => {
-            if (item.phoneNumber.length !== 11) {
-                item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
-            }
-        });
-        this.edrivingPost.phonesNumbers = formData.phonesNumbers;
-        return true;
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {

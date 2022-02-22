@@ -6,7 +6,7 @@ import {FuseMediaWatcherService} from '@fuse/services/media-watcher';
 import {FuseNavigationService, FuseVerticalNavigationComponent} from '@fuse/components/navigation';
 import {InitialData} from 'app/app.types';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
-import {User} from '../../../../shared/models/usuario.model';
+import {User} from '../../../../shared/models/user.model';
 
 @Component({
     selector: 'classy-layout',

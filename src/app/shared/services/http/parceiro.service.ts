@@ -4,11 +4,11 @@ import {PartnnerPost, PartnnerUser} from '../../models/parceiro.model';
 import {Observable, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
-import {Level} from '../../models/cargo.model';
+import {Level} from '../../models/level.model';
 
 
-const URL_PARCEIRO = `${environment.apiUrl}/Parceiro`;
-const URL_PARCEIRO_CARGO = `${environment.apiUrl}/ParceiroCargo`;
+const URL_PARCEIRO = `${environment.apiUrl}/Partnner`;
+const URL_PARCEIRO_CARGO = `${environment.apiUrl}/PartnnerLevel`;
 
 @Injectable({
     providedIn: 'root'

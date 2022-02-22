@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {fuseAnimations} from '@fuse/animations';
 import {AuthService} from 'app/shared/services/auth/auth.service';
-import {User} from 'app/shared/models/usuario.model';
+import {User} from 'app/shared/models/user.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Subscription} from 'rxjs';
 
@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         //Faz Login
         this.loginSub = this._authService.signIn(this.loginForm.value).subscribe((res) => {
             if (res.error) {
-                this.openSnackBar(res.error.detail);
+                this.openSnackBar(res.error.detail, 'warn');
                 this.loginForm.enable();
                 return;
             }
@@ -92,12 +92,11 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {
-        this._snackBar.open(message,'',{
-            duration: 5*1000,
+        this._snackBar.open(message, '', {
+            duration: 5 * 1000,
             horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            panelClass: ['mat-toolbar', 'mat-'+type]
+            verticalPosition: 'top',
+            panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
-
 }

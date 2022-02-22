@@ -18,7 +18,7 @@ export class EdrivingCargosConstants
 
 export class ParceiroCargosConstants
 {
-    static readonly DIRETOR= 'DIRETOR';
+    static readonly EMPRESA= 'EMPRESA';
     static readonly ANALISTA= 'ANALISTA';
     static readonly ADMINISTRATIVO= 'ADMINISTRATIVO';
 };

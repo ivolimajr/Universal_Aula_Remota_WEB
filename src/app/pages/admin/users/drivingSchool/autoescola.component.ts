@@ -10,7 +10,7 @@ import {FuseAlertType} from '../../../../../@fuse/components/alert';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
 import {AutoescolaService} from '../../../../shared/services/http/autoescola.service';
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
-import {DrivingSchool} from '../../../../shared/models/autoEscola.model';
+import {DrivingSchool} from '../../../../shared/models/drivingSchool.model';
 import {Router} from '@angular/router';
 
 const ELEMENT_DATA: DrivingSchool[] = [];

@@ -5,12 +5,12 @@ import {catchError, switchMap} from 'rxjs/operators';
 import {UserService} from 'app/shared/services/http/user.service';
 import {LocalStorageService} from '../storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
-import {User, UsuarioLogin} from '../../models/usuario.model';
+import {User, UsuarioLogin} from '../../models/user.model';
 import {TokenResult} from 'app/shared/models/token.model';
 import {RolesConstants} from '../../constants';
 
 const API_TOKEN_URL = `${environment.apiUrl}/ApiAuth`;
-const API_LOGIN_URL = `${environment.apiUrl}/Usuario/Login`;
+const API_LOGIN_URL = `${environment.apiUrl}/User/Login`;
 const USERNAME = environment.auth.clientId;
 const PASSWORD = environment.auth.clientSecret;
 

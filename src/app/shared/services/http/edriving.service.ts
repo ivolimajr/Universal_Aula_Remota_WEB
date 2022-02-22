@@ -4,11 +4,11 @@ import {EdrivingPost, EdrivingUser} from '../../models/edriving.model';
 import {Observable, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
-import {Level} from '../../models/cargo.model';
+import {Level} from '../../models/level.model';
 
 
 const URL_EDRIVING = `${environment.apiUrl}/Edriving`;
-const URL_EDRIVING_CARGO = `${environment.apiUrl}/EdrivingCargo`;
+const URL_EDRIVING_CARGO = `${environment.apiUrl}/EdrivingLevel`;
 
 @Injectable({
     providedIn: 'root'
