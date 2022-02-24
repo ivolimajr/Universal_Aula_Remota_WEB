@@ -95,7 +95,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                     //Se o usuário a ser atualizado for o usuário logado, atualiza os dados na storage
                     if (this.userEdit.id === this._authServices.getUserInfoFromStorage().id) {
                         this.user = this._authServices.getUserInfoFromStorage();
-                        this.user.name = res.nome;
+                        this.user.name = res.name;
                         this.user.email = res.email;
                         this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
                     }
@@ -307,7 +307,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         if (!this.userEdit) {
             this.edrivingPost.password = 'Pay@2021';
         }
-        this.edrivingPost.name = formData.nome;
+        this.edrivingPost.name = formData.name;
         this.edrivingPost.email = formData.email;
         this.edrivingPost.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
         this.edrivingPost.levelId = this.levelId;

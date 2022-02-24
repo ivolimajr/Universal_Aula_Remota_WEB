@@ -58,7 +58,6 @@ export class LayoutComponent implements OnInit, OnDestroy {
         ]).pipe(
             takeUntil(this._unsubscribeAll),
             map(([config, mql]) => {
-
                 const options = {
                     scheme: config.scheme,
                     theme: config.theme
@@ -156,6 +155,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
      * @param theme
      */
     setTheme(theme: Theme): void {
+        console.log(theme);
         this._fuseConfigService.config = {theme};
     }
 

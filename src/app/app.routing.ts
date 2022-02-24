@@ -65,7 +65,8 @@ export const appRoutes: Route[] = [
         canActivateChild: [AuthGuard],
         component: LayoutComponent,
         data:{
-          layout: 'enterprise'
+            layout: 'enterprise',
+            theme: 'amber'
         },
         resolve: {
             initialData: InitialDataResolver,

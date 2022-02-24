@@ -26,13 +26,13 @@
     <div
         class="relative flex flex-col flex-0 justify-center w-full h-16 sm:h-20 md:h-36 overflow-hidden z-49 shadow dark:shadow-none print:hidden">
         <!-- Top bar -->
-        <div class="relative dark flex flex-auto justify-center w-full px-4 md:px-8 bg-gray-800 dark:bg-gray-900">
+        <div class="relative dark flex flex-auto justify-center w-full px-4 md:px-8 bg-primary dark:bg-gray-900">
             <div class="flex items-center w-full max-w-360 h-16 sm:h-20">
                 <!-- Logo -->
                 <ng-container *ngIf="!isScreenSmall">
                     <div class="flex items-center">
                         <img
-                            class="w-24"
+                            class="w-37"
                             src="assets/images/logo/edrivinglogo.png"
                             alt="Logo image">
                     </div>
@@ -78,7 +78,9 @@
     <!-- Footer -->
     <div class="relative flex flex-0 justify-center w-full px-6 md:px-8 z-49 border-t bg-card print:hidden">
         <div class="flex items-center w-full max-w-360 h-14 sm:h-20">
-            <span class="font-medium text-secondary">Fuse &copy; {{currentYear}}</span>
+            <span class="font-medium text-secondary">
+                <a href="https://www.edriving.com.br" target="_blank">e-Driving</a> &copy; {{currentYear}}
+            </span>
         </div>
     </div>
 
