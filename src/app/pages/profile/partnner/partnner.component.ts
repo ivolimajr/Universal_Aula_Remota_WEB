@@ -68,11 +68,10 @@ export class PartnnerComponent implements OnInit, OnDestroy {
         if (this.checkFormToSend() === false) {
             return null;
         }
-    this.accountForm.disable();
+        this.accountForm.disable();
         this.userSub = this._parceiroServices.update(this.partnnerPost).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
-                this.openSnackBar(res.error.detail, 'warn');
                 this.accountForm.enable();
                 this._changeDetectorRef.markForCheck();
                 return;
@@ -114,9 +113,7 @@ export class PartnnerComponent implements OnInit, OnDestroy {
             this.accountForm.enable();
             this._changeDetectorRef.markForCheck();
         });
-
     }
-
 
     /**
      * Adiciona mais um campo no formulário de contato
@@ -124,7 +121,7 @@ export class PartnnerComponent implements OnInit, OnDestroy {
      * @return void
      */
     addPhoneNumberField(): void {
-        const phoneNumberFormGroup =  this._formBuilder.group({
+        const phoneNumberFormGroup = this._formBuilder.group({
             phoneNumber: ['', Validators.compose([
                 Validators.required,
                 Validators.nullValidator
@@ -152,9 +149,7 @@ export class PartnnerComponent implements OnInit, OnDestroy {
         }
         this.phoneSub = this._userService.removePhonenumber(id)
             .subscribe((res) => {
-                if (!res) {
-                    this.openSnackBar('Telefone já em uso', 'warn');
-                }
+                if (!res) return this.openSnackBar('Telefone já em uso', 'warn');
                 const phoneNumbersFormArray = this.accountForm.get('phonesNumbers') as FormArray;
                 // Remove the phone number field
                 phoneNumbersFormArray.removeAt(index);
@@ -167,10 +162,10 @@ export class PartnnerComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if(this.userSub){
+        if (this.userSub) {
             this.userSub.unsubscribe();
         }
-        if(this.phoneSub){
+        if (this.phoneSub) {
             this.phoneSub.unsubscribe();
         }
         this._changeDetectorRef.markForCheck();
@@ -190,9 +185,9 @@ export class PartnnerComponent implements OnInit, OnDestroy {
             return false;
         }
         //Se todos os dados forem válidos, monta o objeto para atualizar
-        this.partnnerPost.name = formData.nome;
+        this.partnnerPost.name = formData.name;
         this.partnnerPost.email = formData.email;
-        this.partnnerPost.description = formData.descricao;
+        this.partnnerPost.description = formData.description;
         this.partnnerPost.cnpj = formData.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
         formData.phonesNumbers.forEach((item) => {
             if (item.phoneNumber.length !== 11) {

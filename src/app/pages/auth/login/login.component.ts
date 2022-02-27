@@ -5,7 +5,8 @@ import {fuseAnimations} from '@fuse/animations';
 import {AuthService} from 'app/shared/services/auth/auth.service';
 import {User} from 'app/shared/models/user.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {Subscription} from 'rxjs';
+import {Subscription, throwError} from 'rxjs';
+import {catchError} from "rxjs/operators";
 
 @Component({
     selector: 'login',
@@ -39,20 +40,13 @@ export class LoginComponent implements OnInit, OnDestroy {
      * @return void
      */
     signIn(): void {
-        if (!this.loginForm.valid) {
-            return;
-        }
-
+        if (!this.loginForm.valid) return;
         this.loginForm.disable();
 
         //Faz Login
         this.loginSub = this._authService.signIn(this.loginForm.value).subscribe((res) => {
-            if (res.error) {
-                this.openSnackBar(res.error.detail, 'warn');
-                this.loginForm.enable();
-                return;
-            }
-            this.loginForm.enable();
+            if (res.error) return this.loginForm.enable();
+
             const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
             this._router.navigateByUrl(redirectURL);
         });
@@ -100,3 +94,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         });
     }
 }
+
+function then(arg0: any) {
+    throw new Error('Function not implemented.');
+}
+

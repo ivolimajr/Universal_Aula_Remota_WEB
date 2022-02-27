@@ -169,7 +169,8 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                 this.openSnackBar(res.detail, 'warn');
                 this.loadingForm = false;
                 this._changeDetectorRef.markForCheck();
-                return this.closeAlert();;
+                return this.closeAlert();
+                ;
             });
         });
     }
@@ -202,26 +203,14 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         //Se não tiver um ID, significa que está criando um novo usuário
         if (!this.id) {
             this.userSub = this._autoEscolaService.create(this.edrivingSchoolPost).subscribe((res: any) => {
-                if (res.error) {
-                    this.saving = false;
-                    this.openSnackBar(res.error, 'warn');
-                    this.closeAlert();
-                    return;
-                }
-                this.saving = false;
+                if (res.error) return this.closeAlert();
                 this.closeAlert();
                 this.openSnackBar('Salvo');
                 this._router.navigate(['usuario/auto-escola']);
             });
         } else {
             this.userSub = this._autoEscolaService.update(this.edrivingSchoolPost).subscribe((res: any) => {
-                if (res.error) {
-                    this.saving = false;
-                    this.openSnackBar(res.error, 'warn');
-                    this.closeAlert();
-                    return;
-                }
-                this.saving = false;
+                if (res.error) return this.closeAlert();
                 this.closeAlert();
                 this.openSnackBar('Atualizado');
                 this._router.navigate(['usuario/auto-escola']);
@@ -233,6 +222,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
      * Fecha todos os alertas e loadings da tela
      */
     closeAlert(): void {
+        this.saving = false;
         this.loading = false;
         this.message = null;
         this._changeDetectorRef.markForCheck();
@@ -523,10 +513,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
         this._autoEscolaService.getOne(this.id).subscribe((res: any) => {
-            if (res.error) {
-                this.openSnackBar(res.error, 'warn');
-                return;
-            }
+            if (res.error) return;
             this.accountForm = this._formBuilder.group({
                 corporateName: [res.corporateName,
                     Validators.compose([

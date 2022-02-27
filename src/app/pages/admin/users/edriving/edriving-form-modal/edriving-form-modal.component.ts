@@ -88,7 +88,6 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                 this.userSub = this._edrivingServices.update(this.edrivingPost).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
-                        this.openSnackBar(res.error, 'warn');
                         this.closeAlert();
                         return;
                     }
@@ -109,7 +108,6 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                 this.userSub = this._edrivingServices.create(this.edrivingPost).subscribe((res: any) => {
                     if (res.error) {
-                        this.openSnackBar(res.error, 'warn');
                         this.accountForm.enable();
                         this.closeAlert();
                         return;

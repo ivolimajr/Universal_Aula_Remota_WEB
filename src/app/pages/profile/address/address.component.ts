@@ -62,7 +62,6 @@ export class AddressComponent implements OnInit, OnDestroy {
 
         this.userSub = this._userService.updateAddress(this.addressModel).subscribe((res: any) => {
             if (res.error) {
-                this.openSnackBar(res.error.detail, 'warn');
                 this.addressForm.enable();
                 this._changeDetectorRef.markForCheck();
                 return;

@@ -95,7 +95,6 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                 this.userSub = this._parceiroServices.update(this.partnnerPost).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
-                        this.openSnackBar(res.error, 'warn');
                         this.closeAlert();
                         return;
                     }
@@ -115,7 +114,6 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                 this.userSub = this._parceiroServices.create(this.partnnerPost).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
-                        this.openSnackBar(res.error, 'warn');
                         this.closeAlert();
                         return;
                     }

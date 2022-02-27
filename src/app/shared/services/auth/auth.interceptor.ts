@@ -1,13 +1,15 @@
 import {Injectable} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {AuthService} from 'app/shared/services/auth/auth.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-    private accessToken: string;
-    constructor(private _authService: AuthService) {
+    private readonly accessToken: string;
+
+    constructor(private _authService: AuthService,public snackBar: MatSnackBar) {
         this.accessToken = this._authService.tokenFromLocalStorage.accessToken;
     }
 
@@ -19,10 +21,18 @@ export class AuthInterceptor implements HttpInterceptor {
                 headers: req.headers.set('Authorization', 'Bearer ' + this.accessToken)
             });
         }
-
         // Response
-        return next.handle(newReq).pipe(
-            catchError(error => throwError(error))
-        );
+        return next.handle(newReq).pipe(catchError(err => {
+            this.openSnackBar(err.error.UserMessage ? err.error.UserMessage  : err.error.InnerExceptionMessage);
+            return throwError(err);
+        }))
+    }
+    private openSnackBar(message: string): void {
+        this.snackBar.open(message, '', {
+            duration: 5 * 1000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            panelClass: ['mat-toolbar', 'mat-warn']
+        });
     }
 }

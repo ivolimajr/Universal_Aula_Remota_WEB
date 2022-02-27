@@ -149,7 +149,6 @@ export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
             if (res.error) {
                 this.isDeleting = false;
                 this._changeDetectorRef.markForCheck();
-                this.openSnackBar(res.error,'warn');
                 return;
             }
             this.isDeleting = false;

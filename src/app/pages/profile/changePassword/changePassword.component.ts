@@ -80,11 +80,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
         }
         //atualiza a senha na API
         this.authSub = this._userServices.updatePassById(this.securityForm.value).subscribe((res: any) => {
-            if (res.error) {
-                this.securityForm.enable();
-                this.openSnackBar(res.error.detail, 'warn');
-                return;
-            }
+            if (res.error) return this.securityForm.enable();
             this.openSnackBar('Senha Atualizada');
             this.securityForm.enable();
             //Atualiza a senha no localStorage

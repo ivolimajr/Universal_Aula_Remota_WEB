@@ -72,7 +72,6 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
                 this.accountForm.enable();
-                this.openSnackBar(res.error.detail, 'warn');
                 this._changeDetectorRef.markForCheck();
                 return;
             }
@@ -113,7 +112,6 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             this.accountForm.enable();
             this._changeDetectorRef.markForCheck();
         });
-
     }
 
     /**
@@ -122,7 +120,6 @@ export class EdrivingComponent implements OnInit, OnDestroy {
      * @return void
      */
     addPhoneNumberField(): void {
-
         const phoneNumberFormGroup =  this._formBuilder.group({
             phoneNumber: ['', Validators.compose([
                 Validators.required,
@@ -151,9 +148,8 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         }
         this.phoneSub = this._userService.removePhonenumber(id)
             .subscribe((res) => {
-                if (!res) {
-                    this.openSnackBar('Telefone já em uso', 'warn');
-                }
+                if (!res) return this.openSnackBar('Telefone já em uso', 'warn');
+
                 const phoneNumbersFormArray = this.accountForm.get('phonesNumbers') as FormArray;
                 // Remove the phone number field
                 phoneNumbersFormArray.removeAt(index);
@@ -271,7 +267,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             return false;
         }
         //Se todos os dados forem válidos, monta o objeto para atualizar
-        this.edrivingPost.name = formData.nome;
+        this.edrivingPost.name = formData.name;
         this.edrivingPost.email = formData.email;
         this.edrivingPost.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
         formData.phonesNumbers.forEach((item) => {
