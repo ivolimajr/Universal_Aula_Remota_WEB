@@ -12,6 +12,7 @@ import {AlertModalComponent} from '../../../../../layout/common/alert/alert-moda
 import {MatDialog} from '@angular/material/dialog';
 import {FileModel, FileModelUpdate} from '../../../../../shared/models/file.model';
 import {UserService} from '../../../../../shared/services/http/user.service';
+import {AddressModel} from '../../../../../shared/models/address.model';
 
 @Component({
     selector: 'app-autoescola-form',
@@ -35,7 +36,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
     public id: number = parseInt(this.routeAcitve.snapshot.paramMap.get('id'), 10);
     files: Set<File>;
     private phoneArray = [];
-    private edrivingSchoolPost = new DrivingSchoolPost();
+    private drivingSchoolPost = new DrivingSchoolPost();
     private cepSub: Subscription;
     private userSub: Subscription;
     private fileArray = [];
@@ -202,15 +203,16 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
 
         //Se não tiver um ID, significa que está criando um novo usuário
         if (!this.id) {
-            this.userSub = this._autoEscolaService.create(this.edrivingSchoolPost).subscribe((res: any) => {
-                if (res.error) return this.closeAlert();
+            console.log(this.drivingSchoolPost);
+            this.userSub = this._autoEscolaService.create(this.drivingSchoolPost).subscribe((res: any) => {
+                if (res.error) {return this.closeAlert();}
                 this.closeAlert();
                 this.openSnackBar('Salvo');
                 this._router.navigate(['usuario/auto-escola']);
             });
         } else {
-            this.userSub = this._autoEscolaService.update(this.edrivingSchoolPost).subscribe((res: any) => {
-                if (res.error) return this.closeAlert();
+            this.userSub = this._autoEscolaService.update(this.drivingSchoolPost).subscribe((res: any) => {
+                if (res.error) {return this.closeAlert();}
                 this.closeAlert();
                 this.openSnackBar('Atualizado');
                 this._router.navigate(['usuario/auto-escola']);
@@ -282,37 +284,35 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
             const data = this.accountForm.value;
 
             if (this.id) {
-                this.edrivingSchoolPost.id = this.id;
+                this.drivingSchoolPost.id = this.id;
             }
 
-            this.edrivingSchoolPost.corporateName = data.corporateName;
-            this.edrivingSchoolPost.fantasyName = data.fantasyName;
-            this.edrivingSchoolPost.stateRegistration = data.stateRegistration.replace(/[^0-9,]*/g, '').replace('-', '').replace('/', '');
-            this.edrivingSchoolPost.foundingDate = data.foundingDate;
-            this.edrivingSchoolPost.email = data.email;
-            this.edrivingSchoolPost.description = data.description;
-            this.edrivingSchoolPost.site = data.site;
-            this.edrivingSchoolPost.cnpj = data.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
+            this.drivingSchoolPost.corporateName = data.corporateName;
+            this.drivingSchoolPost.fantasyName = data.fantasyName;
+            this.drivingSchoolPost.stateRegistration = data.stateRegistration.replace(/[^0-9,]*/g, '').replace('-', '').replace('/', '');
+            this.drivingSchoolPost.foundingDate = data.foundingDate;
+            this.drivingSchoolPost.email = data.email;
+            this.drivingSchoolPost.description = data.description;
+            this.drivingSchoolPost.site = data.site;
+            this.drivingSchoolPost.cnpj = data.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
             if (!this.id) {
-                this.edrivingSchoolPost.password = 'Pay@2021';
+                this.drivingSchoolPost.password = 'Pay@2021';
             }
         }
         // Dados de endereço
         if (this.addressForm.valid) {
             const data = this.addressForm.value;
 
-            this.edrivingSchoolPost.uf = data.uf;
-            this.edrivingSchoolPost.cep = data.cep.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
-            this.edrivingSchoolPost.address = data.address;
-            this.edrivingSchoolPost.district = data.district;
-            this.edrivingSchoolPost.city = data.city;
-            this.edrivingSchoolPost.number = data.number;
+            this.drivingSchoolPost.cep = data.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
+            this.drivingSchoolPost.uf = data.uf;
+            this.drivingSchoolPost.district = data.district;
+            this.drivingSchoolPost.city = data.city;
+            this.drivingSchoolPost.number = data.number;
+            this.drivingSchoolPost.address = data.address;
         }
         // dados de contato
         if (this.contactForm.valid) {
-
             const data = this.contactForm.value;
-
             //Verifica se os telefones informados são válidos
             data.phonesNumbers.forEach((item) => {
                 if (item.phoneNumber === null || item.phoneNumber === '' || item.phoneNumber.length < 11) {
@@ -320,13 +320,12 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                     return;
                 }
             });
-
             data.phonesNumbers.forEach((item) => {
                 if (item.phoneNumber.length !== 11) {
                     item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
                 }
             });
-            this.edrivingSchoolPost.phonesNumbers = data.phonesNumbers;
+            this.drivingSchoolPost.phonesNumbers = data.phonesNumbers;
         }
 
         //Dados de arquivos de upload
@@ -339,7 +338,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
                     this.fileModel.push(file);
                 }
             });
-            this.edrivingSchoolPost.files = this.fileModel;
+            this.drivingSchoolPost.files = this.fileModel;
         }
     }
 
@@ -513,7 +512,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
         this._autoEscolaService.getOne(this.id).subscribe((res: any) => {
-            if (res.error) return;
+            if (res.error) {return;}
             this.accountForm = this._formBuilder.group({
                 corporateName: [res.corporateName,
                     Validators.compose([

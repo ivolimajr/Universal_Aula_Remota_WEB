@@ -15,6 +15,7 @@ import {AuthService} from '../../../../../shared/services/auth/auth.service';
 import {environment} from '../../../../../../environments/environment';
 import {CepService} from '../../../../../shared/services/http/cep.service';
 import {UserService} from '../../../../../shared/services/http/user.service';
+import {AddressModel} from '../../../../../shared/models/address.model';
 
 @Component({
     selector: 'app-parceiro-form-modal',
@@ -142,7 +143,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
         const phonesFormArray = this.accountForm.get('phonesNumbers') as FormArray;
-        if(id === 0  && phonesFormArray.length > 1){
+        if (id === 0 && phonesFormArray.length > 1) {
             phonesFormArray.removeAt(index);
             return this.closeAlert();
         }
@@ -250,7 +251,7 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(18),
                     Validators.maxLength(18),
-                NgBrazilValidators.cnpj])],
+                    NgBrazilValidators.cnpj])],
             description: ['',
                 Validators.compose([
                     Validators.required,
@@ -361,12 +362,16 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
         this.partnnerPost.email = formData.email;
         this.partnnerPost.cnpj = formData.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
         this.partnnerPost.description = formData.description;
-        this.partnnerPost.cep = formData.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
-        this.partnnerPost.uf = formData.uf;
-        this.partnnerPost.address = formData.address;
-        this.partnnerPost.district = formData.district;
-        this.partnnerPost.city = formData.city;
-        this.partnnerPost.number = formData.number;
+
+        const address = new AddressModel();
+        address.cep = formData.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
+        address.uf = formData.uf;
+        address.address = formData.address;
+        address.district = formData.district;
+        address.city = formData.city;
+        address.number = formData.number;
+        this.partnnerPost.address = address;
+
         this.partnnerPost.levelId = this.levelId;
         formData.phonesNumbers.forEach((item) => {
             if (item.phoneNumber.length !== 11) {

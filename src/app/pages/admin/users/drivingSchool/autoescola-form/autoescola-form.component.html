@@ -481,14 +481,14 @@
                                         <div class="text-2xl font-semibold leading-tight">Informações Básicas</div>
                                         <div class="mt-4  justify-center ql-align-center justify-items-center">
                                             <ul>
-                                                <li class="mt-3"><b>Razão Social: </b>{{edrivingSchoolPost.corporateName}}</li>
-                                                <li class="mt-3"><b>Nome Fantasia: </b>{{edrivingSchoolPost.fantasyName}}</li>
+                                                <li class="mt-3"><b>Razão Social: </b>{{accountForm.value.corporateName}}</li>
+                                                <li class="mt-3"><b>Nome Fantasia: </b>{{accountForm.value.fantasyName}}</li>
                                                 <li class="mt-3"><b>Inscrição
-                                                    Estadual: </b>{{edrivingSchoolPost.stateRegistration}}</li>
-                                                <li class="mt-3"><b>Email: </b>{{edrivingSchoolPost.email}}</li>
-                                                <li class="mt-3"><b>Site: </b> {{edrivingSchoolPost.site}}</li>
-                                                <li class="mt-3"><b>CNPJ: </b>{{edrivingSchoolPost.cnpj}}</li>
-                                                <li class="mt-3"><b>Descrição: </b>{{edrivingSchoolPost.description}}</li>
+                                                    Estadual: </b>{{accountForm.value.stateRegistration}}</li>
+                                                <li class="mt-3"><b>Email: </b>{{accountForm.value.email}}</li>
+                                                <li class="mt-3"><b>Site: </b> {{accountForm.value.site}}</li>
+                                                <li class="mt-3"><b>CNPJ: </b>{{accountForm.value.cnpj}}</li>
+                                                <li class="mt-3"><b>Descrição: </b>{{accountForm.value.description}}</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -498,25 +498,25 @@
                                         <div class="text-2xl font-semibold leading-tight md:ml-3">Endereço</div>
                                         <div class="mt-4 md:ml-3">
                                             <ul>
-                                                <li class="mt-1"><b>Endereço: </b>{{edrivingSchoolPost.address}}</li>
-                                                <li class="mt-1"><b>Bairro: </b>{{edrivingSchoolPost.district}}</li>
-                                                <li class="mt-1"><b>Cidade: </b>{{edrivingSchoolPost.city}}</li>
-                                                <li class="mt-1"><b>Cep: </b>{{edrivingSchoolPost.cep}}</li>
-                                                <li class="mt-1"><b>UF: </b> {{edrivingSchoolPost.uf}}</li>
-                                                <li class="mt-1"><b>N°: </b>{{edrivingSchoolPost.number}}</li>
+                                                <li class="mt-1"><b>Endereço: </b>{{addressForm.value.address}}</li>
+                                                <li class="mt-1"><b>Bairro: </b>{{addressForm.value.district}}</li>
+                                                <li class="mt-1"><b>Cidade: </b>{{addressForm.value.city}}</li>
+                                                <li class="mt-1"><b>Cep: </b>{{addressForm.value.cep}}</li>
+                                                <li class="mt-1"><b>UF: </b> {{addressForm.value.uf}}</li>
+                                                <li class="mt-1"><b>N°: </b>{{addressForm.value.number}}</li>
                                             </ul>
                                         </div>
                                         <div class="flex flex-col h-auto max-w-120 w-full overflow-hidden mt-5">
                                             <div class="text-2xl font-semibold leading-tight ml-2">Contato</div>
                                             <div class="mt-4 ml-2">
-                                                <ul *ngFor="let item of edrivingSchoolPost.phonesNumbers">
+                                                <ul *ngFor="let item of  drivingSchoolPost.phonesNumbers">
                                                     <li class="mt-1"><b>Telefone: </b>{{item.phoneNumber}}</li>
                                                 </ul>
                                             </div>
                                         </div>
                                         <div class="text-2xl font-semibold leading-tight ml-2 mt-5">Anexos</div>
                                         <div class="mt-4 ml-2">
-                                            <ul *ngFor="let item of edrivingSchoolPost.files">
+                                            <ul *ngFor="let item of drivingSchoolPost.files">
                                                 <li class="mt-1"><b>Doc: </b>{{item.fileName}}</li>
                                             </ul>
                                             <ul *ngFor="let item of filesUpdate">

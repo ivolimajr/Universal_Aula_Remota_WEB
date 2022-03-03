@@ -155,7 +155,6 @@ export class LayoutComponent implements OnInit, OnDestroy {
      * @param theme
      */
     setTheme(theme: Theme): void {
-        console.log(theme);
         this._fuseConfigService.config = {theme};
     }
 

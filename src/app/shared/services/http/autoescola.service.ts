@@ -58,7 +58,6 @@ export class AutoescolaService {
      * @return retorna o usuário ou error
      */
     create(data: DrivingSchoolPost): Observable<DrivingSchoolPost> {
-
         this.header = this.header.set('Authorization', 'Bearer ' + this.accessToken);
         const formData = new FormData();
 

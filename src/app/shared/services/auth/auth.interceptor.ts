@@ -22,10 +22,19 @@ export class AuthInterceptor implements HttpInterceptor {
             });
         }
         // Response
-        return next.handle(newReq).pipe(catchError(err => {
-            this.openSnackBar(err.error.UserMessage ? err.error.UserMessage  : err.error.InnerExceptionMessage);
-            return throwError(err);
-        }))
+        return next.handle(newReq).pipe(catchError((err) => {
+            if(err.error.errors !== undefined) {
+                this.openSnackBar('Requisição inválida');
+                return throwError(err);
+            }
+            else if(err.error.UserMessage !== ''){
+                this.openSnackBar(err.error.UserMessage ? err.error.UserMessage  : err.error.InnerExceptionMessage);
+                return throwError(err);
+             } else{
+                this.openSnackBar('Serviço indisponível');
+                return throwError(err);
+            }
+        }));
     }
     private openSnackBar(message: string): void {
         this.snackBar.open(message, '', {

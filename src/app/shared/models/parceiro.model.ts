@@ -26,11 +26,6 @@ export class PartnnerPost {
     description: string;
     password: string;
     levelId: number;
-    uf: string;
-    cep: string;
-    address: string;
-    district: string;
-    city: string;
-    number: string;
+    address: AddressModel;
     phonesNumbers: Array<PhoneNumberModel>;
 }
