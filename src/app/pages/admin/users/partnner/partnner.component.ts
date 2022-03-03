@@ -1,39 +1,40 @@
 import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Subscription} from 'rxjs';
+import {PartnnerUser} from '../../../../shared/models/parceiro.model';
 import {fuseAnimations} from '../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../@fuse/components/alert';
+import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
-import {AutoescolaService} from '../../../../shared/services/http/autoescola.service';
+import {PartnnerService} from '../../../../shared/services/http/partnner.service';
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
-import {DrivingSchool} from '../../../../shared/models/drivingSchool.model';
-import {Router} from '@angular/router';
+import {PartnnerFormModalComponent} from './partnner-form-modal/partnner-form-modal.component';
 
-const ELEMENT_DATA: DrivingSchool[] = [];
+
+const ELEMENT_DATA: PartnnerUser[] = [];
 
 @Component({
-  selector: 'app-autoescola',
-  templateUrl: './autoescola.component.html',
-  styleUrls: ['./autoescola.component.scss'],
+  selector: 'app-partnner',
+  templateUrl: './partnner.component.html',
+  styleUrls: ['./partnner.component.scss'],
     animations: fuseAnimations
 })
-export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
+export class PartnnerComponent implements AfterViewInit, OnInit,OnDestroy {
 
     alert: { type: FuseAlertType; message: string } = {
         type: 'error',
         message: ''
     };
 
-    displayedColumns: string[] = ['razaoSocial', 'email', 'id'];
-    dataSource = new MatTableDataSource<DrivingSchool>(ELEMENT_DATA);
+    displayedColumns: string[] = ['name', 'email', 'id'];
+    dataSource = new MatTableDataSource<PartnnerUser>(ELEMENT_DATA);
     loading: boolean = true;
     isDeleting: boolean = false;
     showAlert: boolean = false;
-    _users$ = this._autoEscolaServices.getAll();
+    _users$ = this._parceiroServices.getAll();
     private dataSub: Subscription;
     private userSub: Subscription;
 
@@ -42,19 +43,20 @@ export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatPaginator) paginator: MatPaginator;
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    @ViewChild(MatTable) table: MatTable<DrivingSchool>;
+    @ViewChild(MatTable) table: MatTable<PartnnerUser>;
 
-  constructor(
-      public dialog: MatDialog,
-      private _snackBar: MatSnackBar,
-      private _authServices: AuthService,
-      private _changeDetectorRef: ChangeDetectorRef,
-      private _router: Router,
-      private _autoEscolaServices: AutoescolaService
-      ) { }
+    constructor(
+        public dialog: MatDialog,
+        private _snackBar: MatSnackBar,
+        private _authServices: AuthService,
+        private _changeDetectorRef: ChangeDetectorRef,
+        private _parceiroServices: PartnnerService
+    ) {
+    }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
+
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -67,13 +69,30 @@ export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
      * @param id -> se tiver ID exibe e atualiza, caso contrário, adiciona
      * @return void
      */
-    setUser(user: DrivingSchool): void {
+    setUser(user: PartnnerUser): void {
 
         //Atualiza um usuário
         if (user) {
-            this._router.navigate(['usuario/auto-escola', user.id]);
+            const dialogRef = this.dialog.open(PartnnerFormModalComponent);
+            dialogRef.componentInstance.userEdit = user;
+            dialogRef.afterClosed().subscribe((result) => {
+                if (result) {
+                    this.openSnackBar('Atualizado');
+                    this.getUsers();
+                }
+            });
         } else {
-            this._router.navigateByUrl('usuario/auto-escola/inserir');
+            //Cria um usuário
+            this.showAlert = false;
+            const dialogRef = this.dialog.open(PartnnerFormModalComponent);
+            dialogRef.componentInstance.userEdit = user;
+            dialogRef.afterClosed().subscribe((result) => {
+                if(result){
+                    this.dataSource.data = [...this.dataSource.data,result];
+                    this.openSnackBar('Inserido');
+                    this._changeDetectorRef.detectChanges();
+                }
+            });
         }
     }
 
@@ -81,6 +100,7 @@ export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
+
     /**
      * Remove um usuário caso o alert de confirmação dê OK
      *
@@ -124,6 +144,7 @@ export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
         }
         this._changeDetectorRef.markForCheck();
     }
+
     /**
      * Lista os usuários
      *
@@ -131,12 +152,13 @@ export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
      * @return void
      */
     private getUsers(): void {
-        this.dataSub = this._users$.subscribe((items: DrivingSchool[]) => {
+        this.dataSub = this._users$.subscribe((items: PartnnerUser[]) => {
             this.dataSource.data = items;
             this.loading = false;
             this._changeDetectorRef.markForCheck();
         });
     }
+
     /**
      * Remove o usuário
      *
@@ -145,7 +167,7 @@ export class AutoescolaComponent implements AfterViewInit, OnInit,OnDestroy {
      * @return void
      */
     private deleteFromApi(id: number): void {
-        this.userSub = this._autoEscolaServices.delete(id).subscribe((res: any)=>{
+        this.userSub = this._parceiroServices.delete(id).subscribe((res: any)=>{
             if (res.error) {
                 this.isDeleting = false;
                 this._changeDetectorRef.markForCheck();

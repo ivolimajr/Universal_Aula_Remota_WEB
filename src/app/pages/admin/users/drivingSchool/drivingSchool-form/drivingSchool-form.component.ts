@@ -7,7 +7,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {CepService} from '../../../../../shared/services/http/cep.service';
 import {Observable, Subscription} from 'rxjs';
 import {DrivingSchoolPost} from '../../../../../shared/models/drivingSchool.model';
-import {AutoescolaService} from '../../../../../shared/services/http/autoescola.service';
+import {DrivingSchoolService} from '../../../../../shared/services/http/drivingSchool.service';
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
 import {MatDialog} from '@angular/material/dialog';
 import {FileModel, FileModelUpdate} from '../../../../../shared/models/file.model';
@@ -15,10 +15,10 @@ import {UserService} from '../../../../../shared/services/http/user.service';
 import {AddressModel} from '../../../../../shared/models/address.model';
 
 @Component({
-    selector: 'app-autoescola-form',
-    templateUrl: './autoescola-form.component.html'
+    selector: 'app-drivingSchool-form',
+    templateUrl: './drivingSchool-form.component.html'
 })
-export class AutoescolaFormComponent implements OnInit, OnDestroy {
+export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
 
     verticalStepperForm: FormGroup;
     accountForm: FormGroup;
@@ -50,7 +50,7 @@ export class AutoescolaFormComponent implements OnInit, OnDestroy {
         private _router: Router,
         private _changeDetectorRef: ChangeDetectorRef,
         private _cepService: CepService,
-        private _autoEscolaService: AutoescolaService,
+        private _autoEscolaService: DrivingSchoolService,
         private _userServices: UserService,
         private _formBuilder: FormBuilder,
     ) {

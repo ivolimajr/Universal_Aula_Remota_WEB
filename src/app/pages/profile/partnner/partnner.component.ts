@@ -18,7 +18,7 @@ import {PartnnerPost, PartnnerUser} from '../../../shared/models/parceiro.model'
 import {UserService} from '../../../shared/services/http/user.service';
 import {AuthService} from '../../../shared/services/auth/auth.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
-import {ParceiroService} from '../../../shared/services/http/parceiro.service';
+import {PartnnerService} from '../../../shared/services/http/partnner.service';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
 import {environment} from '../../../../environments/environment';
 
@@ -45,7 +45,7 @@ export class PartnnerComponent implements OnInit, OnDestroy {
         private _formBuilder: FormBuilder,
         private _userService: UserService,
         private _authServices: AuthService,
-        private _parceiroServices: ParceiroService,
+        private _parceiroServices: PartnnerService,
         private _changeDetectorRef: ChangeDetectorRef,
         private _storageServices: LocalStorageService
     ) {

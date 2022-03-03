@@ -13,7 +13,7 @@ const URL_AUTOESCOLA_CARGO = `${environment.apiUrl}/DrivingSchoolLevel`;
 @Injectable({
     providedIn: 'root'
 })
-export class AutoescolaService {
+export class DrivingSchoolService {
     @ViewChild('fileInput') selectedFileEl;
 
     header = new HttpHeaders();

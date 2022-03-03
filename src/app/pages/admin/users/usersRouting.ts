@@ -1,9 +1,9 @@
 import {Route} from '@angular/router';
 import {EdrivingComponent} from './edriving/edriving.component';
-import {ParceiroComponent} from './partnner/parceiro.component';
+import {PartnnerComponent} from './partnner/partnner.component';
 import {ParceiroGuard, PlataformaGuard} from '../../../shared/services/guards/user.guard';
-import {AutoescolaComponent} from './drivingSchool/autoescola.component';
-import {AutoescolaFormComponent} from './drivingSchool/autoescola-form/autoescola-form.component';
+import {DrivingSchoolComponent} from './drivingSchool/drivingSchool.component';
+import {DrivingSchoolFormComponent} from './drivingSchool/drivingSchool-form/drivingSchool-form.component';
 
 
 export const usersRouting: Route[] = [
@@ -15,21 +15,21 @@ export const usersRouting: Route[] = [
     {
         path: 'parceiro',
         canActivate: [PlataformaGuard],
-        component: ParceiroComponent
+        component: PartnnerComponent
     },
     {
         path: 'auto-escola',
         canActivate: [ParceiroGuard],
-        component: AutoescolaComponent
+        component: DrivingSchoolComponent
     },
     {
         path: 'auto-escola/inserir',
         canActivate: [ParceiroGuard],
-        component: AutoescolaFormComponent
+        component: DrivingSchoolFormComponent
     },
     {
         path: 'auto-escola/:id',
         canActivate: [ParceiroGuard],
-        component: AutoescolaFormComponent
+        component: DrivingSchoolFormComponent
     }
 ];

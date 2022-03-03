@@ -8,7 +8,7 @@ import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../../@fuse/components/alert';
 import {Level} from '../../../../../shared/models/level.model';
 import {PartnnerPost, PartnnerUser} from '../../../../../shared/models/parceiro.model';
-import {ParceiroService} from '../../../../../shared/services/http/parceiro.service';
+import {PartnnerService} from '../../../../../shared/services/http/partnner.service';
 import {User} from '../../../../../shared/models/user.model';
 import {LocalStorageService} from '../../../../../shared/services/storage/localStorage.service';
 import {AuthService} from '../../../../../shared/services/auth/auth.service';
@@ -18,12 +18,12 @@ import {UserService} from '../../../../../shared/services/http/user.service';
 import {AddressModel} from '../../../../../shared/models/address.model';
 
 @Component({
-    selector: 'app-parceiro-form-modal',
-    templateUrl: './parceiro-form-modal.component.html',
+    selector: 'app-partnner-form-modal',
+    templateUrl: './partnner-form-modal.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations
 })
-export class ParceiroFormModalComponent implements OnInit, OnDestroy {
+export class PartnnerFormModalComponent implements OnInit, OnDestroy {
 
     alert: { type: FuseAlertType; message: string } = {
         type: 'error',
@@ -52,9 +52,9 @@ export class ParceiroFormModalComponent implements OnInit, OnDestroy {
         public dialog: MatDialog,
         private _snackBar: MatSnackBar,
         private _formBuilder: FormBuilder,
-        public dialogRef: MatDialogRef<ParceiroFormModalComponent>,
+        public dialogRef: MatDialogRef<PartnnerFormModalComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _parceiroServices: ParceiroService,
+        private _parceiroServices: PartnnerService,
         private _userServices: UserService,
         private _authServices: AuthService,
         private _cepService: CepService,

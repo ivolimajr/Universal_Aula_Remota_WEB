@@ -1,40 +1,39 @@
 import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Subscription} from 'rxjs';
-import {PartnnerUser} from '../../../../shared/models/parceiro.model';
 import {fuseAnimations} from '../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../@fuse/components/alert';
-import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
-import {ParceiroService} from '../../../../shared/services/http/parceiro.service';
+import {DrivingSchoolService} from '../../../../shared/services/http/drivingSchool.service';
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
-import {ParceiroFormModalComponent} from './parceiro-form-modal/parceiro-form-modal.component';
+import {DrivingSchool} from '../../../../shared/models/drivingSchool.model';
+import {Router} from '@angular/router';
 
-
-const ELEMENT_DATA: PartnnerUser[] = [];
+const ELEMENT_DATA: DrivingSchool[] = [];
 
 @Component({
-  selector: 'app-parceiro',
-  templateUrl: './parceiro.component.html',
-  styleUrls: ['./parceiro.component.scss'],
+  selector: 'app-drivingSchool',
+  templateUrl: './drivingSchool.component.html',
+  styleUrls: ['./drivingSchool.component.scss'],
     animations: fuseAnimations
 })
-export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
+export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
 
     alert: { type: FuseAlertType; message: string } = {
         type: 'error',
         message: ''
     };
 
-    displayedColumns: string[] = ['nome', 'email', 'id'];
-    dataSource = new MatTableDataSource<PartnnerUser>(ELEMENT_DATA);
+    displayedColumns: string[] = ['corporateName', 'email', 'id'];
+    dataSource = new MatTableDataSource<DrivingSchool>(ELEMENT_DATA);
     loading: boolean = true;
     isDeleting: boolean = false;
     showAlert: boolean = false;
-    _users$ = this._parceiroServices.getAll();
+    _users$ = this._autoEscolaServices.getAll();
     private dataSub: Subscription;
     private userSub: Subscription;
 
@@ -43,20 +42,19 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatPaginator) paginator: MatPaginator;
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    @ViewChild(MatTable) table: MatTable<PartnnerUser>;
+    @ViewChild(MatTable) table: MatTable<DrivingSchool>;
 
-    constructor(
-        public dialog: MatDialog,
-        private _snackBar: MatSnackBar,
-        private _authServices: AuthService,
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _parceiroServices: ParceiroService
-    ) {
-    }
+  constructor(
+      public dialog: MatDialog,
+      private _snackBar: MatSnackBar,
+      private _authServices: AuthService,
+      private _changeDetectorRef: ChangeDetectorRef,
+      private _router: Router,
+      private _autoEscolaServices: DrivingSchoolService
+      ) { }
 
-    ngOnInit(): void {
-    }
-
+  ngOnInit(): void {
+  }
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -69,30 +67,13 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
      * @param id -> se tiver ID exibe e atualiza, caso contrário, adiciona
      * @return void
      */
-    setUser(user: PartnnerUser): void {
+    setUser(user: DrivingSchool): void {
 
         //Atualiza um usuário
         if (user) {
-            const dialogRef = this.dialog.open(ParceiroFormModalComponent);
-            dialogRef.componentInstance.userEdit = user;
-            dialogRef.afterClosed().subscribe((result) => {
-                if (result) {
-                    this.openSnackBar('Atualizado');
-                    this.getUsers();
-                }
-            });
+            this._router.navigate(['usuario/auto-escola', user.id]);
         } else {
-            //Cria um usuário
-            this.showAlert = false;
-            const dialogRef = this.dialog.open(ParceiroFormModalComponent);
-            dialogRef.componentInstance.userEdit = user;
-            dialogRef.afterClosed().subscribe((result) => {
-                if(result){
-                    this.dataSource.data = [...this.dataSource.data,result];
-                    this.openSnackBar('Inserido');
-                    this._changeDetectorRef.detectChanges();
-                }
-            });
+            this._router.navigateByUrl('usuario/auto-escola/inserir');
         }
     }
 
@@ -100,7 +81,6 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
-
     /**
      * Remove um usuário caso o alert de confirmação dê OK
      *
@@ -144,7 +124,6 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
         }
         this._changeDetectorRef.markForCheck();
     }
-
     /**
      * Lista os usuários
      *
@@ -152,13 +131,12 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
      * @return void
      */
     private getUsers(): void {
-        this.dataSub = this._users$.subscribe((items: PartnnerUser[]) => {
+        this.dataSub = this._users$.subscribe((items: DrivingSchool[]) => {
             this.dataSource.data = items;
             this.loading = false;
             this._changeDetectorRef.markForCheck();
         });
     }
-
     /**
      * Remove o usuário
      *
@@ -167,7 +145,7 @@ export class ParceiroComponent implements AfterViewInit, OnInit,OnDestroy {
      * @return void
      */
     private deleteFromApi(id: number): void {
-        this.userSub = this._parceiroServices.delete(id).subscribe((res: any)=>{
+        this.userSub = this._autoEscolaServices.delete(id).subscribe((res: any)=>{
             if (res.error) {
                 this.isDeleting = false;
                 this._changeDetectorRef.markForCheck();

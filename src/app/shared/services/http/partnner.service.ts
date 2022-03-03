@@ -13,7 +13,7 @@ const URL_PARCEIRO_CARGO = `${environment.apiUrl}/PartnnerLevel`;
 @Injectable({
     providedIn: 'root'
 })
-export class ParceiroService {
+export class PartnnerService {
 
     constructor(private _httpClient: HttpClient) {
     }

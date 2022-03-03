@@ -15,7 +15,7 @@ import {EdrivingService} from '../../shared/services/http/edriving.service';
 import {EdrivingUser} from '../../shared/models/edriving.model';
 import {AuthService} from '../../shared/services/auth/auth.service';
 import {PartnnerUser} from '../../shared/models/parceiro.model';
-import {ParceiroService} from '../../shared/services/http/parceiro.service';
+import {PartnnerService} from '../../shared/services/http/partnner.service';
 import {AddressModel} from '../../shared/models/address.model';
 import {RolesConstants} from '../../shared/constants';
 
@@ -47,7 +47,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _authService: AuthService,
         private _edrivingServices: EdrivingService,
-        private _parceiroServices: ParceiroService
+        private _parceiroServices: PartnnerService
     ) {
     }
 
