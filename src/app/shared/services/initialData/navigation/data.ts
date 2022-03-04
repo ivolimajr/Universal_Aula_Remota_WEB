@@ -23,7 +23,7 @@ export const plataformaNavigation: FuseNavigationItem[] =[
         id: 'parceiro',
         title: 'Parceiros',
         type: 'basic',
-        icon: 'heroicons_outline:user-group',
+        icon: 'heroicons_outline:office-building',
         link: '/usuario/parceiro'
     }
 ];
@@ -43,7 +43,7 @@ export const autoEscolaNavigation: FuseNavigationItem[] =[
         id: 'administrativo',
         title: 'Administrativos',
         type: 'basic',
-        icon: 'heroicons_outline:truck',
-        link: '/usuario/auto-escola'
+        icon: 'heroicons_outline:book-open',
+        link: '/usuario/administrativo'
     }
 ];

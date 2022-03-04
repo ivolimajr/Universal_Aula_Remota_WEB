@@ -4,6 +4,7 @@ import {PartnnerComponent} from './partnner/partnner.component';
 import {ParceiroGuard, PlataformaGuard} from '../../../shared/services/guards/user.guard';
 import {DrivingSchoolComponent} from './drivingSchool/drivingSchool.component';
 import {DrivingSchoolFormComponent} from './drivingSchool/drivingSchool-form/drivingSchool-form.component';
+import {AdministrativeComponent} from './administrative/administrative.component';
 
 
 export const usersRouting: Route[] = [
@@ -31,5 +32,10 @@ export const usersRouting: Route[] = [
         path: 'auto-escola/:id',
         canActivate: [ParceiroGuard],
         component: DrivingSchoolFormComponent
+    },
+    {
+        path: 'administrativo',
+        canActivate: [ParceiroGuard],
+        component: AdministrativeComponent
     }
 ];

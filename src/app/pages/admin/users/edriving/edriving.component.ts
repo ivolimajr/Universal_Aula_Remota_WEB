@@ -23,7 +23,7 @@ const ELEMENT_DATA: EdrivingUser[] = [];
 
 export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
 
-    displayedColumns: string[] = ['nome', 'email', 'id']; //Exibe as colunas da tabela
+    displayedColumns: string[] = ['name', 'email', 'id']; //Exibe as colunas da tabela
     dataSource = new MatTableDataSource<EdrivingUser>(ELEMENT_DATA); //Dados da tabela
     loading: boolean = true;
     isDeleting: boolean = false;
@@ -62,7 +62,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
      * @param id -> se tiver ID exibe e atualiza, caso contrário, adiciona
      * @return void
      */
-    setUser(user: EdrivingUser): void {
+    addUser(user: EdrivingUser): void {
 
         //Atualiza um usuário
         if (user) {

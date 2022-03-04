@@ -13,6 +13,8 @@ import {CustomMaterialModule} from '../../../shared/material.module';
 import {TextMaskModule} from 'angular2-text-mask';
 import { DrivingSchoolComponent } from './drivingSchool/drivingSchool.component';
 import { DrivingSchoolFormComponent } from './drivingSchool/drivingSchool-form/drivingSchool-form.component';
+import { AdministrativeComponent } from './administrative/administrative.component';
+import { AdministrativeFormComponent } from './administrative/administrative-form/administrative-form.component';
 
 
 @NgModule({
@@ -23,7 +25,9 @@ import { DrivingSchoolFormComponent } from './drivingSchool/drivingSchool-form/d
         PartnnerComponent,
         PartnnerFormModalComponent,
         DrivingSchoolComponent,
-        DrivingSchoolFormComponent
+        DrivingSchoolFormComponent,
+        AdministrativeComponent,
+        AdministrativeFormComponent
     ],
     exports: [
         PartnnerComponent

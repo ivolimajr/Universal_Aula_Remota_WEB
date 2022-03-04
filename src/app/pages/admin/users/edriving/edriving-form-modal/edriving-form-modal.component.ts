@@ -4,7 +4,6 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {Observable, of, Subscription} from 'rxjs';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
-import {FuseAlertType} from '../../../../../../@fuse/components/alert';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EdrivingPost, EdrivingUser} from 'app/shared/models/edriving.model';
 import {EdrivingService} from '../../../../../shared/services/http/edriving.service';
@@ -24,12 +23,6 @@ import {AlertModalComponent} from '../../../../../layout/common/alert/alert-moda
 })
 export class EdrivingFormModalComponent implements OnInit, OnDestroy {
 
-    alert: { type: FuseAlertType; message: string } = {
-        type: 'error',
-        message: ''
-    };
-
-    // eslint-disable-next-line @typescript-eslint/member-ordering
     @Input() userEdit: EdrivingUser; //Se vier um ID, exibir e atualizar o usuário
     accountForm: FormGroup;
     masks = MASKS;
