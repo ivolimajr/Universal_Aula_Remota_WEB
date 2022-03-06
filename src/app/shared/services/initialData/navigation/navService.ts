@@ -51,6 +51,17 @@ export class NavServices {
 
                 if (this._authServices.getUserInfoFromStorage()) {
                     this.roles = this._authServices.getUserInfoFromStorage().roles;
+                } else {
+                    this._dataNavigation.push(...this._defaultNavigation);
+                    return [
+                        200,
+                        {
+                            compact: cloneDeep(this._dataNavigation),
+                            default: cloneDeep(this._dataNavigation),
+                            futuristic: cloneDeep(this._dataNavigation),
+                            horizontal: cloneDeep(this._dataNavigation)
+                        }
+                    ];
                 }
 
                 //Montagem do menu para os usuário da plataforma do tipo Edriving
@@ -59,47 +70,27 @@ export class NavServices {
                     this._dataNavigation.push(...this._plataformaNavigation);
                     this._dataNavigation.push(...this._parceiroNavigation);
                     this._dataNavigation.push(...this._autoEscolaNavigation);
-                    // Return the response
-                    return [
-                        200,
-                        {
-                            compact: cloneDeep(this._dataNavigation),
-                            default: cloneDeep(this._dataNavigation),
-                            futuristic: cloneDeep(this._dataNavigation),
-                            horizontal: cloneDeep(this._dataNavigation)
-                        }
-                    ];
                 }
                 //Montagem do menu para os usuários do tipo parceiro
-                if (this.roles.find(r => r.role === RolesConstants.EDRIVING) || this.roles.find(r => r.role === RolesConstants.PARCEIRO)) {
+                else if (this.roles.find(r => r.role === RolesConstants.EDRIVING) || this.roles.find(r => r.role === RolesConstants.PARCEIRO)) {
                     this._dataNavigation.push(...this._defaultNavigation);
                     this._dataNavigation.push(...this._parceiroNavigation);
-                    // Return the response
-                    return [
-                        200,
-                        {
-                            compact: cloneDeep(this._dataNavigation),
-                            default: cloneDeep(this._dataNavigation),
-                            futuristic: cloneDeep(this._dataNavigation),
-                            horizontal: cloneDeep(this._dataNavigation)
-                        }
-                    ];
                 }
                 //Montagem do menu para os usuários do tipo autoEscola
-                if (this.roles.find(r => r.role === RolesConstants.EDRIVING) || this.roles.find(r => r.role === RolesConstants.AUTOESCOLA)) {
+                else if (this.roles.find(r => r.role === RolesConstants.EDRIVING) || this.roles.find(r => r.role === RolesConstants.AUTOESCOLA)) {
                     this._dataNavigation.push(...this._defaultNavigation);
                     this._dataNavigation.push(...this._autoEscolaNavigation);
-                    // Return the response
-                    return [
-                        200,
-                        {
-                            compact: cloneDeep(this._dataNavigation),
-                            default: cloneDeep(this._dataNavigation),
-                            futuristic: cloneDeep(this._dataNavigation),
-                            horizontal: cloneDeep(this._dataNavigation)
-                        }
-                    ];
                 }
+                // Return the response
+                return [
+                    200,
+                    {
+                        compact: cloneDeep(this._dataNavigation),
+                        default: cloneDeep(this._dataNavigation),
+                        futuristic: cloneDeep(this._dataNavigation),
+                        horizontal: cloneDeep(this._dataNavigation)
+                    }
+                ];
             });
     }
 }
