@@ -93,6 +93,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
             this._changeDetectorRef.markForCheck();
 
             if (this.userEdit) {
+                console.log(this.partnnerPost);
                 this.userSub = this._parceiroServices.update(this.partnnerPost).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();

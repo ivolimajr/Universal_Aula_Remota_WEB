@@ -18,7 +18,7 @@ const ELEMENT_DATA: AdministrativeUser[] = [];
 })
 export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy {
 
-    displayedColumns: string[] = ['name', 'email', 'drivingSchool.fantasyName', 'id']; //Exibe as colunas da tabela
+    displayedColumns: string[] = ['name', 'email', 'id']; //Exibe as colunas da tabela
     dataSource = new MatTableDataSource<AdministrativeUser>(ELEMENT_DATA); //Dados da tabela
     isDeleting: boolean = false;
     _users$ = this._administrativeServices.getAll();
