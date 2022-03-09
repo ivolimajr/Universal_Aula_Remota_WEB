@@ -6,13 +6,13 @@
 
         <ng-container *ngIf="!userEdit; else editMode">
             <div class="text-3xl font-bold tracking-tight leading-tight">Novo Usuário</div>
-            <div class="mt-2 text-md font-medium tracking-tight text-secondary">Vocês está cadastrando um novo usuário
+            <div class="mt-2 text-md font-medium tracking-tight text-secondary">Você está cadastrando um novo usuário
                 do tipo Edriving
             </div>
         </ng-container>
         <ng-template #editMode>
             <div class="text-3xl font-bold tracking-tight leading-tight">Dados do Usuário</div>
-            <div class="mt-2 text-md font-medium tracking-tight text-secondary">Vocês está editando um usuário do tipo
+            <div class="mt-2 text-md font-medium tracking-tight text-secondary">Você está editando um usuário do tipo
                 Edriving
             </div>
         </ng-template>
