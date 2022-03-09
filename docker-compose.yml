@@ -1,0 +1,8 @@
+version: '2.1'
+
+services:
+    aula-remota-web:
+        image: aula-remota-web
+        build: .
+        ports:
+            - 8081:80
