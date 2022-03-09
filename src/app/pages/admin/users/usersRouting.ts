@@ -6,6 +6,7 @@ import {DrivingSchoolFormComponent} from './drivingSchool/drivingSchool-form/dri
 import {AdministrativeComponent} from './administrative/administrative.component';
 import {EdrivingGuard} from '../../../shared/services/guards/edriving.guard';
 import { PartnnerGuard } from 'app/shared/services/guards/partnner.guard';
+import {DrivingSchoolGuard} from '../../../shared/services/guards/drivingSchool.guard';
 
 
 export const usersRouting: Route[] = [
@@ -36,7 +37,7 @@ export const usersRouting: Route[] = [
     },
     {
         path: 'administrativo',
-        canActivate: [EdrivingGuard],
+        canActivate: [DrivingSchoolGuard],
         component: AdministrativeComponent
     }
 ];

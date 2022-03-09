@@ -12,7 +12,6 @@ import {AlertModalComponent} from '../../../../../layout/common/alert/alert-moda
 import {MatDialog} from '@angular/material/dialog';
 import {FileModel, FileModelUpdate} from '../../../../../shared/models/file.model';
 import {UserService} from '../../../../../shared/services/http/user.service';
-import {AddressModel} from '../../../../../shared/models/address.model';
 
 @Component({
     selector: 'app-drivingSchool-form',
@@ -20,7 +19,6 @@ import {AddressModel} from '../../../../../shared/models/address.model';
 })
 export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
 
-    verticalStepperForm: FormGroup;
     accountForm: FormGroup;
     addressForm: FormGroup;
     contactForm: FormGroup;
@@ -171,7 +169,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                 this.loadingForm = false;
                 this._changeDetectorRef.markForCheck();
                 return this.closeAlert();
-                ;
             });
         });
     }
@@ -203,7 +200,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
 
         //Se não tiver um ID, significa que está criando um novo usuário
         if (!this.id) {
-            console.log(this.drivingSchoolPost);
             this.userSub = this._autoEscolaService.create(this.drivingSchoolPost).subscribe((res: any) => {
                 if (res.error) {return this.closeAlert();}
                 this.closeAlert();
@@ -635,7 +631,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                     })
                 );
             }
-            // Adiciona o array de telefones ao fomrGroup
+            // Adiciona o array de telefones ao formGroup
             this.phoneArray.forEach((item) => {
                 (this.contactForm.get('phonesNumbers') as FormArray).push(item);
             });
@@ -666,7 +662,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
 
             }
 
-            // Adiciona o array de telefones ao fomrGroup
+            // Adiciona o array de telefones ao formGroup
             this.fileArray.forEach((item) => {
                 (this.filesForm.get('files') as FormArray).push(item);
             });

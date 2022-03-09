@@ -29,7 +29,6 @@ export class AdministrativeFormComponent implements OnInit {
 
     private getUser(): void {
         if (!this.id) {
-            console.log('Aqui');
             this.prepareForm(null);
         } else {
             this.userSub = this._administrativeServices.getOne(this.id)
