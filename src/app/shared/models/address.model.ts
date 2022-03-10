@@ -5,5 +5,5 @@ export class AddressModel {
     address: string;
     district: string;
     city: string;
-    number: string;
+    addressNumber: string;
 }

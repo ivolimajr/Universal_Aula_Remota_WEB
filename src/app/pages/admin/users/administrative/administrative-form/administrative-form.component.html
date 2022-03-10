@@ -2,17 +2,17 @@
     <mat-progress-bar class="mb-5" [mode]="'indeterminate'"></mat-progress-bar>
 </ng-container>
 <div mat-dialog-content>
-    <fuse-card class="flex-col w-full max-w-300 p-6 sm:py-12 sm:px-10 filter-pricing border-2 border-gray-100">
+    <fuse-card class="flex-col p-6 sm:py-12 sm:px-10 filter-pricing border-2 border-gray-100">
 
         <ng-container *ngIf="!id; else editMode">
             <div class="text-3xl font-bold tracking-tight leading-tight">Novo Usuário</div>
-            <div class="mt-2 text-md font-medium tracking-tight text-secondary">Vocês está cadastrando um novo usuário
+            <div class="mt-2 text-md font-medium tracking-tight text-secondary">Você está cadastrando um novo usuário
                 do tipo Edriving
             </div>
         </ng-container>
         <ng-template #editMode>
             <div class="text-3xl font-bold tracking-tight leading-tight">Dados do Usuário</div>
-            <div class="mt-2 text-md font-medium tracking-tight text-secondary">Vocês está editando um usuário do tipo
+            <div class="mt-2 text-md font-medium tracking-tight text-secondary">Você está editando um usuário do tipo
                 Edriving
             </div>
         </ng-template>
@@ -24,12 +24,12 @@
                 <form [formGroup]="userForm">
 
                     <!--start: Nome-->
-                    <div class="sm:col-span-4">
+                    <div class="sm:col-span-4 mt-2.5">
                         <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
                             <mat-label for="name">Nome</mat-label>
                             <mat-icon
                                 class="icon-size-5 mr-0.5"
-                                [svgIcon]="'heroicons_solid:user'"
+                                [svgIcon]="'heroicons_solid:mail'"
                                 matPrefix></mat-icon>
                             <input
                                 id="name"
@@ -84,14 +84,186 @@
                     </div>
                     <!--end:CPF-->
 
-                    <div class="my-5 border-t"></div>
+                    <!--start: Identity-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="identity">Identidade</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:identification'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="identity"
+                                matInput
+                                [formControlName]="'identity'">
 
+                        </mat-form-field>
+                        <mat-error *ngIf="userForm.get('identity').hasError('identity')">
+                            Insira um RG válido
+                        </mat-error>
+                    </div>
+                    <!--end:Identity-->
+
+                    <!--start: Origin-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="origin">Orgão Expeditor</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:information-circle'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="origin"
+                                matInput
+                                [formControlName]="'origin'">
+
+                        </mat-form-field>
+                        <mat-error *ngIf="userForm.get('origin').hasError('origin')">
+                            Insira um orgão válido válido
+                        </mat-error>
+                    </div>
+                    <!--end:Origin-->
+
+                    <!--start:uf-->
+                    <mat-form-field appearance="legacy">
+                        <mat-label>Estado Emissor</mat-label>
+                        <mat-select [formControl]="ufOrigin" required>
+                            <mat-option *ngFor="let item of ufList" value="{{item}}">{{item}}</mat-option>
+                        </mat-select>
+                        <mat-hint align="end">Selecione a UF</mat-hint>
+                    </mat-form-field>
+                    <!--end:uf-->
+                </form>
+
+                <div class="my-5 border-t"></div>
+
+                <form [formGroup]="addressForm">
+
+                    <!--start: Cep-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="cep">Cep</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:hashtag'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="cep"
+                                (blur)="buscaCep($event.target)"
+                                matInput
+                                [formControlName]="'cep'">
+
+                        </mat-form-field>
+                        <mat-error *ngIf="addressForm.get('cep').hasError('cep')">
+                            Insira um cep válido
+                        </mat-error>
+                    </div>
+                    <!--end:Cep-->
+
+                    <!--start: Address-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="address">Endereço</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:location-marker'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="address"
+                                matInput
+                                [formControlName]="'address'">
+
+                        </mat-form-field>
+                        <mat-error *ngIf="addressForm.get('address').hasError('address')">
+                            Insira um endereço válido
+                        </mat-error>
+                    </div>
+                    <!--end:Address-->
+
+                    <!--start: district-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="district">Bairro</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:home'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="district"
+                                matInput
+                                [formControlName]="'district'">
+
+                        </mat-form-field>
+                        <mat-error *ngIf="addressForm.get('district').hasError('district')">
+                            Insira um bairro válido
+                        </mat-error>
+                    </div>
+                    <!--end:district-->
+
+                    <!--start: city-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="city">Cidade</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:map'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="city"
+                                matInput
+                                [formControlName]="'city'">
+
+                        </mat-form-field>
+                        <mat-error *ngIf="addressForm.get('city').hasError('city')">
+                            Insira uma cidade válido
+                        </mat-error>
+                    </div>
+                    <!--end:city-->
+
+                    <!--start: uf-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="uf">Estado</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:location-marker'"
+                                matPrefix></mat-icon>
+                            <mat-select [formControlName]="'uf'">
+                                <mat-option *ngFor="let item of ufList" [value]="item">{{item}}</mat-option>
+                            </mat-select>
+
+                        </mat-form-field>
+                        <mat-error *ngIf="addressForm.get('uf').hasError('uf')">
+                            Insira um cidade válido
+                        </mat-error>
+                    </div>
+                    <!--end:uf-->
+
+                    <!--start: number-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="addressNumber">Número</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:annotation'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="addressNumber"
+                                matInput
+                                [formControlName]="'addressNumber'">
+
+                        </mat-form-field>
+                        <mat-error *ngIf="addressForm.get('addressNumber').hasError('addressNumber')">
+                            Insira um valor válido
+                        </mat-error>
+                    </div>
+                    <!--end:number-->
                 </form>
             </div>
             <!-- start:Submit -->
             <button
                 class="ml-1 items-center"
-                [disabled]="userForm.invalid || userForm.disabled"
+                [disabled]="userForm.invalid || userForm.disabled || ufOrigin.invalid || addressForm.invalid || addressForm.disabled"
                 class="fuse-mat-button-large mt-10"
                 mat-stroked-button
                 (click)="submit()"

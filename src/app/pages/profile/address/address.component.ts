@@ -131,7 +131,7 @@ export class AddressComponent implements OnInit, OnDestroy {
         this.addressModel.address = formValue.address;
         this.addressModel.district = formValue.district;
         this.addressModel.city = formValue.city;
-        this.addressModel.number = formValue.number;
+        this.addressModel.addressNumber = formValue.addressNumber;
         return result;
     }
 
@@ -169,7 +169,7 @@ export class AddressComponent implements OnInit, OnDestroy {
                 Validators.minLength(5),
                 Validators.maxLength(100)
             ])],
-            number: [this.addressModel.number, Validators.compose([
+            addressNumber: [this.addressModel.addressNumber, Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
                 Validators.minLength(1),

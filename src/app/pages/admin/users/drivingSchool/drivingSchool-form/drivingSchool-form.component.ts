@@ -303,7 +303,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
             this.drivingSchoolPost.uf = data.uf;
             this.drivingSchoolPost.district = data.district;
             this.drivingSchoolPost.city = data.city;
-            this.drivingSchoolPost.number = data.number;
+            this.drivingSchoolPost.addressNumber = data.addressNumber;
             this.drivingSchoolPost.address = data.address;
         }
         // dados de contato
@@ -433,7 +433,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
-            number: ['240',
+            addressNumber: ['240',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -585,7 +585,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                         Validators.nullValidator,
                         Validators.minLength(3),
                         Validators.maxLength(150)])],
-                number: [res.address.number,
+                addressNumber: [res.address.addressNumber,
                     Validators.compose([
                         Validators.required,
                         Validators.nullValidator,

@@ -23,11 +23,12 @@ export class AuthInterceptor implements HttpInterceptor {
         }
         // Response
         return next.handle(newReq).pipe(catchError((err) => {
+            console.log(err);
             if(err.error.errors !== undefined) {
                 this.openSnackBar('Requisição inválida');
                 return throwError(err);
             }
-            else if(err.error.UserMessage !== ''){
+            else if(err.error.UserMessage !== '' || !err.ok){
                 this.openSnackBar(err.error.UserMessage ? err.error.UserMessage  : err.error.InnerExceptionMessage);
                 return throwError(err);
              } else{

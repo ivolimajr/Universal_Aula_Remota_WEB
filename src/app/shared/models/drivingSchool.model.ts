@@ -35,7 +35,7 @@ export class DrivingSchoolPost {
     address: string;
     district: string;
     city: string;
-    number: string;
+    addressNumber: string;
     password: string;
     files: Array<FileModel>;
     phonesNumbers: Array<PhoneNumberModel>;

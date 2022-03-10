@@ -289,7 +289,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
-            number: ['',
+            addressNumber: ['',
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
@@ -369,7 +369,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         address.address = formData.address;
         address.district = formData.district;
         address.city = formData.city;
-        address.number = formData.number;
+        address.addressNumber = formData.addressNumber;
         this.partnnerPost.address = address;
 
         this.partnnerPost.levelId = this.levelId;
@@ -445,7 +445,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(3),
                     Validators.maxLength(150)])],
-            number: [this.userEdit.address.number,
+            addressNumber: [this.userEdit.address.addressNumber,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,

@@ -119,7 +119,7 @@
                             <mat-label for="cep">CEP</mat-label>
                             <mat-icon
                                 class="icon-size-5 mr-0.5"
-                                [svgIcon]="'heroicons_solid:credit-card'"
+                                [svgIcon]="'heroicons_solid:hashtag'"
                                 matPrefix></mat-icon>
                             <input
                                 id="cep"
@@ -140,7 +140,7 @@
                             <mat-label for="address">Endereço</mat-label>
                             <mat-icon
                                 class="icon-size-5 mr-0.5"
-                                [svgIcon]="'heroicons_solid:credit-card'"
+                                [svgIcon]="'heroicons_solid:location-marker'"
                                 matPrefix></mat-icon>
                             <input
                                 id="address"
@@ -159,7 +159,7 @@
                             <mat-label for="district">Bairro</mat-label>
                             <mat-icon
                                 class="icon-size-5 mr-0.5"
-                                [svgIcon]="'heroicons_solid:credit-card'"
+                                [svgIcon]="'heroicons_solid:home'"
                                 matPrefix></mat-icon>
                             <input
                                 id="district"
@@ -178,7 +178,7 @@
                             <mat-label for="uf">Estado</mat-label>
                             <mat-icon
                                 class="icon-size-5 mr-0.5"
-                                [svgIcon]="'heroicons_solid:credit-card'"
+                                [svgIcon]="'heroicons_solid:location-marker'"
                                 matPrefix></mat-icon>
                             <mat-select [formControlName]="'uf'">
                                 <mat-option *ngFor="let item of states" [value]="item">{{item}}</mat-option>
@@ -196,7 +196,7 @@
                             <mat-label for="city">Cidade</mat-label>
                             <mat-icon
                                 class="icon-size-5 mr-0.5"
-                                [svgIcon]="'heroicons_solid:credit-card'"
+                                [svgIcon]="'heroicons_solid:map'"
                                 matPrefix></mat-icon>
                             <input
                                 id="city"
@@ -212,18 +212,18 @@
                     <!--start: numero-->
                     <div class="sm:col-span-4 mt-2.5">
                         <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
-                            <mat-label for="number">Número</mat-label>
+                            <mat-label for="addressNumber">Número</mat-label>
                             <mat-icon
                                 class="icon-size-5 mr-0.5"
-                                [svgIcon]="'heroicons_solid:credit-card'"
+                                [svgIcon]="'heroicons_solid:annotation'"
                                 matPrefix></mat-icon>
                             <input
-                                id="number"
+                                id="addressNumber"
                                 matInput
-                                [formControlName]="'number'">
+                                [formControlName]="'addressNumber'">
 
                         </mat-form-field>
-                        <mat-error *ngIf="accountForm.get('number').hasError('number')">
+                        <mat-error *ngIf="accountForm.get('addressNumber').hasError('addressNumber')">
                             Insira um numero válido
                         </mat-error>
                     </div>
