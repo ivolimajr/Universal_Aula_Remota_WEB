@@ -2,7 +2,6 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy,
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Observable, of, Subscription} from 'rxjs';
-import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EdrivingPost, EdrivingUser} from 'app/shared/models/edriving.model';
@@ -25,7 +24,6 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
 
     @Input() userEdit: EdrivingUser; //Se vier um ID, exibir e atualizar o usuário
     accountForm: FormGroup;
-    masks = MASKS;
     loading: boolean = true; //Inicia o componente com um lading
     message: string = null; //Mensagem quando estiver salvando ou editando um usuário
     levels: Level[]; //Lista com os cargos
@@ -229,8 +227,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(11),
-                    Validators.maxLength(14),
-                    NgBrazilValidators.cpf])],
+                    Validators.maxLength(14)])],
             email: ['apagar22@email.com',
                 Validators.compose([
                     Validators.required,

@@ -7,7 +7,6 @@ import {
     OnInit,
     ViewEncapsulation
 } from '@angular/core';
-import {MASKS} from 'ng-brazil';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -34,7 +33,6 @@ export class PartnnerComponent implements OnInit, OnDestroy {
 
     accountForm: FormGroup;
     user: User;
-    masks = MASKS;
     private partnnerPost = new PartnnerPost();
     private userSub: Subscription;
     private phoneSub: Subscription;
@@ -149,7 +147,7 @@ export class PartnnerComponent implements OnInit, OnDestroy {
         }
         this.phoneSub = this._userService.removePhonenumber(id)
             .subscribe((res) => {
-                if (!res) return this.openSnackBar('Telefone já em uso', 'warn');
+                if (!res) {return this.openSnackBar('Telefone já em uso', 'warn');}
                 const phoneNumbersFormArray = this.accountForm.get('phonesNumbers') as FormArray;
                 // Remove the phone number field
                 phoneNumbersFormArray.removeAt(index);

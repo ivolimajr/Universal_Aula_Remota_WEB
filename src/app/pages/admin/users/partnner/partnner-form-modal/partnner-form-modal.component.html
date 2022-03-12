@@ -74,7 +74,6 @@
                             <input
                                 id="cnpj"
                                 matInput
-                                cnpj [textMask]="{mask: masks.cnpj.textMask}"
                                 [formControlName]="'cnpj'">
 
                         </mat-form-field>
@@ -125,7 +124,7 @@
                                 id="cep"
                                 (blur)="buscaCep($event.target)"
                                 matInput
-                                cep [textMask]="{mask: masks.cep.textMask}"
+                                [formControlName]="'cep'">
                                 [formControlName]="'cep'">
 
                         </mat-form-field>
@@ -241,7 +240,6 @@
                                         <mat-label>Telefone</mat-label>
                                         <input
                                             matInput
-                                            phoneNumber [textMask]="{mask: masks.telefone.textMaskFunction}"
                                             [placeholder]="'phoneNumber'"
                                             [formControl]="phoneNumber.get('phoneNumber')"
                                             [value]="phoneNumber.value.phoneNumber ?? ''">

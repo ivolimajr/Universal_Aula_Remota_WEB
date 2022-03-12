@@ -1,7 +1,6 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {formatDate} from '@angular/common';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CepService} from '../../../../../shared/services/http/cep.service';
@@ -24,7 +23,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
     contactForm: FormGroup;
     filesForm: FormGroup;
 
-    masks = MASKS;
     loading: boolean = false; //Inicia o componente com um lading
     loadingForm: boolean = false; //Inicia o componente com um lading
     saving: boolean = false;
@@ -397,8 +395,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
             cnpj: ['51862639000117',
                 Validators.compose([
                     Validators.required,
-                    Validators.maxLength(18),
-                    NgBrazilValidators.cnpj
+                    Validators.maxLength(18)
                 ])],
         });
         this.addressForm = this._formBuilder.group({
@@ -407,8 +404,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(8),
-                    Validators.maxLength(10),
-                    NgBrazilValidators.cep])],
+                    Validators.maxLength(10)])],
             address: ['Travessa SF-2',
                 Validators.compose([
                     Validators.required,
@@ -548,8 +544,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                 cnpj: [res.cnpj,
                     Validators.compose([
                         Validators.required,
-                        Validators.maxLength(18),
-                        NgBrazilValidators.cnpj
+                        Validators.maxLength(18)
                     ])],
             });
             this.addressForm = this._formBuilder.group({
@@ -558,8 +553,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                         Validators.required,
                         Validators.nullValidator,
                         Validators.minLength(8),
-                        Validators.maxLength(10),
-                        NgBrazilValidators.cep])],
+                        Validators.maxLength(10)])],
                 address: [res.address.address,
                     Validators.compose([
                         Validators.required,

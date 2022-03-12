@@ -26,7 +26,6 @@
                         matPrefix></mat-icon>
                     <input
                         (blur)="buscaCep($event.target)"
-                        cep [textMask]="{mask: masks.cep.textMask}"
                         [formControlName]="'cep'"
                         matInput>
                 </mat-form-field>

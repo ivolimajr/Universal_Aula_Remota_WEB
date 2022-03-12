@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {Subscription} from 'rxjs';
 import {AddressModel} from '../../../shared/models/address.model';
 import {CepService} from '../../../shared/services/http/cep.service';
@@ -25,7 +24,6 @@ export class AddressComponent implements OnInit, OnDestroy {
 
     @Input() addressModel: AddressModel;
     @Input() idUser: number;
-    masks = MASKS;
     addressForm: FormGroup;
     plans: any[];
     cep: string;
@@ -148,8 +146,7 @@ export class AddressComponent implements OnInit, OnDestroy {
                 Validators.required,
                 Validators.nullValidator,
                 Validators.minLength(8),
-                Validators.maxLength(10),
-                NgBrazilValidators.cep
+                Validators.maxLength(10)
             ])],
             address: [this.addressModel.address, Validators.compose([
                 Validators.required,
