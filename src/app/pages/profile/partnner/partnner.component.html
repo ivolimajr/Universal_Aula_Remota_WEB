@@ -63,7 +63,6 @@
                         matPrefix></mat-icon>
                     <input
                         id="cnpj"
-                        cnpj [textMask]="{mask: masks.cnpj.textMask}"
                         [formControlName]="'cnpj'"
                         matInput>
                 </mat-form-field>
@@ -120,7 +119,6 @@
                                 matPrefix></mat-icon>
                             <input
                                 matInput
-                                [textMask]="{mask: masks.telefone.textMaskFunction}"
                                 [placeholder]="'telefone'"
                                 [formControl]="phoneNumber.get('phoneNumber')"
                                 [value]="phoneNumber.value.phoneNumber ?? ''">
