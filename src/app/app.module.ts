@@ -14,7 +14,6 @@ import {appRoutes} from 'app/app.routing';
 import {AuthModule} from "./shared/services/auth/auth.module";
 import {IconsModule} from "./core/icons/icons.module";
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import {NgxMaskModule} from "ngx-mask";
 
 
 const routerConfig: ExtraOptions = {
@@ -29,7 +28,6 @@ const routerConfig: ExtraOptions = {
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
-        NgxMaskModule.forRoot(),
         RouterModule.forRoot(appRoutes, routerConfig),
 
         // Fuse, FuseConfig & FuseMockAPI

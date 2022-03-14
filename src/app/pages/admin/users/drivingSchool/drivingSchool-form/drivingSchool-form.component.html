@@ -83,7 +83,7 @@
                                             <input
                                                 matInput
                                                 [formControlName]="'cnpj'"
-                                                cnpj
+                                                cnpj [textMask]="{mask: masks.cnpj.textMask}"
                                                 [placeholder]="'CNPJ'"
                                                 required>
                                             <mat-icon

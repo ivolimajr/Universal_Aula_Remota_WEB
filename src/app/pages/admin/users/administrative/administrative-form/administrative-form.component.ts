@@ -3,6 +3,7 @@ import {AdministrativeService} from '../../../../../shared/services/http/adminis
 import {AdministrativePost} from '../../../../../shared/models/administrative.model';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
+import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -17,6 +18,7 @@ import {CepService} from '../../../../../shared/services/http/cep.service';
 export class AdministrativeFormComponent implements OnInit, OnDestroy {
 
     @Input() id: number;
+    masks = MASKS;
     loading: boolean = false;
     userForm: FormGroup;
     ufOrigin = new FormControl();
@@ -135,7 +137,8 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(8),
-                    Validators.maxLength(10)])],
+                    Validators.maxLength(10),
+                    NgBrazilValidators.cep])],
             address: ['',
                 Validators.compose([
                     Validators.required,
@@ -221,7 +224,8 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                             Validators.required,
                             Validators.nullValidator,
                             Validators.minLength(8),
-                            Validators.maxLength(10)])],
+                            Validators.maxLength(10),
+                            NgBrazilValidators.cep])],
                     address: [res.address.address,
                         Validators.compose([
                             Validators.required,

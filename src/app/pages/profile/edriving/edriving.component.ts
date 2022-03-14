@@ -10,6 +10,7 @@ import {
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {fuseAnimations} from '@fuse/animations';
 import {MatDialog} from '@angular/material/dialog';
+import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Subscription} from 'rxjs';
 import {EdrivingPost, EdrivingUser} from '../../../shared/models/edriving.model';
@@ -33,6 +34,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
 
     accountForm: FormGroup;
     user: User;
+    masks = MASKS;
     private edrivingPost = new EdrivingPost();
     private userSub: Subscription;
     private phoneSub: Subscription;
@@ -146,7 +148,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         }
         this.phoneSub = this._userService.removePhonenumber(id)
             .subscribe((res) => {
-                if (!res) {return this.openSnackBar('Telefone já em uso', 'warn');}
+                if (!res) return this.openSnackBar('Telefone já em uso', 'warn');
 
                 const phoneNumbersFormArray = this.accountForm.get('phonesNumbers') as FormArray;
                 // Remove the phone number field
@@ -192,7 +194,8 @@ export class EdrivingComponent implements OnInit, OnDestroy {
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(11),
-                    Validators.maxLength(14)])],
+                    Validators.maxLength(14),
+                    NgBrazilValidators.cpf])],
             email: [this.edrivingUser.email,
                 Validators.compose([
                     Validators.required,

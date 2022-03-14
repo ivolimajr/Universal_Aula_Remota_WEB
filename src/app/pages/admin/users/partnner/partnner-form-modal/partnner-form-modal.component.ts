@@ -3,6 +3,7 @@ import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Subscription} from 'rxjs';
+import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../../@fuse/components/alert';
 import {Level} from '../../../../../shared/models/level.model';
@@ -32,6 +33,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @Input() userEdit: PartnnerUser; //Se vier um ID, exibir e atualizar o usuário
     accountForm: FormGroup;
+    masks = MASKS;
     loading: boolean = true; //Inicia o componente com um lading
     message: string = null; //Mensagem quando estiver salvando ou editando um usuário
     levels: Level[];
@@ -248,7 +250,8 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(18),
-                    Validators.maxLength(18)])],
+                    Validators.maxLength(18),
+                    NgBrazilValidators.cnpj])],
             description: ['',
                 Validators.compose([
                     Validators.required,
@@ -260,7 +263,8 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(8),
-                    Validators.maxLength(10)])],
+                    Validators.maxLength(10),
+                    NgBrazilValidators.cep])],
             address: ['',
                 Validators.compose([
                     Validators.required,
@@ -415,7 +419,8 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                     Validators.required,
                     Validators.nullValidator,
                     Validators.minLength(8),
-                    Validators.maxLength(8)])],
+                    Validators.maxLength(8),
+                    NgBrazilValidators.cep])],
             uf: [this.userEdit.address.uf, Validators.compose([
                 Validators.required,
                 Validators.nullValidator,

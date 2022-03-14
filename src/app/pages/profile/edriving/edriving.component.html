@@ -63,6 +63,7 @@
                         matPrefix></mat-icon>
                     <input
                         id="cpf"
+                        cpf [textMask]="{mask: masks.cpf.textMask}"
                         [formControlName]="'cpf'"
                         matInput>
                 </mat-form-field>
