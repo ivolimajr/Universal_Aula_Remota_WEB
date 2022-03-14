@@ -2,7 +2,7 @@ import {Level} from './level.model';
 import {User} from './user.model';
 import {PhoneNumberModel} from './phoneNumber.model';
 
-export class EdrivingUser {
+export class EdrivingModel {
     id: number;
     name: string;
     cpf: string;
@@ -12,6 +12,8 @@ export class EdrivingUser {
     level: Level;
     userId: number;
     user: User;
+    password?: string;
+    status?: number;
 }
 
 export class EdrivingPost {

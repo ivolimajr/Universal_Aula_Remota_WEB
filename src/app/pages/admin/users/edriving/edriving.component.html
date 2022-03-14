@@ -32,7 +32,7 @@
                 <ng-container *ngIf="isDeleting;">
                     <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
                 </ng-container>
-                <table class="mat-elevation-z8 min-w-full" mat-table [dataSource]="dataSource" matSort>
+                <table class="mat-elevation-z8 min-w-full min-h-full" mat-table [dataSource]="dataSource" matSort>
                     <!-- Position Column -->
                     <ng-container matColumnDef="name">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>

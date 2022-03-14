@@ -5,7 +5,7 @@ import {Observable, of, Subscription} from 'rxjs';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {EdrivingPost, EdrivingUser} from 'app/shared/models/edriving.model';
+import {EdrivingPost, EdrivingModel} from 'app/shared/models/edriving.model';
 import {EdrivingService} from '../../../../../shared/services/http/edriving.service';
 import {Level} from '../../../../../shared/models/level.model';
 import {LocalStorageService} from '../../../../../shared/services/storage/localStorage.service';
@@ -23,7 +23,7 @@ import {AlertModalComponent} from '../../../../../layout/common/alert/alert-moda
 })
 export class EdrivingFormModalComponent implements OnInit, OnDestroy {
 
-    @Input() userEdit: EdrivingUser; //Se vier um ID, exibir e atualizar o usuário
+    @Input() userEdit: EdrivingModel; //Se vier um ID, exibir e atualizar o usuário
     accountForm: FormGroup;
     masks = MASKS;
     loading: boolean = true; //Inicia o componente com um lading
@@ -31,7 +31,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
     levels: Level[]; //Lista com os cargos
     levelId: number;
     selectedLevel: string = null; //Cargo Selecionado
-    private edrivingPost = new EdrivingPost(); //Objeto para envio dos dados para API
+    private edrivingPost = new EdrivingModel(); //Objeto para envio dos dados para API
     private phoneArray = [];
     private user: User;
     private userSub: Subscription;

@@ -13,7 +13,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Subscription} from 'rxjs';
-import {EdrivingPost, EdrivingUser} from '../../../shared/models/edriving.model';
+import {EdrivingPost, EdrivingModel} from '../../../shared/models/edriving.model';
 import {UserService} from '../../../shared/services/http/user.service';
 import {EdrivingService} from '../../../shared/services/http/edriving.service';
 import {User} from '../../../shared/models/user.model';
@@ -30,12 +30,12 @@ import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.comp
     animations: fuseAnimations
 })
 export class EdrivingComponent implements OnInit, OnDestroy {
-    @Input() edrivingUser: EdrivingUser;
+    @Input() edrivingUser: EdrivingModel;
 
     accountForm: FormGroup;
     user: User;
     masks = MASKS;
-    private edrivingPost = new EdrivingPost();
+    private edrivingPost = new EdrivingModel();
     private userSub: Subscription;
     private phoneSub: Subscription;
 
@@ -148,7 +148,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         }
         this.phoneSub = this._userService.removePhonenumber(id)
             .subscribe((res) => {
-                if (!res) return this.openSnackBar('Telefone já em uso', 'warn');
+                if (!res) {return this.openSnackBar('Telefone já em uso', 'warn');}
 
                 const phoneNumbersFormArray = this.accountForm.get('phonesNumbers') as FormArray;
                 // Remove the phone number field

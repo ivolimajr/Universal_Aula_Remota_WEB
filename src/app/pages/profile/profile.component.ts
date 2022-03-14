@@ -12,7 +12,7 @@ import {Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {FuseMediaWatcherService} from '@fuse/services/media-watcher';
 import {EdrivingService} from '../../shared/services/http/edriving.service';
-import {EdrivingUser} from '../../shared/models/edriving.model';
+import {EdrivingModel} from '../../shared/models/edriving.model';
 import {AuthService} from '../../shared/services/auth/auth.service';
 import {PartnnerUser} from '../../shared/models/parceiro.model';
 import {PartnnerService} from '../../shared/services/http/partnner.service';
@@ -33,7 +33,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     panels: any[] = [];
     selectedPanel: string = 'dadosPessoais';
 
-    edrivingUser: EdrivingUser = null;
+    edrivingUser: EdrivingModel = null;
     parceiroUser: PartnnerUser = null;
     enderecoUser: AddressModel = null;
     loading: boolean = true;
