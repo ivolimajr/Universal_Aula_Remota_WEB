@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {AdministrativeService} from '../../../../../shared/services/http/administrative.service';
 import {AdministrativeModel} from '../../../../../shared/models/administrative.model';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
@@ -21,13 +21,14 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     masks = MASKS;
     loading: boolean = false;
     userForm: FormGroup;
+    addressForm: FormGroup;
     ufOrigin = new FormControl();
     ufList = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB',
         'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
-    addressForm: FormGroup;
     private userPost = new AdministrativeModel(); //Objeto para envio dos dados para API
     private userSub: Subscription;
     private cepSub: Subscription;
+    private phoneArray = [];
 
     constructor(
         public dialog: MatDialog,
@@ -53,14 +54,24 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
         this.prepareForm();
     }
 
-    //Fecha o formulário
     onNoClick(): void {
         this.dialogRef.close();
     }
 
     submit(): void {
+        this.setUserData();
+        this.userForm.disable();
         if (!this.id) {
             this.userForm.value.origin = this.userForm.value.origin + '-' + this.ufOrigin.value;
+            this.userPost.drivingSchoolId = 2;
+            this.userSub = this._administrativeServices.create(this.userPost).subscribe((res: any)=>{
+               if(res.errror){
+                   this.userForm.enable();
+                   return;
+               }
+               this.userForm.enable();
+               this.dialogRef.close(res);
+            });
         }
     }
 
@@ -128,8 +139,22 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.min(5),
                     Validators.maxLength(100)
-                ])]
+                ])],
+            phonesNumbers: this._formBuilder.array([], Validators.compose([
+                Validators.required,
+                Validators.nullValidator
+            ]))
         });
+
+        this.phoneArray.push(
+          this._formBuilder.group({
+              phoneNumber:['', Validators.compose([Validators.required])]
+          })
+        );
+        this.phoneArray.forEach((item)=>{
+            (this.userForm.get('phonesNumbers') as FormArray).push(item);
+        });
+
         this.addressForm = this._formBuilder.group({
             cep: ['',
                 Validators.compose([
@@ -169,6 +194,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                     Validators.minLength(1),
                     Validators.maxLength(50)])],
         });
+
         this._changeDetectorRef.markForCheck();
     }
 
@@ -265,6 +291,35 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                 this.loading = false;
                 this._changeDetectorRef.markForCheck();
             });
+    }
+
+    private setUserData(): void{
+        const userFormValues = this.userForm.value;
+        const addressFormValues = this.addressForm.value;
+
+        //Verifica se os telefones informados são válidos
+        userFormValues.phonesNumbers.forEach((item) => {
+            if (item.phoneNumber === null || item.phoneNumber === '' || item.phoneNumber.length < 10) {
+                this.openSnackBar('Insira um telefone', 'warn');
+                this.userForm.enable();
+                return;
+            }
+        });
+
+        this.userPost = userFormValues;
+        this.userPost.cpf = userFormValues.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
+        this.userPost.password = 'Pay@2021';
+
+        this.userPost.address = addressFormValues;
+        this.userPost.address.cep = addressFormValues.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
+
+
+        userFormValues.phonesNumbers.forEach((item) => {
+            if (item.phoneNumber.length !== 11) {
+                item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
+            }
+        });
+        this.userPost.phonesNumbers = userFormValues.phonesNumbers;
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {

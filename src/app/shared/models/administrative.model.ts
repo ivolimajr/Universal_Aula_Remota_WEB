@@ -17,5 +17,6 @@ export class AdministrativeModel {
     drivingSchoolId: number;
     drivingSchool: DrivingSchool;
     userId: number;
+    password?: string;
     user: User;
 }

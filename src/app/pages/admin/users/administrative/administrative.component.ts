@@ -8,6 +8,8 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatDialog} from '@angular/material/dialog';
 import {AdministrativeFormComponent} from './administrative-form/administrative-form.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
+import {AuthService} from '../../../../shared/services/auth/auth.service';
 
 const ELEMENT_DATA: AdministrativeModel[] = [];
 
@@ -35,10 +37,15 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
 
     constructor(
         public dialog: MatDialog,
+        private _authServices: AuthService,
         private _snackBar: MatSnackBar,
         private _administrativeServices: AdministrativeService,
         private _changeDetectorRef: ChangeDetectorRef
     ) {
+    }
+
+    ngOnInit(): void {
+        this.getUsers();
     }
 
     addUser(user: AdministrativeModel): void {
@@ -54,14 +61,41 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
         } else{
             const dialogRef = this.dialog.open(AdministrativeFormComponent);
             dialogRef.componentInstance.id = null;
+            dialogRef.afterClosed().subscribe((res)=>{
+                if(res){
+                    this.dataSource.data = [...this.dataSource.data,res];
+                    this.openSnackBar('Inserido');
+                    this._changeDetectorRef.detectChanges();
+                }
+            });
         }
     }
 
     removeUser(id: number, email: string): void {
-
-    }
-
-    ngOnInit(): void {
+        this.isDeleting = true;
+        this._changeDetectorRef.markForCheck();
+        //Se o id informado for nulo, ou se o usuário for remover ele mesmo, é retornado um erro
+        if (email !== this._authServices.getUserInfoFromStorage().email) {
+            //Exibe o alerta de confirmação
+            const dialogRef = this.dialog.open(AlertModalComponent, {
+                width: '280px',
+                data: {title: 'Confirmar Remoção ?'}
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+                if (!result) {
+                    this.isDeleting = false;
+                    this._changeDetectorRef.markForCheck();
+                    return;
+                }
+                //Se a confirmação do alerta for um OK, remove o usuário
+                this.deleteFromApi(id);
+            });
+            return;
+        }
+        this.isDeleting = false;
+        this._changeDetectorRef.markForCheck();
+        this.openSnackBar('Remoção Inválida');
+        return;
     }
 
     ngAfterViewInit(): void {
@@ -102,6 +136,20 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
             this.dataSource.data = items;
             this.loading = false;
             this._changeDetectorRef.markForCheck();
+        });
+    }
+    private deleteFromApi(id: number): void {
+        this.userSub = this._administrativeServices.delete(id).subscribe((res: any)=>{
+            if (res.error) {
+                this.isDeleting = false;
+                this._changeDetectorRef.markForCheck();
+                return;
+            }
+            this.isDeleting = false;
+            this._changeDetectorRef.markForCheck();
+            this.openSnackBar('Removido');
+            this.getUsers();
+            return;
         });
     }
 

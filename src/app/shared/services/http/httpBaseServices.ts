@@ -23,8 +23,12 @@ export class HttpBaseServices<T> {
         private _httpBackend?: HttpBackend,
         ) {
         this.endpoint = environment.apiUrl + this.url;
-        this.httpClientBackEnd = new HttpClient(_httpBackend);
-        this.accessToken = this._authServices.tokenFromLocalStorage.accessToken;
+        if(this.httpClientBackEnd != null){
+            this.httpClientBackEnd = new HttpClient(_httpBackend);
+        }
+        if(this._authServices != null){
+            this.accessToken = this._authServices.tokenFromLocalStorage.accessToken;
+        }
     }
 
     getAll(): Observable<T[]> {
@@ -43,7 +47,7 @@ export class HttpBaseServices<T> {
 
     create(data: T): Observable<T> {
         return this._httpClient.post(this.endpoint, data).pipe(
-            switchMap((response: T) => of(response)),
+            switchMap((response: any) => of(response)),
             catchError(e => of(e))
         );
     }
@@ -73,10 +77,8 @@ export class HttpBaseServices<T> {
 
         this.header = this.header.set('Authorization', 'Bearer ' + this.accessToken);
         const formData = new FormData();
-        console.log(data);
-        for (const key in data) {
+        for (const key in data)
             formData.append(key, data[key]);
-        }
 
         return this._httpClient.put(this.endpoint, formData).pipe(
             switchMap((response: any) => of(response)),
