@@ -6,7 +6,7 @@ import {formatDate} from '@angular/common';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CepService} from '../../../../../shared/services/http/cep.service';
 import {Observable, Subscription} from 'rxjs';
-import {DrivingSchoolPost} from '../../../../../shared/models/drivingSchool.model';
+import {DrivingSchool} from '../../../../../shared/models/drivingSchool.model';
 import {DrivingSchoolService} from '../../../../../shared/services/http/drivingSchool.service';
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
 import {MatDialog} from '@angular/material/dialog';
@@ -34,7 +34,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
     public id: number = parseInt(this.routeAcitve.snapshot.paramMap.get('id'), 10);
     files: Set<File>;
     private phoneArray = [];
-    private drivingSchoolPost = new DrivingSchoolPost();
+    private drivinSchoolModel = new DrivingSchool();
     private cepSub: Subscription;
     private userSub: Subscription;
     private fileArray = [];
@@ -200,14 +200,14 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
 
         //Se não tiver um ID, significa que está criando um novo usuário
         if (!this.id) {
-            this.userSub = this._autoEscolaService.create(this.drivingSchoolPost).subscribe((res: any) => {
+            this.userSub = this._autoEscolaService.createFormEncoded(this.drivinSchoolModel).subscribe((res: any) => {
                 if (res.error) {return this.closeAlert();}
                 this.closeAlert();
                 this.openSnackBar('Salvo');
                 this._router.navigate(['usuario/auto-escola']);
             });
         } else {
-            this.userSub = this._autoEscolaService.update(this.drivingSchoolPost).subscribe((res: any) => {
+            this.userSub = this._autoEscolaService.updateFormEncoded(this.drivinSchoolModel).subscribe((res: any) => {
                 if (res.error) {return this.closeAlert();}
                 this.closeAlert();
                 this.openSnackBar('Atualizado');
@@ -280,31 +280,32 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
             const data = this.accountForm.value;
 
             if (this.id) {
-                this.drivingSchoolPost.id = this.id;
+                this.drivinSchoolModel.id = this.id;
             }
 
-            this.drivingSchoolPost.corporateName = data.corporateName;
-            this.drivingSchoolPost.fantasyName = data.fantasyName;
-            this.drivingSchoolPost.stateRegistration = data.stateRegistration.replace(/[^0-9,]*/g, '').replace('-', '').replace('/', '');
-            this.drivingSchoolPost.foundingDate = data.foundingDate;
-            this.drivingSchoolPost.email = data.email;
-            this.drivingSchoolPost.description = data.description;
-            this.drivingSchoolPost.site = data.site;
-            this.drivingSchoolPost.cnpj = data.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
+            this.drivinSchoolModel.corporateName = data.corporateName;
+            this.drivinSchoolModel.fantasyName = data.fantasyName;
+            this.drivinSchoolModel.stateRegistration = data.stateRegistration.replace(/[^0-9,]*/g, '').replace('-', '').replace('/', '');
+            this.drivinSchoolModel.foundingDate = data.foundingDate;
+            this.drivinSchoolModel.email = data.email;
+            this.drivinSchoolModel.description = data.description;
+            this.drivinSchoolModel.site = data.site;
+            this.drivinSchoolModel.cnpj = data.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
             if (!this.id) {
-                this.drivingSchoolPost.password = 'Pay@2021';
+                this.drivinSchoolModel.password = 'Pay@2021';
             }
         }
         // Dados de endereço
         if (this.addressForm.valid) {
             const data = this.addressForm.value;
 
-            this.drivingSchoolPost.cep = data.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
-            this.drivingSchoolPost.uf = data.uf;
-            this.drivingSchoolPost.district = data.district;
-            this.drivingSchoolPost.city = data.city;
-            this.drivingSchoolPost.addressNumber = data.addressNumber;
-            this.drivingSchoolPost.address = data.address;
+            this.drivinSchoolModel.cep = data.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
+            this.drivinSchoolModel.uf = data.uf;
+            this.drivinSchoolModel.district = data.district;
+            this.drivinSchoolModel.city = data.city;
+            this.drivinSchoolModel.addressNumber = data.addressNumber;
+            this.drivinSchoolModel.fullAddress = data.address;
+            this.drivinSchoolModel.complement = data.complement;
         }
         // dados de contato
         if (this.contactForm.valid) {
@@ -321,7 +322,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                     item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
                 }
             });
-            this.drivingSchoolPost.phonesNumbers = data.phonesNumbers;
+            this.drivinSchoolModel.phonesNumbers = data.phonesNumbers;
         }
 
         //Dados de arquivos de upload
@@ -334,7 +335,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                     this.fileModel.push(file);
                 }
             });
-            this.drivingSchoolPost.files = this.fileModel;
+            this.drivinSchoolModel.files = this.fileModel;
         }
     }
 
@@ -439,6 +440,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(1),
                     Validators.maxLength(50)])],
+            complement: ['a'],
         });
         this.contactForm = this._formBuilder.group({
             phonesNumbers: this._formBuilder.array([],
@@ -591,6 +593,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                         Validators.nullValidator,
                         Validators.minLength(1),
                         Validators.maxLength(50)])],
+                complement: [res.address.complement],
             });
             this.contactForm = this._formBuilder.group({
                 phonesNumbers: this._formBuilder.array([],

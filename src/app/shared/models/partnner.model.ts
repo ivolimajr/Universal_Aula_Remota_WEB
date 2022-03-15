@@ -3,7 +3,7 @@ import {User} from './user.model';
 import {PhoneNumberModel} from './phoneNumber.model';
 import {AddressModel} from './address.model';
 
-export class PartnnerUser {
+export class PartnnerModel {
     id: number;
     name: string;
     email: string;
@@ -16,16 +16,5 @@ export class PartnnerUser {
     userId: number;
     user: User;
     phonesNumbers: Array<PhoneNumberModel>;
-}
-
-export class PartnnerPost {
-    id?: number;
-    name: string;
-    email: string;
-    cnpj: string;
-    description: string;
     password: string;
-    levelId: number;
-    address: AddressModel;
-    phonesNumbers: Array<PhoneNumberModel>;
 }

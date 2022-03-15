@@ -15,14 +15,3 @@ export class EdrivingModel {
     password?: string;
     status?: number;
 }
-
-export class EdrivingPost {
-    id?: number;
-    name: string;
-    cpf: string;
-    email: string;
-    phonesNumbers: Array<PhoneNumberModel>;
-    levelId: number;
-    status: number;
-    password?: string;
-}

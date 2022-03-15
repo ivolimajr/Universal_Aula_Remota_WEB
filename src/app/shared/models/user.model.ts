@@ -9,7 +9,7 @@ export class User {
     roles: Array<RoleModel>;
 }
 
-export class UsuarioLogin {
+export class UserLogin {
     email: string;
     password: string;
 }

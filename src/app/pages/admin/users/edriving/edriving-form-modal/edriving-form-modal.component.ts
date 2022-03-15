@@ -5,7 +5,7 @@ import {Observable, of, Subscription} from 'rxjs';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {EdrivingPost, EdrivingModel} from 'app/shared/models/edriving.model';
+import {EdrivingModel} from 'app/shared/models/edriving.model';
 import {EdrivingService} from '../../../../../shared/services/http/edriving.service';
 import {Level} from '../../../../../shared/models/level.model';
 import {LocalStorageService} from '../../../../../shared/services/storage/localStorage.service';
@@ -31,7 +31,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
     levels: Level[]; //Lista com os cargos
     levelId: number;
     selectedLevel: string = null; //Cargo Selecionado
-    private edrivingPost = new EdrivingModel(); //Objeto para envio dos dados para API
+    private edrivingModel = new EdrivingModel(); //Objeto para envio dos dados para API
     private phoneArray = [];
     private user: User;
     private userSub: Subscription;
@@ -78,7 +78,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
 
             //Atualiza o usuário
             if (this.userEdit) {
-                this.userSub = this._edrivingServices.update(this.edrivingPost).subscribe((res: any) => {
+                this.userSub = this._edrivingServices.update(this.edrivingModel).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
                         this.closeAlert();
@@ -99,7 +99,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
             } else {
                 //Cria um usuário
                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                this.userSub = this._edrivingServices.create(this.edrivingPost).subscribe((res: any) => {
+                this.userSub = this._edrivingServices.create(this.edrivingModel).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
                         this.closeAlert();
@@ -293,21 +293,21 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         }
 
         if (this.userEdit) {
-            this.edrivingPost.id = this.userEdit.id;
+            this.edrivingModel.id = this.userEdit.id;
         }
         if (!this.userEdit) {
-            this.edrivingPost.password = 'Pay@2021';
+            this.edrivingModel.password = 'Pay@2021';
         }
-        this.edrivingPost.name = formData.name;
-        this.edrivingPost.email = formData.email;
-        this.edrivingPost.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
-        this.edrivingPost.levelId = this.levelId;
+        this.edrivingModel.name = formData.name;
+        this.edrivingModel.email = formData.email;
+        this.edrivingModel.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
+        this.edrivingModel.levelId = this.levelId;
         formData.phonesNumber.forEach((item) => {
             if (item.phoneNumber.length !== 11) {
                 item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
-        this.edrivingPost.phonesNumbers = formData.phonesNumber;
+        this.edrivingModel.phonesNumbers = formData.phonesNumber;
         return result;
     }
 
@@ -376,7 +376,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         this.phoneArray.forEach((item) => {
             (this.accountForm.get('phonesNumber') as FormArray).push(item);
         });
-        this.edrivingPost.id = this.userEdit.id;
+        this.edrivingModel.id = this.userEdit.id;
         this.closeAlert();
         this.phoneArray = [];
     }

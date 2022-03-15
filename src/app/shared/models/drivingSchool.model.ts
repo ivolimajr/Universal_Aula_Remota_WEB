@@ -18,25 +18,13 @@ export class DrivingSchool {
     userId: number;
     user: User;
     phonesNumbers: Array<PhoneNumberModel>;
-}
-
-export class DrivingSchoolPost {
-    id: number;
-    corporateName: string;
-    fantasyName: string;
-    stateRegistration: string;
-    foundingDate: string;
-    email: string;
-    description: string;
-    site: string;
-    cnpj: string;
     uf: string;
     cep: string;
-    address: string;
+    fullAddress: string;
     district: string;
     city: string;
     addressNumber: string;
+    complement: string;
     password: string;
     files: Array<FileModel>;
-    phonesNumbers: Array<PhoneNumberModel>;
 }

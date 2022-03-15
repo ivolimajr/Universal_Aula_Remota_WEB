@@ -68,7 +68,6 @@ export class PartnnerGuard implements CanActivate, CanActivateChild, CanLoad {
                     }
 
                     this._router.navigate([''], {queryParams: {redirectURL}});
-                    console.log('partnnerGuard: '+'false');
                     // Prevent the access
                     return of(false);
                 })

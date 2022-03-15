@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {PartnnerPost, PartnnerUser} from '../../models/parceiro.model';
+import {PartnnerModel} from '../../models/partnner.model';
 import {Observable, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
@@ -14,7 +14,7 @@ const URL_PARCEIRO_CARGO = `${environment.apiUrl}/PartnnerLevel`;
 @Injectable({
     providedIn: 'root'
 })
-export class PartnnerService extends HttpBaseServices<PartnnerUser>{
+export class PartnnerService extends HttpBaseServices<PartnnerModel>{
 
     constructor( _httpClient: HttpClient) {
         super(
@@ -22,8 +22,6 @@ export class PartnnerService extends HttpBaseServices<PartnnerUser>{
             URL_PARCEIRO
         );
     }
-
-
     /**
      * Busca todos os cargos referente ao usuário do tipo Edriving
      *

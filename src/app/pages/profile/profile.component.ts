@@ -14,7 +14,7 @@ import {FuseMediaWatcherService} from '@fuse/services/media-watcher';
 import {EdrivingService} from '../../shared/services/http/edriving.service';
 import {EdrivingModel} from '../../shared/models/edriving.model';
 import {AuthService} from '../../shared/services/auth/auth.service';
-import {PartnnerUser} from '../../shared/models/parceiro.model';
+import {PartnnerModel} from '../../shared/models/partnner.model';
 import {PartnnerService} from '../../shared/services/http/partnner.service';
 import {AddressModel} from '../../shared/models/address.model';
 import {RolesConstants} from '../../shared/constants';
@@ -34,7 +34,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     selectedPanel: string = 'dadosPessoais';
 
     edrivingUser: EdrivingModel = null;
-    parceiroUser: PartnnerUser = null;
+    parceiroUser: PartnnerModel = null;
     enderecoUser: AddressModel = null;
     loading: boolean = true;
     idUser: number;

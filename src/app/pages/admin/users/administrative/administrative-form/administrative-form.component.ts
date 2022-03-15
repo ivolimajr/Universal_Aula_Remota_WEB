@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {AdministrativeService} from '../../../../../shared/services/http/administrative.service';
-import {AdministrativePost} from '../../../../../shared/models/administrative.model';
+import {AdministrativeModel} from '../../../../../shared/models/administrative.model';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
@@ -25,7 +25,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     ufList = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB',
         'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
     addressForm: FormGroup;
-    private userPost = new AdministrativePost(); //Objeto para envio dos dados para API
+    private userPost = new AdministrativeModel(); //Objeto para envio dos dados para API
     private userSub: Subscription;
     private cepSub: Subscription;
 
@@ -61,7 +61,6 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     submit(): void {
         if (!this.id) {
             this.userForm.value.origin = this.userForm.value.origin + '-' + this.ufOrigin.value;
-            console.log(this.userForm.value);
         }
     }
 

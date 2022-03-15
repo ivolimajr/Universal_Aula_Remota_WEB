@@ -264,6 +264,18 @@
                                                 [svgIcon]="'heroicons_solid:map'"></mat-icon>
                                         </mat-form-field>
                                     </div>
+                                    <div class="flex">
+                                        <mat-form-field class="fuse-mat-textarea flex-auto">
+                                            <input
+                                                matInput
+                                                [formControlName]="'complement'"
+                                                [placeholder]="'Complemento'">
+                                            <mat-icon
+                                                class="icon-size-5"
+                                                matPrefix
+                                                [svgIcon]="'heroicons_solid:map'"></mat-icon>
+                                        </mat-form-field>
+                                    </div>
                                     <div class="flex justify-end">
                                         <button
                                             class="px-8 mr-2"
@@ -504,19 +516,20 @@
                                                 <li class="mt-1"><b>Cep: </b>{{addressForm.value.cep}}</li>
                                                 <li class="mt-1"><b>UF: </b> {{addressForm.value.uf}}</li>
                                                 <li class="mt-1"><b>N°: </b>{{addressForm.value.addressNumber}}</li>
+                                                <li class="mt-1"><b>Complemento: </b>{{addressForm.value.complement}}</li>
                                             </ul>
                                         </div>
                                         <div class="flex flex-col h-auto max-w-120 w-full overflow-hidden mt-5">
                                             <div class="text-2xl font-semibold leading-tight ml-2">Contato</div>
                                             <div class="mt-4 ml-2">
-                                                <ul *ngFor="let item of  drivingSchoolPost.phonesNumbers">
+                                                <ul *ngFor="let item of  drivinSchoolModel.phonesNumbers">
                                                     <li class="mt-1"><b>Telefone: </b>{{item.phoneNumber}}</li>
                                                 </ul>
                                             </div>
                                         </div>
                                         <div class="text-2xl font-semibold leading-tight ml-2 mt-5">Anexos</div>
                                         <div class="mt-4 ml-2">
-                                            <ul *ngFor="let item of drivingSchoolPost.files">
+                                            <ul *ngFor="let item of drivinSchoolModel.files">
                                                 <li class="mt-1"><b>Doc: </b>{{item.fileName}}</li>
                                             </ul>
                                             <ul *ngFor="let item of filesUpdate">

@@ -4,8 +4,9 @@ import {Observable, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
 import {Level} from '../../models/level.model';
-import {DrivingSchoolPost, DrivingSchool} from '../../models/drivingSchool.model';
+import {DrivingSchool} from '../../models/drivingSchool.model';
 import {AuthService} from '../auth/auth.service';
+import {HttpBaseServices} from './httpBaseServices';
 
 const URL_AUTOESCOLA = `${environment.apiUrl}/DrivingSchool`;
 const URL_AUTOESCOLA_CARGO = `${environment.apiUrl}/DrivingSchoolLevel`;
@@ -13,7 +14,7 @@ const URL_AUTOESCOLA_CARGO = `${environment.apiUrl}/DrivingSchoolLevel`;
 @Injectable({
     providedIn: 'root'
 })
-export class DrivingSchoolService {
+export class DrivingSchoolService extends HttpBaseServices<DrivingSchool> {
     @ViewChild('fileInput') selectedFileEl;
 
     header = new HttpHeaders();
@@ -21,34 +22,16 @@ export class DrivingSchoolService {
     private accessToken: string;
 
     constructor(
-        private _httpClient: HttpClient,
-        private httpBackend: HttpBackend,
-        private _authService: AuthService) {
+        public _httpClient: HttpClient,
+            private httpBackend: HttpBackend,
+            private _authService: AuthService
+    ) {
+        super(
+            _httpClient,
+            '/DrivingSchool'
+        );
         this.httpClientBackEnd = new HttpClient(httpBackend);
         this.accessToken = this._authService.tokenFromLocalStorage.accessToken;
-    }
-
-    /**
-     * Recupera um usuário do Edriving
-     *
-     * @param id do usuário a ser consultado
-     * @return retorna um usuário ou o error
-     */
-    getOne(id: number): Observable<DrivingSchool> {
-        return this._httpClient.get<DrivingSchool>(URL_AUTOESCOLA + '/' + id).pipe(
-            switchMap((response: any) => of(response)),
-            catchError(e => of(e))
-        );
-    }
-
-    /**
-     * @return o array de items contendo todos os usuários do tipo Edriving
-     */
-    getAll(): Observable<DrivingSchool[]> {
-        return this._httpClient.get<DrivingSchool[]>(URL_AUTOESCOLA).pipe(
-            switchMap((response: DrivingSchool[]) => of(response)),
-            catchError(e => of(e))
-        );
     }
 
     /**
@@ -57,12 +40,12 @@ export class DrivingSchoolService {
      * @param data model do usuario
      * @return retorna o usuário ou error
      */
-    create(data: DrivingSchoolPost): Observable<DrivingSchoolPost> {
+    createFormEncoded(data: DrivingSchool): Observable<DrivingSchool> {
         this.header = this.header.set('Authorization', 'Bearer ' + this.accessToken);
         const formData = new FormData();
 
-        for (const key in data){
-            if(key !== 'files' && key !== 'phonesNumbers'){
+        for (const key in data) {
+            if (key !== 'files' && key !== 'phonesNumbers') {
                 formData.append(key, data[key]);
             }
         }
@@ -91,23 +74,25 @@ export class DrivingSchoolService {
      * @param data model do usuario
      * @return retorna o usuário atualizado ou error
      */
-    update(data: DrivingSchoolPost): Observable<DrivingSchoolPost> {
+    updateFormEncoded(data: DrivingSchool): Observable<DrivingSchool> {
         if (data.id === 0 || data.id == null) {
             return of(null);
         }
         this.header = this.header.set('Authorization', 'Bearer ' + this.accessToken);
         const formData = new FormData();
 
-        for (const key in data){
-            if(key !== 'files' && key !== 'phonesNumbers'){
+        for (const key in data) {
+            if (key !== 'files' && key !== 'phonesNumbers') {
                 formData.append(key, data[key]);
             }
         }
 
         let i = 0;
         data.phonesNumbers.forEach((item) => {
-            const name = 'phonesNumbers[' + i + '][phoneNumber]';
-            formData.append(name, item.phoneNumber);
+            const id = 'phonesNumbers[' + i + '][id]';
+            const phone = 'phonesNumbers[' + i + '][phoneNumber]';
+            formData.append(id, item.id.toString());
+            formData.append(phone, item.phoneNumber);
             i++;
         });
         data.files.forEach((item) => {
@@ -116,24 +101,6 @@ export class DrivingSchoolService {
         });
 
         return this._httpClient.put(URL_AUTOESCOLA, formData).pipe(
-            switchMap((response: any) => of(response)),
-            catchError(e => of(e))
-        );
-    }
-
-    /**
-     * Remove um usuário do tipo edriving
-     * Verifica se o id a ser passao é zero, se for, retorna error.
-     *
-     * @param id do usuário a ser removido
-     * @return boolean se true = removido, se false = erro na remoção
-     */
-    delete(id: number): Observable<boolean> {
-        if (id === 0 || id == null) {
-            return of(null);
-        }
-
-        return this._httpClient.delete(URL_AUTOESCOLA + '/' + id).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))
         );

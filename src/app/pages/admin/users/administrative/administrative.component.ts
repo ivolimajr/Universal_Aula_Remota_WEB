@@ -1,5 +1,5 @@
 import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {AdministrativeUser} from '../../../../shared/models/administrative.model';
+import {AdministrativeModel} from '../../../../shared/models/administrative.model';
 import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {AdministrativeService} from '../../../../shared/services/http/administrative.service';
 import {Subscription} from 'rxjs';
@@ -9,7 +9,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {AdministrativeFormComponent} from './administrative-form/administrative-form.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
-const ELEMENT_DATA: AdministrativeUser[] = [];
+const ELEMENT_DATA: AdministrativeModel[] = [];
 
 @Component({
     selector: 'app-administrative',
@@ -19,7 +19,7 @@ const ELEMENT_DATA: AdministrativeUser[] = [];
 export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy {
 
     displayedColumns: string[] = ['name', 'email', 'id']; //Exibe as colunas da tabela
-    dataSource = new MatTableDataSource<AdministrativeUser>(ELEMENT_DATA); //Dados da tabela
+    dataSource = new MatTableDataSource<AdministrativeModel>(ELEMENT_DATA); //Dados da tabela
     isDeleting: boolean = false;
     _users$ = this._administrativeServices.getAll();
     loading: boolean = false;
@@ -31,7 +31,7 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatPaginator) paginator: MatPaginator;
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    @ViewChild(MatTable) table: MatTable<AdministrativeUser>;
+    @ViewChild(MatTable) table: MatTable<AdministrativeModel>;
 
     constructor(
         public dialog: MatDialog,
@@ -41,7 +41,7 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
     ) {
     }
 
-    addUser(user: AdministrativeUser): void {
+    addUser(user: AdministrativeModel): void {
         if (user) {
             const dialogRef = this.dialog.open(AdministrativeFormComponent);
             dialogRef.componentInstance.id = user.id;
@@ -98,7 +98,7 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
      * @return void
      */
     private getUsers(): void {
-        this.dataSub = this._users$.subscribe((items: AdministrativeUser[]) => {
+        this.dataSub = this._users$.subscribe((items: AdministrativeModel[]) => {
             this.dataSource.data = items;
             this.loading = false;
             this._changeDetectorRef.markForCheck();

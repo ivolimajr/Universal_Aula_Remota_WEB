@@ -13,7 +13,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Subscription} from 'rxjs';
-import {EdrivingPost, EdrivingModel} from '../../../shared/models/edriving.model';
+import {EdrivingModel} from '../../../shared/models/edriving.model';
 import {UserService} from '../../../shared/services/http/user.service';
 import {EdrivingService} from '../../../shared/services/http/edriving.service';
 import {User} from '../../../shared/models/user.model';
@@ -35,7 +35,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
     accountForm: FormGroup;
     user: User;
     masks = MASKS;
-    private edrivingPost = new EdrivingModel();
+    private edrivingModel = new EdrivingModel();
     private userSub: Subscription;
     private phoneSub: Subscription;
 
@@ -68,7 +68,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             return null;
         }
         this.accountForm.disable();
-        this.userSub = this._edrivingServices.update(this.edrivingPost).subscribe((res: any) => {
+        this.userSub = this._edrivingServices.update(this.edrivingModel).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
                 this.accountForm.enable();
@@ -249,7 +249,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         });
 
         //Define o ID do usuário Edriving a ser atualizado
-        this.edrivingPost.id = this.edrivingUser.id;
+        this.edrivingModel.id = this.edrivingUser.id;
         this._changeDetectorRef.markForCheck();
     }
 
@@ -267,15 +267,15 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             return false;
         }
         //Se todos os dados forem válidos, monta o objeto para atualizar
-        this.edrivingPost.name = formData.name;
-        this.edrivingPost.email = formData.email;
-        this.edrivingPost.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
+        this.edrivingModel.name = formData.name;
+        this.edrivingModel.email = formData.email;
+        this.edrivingModel.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
         formData.phonesNumbers.forEach((item) => {
             if (item.phoneNumber.length !== 11) {
                 item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
-        this.edrivingPost.phonesNumbers = formData.phonesNumbers;
+        this.edrivingModel.phonesNumbers = formData.phonesNumbers;
         return true;
     }
 

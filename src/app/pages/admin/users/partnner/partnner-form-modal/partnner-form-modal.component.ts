@@ -7,7 +7,7 @@ import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {FuseAlertType} from '../../../../../../@fuse/components/alert';
 import {Level} from '../../../../../shared/models/level.model';
-import {PartnnerPost, PartnnerUser} from '../../../../../shared/models/parceiro.model';
+import {PartnnerModel} from '../../../../../shared/models/partnner.model';
 import {PartnnerService} from '../../../../../shared/services/http/partnner.service';
 import {User} from '../../../../../shared/models/user.model';
 import {LocalStorageService} from '../../../../../shared/services/storage/localStorage.service';
@@ -31,7 +31,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
     };
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    @Input() userEdit: PartnnerUser; //Se vier um ID, exibir e atualizar o usuário
+    @Input() userEdit: PartnnerModel; //Se vier um ID, exibir e atualizar o usuário
     accountForm: FormGroup;
     masks = MASKS;
     loading: boolean = true; //Inicia o componente com um lading
@@ -41,7 +41,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
     selectedLevel: string = null; //Cargo Selecionado
     states = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
         'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
-    private partnnerPost = new PartnnerPost();
+    private partnnerModel = new PartnnerModel();
     private phoneArray = [];
     private user: User;
     private levelSub: Subscription;
@@ -93,7 +93,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
             this._changeDetectorRef.markForCheck();
 
             if (this.userEdit) {
-                this.userSub = this._parceiroServices.update(this.partnnerPost).subscribe((res: any) => {
+                this.userSub = this._parceiroServices.update(this.partnnerModel).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
                         this.closeAlert();
@@ -112,7 +112,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                     return;
                 });
             } else {
-                this.userSub = this._parceiroServices.create(this.partnnerPost).subscribe((res: any) => {
+                this.userSub = this._parceiroServices.create(this.partnnerModel).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
                         this.closeAlert();
@@ -352,16 +352,16 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         }
 
         if (this.userEdit) {
-            this.partnnerPost.id = this.userEdit.id;
+            this.partnnerModel.id = this.userEdit.id;
         }
         if (!this.userEdit) {
-            this.partnnerPost.password = 'Pay@2021';
+            this.partnnerModel.password = 'Pay@2021';
         }
 
-        this.partnnerPost.name = formData.name;
-        this.partnnerPost.email = formData.email;
-        this.partnnerPost.cnpj = formData.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
-        this.partnnerPost.description = formData.description;
+        this.partnnerModel.name = formData.name;
+        this.partnnerModel.email = formData.email;
+        this.partnnerModel.cnpj = formData.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
+        this.partnnerModel.description = formData.description;
 
         const address = new AddressModel();
         address.cep = formData.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
@@ -370,15 +370,15 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         address.district = formData.district;
         address.city = formData.city;
         address.addressNumber = formData.addressNumber;
-        this.partnnerPost.address = address;
+        this.partnnerModel.address = address;
 
-        this.partnnerPost.levelId = this.levelId;
+        this.partnnerModel.levelId = this.levelId;
         formData.phonesNumbers.forEach((item) => {
             if (item.phoneNumber.length !== 11) {
                 item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
-        this.partnnerPost.phonesNumbers = formData.phonesNumbers;
+        this.partnnerModel.phonesNumbers = formData.phonesNumbers;
         return result;
     }
 
@@ -495,7 +495,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         this.phoneArray.forEach((phoneNumbersFormGroup) => {
             (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumbersFormGroup);
         });
-        this.partnnerPost.id = this.userEdit.id;
+        this.partnnerModel.id = this.userEdit.id;
         this.closeAlert();
         this.phoneArray = [];
     }
