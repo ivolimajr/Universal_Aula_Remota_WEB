@@ -75,7 +75,7 @@ export class UserService {
             return of(null);
         }
 
-        return this._httpClient.put(URL_USER_API + '/atualizar-endereco/', endereco).pipe(
+        return this._httpClient.put(URL_USER_API + '/update-address/', endereco).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))
         );

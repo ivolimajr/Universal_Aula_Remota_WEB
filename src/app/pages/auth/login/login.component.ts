@@ -3,10 +3,8 @@ import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {fuseAnimations} from '@fuse/animations';
 import {AuthService} from 'app/shared/services/auth/auth.service';
-import {User} from 'app/shared/models/user.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {Subscription, throwError} from 'rxjs';
-import {catchError} from "rxjs/operators";
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'login',
@@ -18,7 +16,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
 
     loginForm: FormGroup;
-    private userStorage: User;
     private loginSub: Subscription;
 
     constructor(
@@ -34,19 +31,17 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.prepareForm();
     }
 
-    /**
-     * Fazer Login na plataforma
-     *
-     * @return void
-     */
     signIn(): void {
-        if (!this.loginForm.valid) return;
+        if (!this.loginForm.valid) {
+            this.openSnackBar('Verifique os dados', 'warn');
+            return;
+        }
         this.loginForm.disable();
 
-        //Faz Login
         this.loginSub = this._authService.signIn(this.loginForm.value).subscribe((res) => {
-            if (res.error) return this.loginForm.enable();
-
+            if (res.error) {
+                return this.loginForm.enable();
+            }
             const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
             this._router.navigateByUrl(redirectURL);
         });
@@ -58,14 +53,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     * Prepara o formulário de login com validadores básicos
-     *
-     * @private
-     * @return void
-     */
     private prepareForm(): void {
-        this.userStorage = this._authService.getLoginFromStorage();
         this.loginForm = this._formBuilder.group({
             email: ['IVO@EDRIVING.COM',
                 Validators.compose([
@@ -93,9 +81,5 @@ export class LoginComponent implements OnInit, OnDestroy {
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
-}
-
-function then(arg0: any) {
-    throw new Error('Function not implemented.');
 }
 

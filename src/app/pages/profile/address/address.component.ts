@@ -44,21 +44,15 @@ export class AddressComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        // Create the form
         this.prepareForm();
-
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
     update(): void {
-        this.addressForm.disable();
-        //Verifica se o formulário é valido
-        if (this.prepareFormToSend() === false) {
+        if(this.addressForm.invalid){
             return null;
         }
+        this.addressForm.disable();
+        this.setData();
 
         this.userSub = this._userService.updateAddress(this.addressModel).subscribe((res: any) => {
             if (res.error) {
@@ -74,12 +68,6 @@ export class AddressComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     * Track by function for ngFor loops
-     *
-     * @param index
-     * @param item
-     */
     trackByFn(index: number, item: any): any {
         return item.id || index;
     }
@@ -89,7 +77,7 @@ export class AddressComponent implements OnInit, OnDestroy {
             this.openSnackBar('Cep inválido');
             return;
         }
-        this.cepSub = this._cepService.buscar(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
+        this.cepSub = this._cepService.getCep(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
             this.addressForm.patchValue({
                 district: res.bairro,
                 address: res.logradouro,
@@ -111,28 +99,15 @@ export class AddressComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    private prepareFormToSend(): boolean {
-        const formValue = this.addressForm.value;
-        let result = true;
-        if (this.addressForm.invalid) {
-            this.openSnackBar('Dados Inválidos');
-            result = false;
-            return result;
-        }
-        if (formValue.uf.length !== 2) {
+    private setData(): void {
+        const addressFormValue = this.addressForm.value;
+
+        if (addressFormValue.uf.length !== 2) {
             this.openSnackBar('UF Inválida');
             this.addressForm.enable();
-            result = false;
-            return result;
         }
-        this.addressModel.id = formValue.id;
-        this.addressModel.uf = formValue.uf;
-        this.addressModel.cep = formValue.cep.replace(/[^0-9,]*/g, '');
-        this.addressModel.address = formValue.address;
-        this.addressModel.district = formValue.district;
-        this.addressModel.city = formValue.city;
-        this.addressModel.addressNumber = formValue.addressNumber;
-        return result;
+        this.addressModel = addressFormValue;
+        this.addressModel.cep = addressFormValue.cep.replace(/[^0-9,]*/g, '');
     }
 
     private prepareForm(): void {
