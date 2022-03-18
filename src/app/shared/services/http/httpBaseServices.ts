@@ -4,6 +4,7 @@ import {Observable, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
 import {AuthService} from '../auth/auth.service';
+import {PhoneNumberModel} from "../../models/phoneNumber.model";
 
 @Injectable({
     providedIn: 'root'
@@ -21,12 +22,12 @@ export class HttpBaseServices<T> {
         private url: string,
         private _authServices?: AuthService,
         private _httpBackend?: HttpBackend,
-        ) {
+    ) {
         this.endpoint = environment.apiUrl + this.url;
-        if(this.httpClientBackEnd != null){
+        if (this.httpClientBackEnd != null) {
             this.httpClientBackEnd = new HttpClient(_httpBackend);
         }
-        if(this._authServices != null){
+        if (this._authServices != null) {
             this.accessToken = this._authServices.tokenFromLocalStorage.accessToken;
         }
     }
@@ -74,11 +75,22 @@ export class HttpBaseServices<T> {
     }
 
     updateFormEncoded(data: any): Observable<T> {
-
         this.header = this.header.set('Authorization', 'Bearer ' + this.accessToken);
         const formData = new FormData();
-        for (const key in data)
-            formData.append(key, data[key]);
+        for (const key in data) {
+            if (key === 'phonesNumbers') {
+                let i = 0;
+                key['phonesNumbers'].forEach((item: PhoneNumberModel) => {
+                    const id = 'phonesNumbers[' + i + '][id]';
+                    const phone = 'phonesNumbers[' + i + '][phoneNumber]';
+                    formData.append(phone, item.phoneNumber);
+                    formData.append(id, item.id.toString());
+                    i++;
+                });
+            } else {
+                formData.append(key, data[key]);
+            }
+        }
 
         return this._httpClient.put(this.endpoint, formData).pipe(
             switchMap((response: any) => of(response)),
@@ -86,8 +98,13 @@ export class HttpBaseServices<T> {
         );
     }
 
-    delete(id: number): Observable<boolean> {
-        if (id === 0 || id == null) {
+    delete(id
+               :
+               number
+    ):
+        Observable<boolean> {
+        if (id === 0 || id == null
+        ) {
             return of(null);
         }
         return this._httpClient.delete(this.endpoint + '/' + id).pipe(
