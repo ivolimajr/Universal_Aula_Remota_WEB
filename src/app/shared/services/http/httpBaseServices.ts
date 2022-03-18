@@ -4,7 +4,7 @@ import {Observable, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
 import {AuthService} from '../auth/auth.service';
-import {PhoneNumberModel} from "../../models/phoneNumber.model";
+import {PhoneNumberModel} from '../../models/phoneNumber.model';
 
 @Injectable({
     providedIn: 'root'
@@ -76,30 +76,29 @@ export class HttpBaseServices<T> {
 
     updateFormEncoded(data: any): Observable<T> {
         this.header = this.header.set('Authorization', 'Bearer ' + this.accessToken);
+        this.header = this.header.set('Content-type', 'multipart/form-data');
         const formData = new FormData();
         for (const key in data) {
             if (key === 'phonesNumbers') {
                 let i = 0;
-                key['phonesNumbers'].forEach((item: PhoneNumberModel) => {
+                data['phonesNumbers'].forEach((item: PhoneNumberModel) => {
                     const id = 'phonesNumbers[' + i + '][id]';
                     const phone = 'phonesNumbers[' + i + '][phoneNumber]';
+                    if (item.id != null) {formData.append(id, item.id.toString());}
                     formData.append(phone, item.phoneNumber);
-                    formData.append(id, item.id.toString());
                     i++;
                 });
             } else {
                 formData.append(key, data[key]);
             }
         }
-
         return this._httpClient.put(this.endpoint, formData).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))
         );
     }
 
-    delete(id
-               :
+    delete(id:
                number
     ):
         Observable<boolean> {
