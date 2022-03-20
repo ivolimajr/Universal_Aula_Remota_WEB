@@ -12,7 +12,7 @@ import {fuseAnimations} from '@fuse/animations';
 import {MatDialog} from '@angular/material/dialog';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {EdrivingModel} from '../../../shared/models/edriving.model';
 import {UserService} from '../../../shared/services/http/user.service';
 import {EdrivingService} from '../../../shared/services/http/edriving.service';
@@ -32,18 +32,19 @@ import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.comp
 export class EdrivingComponent implements OnInit, OnDestroy {
     @Input() edrivingUser: EdrivingModel;
 
-    accountForm: FormGroup;
-    user: User;
-    masks = MASKS;
+    public accountForm: FormGroup;
+    public user: User;
+    public masks = MASKS;
+    public loading: boolean;
     private edrivingModel = new EdrivingModel();
-    private userSub: Subscription;
-    private phoneSub: Subscription;
+    private user$: Subscription;
+    private phone$: Subscription;
 
     constructor(
         public dialog: MatDialog,
         private _snackBar: MatSnackBar,
         private _formBuilder: FormBuilder,
-        private _userService: UserService,
+        private _userServices: UserService,
         private _authServices: AuthService,
         private _edrivingServices: EdrivingService,
         private _changeDetectorRef: ChangeDetectorRef,
@@ -52,38 +53,28 @@ export class EdrivingComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        //Prepara o formulário
         this.prepareForm();
     }
 
-    /**
-     * Atualiza o usuário do tipo Edriving
-     *
-     * @return void
-     */
     update(): void {
-
-        //Verifica se o formulário é valido
-        if (this.prepareFormToSend() === false) {
-            return null;
-        }
+        this.loading = true;
         this.accountForm.disable();
-        this.userSub = this._edrivingServices.update(this.edrivingModel).subscribe((res: any) => {
+        //Verifica se o formulário é valido
+        if (this.setUserData() === false) {
+            return this.closeAlert();
+        }
+        this.user$ = this._edrivingServices.update(this.edrivingModel).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
-                this.accountForm.enable();
-                this._changeDetectorRef.markForCheck();
-                return;
+                return this.closeAlert();
             }
             this.edrivingUser = res;
 
             //Atualiza os dados do localStorage
             this.user = this._authServices.getUserInfoFromStorage();
-            this.user.name = res.nome;
+            this.user.name = res.name;
             this.user.email = res.email;
             this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
-
-            //Atualiza o útlimo registro do formulário de contato com o ID do telefone atualizado
 
             //Pega o último registro de telefone que veio do usuario atualizado
             const lastPhoneIdFromUser = res.phonesNumbers[res.phonesNumbers.length - 1];
@@ -109,52 +100,61 @@ export class EdrivingComponent implements OnInit, OnDestroy {
 
             //Retorna a mensagem de atualizado
             this.openSnackBar('Atualizado');
-            this.accountForm.enable();
-            this._changeDetectorRef.markForCheck();
+            return this.closeAlert();
         });
     }
 
-    /**
-     * Adiciona mais um campo no formulário de contato
-     *
-     * @return void
-     */
     addPhoneNumberField(): void {
-        const phoneNumberFormGroup =  this._formBuilder.group({
+        const phoneNumberFormGroup = this._formBuilder.group({
             phoneNumber: ['', Validators.compose([
                 Validators.required,
                 Validators.nullValidator
             ])]
         });
 
-        // Adiciona o formGroup ao array de telefones
         (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumberFormGroup);
         this._changeDetectorRef.markForCheck();
     }
 
-    /**
-     * Remove um telefone do formulário de contato e do banco de dados
-     *
-     * @param id do telefone a ser removido
-     * @param index do array de telefones a ser removido
-     */
     removePhoneNumber(id: number, index: number): void {
-        if (this.edrivingUser.phonesNumbers.length === 1) {
-            this.dialog.open(AlertModalComponent, {
-                width: '280px',
-                data: {content: 'Usuário não pode ficar sem contato.', oneButton: true}
-            });
-            return;
-        }
-        this.phoneSub = this._userService.removePhonenumber(id)
-            .subscribe((res) => {
-                if (!res) {return this.openSnackBar('Telefone já em uso', 'warn');}
+        const phonesFormArray = this.accountForm.get('phonesNumbers') as FormArray;
 
-                const phoneNumbersFormArray = this.accountForm.get('phonesNumbers') as FormArray;
-                // Remove the phone number field
-                phoneNumbersFormArray.removeAt(index);
-                this._changeDetectorRef.markForCheck();
+        if (id === 0 && phonesFormArray.length > 1) {
+            phonesFormArray.removeAt(index);
+            return this._changeDetectorRef.markForCheck();
+        }
+        if (phonesFormArray.length === 1) {
+            this.openSnackBar('Remoção Inválida', 'warn');
+            return this._changeDetectorRef.markForCheck();
+        }
+        if (this.edrivingUser.phonesNumbers.length === 1) {
+            this.openSnackBar('Remoção Inválida', 'warn');
+            this._changeDetectorRef.markForCheck();
+        }
+        this.loading = true;
+        this._changeDetectorRef.markForCheck();
+        const dialogRef = this.dialog.open(AlertModalComponent, {
+            width: '280px',
+            data: {title: 'Confirma remoção do telefone?'}
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (!result) {
+                return this.closeAlert();
+            }
+            this.removePhoneFromApi(id).subscribe((res: any)=>{
+                if(res){
+                    this.openSnackBar('Removido');
+                    const phoneNumbersFormArray = this.accountForm.get('phonesNumbers') as FormArray;
+                    // Remove the phone number field
+                    phoneNumbersFormArray.removeAt(index);
+                    this.closeAlert();
+                    return;
+                }
+                this.openSnackBar('Remoção Inválida', 'warn');
+                this.closeAlert();
             });
+        });
     }
 
     trackByFn(index: number, item: any): any {
@@ -162,25 +162,18 @@ export class EdrivingComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if(this.userSub){
-            this.userSub.unsubscribe();
+        if (this.user$) {
+            this.user$.unsubscribe();
         }
-        if(this.phoneSub){
-            this.phoneSub.unsubscribe();
+        if (this.phone$) {
+            this.phone$.unsubscribe();
         }
         this._changeDetectorRef.markForCheck();
     }
-    // -----------------------------------------------------------------------------------------------------
-    // @ Private methods
-    // -----------------------------------------------------------------------------------------------------
 
-    /**
-     * monta o formulário com os validadores
-     *
-     * @return void
-     * @private
-     */
     private prepareForm(): void {
+        this.loading = true;
+        this._changeDetectorRef.markForCheck();
         this.accountForm = this._formBuilder.group({
             name: [this.edrivingUser.name,
                 Validators.compose([
@@ -247,36 +240,25 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         phoneNumbersFormGroups.forEach((phoneNumbersFormGroup) => {
             (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumbersFormGroup);
         });
-
-        //Define o ID do usuário Edriving a ser atualizado
-        this.edrivingModel.id = this.edrivingUser.id;
-        this._changeDetectorRef.markForCheck();
+        this.closeAlert();
     }
 
-    /**
-     * Valida os dados vindo do formulário antes de enviar para API
-     *
-     * @private
-     * @return um boleano
-     */
-    private prepareFormToSend(): boolean {
+    private setUserData(): boolean {
         const formData = this.accountForm.value;
-
         if (this.accountForm.invalid) {
             this.openSnackBar('Dados Inválidos', 'warn');
             return false;
         }
-        //Se todos os dados forem válidos, monta o objeto para atualizar
-        this.edrivingModel.name = formData.name;
-        this.edrivingModel.email = formData.email;
-        this.edrivingModel.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
+        formData.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
         formData.phonesNumbers.forEach((item) => {
             if (item.phoneNumber.length !== 11) {
                 item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
-        this.edrivingModel.phonesNumbers = formData.phonesNumbers;
-        return true;
+        this.edrivingModel = formData;
+        if(this.edrivingUser){
+            this.edrivingModel.id = this.edrivingUser.id;
+        }
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {
@@ -286,5 +268,14 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             verticalPosition: 'bottom',
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
+    }
+
+    private closeAlert(): void {
+        this.accountForm.enable();
+        this.loading = false;
+        this._changeDetectorRef.markForCheck();
+    }
+    private removePhoneFromApi(id: number): Observable<boolean> {
+        return this._userServices.removePhonenumber(id);
     }
 }

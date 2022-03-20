@@ -26,7 +26,7 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
     _users$ = this._administrativeServices.getAll();
     loading: boolean = false;
     private dataSub: Subscription;
-    private userSub: Subscription;
+    private user$: Subscription;
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatSort) sort: MatSort;
@@ -116,8 +116,8 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        if (this.userSub) {
-            this.userSub.unsubscribe();
+        if (this.user$) {
+            this.user$.unsubscribe();
         }
         if (this.dataSub) {
             this.dataSub.unsubscribe();
@@ -139,7 +139,7 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
         });
     }
     private deleteFromApi(id: number): void {
-        this.userSub = this._administrativeServices.delete(id).subscribe((res: any)=>{
+        this.user$ = this._administrativeServices.delete(id).subscribe((res: any)=>{
             if (res.error) {
                 this.isDeleting = false;
                 this._changeDetectorRef.markForCheck();

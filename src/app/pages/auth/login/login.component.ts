@@ -5,6 +5,7 @@ import {fuseAnimations} from '@fuse/animations';
 import {AuthService} from 'app/shared/services/auth/auth.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Subscription} from 'rxjs';
+import {TokenResult} from '../../../shared/models/token.model';
 
 @Component({
     selector: 'login',
@@ -38,13 +39,16 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
         this.loginForm.disable();
 
-        this.loginSub = this._authService.signIn(this.loginForm.value).subscribe((res) => {
-            if (res.error) {
-                return this.loginForm.enable();
-            }
-            const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
-            this._router.navigateByUrl(redirectURL);
-        });
+        if (!this._authService.tokenFromLocalStorage) {
+            this.loginSub =  this._authService.getApiTokenFromApi()
+                .subscribe((result: TokenResult) => {
+                    this._authService.tokenFromLocalStorage = result;
+                    this.login();
+                    return;
+                });
+        } else{
+            this.login();
+        }
     }
 
     ngOnDestroy(): void {
@@ -72,6 +76,17 @@ export class LoginComponent implements OnInit, OnDestroy {
             rememberMe: ['']
         });
     }
+
+    private login(): void{
+        this._authService.signIn(this.loginForm.value).subscribe((res) => {
+            if (res.error) {
+                return this.loginForm.enable();
+            }
+            const redirectURL = this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
+            this._router.navigateByUrl(redirectURL);
+        });
+    }
+
 
     private openSnackBar(message: string, type: string = 'accent'): void {
         this._snackBar.open(message, '', {

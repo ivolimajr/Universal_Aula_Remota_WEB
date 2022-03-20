@@ -1,16 +1,19 @@
+<ng-container *ngIf="loading;">
+    <mat-progress-bar class="mb-5" [mode]="'indeterminate'"></mat-progress-bar>
+</ng-container>
 <div class="w-full max-w-3xl">
 
-
-    <!-- Form -->
     <form [formGroup]="accountForm">
 
-        <!-- Section -->
         <div class="w-full">
             <div class="text-xl">Dados Pessoais</div>
             <div class="text-secondary">Mantenha seus dados sempre atualizados!</div>
         </div>
-        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
-            <!-- Nome -->
+
+        <!--start:Dados pessoais-->
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-5">
+
+            <!-- start:Nome -->
             <div class="sm:col-span-4">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label for="name">Nome</mat-label>
@@ -22,7 +25,6 @@
                         id="name"
                         matInput
                         [formControlName]="'name'">
-
                 </mat-form-field>
                 <mat-error *ngIf="accountForm.get('name').hasError('required')">
                     Informe name
@@ -31,8 +33,9 @@
                     Insira um nome válido
                 </mat-error>
             </div>
+            <!--end:Nome-->
 
-            <!-- Email -->
+            <!-- start:Email -->
             <div class="sm:col-span-2">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label for="email">Email</mat-label>
@@ -52,8 +55,9 @@
                     Insira um nome válido
                 </mat-error>
             </div>
+            <!--end:Email-->
 
-            <!-- Cpf -->
+            <!-- start:Cpf -->
             <div class="sm:col-span-2">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label for="cpf">CPF</mat-label>
@@ -74,23 +78,29 @@
                     Insira um cpf válido
                 </mat-error>
             </div>
+            <!--end:Cpf-->
+
         </div>
+        <!--end:Dados Pessoais-->
 
-        <!-- Divider -->
-        <div class="my-10 border-t"></div>
+        <div class="my-5 border-t"></div>
 
-        <!-- Section -->
         <div class="w-full">
             <div class="text-xl">Dados de contato</div>
             <div class="text-secondary">Dados necessário para nossa equipe entrar em contato com você.
             </div>
         </div>
-        <div class="mt-8">
+
+        <!--start:PhonesNumbers-->
+        <div class="mt-5">
+            <!--start:field-->
             <div class="space-y-4">
                 <ng-container
                     *ngFor="let phoneNumber of accountForm.get('phonesNumbers')['controls']; let i = index;"
                     formArrayName="phonesNumbers">
                     <div class="relative flex">
+
+                        <!--start:Phone form field-->
                         <mat-form-field class="fuse-mat-no-subscript flex-auto">
                             <mat-label>Telefone</mat-label>
                             <mat-icon
@@ -104,7 +114,9 @@
                                 [formControl]="phoneNumber.get('phoneNumber')"
                                 [value]="phoneNumber.value.phoneNumber ?? ''">
                         </mat-form-field>
-                        <!-- Remove phone number -->
+                        <!--end:Phone form field-->
+
+                        <!-- start:Remove phone number -->
                         <ng-container>
                             <div
                                 class="flex items-center w-10 pl-2"
@@ -120,9 +132,14 @@
                                 </button>
                             </div>
                         </ng-container>
+                        <!-- end:Remove phone number -->
+
                     </div>
                 </ng-container>
             </div>
+            <!--end:field-->
+
+            <!--start:add phone Button-->
             <div
                 class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer"
                 (click)="addPhoneNumberField()">
@@ -131,19 +148,15 @@
                     [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
                 <span class="ml-2 font-medium text-secondary group-hover:underline">Inserir novo contato</span>
             </div>
+            <!--end:add phone Button-->
+
         </div>
 
-        <!-- Divider -->
-        <div class="mt-11 mb-10 border-t"></div>
-        <!-- Actions -->
+        <div class="mt-5 mb-5 border-t"></div>
+
         <div class="flex items-center justify-end">
             <button
-                mat-stroked-button
-                type="button">
-                Cancelar
-            </button>
-            <button
-                [disabled]="accountForm.disabled"
+                [disabled]="accountForm.disabled || accountForm.invalid"
                 class="ml-4"
                 mat-flat-button
                 type="button"
@@ -153,6 +166,5 @@
             </button>
         </div>
     </form>
-
 
 </div>

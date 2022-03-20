@@ -36,8 +36,8 @@ export class PartnnerComponent implements OnInit, OnDestroy {
     user: User;
     masks = MASKS;
     private partnnerModel = new PartnnerModel();
-    private userSub: Subscription;
-    private phoneSub: Subscription;
+    private user$: Subscription;
+    private phone$: Subscription;
 
     constructor(
         public dialog: MatDialog,
@@ -69,7 +69,7 @@ export class PartnnerComponent implements OnInit, OnDestroy {
             return null;
         }
         this.accountForm.disable();
-        this.userSub = this._parceiroServices.update(this.partnnerModel).subscribe((res: any) => {
+        this.user$ = this._parceiroServices.update(this.partnnerModel).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
                 this.accountForm.enable();
@@ -147,7 +147,7 @@ export class PartnnerComponent implements OnInit, OnDestroy {
             });
             return;
         }
-        this.phoneSub = this._userService.removePhonenumber(id)
+        this.phone$ = this._userService.removePhonenumber(id)
             .subscribe((res) => {
                 if (!res) {return this.openSnackBar('Telefone já em uso', 'warn');}
                 const phoneNumbersFormArray = this.accountForm.get('phonesNumbers') as FormArray;
@@ -162,11 +162,11 @@ export class PartnnerComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.userSub) {
-            this.userSub.unsubscribe();
+        if (this.user$) {
+            this.user$.unsubscribe();
         }
-        if (this.phoneSub) {
-            this.phoneSub.unsubscribe();
+        if (this.phone$) {
+            this.phone$.unsubscribe();
         }
         this._changeDetectorRef.markForCheck();
     }

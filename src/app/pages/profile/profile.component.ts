@@ -39,8 +39,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     loading: boolean = true;
     idUser: number;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-    private userSub: Subscription;
-    private authSub: Subscription;
+    private user$: Subscription;
+    private auth$: Subscription;
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
@@ -58,11 +58,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        if(this.userSub){
-            this.userSub.unsubscribe();
+        if(this.user$){
+            this.user$.unsubscribe();
         }
-        if(this.authSub){
-            this.authSub.unsubscribe();
+        if(this.auth$){
+            this.auth$.unsubscribe();
         }
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
@@ -161,14 +161,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
      */
     private loadUser(): void {
         //pega os dados do usuário que estão no localstorage
-        this.authSub = this._authService.user$.subscribe((res) => {
+        this.auth$ = this._authService.user$.subscribe((res) => {
             //verifica se o usuário tem perfil de edriving - perfil que gerencia a plataforma
             if (res.roles.find(r => r.role === RolesConstants.EDRIVING) ) {
                 //busca o usuário na API
-                this.userSub = this._edrivingServices.getOne(res.id).subscribe((result) => {
+                this.user$ = this._edrivingServices.getOne(res.id).subscribe((result) => {
                     this.edrivingUser = result;
                     //Set o id do usuário para alterar a senha
-                    this.idUser = result.id;
+                    this.idUser = result.userId;
                     //carrega o painel A
                     this.loadPanel();
                     this.loading = false;
@@ -178,7 +178,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             //verifica se o usuário tem perfil de edriving - perfil que gerencia a plataforma
             if (res.roles.find(r => r.role === RolesConstants.PARCEIRO) ) {
                 //busca o usuário na API
-                this.userSub = this._parceiroServices.getOne(res.id).subscribe((result) => {
+                this.user$ = this._parceiroServices.getOne(res.id).subscribe((result) => {
                     this.parceiroUser = result;
                     this.enderecoUser = result.address;
                     //Set o id do usuário para alterar a senha

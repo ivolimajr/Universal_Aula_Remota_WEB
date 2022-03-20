@@ -45,8 +45,8 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
     private phoneArray = [];
     private user: User;
     private levelSub: Subscription;
-    private userSub: Subscription;
-    private cepSub: Subscription;
+    private user$: Subscription;
+    private cep$: Subscription;
 
     constructor(
         public dialog: MatDialog,
@@ -63,14 +63,14 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.userSub) {
-            this.userSub.unsubscribe();
+        if (this.user$) {
+            this.user$.unsubscribe();
         }
         if (this.levelSub) {
             this.levelSub.unsubscribe();
         }
-        if (this.cepSub) {
-            this.cepSub.unsubscribe();
+        if (this.cep$) {
+            this.cep$.unsubscribe();
         }
     }
 
@@ -93,7 +93,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
             this._changeDetectorRef.markForCheck();
 
             if (this.userEdit) {
-                this.userSub = this._parceiroServices.update(this.partnnerModel).subscribe((res: any) => {
+                this.user$ = this._parceiroServices.update(this.partnnerModel).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
                         this.closeAlert();
@@ -102,7 +102,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                     //Se o usuário a ser atualizado for o usuário logado, atualiza os dados na storage
                     if (this.userEdit.id === this._authServices.getUserInfoFromStorage().id) {
                         this.user = this._authServices.getUserInfoFromStorage();
-                        this.user.name = res.nome;
+                        this.user.name = res.name;
                         this.user.email = res.email;
                         this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
                     }
@@ -112,7 +112,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                     return;
                 });
             } else {
-                this.userSub = this._parceiroServices.create(this.partnnerModel).subscribe((res: any) => {
+                this.user$ = this._parceiroServices.create(this.partnnerModel).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
                         this.closeAlert();
@@ -193,7 +193,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
             this.openSnackBar('Cep inválido');
             return;
         }
-        this.cepSub = this._cepService.getCep(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
+        this.cep$ = this._cepService.getCep(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
             this.accountForm.patchValue({
                 district: res.bairro,
                 address: res.logradouro,

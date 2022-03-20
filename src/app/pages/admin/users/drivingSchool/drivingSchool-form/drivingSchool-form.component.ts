@@ -35,8 +35,8 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
     files: Set<File>;
     private phoneArray = [];
     private drivinSchoolModel = new DrivingSchool();
-    private cepSub: Subscription;
-    private userSub: Subscription;
+    private cep$: Subscription;
+    private user$: Subscription;
     private fileArray = [];
     private fileModel: Array<FileModel> = [];
     private filesUpdate: Array<FileModelUpdate> = [];
@@ -200,14 +200,14 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
 
         //Se não tiver um ID, significa que está criando um novo usuário
         if (!this.id) {
-            this.userSub = this._autoEscolaService.createFormEncoded(this.drivinSchoolModel).subscribe((res: any) => {
+            this.user$ = this._autoEscolaService.createFormEncoded(this.drivinSchoolModel).subscribe((res: any) => {
                 if (res.error) {return this.closeAlert();}
                 this.closeAlert();
                 this.openSnackBar('Salvo');
                 this._router.navigate(['usuario/auto-escola']);
             });
         } else {
-            this.userSub = this._autoEscolaService.updateFormEncoded(this.drivinSchoolModel).subscribe((res: any) => {
+            this.user$ = this._autoEscolaService.updateFormEncoded(this.drivinSchoolModel).subscribe((res: any) => {
                 if (res.error) {return this.closeAlert();}
                 this.closeAlert();
                 this.openSnackBar('Atualizado');
@@ -236,7 +236,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
             this.openSnackBar('Cep inválido');
             return;
         }
-        this.cepSub = this._cepService.getCep(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
+        this.cep$ = this._cepService.getCep(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
             this.addressForm.patchValue({
                 district: res.bairro,
                 address: res.logradouro,
@@ -340,11 +340,11 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.userSub) {
-            this.userSub.unsubscribe();
+        if (this.user$) {
+            this.user$.unsubscribe();
         }
-        if (this.cepSub) {
-            this.cepSub.unsubscribe();
+        if (this.cep$) {
+            this.cep$.unsubscribe();
         }
     }
 

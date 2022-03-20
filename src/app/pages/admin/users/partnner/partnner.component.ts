@@ -36,7 +36,7 @@ export class PartnnerComponent implements AfterViewInit, OnInit,OnDestroy {
     showAlert: boolean = false;
     _users$ = this._parceiroServices.getAll();
     private dataSub: Subscription;
-    private userSub: Subscription;
+    private user$: Subscription;
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatSort) sort: MatSort;
@@ -136,8 +136,8 @@ export class PartnnerComponent implements AfterViewInit, OnInit,OnDestroy {
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        if(this.userSub){
-            this.userSub.unsubscribe();
+        if(this.user$){
+            this.user$.unsubscribe();
         }
         if(this.dataSub){
             this.dataSub.unsubscribe();
@@ -167,7 +167,7 @@ export class PartnnerComponent implements AfterViewInit, OnInit,OnDestroy {
      * @return void
      */
     private deleteFromApi(id: number): void {
-        this.userSub = this._parceiroServices.delete(id).subscribe((res: any)=>{
+        this.user$ = this._parceiroServices.delete(id).subscribe((res: any)=>{
             if (res.error) {
                 this.isDeleting = false;
                 this._changeDetectorRef.markForCheck();

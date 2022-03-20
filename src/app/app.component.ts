@@ -30,7 +30,7 @@ export class AppComponent {
      */
     private getToken(): void {
 
-        //Se não tiver um token no storage, já busca um token
+        //Se não tiver um token no storage, busca um token
         if (!this._authService.tokenFromLocalStorage) {
             this._authService.getApiTokenFromApi()
                 .subscribe((result: TokenResult) => {

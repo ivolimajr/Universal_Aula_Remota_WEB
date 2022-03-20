@@ -34,10 +34,10 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
         message: ''
     };
 
-    securityForm: FormGroup;
-    showAlert: boolean = false;
+    public securityForm: FormGroup;
+    public loading: boolean;
     private loginUser = new UserLogin();
-    private authSub: Subscription;
+    private auth$: Subscription;
 
     constructor(
         private _snackBar: MatSnackBar,
@@ -65,47 +65,45 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     update(): void {
         //Verifica se o formulário é válido
         if (this.securityForm.invalid) {
-            this.setAlert('Dados Inválidos.');
-            return;
+            return this.openSnackBar('Dados Inválidos.', 'warn');
         }
-
+        this.loading = true;
+        this._changeDetectorRef.markForCheck();
         this.securityForm.disable();
-        //Verifica se a senha atual confere
+
         const formData = this.securityForm.value;
-        if (formData.currentPassword !== this._authServices.getLoginFromStorage().password) {
+        const storagePassword = this._authServices.getLoginFromStorage().password;
+        if (formData.currentPassword !== storagePassword) {
+            console.log(storagePassword);
             this.openSnackBar('Senha atual não confere', 'warn');
-            this.setAlert('Senha atual não confere');
-            this.securityForm.enable();
+            this.closeAlert();
             return;
         }
         //atualiza a senha na API
-        this.authSub = this._userServices.updatePassById(this.securityForm.value).subscribe((res: any) => {
-            if (res.error) return this.securityForm.enable();
+        this.auth$ = this._userServices.updatePassById(this.securityForm.value).subscribe((res: any) => {
+            if (res.error) {
+                return this.closeAlert();
+            }
             this.openSnackBar('Senha Atualizada');
-            this.securityForm.enable();
+
             //Atualiza a senha no localStorage
             this.loginUser.email = this._authServices.getUserInfoFromStorage().email;
-            this.loginUser.password = formData.currentPassword;
+            this.localStorage.removeFromStorage(environment.dataStorage);
+            this.loginUser.password = formData.newPassword;
             this.localStorage.setValueFromLocalStorage(environment.dataStorage, this.loginUser);
-            //Atualiza o formulário
-            this._changeDetectorRef.markForCheck();
+
+            this.closeAlert();
             return;
         });
     }
 
     ngOnDestroy(): void {
-        if(this.authSub){
-            this.authSub.unsubscribe();
+        if(this.auth$){
+            this.auth$.unsubscribe();
         }
         this._changeDetectorRef.markForCheck();
     }
 
-    /**
-     *Carrega o formulário
-     *
-     * @private
-     * @return void
-     */
     private loadForm(): void {
         this.securityForm = this._formBuilder.group({
             id: [this.idUser],
@@ -123,11 +121,9 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    private setAlert(message: string, type: any = 'error'): void {
-        this.showAlert = false;
-        this.alert.type = type;
-        this.alert.message = message;
-        this.showAlert = true;
+    private closeAlert(): void {
+        this.loading = false;
+        this.securityForm.enable();
         this._changeDetectorRef.markForCheck();
     }
     private openSnackBar(message: string, type: string = 'accent'): void {

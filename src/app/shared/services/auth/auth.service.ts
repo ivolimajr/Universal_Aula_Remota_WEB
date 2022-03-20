@@ -57,11 +57,11 @@ export class AuthService {
     signIn(credentials: { email: string; password: string }): Observable<any> {
         //Verifica se o usuário já está autenticado
         if (this._authenticated) {
-            return throwError('User is already logged in.');
+            return throwError('Usuário já está online');
         }
-
         return this._httpClient.post(API_LOGIN_URL, credentials).pipe(
             switchMap((response: User) => {
+
                 this.storageServices.setValueFromLocalStorage(environment.authStorage, response);
 
                 //Define os atributos de login e senha para salvar no Storage para verificações.

@@ -28,8 +28,8 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     ufList = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB',
         'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
     private userPost = new AdministrativeModel(); //Objeto para envio dos dados para API
-    private userSub: Subscription;
-    private cepSub: Subscription;
+    private user$: Subscription;
+    private cep$: Subscription;
     private phoneArray = [];
 
     constructor(
@@ -45,11 +45,11 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.userSub) {
-            this.userSub.unsubscribe();
+        if (this.user$) {
+            this.user$.unsubscribe();
         }
-        if (this.cepSub) {
-            this.cepSub.unsubscribe();
+        if (this.cep$) {
+            this.cep$.unsubscribe();
         }
     }
 
@@ -65,7 +65,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
         this.setUserData();
         this.userForm.disable();
         if (!this.id) {
-            this.userSub = this._administrativeServices.create(this.userPost).subscribe((res: any)=>{
+            this.user$ = this._administrativeServices.create(this.userPost).subscribe((res: any)=>{
                if(res.error){
                    this.userForm.enable();
                    return;
@@ -74,7 +74,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                this.dialogRef.close(res);
             });
         } else{
-            this.userSub = this._administrativeServices.update(this.userPost).subscribe((res: any)=>{
+            this.user$ = this._administrativeServices.update(this.userPost).subscribe((res: any)=>{
                 if(res.error){
                     this.userForm.enable();
                     return;
@@ -135,7 +135,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             this.openSnackBar('Cep inválido');
             return;
         }
-        this.cepSub = this._cepService.getCep(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
+        this.cep$ = this._cepService.getCep(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
             this.addressForm.patchValue({
                 district: res.bairro,
                 address: res.logradouro,
@@ -253,7 +253,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     private prepareEditForm(): void {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
-        this.userSub = this._administrativeServices.getOne(this.id)
+        this.user$ = this._administrativeServices.getOne(this.id)
             .subscribe((res) => {
                 if (!res.id) {
                     return;

@@ -31,8 +31,8 @@ export class AddressComponent implements OnInit, OnDestroy {
     cep: string;
     states = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
         'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
-    private userSub: Subscription;
-    private cepSub: Subscription;
+    private user$: Subscription;
+    private cep$: Subscription;
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -54,7 +54,7 @@ export class AddressComponent implements OnInit, OnDestroy {
         this.addressForm.disable();
         this.setData();
 
-        this.userSub = this._userService.updateAddress(this.addressModel).subscribe((res: any) => {
+        this.user$ = this._userService.updateAddress(this.addressModel).subscribe((res: any) => {
             if (res.error) {
                 this.addressForm.enable();
                 this._changeDetectorRef.markForCheck();
@@ -77,7 +77,7 @@ export class AddressComponent implements OnInit, OnDestroy {
             this.openSnackBar('Cep inválido');
             return;
         }
-        this.cepSub = this._cepService.getCep(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
+        this.cep$ = this._cepService.getCep(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
             this.addressForm.patchValue({
                 district: res.bairro,
                 address: res.logradouro,
@@ -90,11 +90,11 @@ export class AddressComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.cepSub) {
-            this.cepSub.unsubscribe();
+        if (this.cep$) {
+            this.cep$.unsubscribe();
         }
-        if (this.userSub) {
-            this.userSub.unsubscribe();
+        if (this.user$) {
+            this.user$.unsubscribe();
         }
         this._changeDetectorRef.markForCheck();
     }

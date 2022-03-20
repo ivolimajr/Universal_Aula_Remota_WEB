@@ -27,14 +27,13 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
     accountForm: FormGroup;
     masks = MASKS;
     loading: boolean = true; //Inicia o componente com um lading
-    message: string = null; //Mensagem quando estiver salvando ou editando um usuário
     levels: Level[]; //Lista com os cargos
     levelId: number;
     selectedLevel: string = null; //Cargo Selecionado
     private edrivingModel = new EdrivingModel(); //Objeto para envio dos dados para API
     private phoneArray = [];
     private user: User;
-    private userSub: Subscription;
+    private user$: Subscription;
     private levelSub: Subscription;
 
     constructor(
@@ -68,17 +67,15 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
      * @return void
      */
     submit(): void {
-        this.accountForm.disable();
         //Prepara o usuário
         const result = this.prepareUser();
         if (result) {
-            //Exibe o alerta de salvando dados
             this.loading = true;
             this._changeDetectorRef.markForCheck();
-
+            this.accountForm.disable();
             //Atualiza o usuário
             if (this.userEdit) {
-                this.userSub = this._edrivingServices.update(this.edrivingModel).subscribe((res: any) => {
+                this.user$ = this._edrivingServices.update(this.edrivingModel).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
                         this.closeAlert();
@@ -99,7 +96,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
             } else {
                 //Cria um usuário
                 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-                this.userSub = this._edrivingServices.create(this.edrivingModel).subscribe((res: any) => {
+                this.user$ = this._edrivingServices.create(this.edrivingModel).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
                         this.closeAlert();
@@ -116,7 +113,6 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
     //Fecha o alerta na tela
     closeAlert(): void {
         this.loading = false;
-        this.message = null;
         this._changeDetectorRef.markForCheck();
     }
 
@@ -127,6 +123,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
      * @param index do array de telefones a ser removido
      */
     removePhoneNumber(id: number, index: number): void {
+        this.loading = true;
         const phonesFormArray = this.accountForm.get('phonesNumbers') as FormArray;
         if (id === 0 && phonesFormArray.length > 1) {
             phonesFormArray.removeAt(index);
@@ -183,8 +180,8 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
     };
 
     ngOnDestroy(): void {
-        if (this.userSub) {
-            this.userSub.unsubscribe();
+        if (this.user$) {
+            this.user$.unsubscribe();
         }
         if (this.levelSub) {
             this.levelSub.unsubscribe();
@@ -314,7 +311,6 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
     private prepareEditForm(): void {
 
         this.loading = true;
-        this.message = 'Buscando dados.';
         this._changeDetectorRef.markForCheck();
 
         this.accountForm = this._formBuilder.group({

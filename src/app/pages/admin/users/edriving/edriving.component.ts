@@ -29,7 +29,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
     isDeleting: boolean = false;
     _users$ = this._edrivingServices.getAll(); //Observable dos usuário
     private dataSub: Subscription;
-    private userSub: Subscription;
+    private user$: Subscription;
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatSort) sort: MatSort;
@@ -133,8 +133,8 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        if(this.userSub){
-            this.userSub.unsubscribe();
+        if(this.user$){
+            this.user$.unsubscribe();
         }
         if(this.dataSub){
             this.dataSub.unsubscribe();
@@ -164,7 +164,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
      * @return void
      */
     private deleteFromApi(id: number): void {
-        this.userSub = this._edrivingServices.delete(id).subscribe((res: any)=>{
+        this.user$ = this._edrivingServices.delete(id).subscribe((res: any)=>{
             if (res.error) {
                 this.isDeleting = false;
                 this._changeDetectorRef.markForCheck();
