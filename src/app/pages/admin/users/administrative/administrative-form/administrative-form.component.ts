@@ -2,12 +2,14 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy,
 import {AdministrativeService} from '../../../../../shared/services/http/administrative.service';
 import {AdministrativeModel} from '../../../../../shared/models/administrative.model';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CepService} from '../../../../../shared/services/http/cep.service';
+import {UserService} from "../../../../../shared/services/http/user.service";
+import {AlertModalComponent} from "../../../../../layout/common/alert/alert-modal.component";
 
 @Component({
     selector: 'app-administrative-form',
@@ -34,6 +36,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
         public dialog: MatDialog,
         private _snackBar: MatSnackBar,
         private _formBuilder: FormBuilder,
+        private _userServices: UserService,
         public dialogRef: MatDialogRef<AdministrativeFormComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
         private _cepService: CepService,
@@ -62,25 +65,69 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
         this.setUserData();
         this.userForm.disable();
         if (!this.id) {
-            this.userForm.value.origin = this.userForm.value.origin + '-' + this.ufOrigin.value;
-            this.userPost.drivingSchoolId = 2;
             this.userSub = this._administrativeServices.create(this.userPost).subscribe((res: any)=>{
-               if(res.errror){
+               if(res.error){
                    this.userForm.enable();
                    return;
                }
                this.userForm.enable();
                this.dialogRef.close(res);
             });
+        } else{
+            this.userSub = this._administrativeServices.update(this.userPost).subscribe((res: any)=>{
+                if(res.error){
+                    this.userForm.enable();
+                    return;
+                }
+                this.userForm.enable();
+                this.dialogRef.close(res);
+            });
         }
     }
 
     removePhoneNumber(id: number, index: number): void {
-
+        const phonesFormArray = this.userForm.get('phonesNumbers') as FormArray;
+        if (id === 0 && phonesFormArray.length > 1) {
+            phonesFormArray.removeAt(index);
+            return this.closeAlert();
+        }
+        if (phonesFormArray.length === 1) {
+            this.openSnackBar('Remoção Inválida', 'warn');
+            return this.closeAlert();
+        }
+        this.loading = true;
+        this._changeDetectorRef.markForCheck();
+        const dialogRef = this.dialog.open(AlertModalComponent, {
+            width: '280px',
+            data: {title: 'Confirma remoção do telefone?'}
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (!result) {
+                return this.closeAlert();
+            }
+            this.removePhoneFromApi(id).subscribe((res: boolean)=>{
+                if(res){
+                    this.openSnackBar('Removido');
+                    phonesFormArray.removeAt(index);
+                } else {
+                    this.openSnackBar('Remoção Inválida', 'warn');
+                }
+                return this.closeAlert();
+            });
+        });
     }
 
     addPhoneNumberField(): void {
+        const phonesFormArray = this._formBuilder.group({
+            phoneNumber: ['', Validators.compose([
+                Validators.required,
+                Validators.nullValidator
+            ])]
+        });
 
+        // Adiciona o formGroup ao array de telefones
+        (this.userForm.get('phonesNumbers') as FormArray).push(phonesFormArray);
+        this._changeDetectorRef.markForCheck();
     }
 
     buscaCep(event): void {
@@ -100,9 +147,14 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
         });
     }
 
+    private removePhoneFromApi(id: number): Observable<boolean> {
+        return this._userServices.removePhonenumber(id);
+    }
+
     private prepareForm(): void {
         if (this.id != null) {
             this.prepareEditForm();
+            return;
         }
         this.userForm = this._formBuilder.group({
             name: ['',
@@ -241,8 +293,40 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                             Validators.nullValidator,
                             Validators.min(5),
                             Validators.maxLength(100)
-                        ])]
+                        ])],
+                    phonesNumbers: this._formBuilder.array([], Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator
+                    ]))
                 });
+
+                if (res.phonesNumbers.length > 0) {
+                    res.phonesNumbers.forEach((phoneNumber) => {
+                        this.phoneArray.push(
+                            this._formBuilder.group({
+                                id: [phoneNumber.id],
+                                phoneNumber: [phoneNumber.phoneNumber, Validators.compose([
+                                    Validators.required,
+                                    Validators.nullValidator
+                                ])]
+                            }));
+                    });
+                } else {
+                    // Create a phone number form group
+                    this.phoneArray.push(
+                        this._formBuilder.group({
+                            id: [0],
+                            phoneNumber: ['', Validators.compose([
+                                Validators.required,
+                                Validators.nullValidator
+                            ])]
+                        })
+                    );
+                }
+                this.phoneArray.forEach((item)=>{
+                    (this.userForm.get('phonesNumbers') as FormArray).push(item);
+                });
+
                 this.addressForm = this._formBuilder.group({
                     cep: [res.address.cep,
                         Validators.compose([
@@ -285,17 +369,19 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                 });
 
                 const uf = res.origin.substr(res.origin.length - 2, res.origin.length - 1);
+                console.log(uf);
                 if (this.ufList.indexOf(uf) > 0) {
                     this.ufOrigin.setValue(res.origin.substr(res.origin.length - 2, res.origin.length - 1));
                 }
-                this.loading = false;
-                this._changeDetectorRef.markForCheck();
+                this.closeAlert();
+                this.phoneArray = [];
             });
     }
 
     private setUserData(): void{
         const userFormValues = this.userForm.value;
         const addressFormValues = this.addressForm.value;
+
 
         //Verifica se os telefones informados são válidos
         userFormValues.phonesNumbers.forEach((item) => {
@@ -308,18 +394,25 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
 
         this.userPost = userFormValues;
         this.userPost.cpf = userFormValues.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
-        this.userPost.password = 'Pay@2021';
 
         this.userPost.address = addressFormValues;
         this.userPost.address.cep = addressFormValues.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
-
 
         userFormValues.phonesNumbers.forEach((item) => {
             if (item.phoneNumber.length !== 11) {
                 item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
+
         this.userPost.phonesNumbers = userFormValues.phonesNumbers;
+
+        this.userPost.id = this.id ?? null;
+
+        if(!this.id){
+            this.userForm.value.origin = this.userForm.value.origin + '-' + this.ufOrigin.value;
+            this.userPost.drivingSchoolId = 26;
+            this.userPost.password = 'Pay@2021';
+        }
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {
@@ -329,5 +422,10 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             verticalPosition: 'bottom',
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
+    }
+
+    private closeAlert(): void {
+        this.loading = false;
+        this._changeDetectorRef.markForCheck();
     }
 }

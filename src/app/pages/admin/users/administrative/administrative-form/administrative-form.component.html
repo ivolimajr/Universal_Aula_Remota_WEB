@@ -17,7 +17,7 @@
             </div>
         </ng-template>
         <div class="w-15 h-0.5 mt-3 mb-3 rounded bg-accent"></div>
-        <ng-container>
+        <ng-container *ngIf="!loading">
 
             <div class="flex flex-col mt-2.5">
 
@@ -35,7 +35,6 @@
                                 id="name"
                                 matInput
                                 [formControlName]="'name'">
-
                         </mat-form-field>
                         <mat-error *ngIf="userForm.get('name').hasError('name')">
                             Insira um nome válido

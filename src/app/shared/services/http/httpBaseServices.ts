@@ -84,7 +84,9 @@ export class HttpBaseServices<T> {
                 data['phonesNumbers'].forEach((item: PhoneNumberModel) => {
                     const id = 'phonesNumbers[' + i + '][id]';
                     const phone = 'phonesNumbers[' + i + '][phoneNumber]';
-                    if (item.id != null) {formData.append(id, item.id.toString());}
+                    if (item.id != null) {
+                        formData.append(id, item.id.toString());
+                    }
                     formData.append(phone, item.phoneNumber);
                     i++;
                 });
@@ -98,12 +100,9 @@ export class HttpBaseServices<T> {
         );
     }
 
-    delete(id:
-               number
-    ):
+    delete(id: number):
         Observable<boolean> {
-        if (id === 0 || id == null
-        ) {
+        if (id === 0 || id == null) {
             return of(null);
         }
         return this._httpClient.delete(this.endpoint + '/' + id).pipe(
