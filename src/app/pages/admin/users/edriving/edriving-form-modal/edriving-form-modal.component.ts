@@ -1,10 +1,10 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {Observable, of, Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {EdrivingModel} from 'app/shared/models/edriving.model';
 import {EdrivingService} from '../../../../../shared/services/http/edriving.service';
 import {Level} from '../../../../../shared/models/level.model';
@@ -15,22 +15,21 @@ import {AuthService} from '../../../../../shared/services/auth/auth.service';
 import {UserService} from '../../../../../shared/services/http/user.service';
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
 
+
 @Component({
-    selector: 'app-edrivin-form-modal',
+    selector: 'app-edriving-form-modal',
     templateUrl: './edriving-form-modal.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations
 })
 export class EdrivingFormModalComponent implements OnInit, OnDestroy {
 
-    @Input() userEdit: EdrivingModel; //Se vier um ID, exibir e atualizar o usuário
+    @Input() userEdit: EdrivingModel;
     accountForm: FormGroup;
+    levels: Level[] = [];
     masks = MASKS;
-    loading: boolean = true; //Inicia o componente com um lading
-    levels: Level[]; //Lista com os cargos
-    levelId: number;
-    selectedLevel: string = null; //Cargo Selecionado
-    private edrivingModel = new EdrivingModel(); //Objeto para envio dos dados para API
+    loading: boolean = true;
+    private edrivingModel = new EdrivingModel();
     private phoneArray = [];
     private user: User;
     private user$: Subscription;
@@ -38,9 +37,9 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
 
     constructor(
         public dialog: MatDialog,
+        public dialogRef: MatDialogRef<EdrivingFormModalComponent>,
         private _snackBar: MatSnackBar,
         private _formBuilder: FormBuilder,
-        public dialogRef: MatDialogRef<EdrivingFormModalComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
         private _edrivingServices: EdrivingService,
         private _userServices: UserService,
@@ -50,13 +49,10 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        //Busca os cargos
         this.getCargos();
-        //Prepara o formulário
         this.prepareForm();
     }
 
-    //Fecha o formulário
     onNoClick(): void {
         this.dialogRef.close();
     }
@@ -67,13 +63,11 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
      * @return void
      */
     submit(): void {
-        //Prepara o usuário
         const result = this.prepareUser();
         if (result) {
             this.loading = true;
             this._changeDetectorRef.markForCheck();
             this.accountForm.disable();
-            //Atualiza o usuário
             if (this.userEdit) {
                 this.user$ = this._edrivingServices.update(this.edrivingModel).subscribe((res: any) => {
                     if (res.error) {
@@ -94,8 +88,6 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                     return;
                 });
             } else {
-                //Cria um usuário
-                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                 this.user$ = this._edrivingServices.create(this.edrivingModel).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
@@ -107,13 +99,9 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                     this.dialogRef.close(res);
                 });
             }
+        } else{
+            this.accountForm.enable();
         }
-    }
-
-    //Fecha o alerta na tela
-    closeAlert(): void {
-        this.loading = false;
-        this._changeDetectorRef.markForCheck();
     }
 
     /**
@@ -175,10 +163,6 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    onSelectCargoChange(id: number): void {
-        this.levelId = id;
-    };
-
     ngOnDestroy(): void {
         if (this.user$) {
             this.user$.unsubscribe();
@@ -235,10 +219,12 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(70)])],
+            password: ['Pay@2021'],
             phonesNumbers: this._formBuilder.array([], Validators.compose([
                 Validators.required,
                 Validators.nullValidator
             ])),
+            levelId: ['', [Validators.required]],
         });
 
         // Create a phone number form group
@@ -267,44 +253,25 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
     private prepareUser(): boolean {
         const formData = this.accountForm.value;
         let result: boolean = true;
-
         if (this.accountForm.invalid) {
             this.openSnackBar('Dados Inválidos', 'warn');
-            this.accountForm.enable();
             return false;
         }
-
         //Verifica se os telefones informados são válidos
         formData.phonesNumbers.forEach((item) => {
             if (item.phoneNumber === null || item.phoneNumber === '' || item.phoneNumber.length < 10) {
                 this.openSnackBar('Insira um telefone', 'warn');
-                this.accountForm.enable();
                 result = false;
             }
         });
 
-        if (this.levelId === undefined || this.levelId === 0) {
-            this.openSnackBar('Selecione um Cargo', 'warn');
-            this.accountForm.enable();
-            result = false;
-        }
-
-        if (this.userEdit) {
-            this.edrivingModel.id = this.userEdit.id;
-        }
-        if (!this.userEdit) {
-            this.edrivingModel.password = 'Pay@2021';
-        }
-        this.edrivingModel.name = formData.name;
-        this.edrivingModel.email = formData.email;
-        this.edrivingModel.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
-        this.edrivingModel.levelId = this.levelId;
+        formData.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
         formData.phonesNumbers.forEach((item) => {
             if (item.phoneNumber.length !== 11) {
                 item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
-        this.edrivingModel.phonesNumbers = formData.phonesNumbers;
+        this.edrivingModel = formData;
         return result;
     }
 
@@ -314,6 +281,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
 
         this.accountForm = this._formBuilder.group({
+            id: [this.userEdit.id],
             name: [this.userEdit.name,
                 Validators.compose([
                     Validators.required,
@@ -337,9 +305,8 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                 Validators.required,
                 Validators.nullValidator
             ])),
+            levelId: [this.userEdit.levelId, [Validators.required]],
         });
-        this.levelId = this.userEdit.levelId;
-        this.selectedLevel = this.userEdit.level.id.toString();
 
         //Só monta o array de telefones se houver telefones de contato cadastrado
         if (this.userEdit.phonesNumbers.length > 0) {
@@ -372,7 +339,6 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         this.phoneArray.forEach((item) => {
             (this.accountForm.get('phonesNumbers') as FormArray).push(item);
         });
-        this.edrivingModel.id = this.userEdit.id;
         this.closeAlert();
         this.phoneArray = [];
     }
@@ -388,5 +354,10 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
 
     private removePhoneFromApi(id: number): Observable<boolean> {
        return this._userServices.removePhonenumber(id);
+    }
+    //Fecha o alerta na tela
+    private closeAlert(): void {
+        this.loading = false;
+        this._changeDetectorRef.markForCheck();
     }
 }

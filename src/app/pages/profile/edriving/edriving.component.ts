@@ -16,7 +16,7 @@ import {Observable, Subscription} from 'rxjs';
 import {EdrivingModel} from '../../../shared/models/edriving.model';
 import {UserService} from '../../../shared/services/http/user.service';
 import {EdrivingService} from '../../../shared/services/http/edriving.service';
-import {User} from '../../../shared/models/user.model';
+import {User, UserLogin} from '../../../shared/models/user.model';
 import {AuthService} from '../../../shared/services/auth/auth.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
@@ -34,6 +34,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
 
     public accountForm: FormGroup;
     public user: User;
+    public userLogin: UserLogin;
     public masks = MASKS;
     public loading: boolean;
     private edrivingModel = new EdrivingModel();
@@ -72,9 +73,12 @@ export class EdrivingComponent implements OnInit, OnDestroy {
 
             //Atualiza os dados do localStorage
             this.user = this._authServices.getUserInfoFromStorage();
+            this.userLogin = this._storageServices.getValueFromLocalStorage(environment.dataStorage);
             this.user.name = res.name;
             this.user.email = res.email;
+            this.userLogin.email = res.email;
             this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
+            this._storageServices.setValueFromLocalStorage(environment.dataStorage, this.userLogin);
 
             //Pega o último registro de telefone que veio do usuario atualizado
             const lastPhoneIdFromUser = res.phonesNumbers[res.phonesNumbers.length - 1];

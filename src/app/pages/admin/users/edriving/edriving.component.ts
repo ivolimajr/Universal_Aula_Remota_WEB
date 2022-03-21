@@ -63,7 +63,6 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
      * @return void
      */
     addUser(user: EdrivingModel): void {
-
         //Atualiza um usuário
         if (user) {
             const dialogRef = this.dialog.open(EdrivingFormModalComponent);
@@ -81,18 +80,13 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
             dialogRef.afterClosed().subscribe((result) => {
                 if (result) {
                     this.dataSource.data = [...this.dataSource.data, result];
-                    this.openSnackBar('Inserido');
+                    this.openSnackBar('Salvo');
                     this._changeDetectorRef.detectChanges();
                 }
             });
         }
     }
 
-    /**
-     * Aplica os filtros de busca
-     *
-     * @param event
-     */
     applyFilter(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();

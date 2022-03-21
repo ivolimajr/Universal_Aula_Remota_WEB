@@ -8,8 +8,8 @@ import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CepService} from '../../../../../shared/services/http/cep.service';
-import {UserService} from "../../../../../shared/services/http/user.service";
-import {AlertModalComponent} from "../../../../../layout/common/alert/alert-modal.component";
+import {UserService} from '../../../../../shared/services/http/user.service';
+import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
 
 @Component({
     selector: 'app-administrative-form',
@@ -369,7 +369,6 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                 });
 
                 const uf = res.origin.substr(res.origin.length - 2, res.origin.length - 1);
-                console.log(uf);
                 if (this.ufList.indexOf(uf) > 0) {
                     this.ufOrigin.setValue(res.origin.substr(res.origin.length - 2, res.origin.length - 1));
                 }

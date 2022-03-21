@@ -45,7 +45,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _authServices: AuthService,
         private _userServices: UserService,
-        private localStorage: LocalStorageService
+        private _storageServices: LocalStorageService
     ) {
     }
 
@@ -88,9 +88,9 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
 
             //Atualiza a senha no localStorage
             this.loginUser.email = this._authServices.getUserInfoFromStorage().email;
-            this.localStorage.removeFromStorage(environment.dataStorage);
+            this._storageServices.removeFromStorage(environment.dataStorage);
             this.loginUser.password = formData.newPassword;
-            this.localStorage.setValueFromLocalStorage(environment.dataStorage, this.loginUser);
+            this._storageServices.setValueFromLocalStorage(environment.dataStorage, this.loginUser);
 
             this.closeAlert();
             return;

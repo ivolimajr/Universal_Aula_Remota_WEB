@@ -85,14 +85,16 @@
                     <!--end:CPF-->
 
                     <!--start:cargo-->
-                    <mat-form-field appearance="legacy">
-                        <mat-label>Cargo</mat-label>
-                        <mat-select [(value)]="selectedLevel" required (valueChange)="onSelectCargoChange($event)">
-                            <mat-option *ngFor="let item of levels" value="{{item.id}}">{{item.level}}</mat-option>
-                        </mat-select>
-                        <mat-hint align="end">Selecione o cargo</mat-hint>
-                    </mat-form-field>
-                    <!--end:Cargo-->
+                    <form [formGroup]="accountForm">
+                        <mat-form-field appearance="legacy">
+                            <mat-label>Perfil de Acesso</mat-label>
+                            <mat-select [formControlName]="'levelId'" required>
+                                <mat-option *ngFor="let item of levels" [value]="item.id">{{item.level}}</mat-option>
+                            </mat-select>
+                            <mat-hint align="end">Selecione</mat-hint>
+                        </mat-form-field>
+                    </form>
+                    <!--end:cargo-->
 
                     <div class="my-5 border-t"></div>
 
