@@ -6,7 +6,6 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Subscription} from 'rxjs';
 import {fuseAnimations} from '../../../../../@fuse/animations';
-import {FuseAlertType} from '../../../../../@fuse/components/alert';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
 import {DrivingSchoolService} from '../../../../shared/services/http/drivingSchool.service';
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
@@ -23,17 +22,12 @@ const ELEMENT_DATA: DrivingSchool[] = [];
 })
 export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
 
-    alert: { type: FuseAlertType; message: string } = {
-        type: 'error',
-        message: ''
-    };
-
     displayedColumns: string[] = ['corporateName', 'email', 'id'];
     dataSource = new MatTableDataSource<DrivingSchool>(ELEMENT_DATA);
     loading: boolean = true;
     isDeleting: boolean = false;
     showAlert: boolean = false;
-    _users$ = this._autoEscolaServices.getAll();
+    _users$ = this._autoEscolaServices.getAll(this._authServices.getUserInfoFromStorage().address.uf);
     private data$: Subscription;
     private user$: Subscription;
 
@@ -51,7 +45,9 @@ export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
       private _changeDetectorRef: ChangeDetectorRef,
       private _router: Router,
       private _autoEscolaServices: DrivingSchoolService
-      ) { }
+      ) {
+      console.log(this._authServices.getUserInfoFromStorage().address.uf);
+  }
 
   ngOnInit(): void {
   }

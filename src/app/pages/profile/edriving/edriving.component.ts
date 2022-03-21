@@ -62,12 +62,12 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         this.accountForm.disable();
         //Verifica se o formulário é valido
         if (this.setUserData() === false) {
-            return this.closeAlert();
+            return this.closeAlerts();
         }
         this.user$ = this._edrivingServices.update(this.edrivingModel).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
-                return this.closeAlert();
+                return this.closeAlerts();
             }
             this.edrivingUser = res;
 
@@ -104,7 +104,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
 
             //Retorna a mensagem de atualizado
             this.openSnackBar('Atualizado');
-            return this.closeAlert();
+            return this.closeAlerts();
         });
     }
 
@@ -144,7 +144,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
 
         dialogRef.afterClosed().subscribe((result) => {
             if (!result) {
-                return this.closeAlert();
+                return this.closeAlerts();
             }
             this.removePhoneFromApi(id).subscribe((res: any)=>{
                 if(res){
@@ -152,11 +152,11 @@ export class EdrivingComponent implements OnInit, OnDestroy {
                     const phoneNumbersFormArray = this.accountForm.get('phonesNumbers') as FormArray;
                     // Remove the phone number field
                     phoneNumbersFormArray.removeAt(index);
-                    this.closeAlert();
+                    this.closeAlerts();
                     return;
                 }
                 this.openSnackBar('Remoção Inválida', 'warn');
-                this.closeAlert();
+                this.closeAlerts();
             });
         });
     }
@@ -244,7 +244,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         phoneNumbersFormGroups.forEach((phoneNumbersFormGroup) => {
             (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumbersFormGroup);
         });
-        this.closeAlert();
+        this.closeAlerts();
     }
 
     private setUserData(): boolean {
@@ -274,7 +274,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         });
     }
 
-    private closeAlert(): void {
+    private closeAlerts(): void {
         this.accountForm.enable();
         this.loading = false;
         this._changeDetectorRef.markForCheck();

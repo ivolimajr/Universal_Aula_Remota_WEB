@@ -82,22 +82,22 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
             if (this.userEdit) {
                 this.user$ = this._parceiroServices.update(this.partnnerModel).subscribe((res: any) => {
                     if (res.error) {
-                        return this.closeAlert();
+                        return this.closeAlerts();
                     }
-                    this.closeAlert();
+                    this.closeAlerts();
                     return this.dialogRef.close(res);
                 });
             } else {
                 this.user$ = this._parceiroServices.create(this.partnnerModel).subscribe((res: any) => {
                     if (res.error) {
-                        return this.closeAlert();
+                        return this.closeAlerts();
                     }
-                    this.closeAlert();
+                    this.closeAlerts();
                     return this.dialogRef.close(res);
                 });
             }
         } else {
-            this.closeAlert();
+            this.closeAlerts();
         }
     }
 
@@ -112,11 +112,11 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         const phonesFormArray = this.accountForm.get('phonesNumbers') as FormArray;
         if (id === 0 && phonesFormArray.length > 1) {
             phonesFormArray.removeAt(index);
-            return this.closeAlert();
+            return this.closeAlerts();
         }
         if (phonesFormArray.length === 1) {
             this.openSnackBar('Remoção Inválida', 'warn');
-            return this.closeAlert();
+            return this.closeAlerts();
         }
         this.loading = true;
         this._changeDetectorRef.markForCheck();
@@ -134,10 +134,10 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                 if(res){
                     this.openSnackBar('Removido');
                     phonesFormArray.removeAt(index);
-                    return this.closeAlert();
+                    return this.closeAlerts();
                 }
                 this.openSnackBar('Remoção Inválida', 'warn');
-                return this.closeAlert();
+                return this.closeAlerts();
             });
         });
     }
@@ -296,7 +296,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
             (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumbersFormGroup);
         });
 
-        this.closeAlert();
+        this.closeAlerts();
         this.phoneArray = [];
     }
 
@@ -446,7 +446,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         this.phoneArray.forEach((phoneNumbersFormGroup) => {
             (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumbersFormGroup);
         });
-        this.closeAlert();
+        this.closeAlerts();
         this.phoneArray = [];
     }
 
@@ -455,7 +455,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
     }
 
     //Fecha o alerta na tela
-    private closeAlert(): void {
+    private closeAlerts(): void {
         this.accountForm.enable();
         this.loading = false;
         this._changeDetectorRef.markForCheck();

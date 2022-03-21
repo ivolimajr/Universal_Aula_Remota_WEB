@@ -12,6 +12,7 @@ import {AlertModalComponent} from '../../../../../layout/common/alert/alert-moda
 import {MatDialog} from '@angular/material/dialog';
 import {FileModel, FileModelUpdate} from '../../../../../shared/models/file.model';
 import {UserService} from '../../../../../shared/services/http/user.service';
+import {AuthService} from '../../../../../shared/services/auth/auth.service';
 
 @Component({
     selector: 'app-drivingSchool-form',
@@ -50,6 +51,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         private _cepService: CepService,
         private _autoEscolaService: DrivingSchoolService,
         private _userServices: UserService,
+        private _authServices: AuthService,
         private _formBuilder: FormBuilder,
     ) {
         this.files = new Set();
@@ -92,21 +94,21 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         const phonesFormArray = this.contactForm.get('phonesNumbers') as FormArray;
         if (id === 0 && phonesFormArray.length > 1) {
             phonesFormArray.removeAt(index);
-            return this.closeAlert();
+            return this.closeAlerts();
         }
         if (phonesFormArray.length === 1) {
             this.openSnackBar('Remoção Inválida', 'warn');
-            return this.closeAlert();
+            return this.closeAlerts();
         }
         this._userServices.removePhonenumber(id).subscribe((res) => {
             if (res === true) {
                 this.openSnackBar('Removido');
                 phonesFormArray.removeAt(index);
-                return this.closeAlert();
+                return this.closeAlerts();
             }
             if (res === false) {
                 this.openSnackBar('Remoção Inválida', 'warn');
-                return this.closeAlert();
+                return this.closeAlerts();
             }
 
         });
@@ -139,8 +141,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
      */
     removeFileFieldFromApi(id: number, index): void {
         this.loadingForm = true;
-        this.filesForm.invalid;
-        this.filesForm.disabled;
+        this.filesForm.disable();
         this._changeDetectorRef.markForCheck();
         //Exibe o alerta de confirmação
         const dialogRef = this.dialog.open(AlertModalComponent, {
@@ -163,12 +164,12 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                     this.loadingForm = false;
                     this._changeDetectorRef.markForCheck();
                     this.openSnackBar('Removido');
-                    return this.closeAlert();
+                    return this.closeAlerts();
                 }
                 this.openSnackBar(res.detail, 'warn');
                 this.loadingForm = false;
                 this._changeDetectorRef.markForCheck();
-                return this.closeAlert();
+                return this.closeAlerts();
             });
         });
     }
@@ -201,15 +202,15 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         //Se não tiver um ID, significa que está criando um novo usuário
         if (!this.id) {
             this.user$ = this._autoEscolaService.createFormEncoded(this.drivinSchoolModel).subscribe((res: any) => {
-                if (res.error) {return this.closeAlert();}
-                this.closeAlert();
+                if (res.error) {return this.closeAlerts();}
+                this.closeAlerts();
                 this.openSnackBar('Salvo');
                 this._router.navigate(['usuario/auto-escola']);
             });
         } else {
             this.user$ = this._autoEscolaService.updateFormEncoded(this.drivinSchoolModel).subscribe((res: any) => {
-                if (res.error) {return this.closeAlert();}
-                this.closeAlert();
+                if (res.error) {return this.closeAlerts();}
+                this.closeAlerts();
                 this.openSnackBar('Atualizado');
                 this._router.navigate(['usuario/auto-escola']);
             });
@@ -219,7 +220,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
     /**
      * Fecha todos os alertas e loadings da tela
      */
-    closeAlert(): void {
+    closeAlerts(): void {
         this.saving = false;
         this.loading = false;
         this.message = null;
@@ -509,7 +510,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
     private prepareEditUser(): void {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
-        this._autoEscolaService.getOne(this.id).subscribe((res: any) => {
+        this._autoEscolaService.getOne(this.id,this._authServices.getUserInfoFromStorage().address.uf).subscribe((res: any) => {
             if (res.error) {return;}
             this.accountForm = this._formBuilder.group({
                 corporateName: [res.corporateName,

@@ -74,15 +74,14 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
         const formData = this.securityForm.value;
         const storagePassword = this._authServices.getLoginFromStorage().password;
         if (formData.currentPassword !== storagePassword) {
-            console.log(storagePassword);
             this.openSnackBar('Senha atual não confere', 'warn');
-            this.closeAlert();
+            this.closeAlerts();
             return;
         }
         //atualiza a senha na API
         this.auth$ = this._userServices.updatePassById(this.securityForm.value).subscribe((res: any) => {
             if (res.error) {
-                return this.closeAlert();
+                return this.closeAlerts();
             }
             this.openSnackBar('Senha Atualizada');
 
@@ -92,7 +91,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
             this.loginUser.password = formData.newPassword;
             this._storageServices.setValueFromLocalStorage(environment.dataStorage, this.loginUser);
 
-            this.closeAlert();
+            this.closeAlerts();
             return;
         });
     }
@@ -121,7 +120,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    private closeAlert(): void {
+    private closeAlerts(): void {
         this.loading = false;
         this.securityForm.enable();
         this._changeDetectorRef.markForCheck();

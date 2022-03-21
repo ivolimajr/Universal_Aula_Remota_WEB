@@ -32,15 +32,16 @@ export class HttpBaseServices<T> {
         }
     }
 
-    getAll(): Observable<T[]> {
-        return this._httpClient.get<T[]>(this.endpoint).pipe(
+    getAll(uf: string = ''): Observable<T[]> {
+        uf = uf ?? '';
+        return this._httpClient.get<T[]>(this.endpoint+'?uf='+uf).pipe(
             switchMap((response: T[]) => of(response)),
             catchError(e => of(e))
         );
     }
 
-    getOne(id: number): Observable<T> {
-        return this._httpClient.get<T>(this.endpoint + '/' + id).pipe(
+    getOne(id: number, uf: string = ''): Observable<T> {
+        return this._httpClient.get<T>(this.endpoint + '/' + id+'?uf='+uf).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))
         );

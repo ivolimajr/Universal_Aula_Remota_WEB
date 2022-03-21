@@ -6,7 +6,6 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {Subscription} from 'rxjs';
 import {PartnnerModel} from '../../../../shared/models/partnner.model';
 import {fuseAnimations} from '../../../../../@fuse/animations';
-import {FuseAlertType} from '../../../../../@fuse/components/alert';
 import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
 import {PartnnerService} from '../../../../shared/services/http/partnner.service';

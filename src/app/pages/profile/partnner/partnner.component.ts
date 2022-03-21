@@ -11,7 +11,7 @@ import {MASKS} from 'ng-brazil';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {fuseAnimations} from '../../../../@fuse/animations';
 import {User} from '../../../shared/models/user.model';
 import {PartnnerModel} from '../../../shared/models/partnner.model';
@@ -56,7 +56,6 @@ export class PartnnerComponent implements OnInit, OnDestroy {
         this.prepareForm();
     }
 
-
     /**
      * Atualiza o usuário do tipo Edriving
      *
@@ -72,9 +71,7 @@ export class PartnnerComponent implements OnInit, OnDestroy {
         this.user$ = this._parceiroServices.update(this.partnnerModel).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
-                this.accountForm.enable();
-                this._changeDetectorRef.markForCheck();
-                return;
+                return this.closeAlerts();
             }
             this.partnnerUser = res;
 
@@ -83,8 +80,6 @@ export class PartnnerComponent implements OnInit, OnDestroy {
             this.user.name = res.name;
             this.user.email = res.email;
             this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
-
-            //Atualiza o útlimo registro do formulário de contato com o ID do telefone atualizado
 
             //Pega o último registro de telefone que veio do usuario atualizado
             const lastPhoneIdFromUser = res.phonesNumbers[res.phonesNumbers.length - 1];
@@ -110,8 +105,7 @@ export class PartnnerComponent implements OnInit, OnDestroy {
 
             //Retorna a mensagem de atualizado
             this.openSnackBar('Atualizado');
-            this.accountForm.enable();
-            this._changeDetectorRef.markForCheck();
+            return this.closeAlerts();
         });
     }
 
@@ -140,21 +134,43 @@ export class PartnnerComponent implements OnInit, OnDestroy {
      * @param index do array de telefones a ser removido
      */
     removePhoneNumber(id: number, index: number): void {
-        if (this.partnnerUser.phonesNumbers.length === 1) {
-            this.dialog.open(AlertModalComponent, {
-                width: '280px',
-                data: {content: 'Usuário não pode ficar sem contato.', oneButton: true}
-            });
-            return;
+        const phonesFormArray = this.accountForm.get('phonesNumbers') as FormArray;
+
+        if (id === 0 && phonesFormArray.length > 1) {
+            phonesFormArray.removeAt(index);
+            return this._changeDetectorRef.markForCheck();
         }
-        this.phone$ = this._userService.removePhonenumber(id)
-            .subscribe((res) => {
-                if (!res) {return this.openSnackBar('Telefone já em uso', 'warn');}
-                const phoneNumbersFormArray = this.accountForm.get('phonesNumbers') as FormArray;
-                // Remove the phone number field
-                phoneNumbersFormArray.removeAt(index);
-                this._changeDetectorRef.markForCheck();
+        if (phonesFormArray.length === 1) {
+            this.openSnackBar('Remoção Inválida', 'warn');
+            return this._changeDetectorRef.markForCheck();
+        }
+        if (this.partnnerUser.phonesNumbers.length === 1) {
+            this.openSnackBar('Remoção Inválida', 'warn');
+            this._changeDetectorRef.markForCheck();
+        }
+        this._changeDetectorRef.markForCheck();
+        const dialogRef = this.dialog.open(AlertModalComponent, {
+            width: '280px',
+            data: {title: 'Confirma remoção do telefone?'}
+        });
+
+        dialogRef.afterClosed().subscribe((modalResult) => {
+            if (!modalResult) {
+                return this.closeAlerts();
+            }
+            this.removePhoneFromApi(id).subscribe((apiResult: any)=>{
+                if(apiResult){
+                    this.openSnackBar('Removido');
+                    const phoneNumbersFormArray = this.accountForm.get('phonesNumbers') as FormArray;
+                    // Remove the phone number field
+                    phoneNumbersFormArray.removeAt(index);
+                    this.closeAlerts();
+                    return;
+                }
+                this.openSnackBar('Remoção Inválida', 'warn');
+                this.closeAlerts();
             });
+        });
     }
 
     trackByFn(index: number, item: any): any {
@@ -282,6 +298,15 @@ export class PartnnerComponent implements OnInit, OnDestroy {
         //Define o ID do usuário Edriving a ser atualizado
         this.partnnerModel.id = this.partnnerUser.id;
         this._changeDetectorRef.markForCheck();
+    }
+
+    private closeAlerts(): void {
+        this.accountForm.enable();
+        this._changeDetectorRef.markForCheck();
+    }
+
+    private removePhoneFromApi(id: number): Observable<boolean> {
+        return this._userService.removePhonenumber(id);
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {

@@ -71,7 +71,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                 this.user$ = this._edrivingServices.update(this.edrivingModel).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
-                        this.closeAlert();
+                        this.closeAlerts();
                         return;
                     }
                     //Se o usuário a ser atualizado for o usuário logado, atualiza os dados na storage
@@ -81,20 +81,20 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                         this.user.email = res.email;
                         this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
                     }
-                    this.closeAlert();
+                    this.closeAlerts();
                     return this.dialogRef.close(res);
                 });
             } else {
                 this.user$ = this._edrivingServices.create(this.edrivingModel).subscribe((res: any) => {
                     if (res.error) {
-                        return this.closeAlert();
+                        return this.closeAlerts();
                     }
-                    this.closeAlert();
+                    this.closeAlerts();
                     return this.dialogRef.close(res);
                 });
             }
         } else{
-            this.closeAlert();
+            this.closeAlerts();
         }
     }
 
@@ -109,11 +109,11 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         const phonesFormArray = this.accountForm.get('phonesNumbers') as FormArray;
         if (id === 0 && phonesFormArray.length > 1) {
             phonesFormArray.removeAt(index);
-            return this.closeAlert();
+            return this.closeAlerts();
         }
         if (phonesFormArray.length === 1) {
             this.openSnackBar('Remoção Inválida', 'warn');
-            return this.closeAlert();
+            return this.closeAlerts();
         }
         this.loading = true;
         this._changeDetectorRef.markForCheck();
@@ -131,10 +131,10 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                 if(res){
                     this.openSnackBar('Removido');
                     phonesFormArray.removeAt(index);
-                    return this.closeAlert();
+                    return this.closeAlerts();
                 }
                 this.openSnackBar('Remoção Inválida', 'warn');
-                return this.closeAlert();
+                return this.closeAlerts();
             });
         });
     }
@@ -236,7 +236,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
             (this.accountForm.get('phonesNumbers') as FormArray).push(item);
         });
 
-        this.closeAlert();
+        this.closeAlerts();
         this._changeDetectorRef.markForCheck();
         this.phoneArray = [];
     }
@@ -333,7 +333,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         this.phoneArray.forEach((item) => {
             (this.accountForm.get('phonesNumbers') as FormArray).push(item);
         });
-        this.closeAlert();
+        this.closeAlerts();
         this.phoneArray = [];
     }
 
@@ -350,7 +350,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
        return this._userServices.removePhonenumber(id);
     }
     //Fecha o alerta na tela
-    private closeAlert(): void {
+    private closeAlerts(): void {
         this.loading = false;
         this.accountForm.enable();
         this._changeDetectorRef.markForCheck();

@@ -89,11 +89,11 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
         const phonesFormArray = this.userForm.get('phonesNumbers') as FormArray;
         if (id === 0 && phonesFormArray.length > 1) {
             phonesFormArray.removeAt(index);
-            return this.closeAlert();
+            return this.closeAlerts();
         }
         if (phonesFormArray.length === 1) {
             this.openSnackBar('Remoção Inválida', 'warn');
-            return this.closeAlert();
+            return this.closeAlerts();
         }
         this.loading = true;
         this._changeDetectorRef.markForCheck();
@@ -103,7 +103,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (!result) {
-                return this.closeAlert();
+                return this.closeAlerts();
             }
             this.removePhoneFromApi(id).subscribe((res: boolean)=>{
                 if(res){
@@ -112,7 +112,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                 } else {
                     this.openSnackBar('Remoção Inválida', 'warn');
                 }
-                return this.closeAlert();
+                return this.closeAlerts();
             });
         });
     }
@@ -372,7 +372,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                 if (this.ufList.indexOf(uf) > 0) {
                     this.ufOrigin.setValue(res.origin.substr(res.origin.length - 2, res.origin.length - 1));
                 }
-                this.closeAlert();
+                this.closeAlerts();
                 this.phoneArray = [];
             });
     }
@@ -423,7 +423,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    private closeAlert(): void {
+    private closeAlerts(): void {
         this.loading = false;
         this._changeDetectorRef.markForCheck();
     }
