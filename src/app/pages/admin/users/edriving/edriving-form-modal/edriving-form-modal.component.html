@@ -2,7 +2,7 @@
     <mat-progress-bar class="mb-5" [mode]="'indeterminate'"></mat-progress-bar>
 </ng-container>
 <div mat-dialog-content>
-    <fuse-card class="flex-col w-full max-w-300 p-6 sm:py-12 sm:px-10 filter-pricing border-2 border-gray-100">
+    <fuse-card class="flex-col p-6 sm:py-12 sm:px-10 border-2 border-gray-100">
 
         <ng-container *ngIf="!userEdit; else editMode">
             <div class="text-3xl font-bold tracking-tight leading-tight">Novo Usuário</div>
@@ -85,15 +85,13 @@
                     <!--end:CPF-->
 
                     <!--start:cargo-->
-                    <form [formGroup]="accountForm">
-                        <mat-form-field appearance="legacy">
-                            <mat-label>Perfil de Acesso</mat-label>
-                            <mat-select [formControlName]="'levelId'" required>
-                                <mat-option *ngFor="let item of levels" [value]="item.id">{{item.level}}</mat-option>
-                            </mat-select>
-                            <mat-hint align="end">Selecione</mat-hint>
-                        </mat-form-field>
-                    </form>
+                    <mat-form-field appearance="legacy">
+                        <mat-label>Perfil de Acesso</mat-label>
+                        <mat-select [formControlName]="'levelId'" required>
+                            <mat-option *ngFor="let item of levels" [value]="item.id">{{item.level}}</mat-option>
+                        </mat-select>
+                        <mat-hint align="end">Selecione</mat-hint>
+                    </mat-form-field>
                     <!--end:cargo-->
 
                     <div class="my-5 border-t"></div>

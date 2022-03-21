@@ -4,7 +4,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {Observable, Subscription} from 'rxjs';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EdrivingModel} from 'app/shared/models/edriving.model';
 import {EdrivingService} from '../../../../../shared/services/http/edriving.service';
 import {Level} from '../../../../../shared/models/level.model';
@@ -14,7 +14,6 @@ import {environment} from '../../../../../../environments/environment';
 import {AuthService} from '../../../../../shared/services/auth/auth.service';
 import {UserService} from '../../../../../shared/services/http/user.service';
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
-
 
 @Component({
     selector: 'app-edriving-form-modal',
@@ -33,7 +32,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
     private phoneArray = [];
     private user: User;
     private user$: Subscription;
-    private levelSub: Subscription;
+    private level$: Subscription;
 
     constructor(
         public dialog: MatDialog,
@@ -63,8 +62,8 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
      * @return void
      */
     submit(): void {
-        const result = this.prepareUser();
-        if (result) {
+        const formIsValid = this.prepareUser();
+        if (formIsValid) {
             this.loading = true;
             this._changeDetectorRef.markForCheck();
             this.accountForm.disable();
@@ -82,25 +81,20 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                         this.user.email = res.email;
                         this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
                     }
-                    this.accountForm.enable();
                     this.closeAlert();
-                    this.dialogRef.close(res);
-                    return;
+                    return this.dialogRef.close(res);
                 });
             } else {
                 this.user$ = this._edrivingServices.create(this.edrivingModel).subscribe((res: any) => {
                     if (res.error) {
-                        this.accountForm.enable();
-                        this.closeAlert();
-                        return;
+                        return this.closeAlert();
                     }
-                    this.accountForm.enable();
                     this.closeAlert();
-                    this.dialogRef.close(res);
+                    return this.dialogRef.close(res);
                 });
             }
         } else{
-            this.accountForm.enable();
+            this.closeAlert();
         }
     }
 
@@ -167,8 +161,8 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
         if (this.user$) {
             this.user$.unsubscribe();
         }
-        if (this.levelSub) {
-            this.levelSub.unsubscribe();
+        if (this.level$) {
+            this.level$.unsubscribe();
         }
     }
 
@@ -176,7 +170,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
      * Busca os cargos dos usuário do tipo edriving
      */
     private getCargos(): void {
-        this.levelSub = this._edrivingServices.getCargos().subscribe((res) => {
+        this.level$ = this._edrivingServices.getCargos().subscribe((res) => {
             this.levels = res;
             this._changeDetectorRef.markForCheck();
         });
@@ -358,6 +352,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
     //Fecha o alerta na tela
     private closeAlert(): void {
         this.loading = false;
+        this.accountForm.enable();
         this._changeDetectorRef.markForCheck();
     }
 }

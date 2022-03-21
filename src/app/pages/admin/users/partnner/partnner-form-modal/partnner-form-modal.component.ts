@@ -2,20 +2,16 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy,
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
-import {FuseAlertType} from '../../../../../../@fuse/components/alert';
 import {Level} from '../../../../../shared/models/level.model';
 import {PartnnerModel} from '../../../../../shared/models/partnner.model';
 import {PartnnerService} from '../../../../../shared/services/http/partnner.service';
 import {User} from '../../../../../shared/models/user.model';
-import {LocalStorageService} from '../../../../../shared/services/storage/localStorage.service';
-import {AuthService} from '../../../../../shared/services/auth/auth.service';
-import {environment} from '../../../../../../environments/environment';
 import {CepService} from '../../../../../shared/services/http/cep.service';
 import {UserService} from '../../../../../shared/services/http/user.service';
-import {AddressModel} from '../../../../../shared/models/address.model';
+import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
 
 @Component({
     selector: 'app-partnner-form-modal',
@@ -25,26 +21,19 @@ import {AddressModel} from '../../../../../shared/models/address.model';
 })
 export class PartnnerFormModalComponent implements OnInit, OnDestroy {
 
-    alert: { type: FuseAlertType; message: string } = {
-        type: 'error',
-        message: ''
-    };
-
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    @Input() userEdit: PartnnerModel; //Se vier um ID, exibir e atualizar o usuário
+    @Input() userEdit: PartnnerModel;
     accountForm: FormGroup;
+    addressForm: FormGroup;
     masks = MASKS;
-    loading: boolean = true; //Inicia o componente com um lading
-    message: string = null; //Mensagem quando estiver salvando ou editando um usuário
+    loading: boolean = true;
     levels: Level[];
-    levelId: number;
-    selectedLevel: string = null; //Cargo Selecionado
     states = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
         'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
     private partnnerModel = new PartnnerModel();
     private phoneArray = [];
     private user: User;
-    private levelSub: Subscription;
+    private level$: Subscription;
     private user$: Subscription;
     private cep$: Subscription;
 
@@ -56,9 +45,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _parceiroServices: PartnnerService,
         private _userServices: UserService,
-        private _authServices: AuthService,
-        private _cepService: CepService,
-        private _storageServices: LocalStorageService
+        private _cepService: CepService
     ) {
     }
 
@@ -66,17 +53,17 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         if (this.user$) {
             this.user$.unsubscribe();
         }
-        if (this.levelSub) {
-            this.levelSub.unsubscribe();
+        if (this.level$) {
+            this.level$.unsubscribe();
         }
         if (this.cep$) {
             this.cep$.unsubscribe();
         }
+        this._changeDetectorRef.markForCheck();
     }
 
     ngOnInit(): void {
         this.getCargos();
-        //Prepara o formulário
         this.prepareForm();
     }
 
@@ -86,8 +73,8 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
 
     submit(): void {
         this.accountForm.disable();
-        const result = this.prepareUser();
-        if (result) {
+        const formIsValid = this.prepareUser();
+        if (formIsValid) {
             //Exibe o alerta de salvando dados
             this.loading = true;
             this._changeDetectorRef.markForCheck();
@@ -95,42 +82,23 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
             if (this.userEdit) {
                 this.user$ = this._parceiroServices.update(this.partnnerModel).subscribe((res: any) => {
                     if (res.error) {
-                        this.accountForm.enable();
-                        this.closeAlert();
-                        return;
+                        return this.closeAlert();
                     }
-                    //Se o usuário a ser atualizado for o usuário logado, atualiza os dados na storage
-                    if (this.userEdit.id === this._authServices.getUserInfoFromStorage().id) {
-                        this.user = this._authServices.getUserInfoFromStorage();
-                        this.user.name = res.name;
-                        this.user.email = res.email;
-                        this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
-                    }
-                    this.accountForm.enable();
                     this.closeAlert();
-                    this.dialogRef.close(res);
-                    return;
+                    return this.dialogRef.close(res);
                 });
             } else {
                 this.user$ = this._parceiroServices.create(this.partnnerModel).subscribe((res: any) => {
                     if (res.error) {
-                        this.accountForm.enable();
-                        this.closeAlert();
-                        return;
+                        return this.closeAlert();
                     }
-                    this.accountForm.enable();
                     this.closeAlert();
-                    this.dialogRef.close(res);
+                    return this.dialogRef.close(res);
                 });
             }
+        } else {
+            this.closeAlert();
         }
-    }
-
-    //Fecha o alerta na tela
-    closeAlert(): void {
-        this.loading = false;
-        this.message = null;
-        this._changeDetectorRef.markForCheck();
     }
 
     /**
@@ -141,7 +109,6 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
      */
     removePhoneNumber(id: number, index: number): void {
         this.loading = true;
-        this._changeDetectorRef.markForCheck();
         const phonesFormArray = this.accountForm.get('phonesNumbers') as FormArray;
         if (id === 0 && phonesFormArray.length > 1) {
             phonesFormArray.removeAt(index);
@@ -151,17 +118,27 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
             this.openSnackBar('Remoção Inválida', 'warn');
             return this.closeAlert();
         }
-        this._userServices.removePhonenumber(id).subscribe((res) => {
-            if (res === true) {
-                this.openSnackBar('Removido');
-                phonesFormArray.removeAt(index);
-                return this.closeAlert();
+        this.loading = true;
+        this._changeDetectorRef.markForCheck();
+        const dialogRef = this.dialog.open(AlertModalComponent, {
+            width: '280px',
+            data: {title: 'Confirma remoção do telefone?'}
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (!result) {
+                this.loading = false;
+                this._changeDetectorRef.markForCheck();
+                return;
             }
-            if (res === false) {
+            this.removePhoneFromApi(id).subscribe((res: any)=>{
+                if(res){
+                    this.openSnackBar('Removido');
+                    phonesFormArray.removeAt(index);
+                    return this.closeAlert();
+                }
                 this.openSnackBar('Remoção Inválida', 'warn');
                 return this.closeAlert();
-            }
-
+            });
         });
     }
 
@@ -184,10 +161,6 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    onSelectCargoChange(id: number): void {
-        this.levelId = id;
-    };
-
     buscaCep(event): void {
         if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
             this.openSnackBar('Cep inválido');
@@ -209,7 +182,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
      * Busca os cargos dos usuário do tipo edriving
      */
     private getCargos(): void {
-        this.levelSub = this._parceiroServices.getCargos().subscribe((res) => {
+        this.level$ = this._parceiroServices.getCargos().subscribe((res) => {
             this.levels = res;
             this._changeDetectorRef.markForCheck();
         });
@@ -229,7 +202,6 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
             this.prepareEditForm();
             return;
         }
-
         //Cria um formulário para adição de um usuário
         this.accountForm = this._formBuilder.group({
             name: ['',
@@ -258,6 +230,16 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(100)])],
+            levelId: ['',
+                Validators.compose([
+                    Validators.required])],
+            password:['Pay@2021'],
+            phonesNumbers: this._formBuilder.array([], Validators.compose([
+                Validators.required,
+                Validators.nullValidator,
+            ])),
+        });
+        this.addressForm = this._formBuilder.group({
             cep: ['',
                 Validators.compose([
                     Validators.required,
@@ -295,15 +277,10 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(1),
                     Validators.maxLength(50)])],
-            levelId: [0,
+            complement: ['',
                 Validators.compose([
-                    Validators.required])],
-            phonesNumbers: this._formBuilder.array([], Validators.compose([
-                Validators.required,
-                Validators.nullValidator,
-            ])),
+                    Validators.maxLength(100)])],
         });
-
         // Create a phone number form group
         this.phoneArray.push(
             this._formBuilder.group({
@@ -320,7 +297,6 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         });
 
         this.closeAlert();
-        this._changeDetectorRef.markForCheck();
         this.phoneArray = [];
     }
 
@@ -328,67 +304,41 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
      * Prepara o usuário para envio
      */
     private prepareUser(): boolean {
-        const formData = this.accountForm.value;
+        const userFormData = this.accountForm.value;
+        const addressFormData = this.addressForm.value;
         let result: boolean = true;
 
         if (this.accountForm.invalid) {
             this.openSnackBar('Dados Inválidos', 'warn');
-            this.accountForm.enable();
             return false;
         }
         //Verifica se os telefones informados são válidos
-        formData.phonesNumbers.forEach((item) => {
+        userFormData.phonesNumbers.forEach((item) => {
             if (item.phoneNumber === null || item.phoneNumber === '' || item.phoneNumber.length < 11) {
                 this.openSnackBar('Insira um telefone', 'warn');
-                this.accountForm.enable();
                 result = false;
             }
         });
+        userFormData.cnpj = userFormData.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
+        addressFormData.cep = addressFormData.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
 
-        if (this.levelId === undefined || this.levelId === 0) {
-            this.openSnackBar('Selecione um Cargo', 'warn');
-            this.accountForm.enable();
-            result = false;
-        }
-
-        if (this.userEdit) {
-            this.partnnerModel.id = this.userEdit.id;
-        }
-        if (!this.userEdit) {
-            this.partnnerModel.password = 'Pay@2021';
-        }
-
-        this.partnnerModel.name = formData.name;
-        this.partnnerModel.email = formData.email;
-        this.partnnerModel.cnpj = formData.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
-        this.partnnerModel.description = formData.description;
-
-        const address = new AddressModel();
-        address.cep = formData.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
-        address.uf = formData.uf;
-        address.address = formData.address;
-        address.district = formData.district;
-        address.city = formData.city;
-        address.addressNumber = formData.addressNumber;
-        this.partnnerModel.address = address;
-
-        this.partnnerModel.levelId = this.levelId;
-        formData.phonesNumbers.forEach((item) => {
+        userFormData.phonesNumbers.forEach((item) => {
             if (item.phoneNumber.length !== 11) {
                 item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
-        this.partnnerModel.phonesNumbers = formData.phonesNumbers;
+        this.partnnerModel = userFormData;
+        this.partnnerModel.address = addressFormData;
         return result;
     }
 
     private prepareEditForm(): void {
 
         this.loading = true;
-        this.message = 'Buscando dados.';
         this._changeDetectorRef.markForCheck();
 
         this.accountForm = this._formBuilder.group({
+            id: [this.userEdit.id],
             name: [this.userEdit.name,
                 Validators.compose([
                     Validators.required,
@@ -414,6 +364,15 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(100)])],
+            levelId: [this.userEdit.levelId,
+                Validators.compose([
+                    Validators.required])],
+            phonesNumbers: this._formBuilder.array([], Validators.compose([
+                Validators.required,
+                Validators.nullValidator
+            ])),
+        });
+        this.addressForm = this._formBuilder.group({
             cep: [this.userEdit.address.cep,
                 Validators.compose([
                     Validators.required,
@@ -451,17 +410,10 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(1),
                     Validators.maxLength(50)])],
-            levelId: [this.userEdit.levelId,
+            complement: [this.userEdit.address.complement,
                 Validators.compose([
-                    Validators.required])],
-            phonesNumbers: this._formBuilder.array([], Validators.compose([
-                Validators.required,
-                Validators.nullValidator
-            ])),
+                    Validators.maxLength(100)])],
         });
-
-        this.levelId = this.userEdit.levelId;
-        this.selectedLevel = this.userEdit.level.id.toString();
 
         //Só monta o array de telefones se houver telefones de contato cadastrado
         if (this.userEdit.phonesNumbers.length > 0) {
@@ -490,14 +442,23 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                 })
             );
         }
-
         // Adiciona o array de telefones ao fomrGroup
         this.phoneArray.forEach((phoneNumbersFormGroup) => {
             (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumbersFormGroup);
         });
-        this.partnnerModel.id = this.userEdit.id;
         this.closeAlert();
         this.phoneArray = [];
+    }
+
+    private removePhoneFromApi(id: number): Observable<boolean> {
+        return this._userServices.removePhonenumber(id);
+    }
+
+    //Fecha o alerta na tela
+    private closeAlert(): void {
+        this.accountForm.enable();
+        this.loading = false;
+        this._changeDetectorRef.markForCheck();
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {
@@ -508,5 +469,4 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
-
 }

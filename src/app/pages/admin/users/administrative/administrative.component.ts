@@ -25,7 +25,7 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
     isDeleting: boolean = false;
     _users$ = this._administrativeServices.getAll();
     loading: boolean = false;
-    private dataSub: Subscription;
+    private data$: Subscription;
     private user$: Subscription;
 
     // eslint-disable-next-line @typescript-eslint/member-ordering
@@ -119,8 +119,8 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
         if (this.user$) {
             this.user$.unsubscribe();
         }
-        if (this.dataSub) {
-            this.dataSub.unsubscribe();
+        if (this.data$) {
+            this.data$.unsubscribe();
         }
         this._changeDetectorRef.markForCheck();
     }
@@ -132,7 +132,7 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
      * @return void
      */
     private getUsers(): void {
-        this.dataSub = this._users$.subscribe((items: AdministrativeModel[]) => {
+        this.data$ = this._users$.subscribe((items: AdministrativeModel[]) => {
             this.dataSource.data = items;
             this.loading = false;
             this._changeDetectorRef.markForCheck();

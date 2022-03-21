@@ -6,4 +6,5 @@ export class AddressModel {
     district: string;
     city: string;
     addressNumber: string;
+    complement: string;
 }
