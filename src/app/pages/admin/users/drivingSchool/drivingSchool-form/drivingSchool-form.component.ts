@@ -91,6 +91,8 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
      * @param index do array de telefones a ser removido
      */
     removePhoneNumber(id: number, index: number): void {
+        // this.loading = true;
+        // this._changeDetectorRef.markForCheck();
         const phonesFormArray = this.contactForm.get('phonesNumbers') as FormArray;
         if (id === 0 && phonesFormArray.length > 1) {
             phonesFormArray.removeAt(index);
@@ -100,17 +102,23 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
             this.openSnackBar('Remoção Inválida', 'warn');
             return this.closeAlerts();
         }
-        this._userServices.removePhonenumber(id).subscribe((res) => {
-            if (res === true) {
-                this.openSnackBar('Removido');
-                phonesFormArray.removeAt(index);
+        const dialogRef = this.dialog.open(AlertModalComponent, {
+            width: '280px',
+            data: {title: 'Confirma remoção do telefone?'}
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (!result) {
                 return this.closeAlerts();
             }
-            if (res === false) {
+            this.removePhoneFromApi(id).subscribe((res: any)=>{
+                if(res){
+                    this.openSnackBar('Removido');
+                    phonesFormArray.removeAt(index);
+                    return this.closeAlerts();
+                }
                 this.openSnackBar('Remoção Inválida', 'warn');
                 return this.closeAlerts();
-            }
-
+            });
         });
     }
 
@@ -688,5 +696,9 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
      */
     private deleteFileFromApi(id: number): Observable<boolean> {
         return this._userServices.removeFile(id);
+    }
+
+    private removePhoneFromApi(id: number): Observable<boolean> {
+        return this._userServices.removePhonenumber(id);
     }
 }

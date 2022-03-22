@@ -70,7 +70,6 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
             if (this.userEdit) {
                 this.user$ = this._edrivingServices.update(this.edrivingModel).subscribe((res: any) => {
                     if (res.error) {
-                        this.accountForm.enable();
                         this.closeAlerts();
                         return;
                     }
@@ -106,6 +105,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
      */
     removePhoneNumber(id: number, index: number): void {
         this.loading = true;
+        this._changeDetectorRef.markForCheck();
         const phonesFormArray = this.accountForm.get('phonesNumbers') as FormArray;
         if (id === 0 && phonesFormArray.length > 1) {
             phonesFormArray.removeAt(index);
@@ -115,17 +115,13 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
             this.openSnackBar('Remoção Inválida', 'warn');
             return this.closeAlerts();
         }
-        this.loading = true;
-        this._changeDetectorRef.markForCheck();
         const dialogRef = this.dialog.open(AlertModalComponent, {
             width: '280px',
             data: {title: 'Confirma remoção do telefone?'}
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (!result) {
-                this.loading = false;
-                this._changeDetectorRef.markForCheck();
-                return;
+                return this.closeAlerts();
             }
             this.removePhoneFromApi(id).subscribe((res: any)=>{
                 if(res){

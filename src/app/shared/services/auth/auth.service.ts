@@ -7,6 +7,7 @@ import {LocalStorageService} from '../storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
 import {User, UserLogin} from '../../models/user.model';
 import {TokenResult} from 'app/shared/models/token.model';
+import {RolesConstants} from '../../constants';
 
 const API_TOKEN_URL = `${environment.apiUrl}/ApiAuth`;
 const API_LOGIN_URL = `${environment.apiUrl}/User/Login`;
@@ -213,5 +214,11 @@ export class AuthService {
      */
     getLoginFromStorage(): User {
         return this.userModel = this.storageServices.getValueFromLocalStorage(environment.dataStorage);
+    }
+
+    isAdmin(): boolean {
+        const roles = this.getUserInfoFromStorage().roles;
+        if(roles.find(r => r.role === RolesConstants.EDRIVING)) {return true;}
+        return false;
     }
 }

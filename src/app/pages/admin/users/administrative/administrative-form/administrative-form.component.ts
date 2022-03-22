@@ -10,6 +10,9 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {CepService} from '../../../../../shared/services/http/cep.service';
 import {UserService} from '../../../../../shared/services/http/user.service';
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
+import {DrivingSchool} from '../../../../../shared/models/drivingSchool.model';
+import {DrivingSchoolService} from '../../../../../shared/services/http/drivingSchool.service';
+import {AuthService} from '../../../../../shared/services/auth/auth.service';
 
 @Component({
     selector: 'app-administrative-form',
@@ -25,11 +28,15 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     userForm: FormGroup;
     addressForm: FormGroup;
     ufOrigin = new FormControl();
+    drivingSchoolForm: FormGroup;
     ufList = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB',
         'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
+    drivingSchoolList: DrivingSchool[];
+    isAdmin: boolean;
     private userPost = new AdministrativeModel(); //Objeto para envio dos dados para API
     private user$: Subscription;
     private cep$: Subscription;
+    private drivingSchool$: Subscription;
     private phoneArray = [];
 
     constructor(
@@ -39,8 +46,10 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
         private _userServices: UserService,
         public dialogRef: MatDialogRef<AdministrativeFormComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
+        private _authServices: AuthService,
         private _cepService: CepService,
-        private _administrativeServices: AdministrativeService
+        private _administrativeServices: AdministrativeService,
+        private _drivingSchoolServices: DrivingSchoolService
     ) {
     }
 
@@ -54,6 +63,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.loadDrivingSchools();
         this.prepareForm();
     }
 
@@ -62,26 +72,28 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     }
 
     submit(): void {
-        this.setUserData();
-        this.userForm.disable();
-        if (!this.id) {
-            this.user$ = this._administrativeServices.create(this.userPost).subscribe((res: any)=>{
-               if(res.error){
-                   this.userForm.enable();
-                   return;
-               }
-               this.userForm.enable();
-               this.dialogRef.close(res);
-            });
-        } else{
-            this.user$ = this._administrativeServices.update(this.userPost).subscribe((res: any)=>{
-                if(res.error){
-                    this.userForm.enable();
-                    return;
-                }
-                this.userForm.enable();
-                this.dialogRef.close(res);
-            });
+        if (this.setUserData()) {
+            console.log(this.userPost);
+            this.userForm.disable();
+            // if (!this.id) {
+            //     this.user$ = this._administrativeServices.create(this.userPost).subscribe((res: any) => {
+            //         if (res.error) {
+            //             this.userForm.enable();
+            //             return;
+            //         }
+            //         this.userForm.enable();
+            //         this.dialogRef.close(res);
+            //     });
+            // } else {
+            //     this.user$ = this._administrativeServices.update(this.userPost).subscribe((res: any) => {
+            //         if (res.error) {
+            //             this.userForm.enable();
+            //             return;
+            //         }
+            //         this.userForm.enable();
+            //         this.dialogRef.close(res);
+            //     });
+            // }
         }
     }
 
@@ -105,8 +117,8 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             if (!result) {
                 return this.closeAlerts();
             }
-            this.removePhoneFromApi(id).subscribe((res: boolean)=>{
-                if(res){
+            this.removePhoneFromApi(id).subscribe((res: boolean) => {
+                if (res) {
                     this.openSnackBar('Removido');
                     phonesFormArray.removeAt(index);
                 } else {
@@ -199,11 +211,11 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
         });
 
         this.phoneArray.push(
-          this._formBuilder.group({
-              phoneNumber:['', Validators.compose([Validators.required])]
-          })
+            this._formBuilder.group({
+                phoneNumber: ['', Validators.compose([Validators.required])]
+            })
         );
-        this.phoneArray.forEach((item)=>{
+        this.phoneArray.forEach((item) => {
             (this.userForm.get('phonesNumbers') as FormArray).push(item);
         });
 
@@ -245,6 +257,9 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(1),
                     Validators.maxLength(50)])],
+            complement: ['',
+                Validators.compose([
+                    Validators.maxLength(100)])],
         });
 
         this._changeDetectorRef.markForCheck();
@@ -323,7 +338,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                         })
                     );
                 }
-                this.phoneArray.forEach((item)=>{
+                this.phoneArray.forEach((item) => {
                     (this.userForm.get('phonesNumbers') as FormArray).push(item);
                 });
 
@@ -349,11 +364,11 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                             Validators.maxLength(150)])],
                     uf: [res.address.uf,
                         Validators.compose([
-                        Validators.required,
-                        Validators.nullValidator,
-                        Validators.minLength(2),
-                        Validators.maxLength(2)
-                    ])],
+                            Validators.required,
+                            Validators.nullValidator,
+                            Validators.minLength(2),
+                            Validators.maxLength(2)
+                        ])],
                     city: [res.address.city,
                         Validators.compose([
                             Validators.required,
@@ -366,6 +381,9 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                             Validators.nullValidator,
                             Validators.minLength(1),
                             Validators.maxLength(50)])],
+                    complement: [res.address.complement,
+                        Validators.compose([
+                            Validators.maxLength(100)])],
                 });
 
                 const uf = res.origin.substr(res.origin.length - 2, res.origin.length - 1);
@@ -377,7 +395,12 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             });
     }
 
-    private setUserData(): void{
+    private setUserData(): boolean {
+
+        if (this.drivingSchoolForm.invalid) {
+            this.openSnackBar('Informe a auto escola', 'warn');
+            return false;
+        }
         const userFormValues = this.userForm.value;
         const addressFormValues = this.addressForm.value;
 
@@ -405,13 +428,20 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
 
         this.userPost.phonesNumbers = userFormValues.phonesNumbers;
 
+
         this.userPost.id = this.id ?? null;
 
-        if(!this.id){
+        if (!this.id) {
             this.userForm.value.origin = this.userForm.value.origin + '-' + this.ufOrigin.value;
-            this.userPost.drivingSchoolId = 26;
+            this.userPost.drivingSchoolId = this.drivingSchoolForm.value.id;
             this.userPost.password = 'Pay@2021';
         }
+        if (this.isAdmin) {
+            this.userPost.drivingSchoolId = this.drivingSchoolForm.value.id;
+        } else{
+            this.userPost.drivingSchoolId = 26;
+        }
+        return true;
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {
@@ -426,5 +456,19 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     private closeAlerts(): void {
         this.loading = false;
         this._changeDetectorRef.markForCheck();
+    }
+
+    private loadDrivingSchools(): void {
+        this.isAdmin = this._authServices.isAdmin();
+        if (this.isAdmin) {
+            this.drivingSchool$ = this._drivingSchoolServices.getAll().subscribe((res) => {
+                this.drivingSchoolList = res;
+                this.drivingSchoolForm = this._formBuilder.group({
+                    id: [''],
+                    fantasyName: [''],
+                });
+                this._changeDetectorRef.markForCheck();
+            });
+        }
     }
 }

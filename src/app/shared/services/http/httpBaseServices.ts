@@ -41,6 +41,7 @@ export class HttpBaseServices<T> {
     }
 
     getOne(id: number, uf: string = ''): Observable<T> {
+        uf = uf ?? '';
         return this._httpClient.get<T>(this.endpoint + '/' + id+'?uf='+uf).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))

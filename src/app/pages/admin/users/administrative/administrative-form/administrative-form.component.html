@@ -21,6 +21,17 @@
 
             <div class="flex flex-col mt-2.5">
 
+                <ng-container *ngIf="isAdmin">
+                    <form [formGroup]="drivingSchoolForm">
+                        <mat-form-field appearance="legacy">
+                            <mat-label>Perfil de Acesso</mat-label>
+                            <mat-select [formControlName]="'id'" *ngIf="isAdmin">
+                                <mat-option *ngFor="let item of drivingSchoolList" [value]="item.id">{{item.fantasyName}}</mat-option>
+                            </mat-select>
+                            <mat-hint align="end">Selecione</mat-hint>
+                        </mat-form-field>
+                    </form>
+                </ng-container>
                 <form [formGroup]="userForm">
 
                     <!--start: Nome-->
@@ -305,6 +316,26 @@
                         </mat-error>
                     </div>
                     <!--end:number-->
+
+                    <!--start: complement-->
+                    <div class="sm:col-span-4 mt-2.5">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                            <mat-label for="complement">Complemento</mat-label>
+                            <mat-icon
+                                class="icon-size-5 mr-0.5"
+                                [svgIcon]="'heroicons_solid:annotation'"
+                                matPrefix></mat-icon>
+                            <input
+                                id="complement"
+                                matInput
+                                [formControlName]="'complement'">
+
+                        </mat-form-field>
+                        <mat-error *ngIf="addressForm.get('complement').hasError('complement')">
+                            Insira um valor válido
+                        </mat-error>
+                    </div>
+                    <!--end:complement-->
                 </form>
             </div>
             <!-- start:Submit -->
