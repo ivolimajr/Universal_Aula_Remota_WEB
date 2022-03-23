@@ -24,7 +24,7 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
     dataSource = new MatTableDataSource<AdministrativeModel>(ELEMENT_DATA); //Dados da tabela
     isDeleting: boolean = false;
     _users$ = this._administrativeServices.getAll();
-    loading: boolean = false;
+    loading: boolean = true;
     private data$: Subscription;
     private user$: Subscription;
 

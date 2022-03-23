@@ -63,7 +63,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.loadDrivingSchools();
+        this.isAdmin = this._authServices.isAdmin();
         this.prepareForm();
     }
 
@@ -73,27 +73,26 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
 
     submit(): void {
         if (this.setUserData()) {
-            console.log(this.userPost);
             this.userForm.disable();
-            // if (!this.id) {
-            //     this.user$ = this._administrativeServices.create(this.userPost).subscribe((res: any) => {
-            //         if (res.error) {
-            //             this.userForm.enable();
-            //             return;
-            //         }
-            //         this.userForm.enable();
-            //         this.dialogRef.close(res);
-            //     });
-            // } else {
-            //     this.user$ = this._administrativeServices.update(this.userPost).subscribe((res: any) => {
-            //         if (res.error) {
-            //             this.userForm.enable();
-            //             return;
-            //         }
-            //         this.userForm.enable();
-            //         this.dialogRef.close(res);
-            //     });
-            // }
+            if (!this.id) {
+                this.user$ = this._administrativeServices.create(this.userPost).subscribe((res: any) => {
+                    if (res.error) {
+                        this.userForm.enable();
+                        return;
+                    }
+                    this.userForm.enable();
+                    this.dialogRef.close(res);
+                });
+            } else {
+                this.user$ = this._administrativeServices.update(this.userPost).subscribe((res: any) => {
+                    if (res.error) {
+                        this.userForm.enable();
+                        return;
+                    }
+                    this.userForm.enable();
+                    this.dialogRef.close(res);
+                });
+            }
         }
     }
 
@@ -168,6 +167,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             this.prepareEditForm();
             return;
         }
+        this.loadDrivingSchools();
         this.userForm = this._formBuilder.group({
             name: ['',
                 Validators.compose([
@@ -381,7 +381,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                             Validators.nullValidator,
                             Validators.minLength(1),
                             Validators.maxLength(50)])],
-                    complement: [res.address.complement,
+                    complement: [res.address.complement ?? '',
                         Validators.compose([
                             Validators.maxLength(100)])],
                 });
@@ -390,7 +390,12 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                 if (this.ufList.indexOf(uf) > 0) {
                     this.ufOrigin.setValue(res.origin.substr(res.origin.length - 2, res.origin.length - 1));
                 }
-                this.closeAlerts();
+                if(this.isAdmin){
+                    console.log('1');
+                    this.loadDrivingSchools(res.drivingSchoolId);
+                } else {
+                    this.closeAlerts();
+                }
                 this.phoneArray = [];
             });
     }
@@ -458,15 +463,18 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    private loadDrivingSchools(): void {
-        this.isAdmin = this._authServices.isAdmin();
+    private loadDrivingSchools(id: number = 0): void {
+
         if (this.isAdmin) {
+            this.loading = true;
+            this._changeDetectorRef.markForCheck();
             this.drivingSchool$ = this._drivingSchoolServices.getAll().subscribe((res) => {
                 this.drivingSchoolList = res;
                 this.drivingSchoolForm = this._formBuilder.group({
-                    id: [''],
+                    id: [id ?? ''],
                     fantasyName: [''],
                 });
+                this.loading = false;
                 this._changeDetectorRef.markForCheck();
             });
         }
