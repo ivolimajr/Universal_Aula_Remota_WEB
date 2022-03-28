@@ -5,13 +5,13 @@ import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Observable, Subscription} from 'rxjs';
 import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
-import {Level} from '../../../../../shared/models/level.model';
 import {PartnnerModel} from '../../../../../shared/models/partnner.model';
 import {PartnnerService} from '../../../../../shared/services/http/partnner.service';
 import {User} from '../../../../../shared/models/user.model';
 import {CepService} from '../../../../../shared/services/http/cep.service';
 import {UserService} from '../../../../../shared/services/http/user.service';
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
+import {ParceiroCargosConstants} from '../../../../../shared/constants';
 
 @Component({
     selector: 'app-partnner-form-modal',
@@ -27,7 +27,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
     addressForm: FormGroup;
     masks = MASKS;
     loading: boolean = true;
-    levels: Level[];
+    level: number;
     states = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
         'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
     private partnnerModel = new PartnnerModel();
@@ -164,7 +164,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
             return;
         }
         this.cep$ = this._cepService.getCep(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
-            this.accountForm.patchValue({
+            this.addressForm.patchValue({
                 district: res.bairro,
                 address: res.logradouro,
                 city: res.localidade,
@@ -180,7 +180,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
      */
     private getCargos(): void {
         this.level$ = this._parceiroServices.getCargos().subscribe((res) => {
-            this.levels = res;
+            this.level = res.find(e => e.level === ParceiroCargosConstants.EMPRESA).id;
             this._changeDetectorRef.markForCheck();
         });
     }
@@ -227,9 +227,6 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(100)])],
-            levelId: ['',
-                Validators.compose([
-                    Validators.required])],
             password:['Pay@2021'],
             phonesNumbers: this._formBuilder.array([], Validators.compose([
                 Validators.required,
@@ -292,7 +289,6 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         this.phoneArray.forEach((phoneNumbersFormGroup) => {
             (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumbersFormGroup);
         });
-
         this.closeAlerts();
         this.phoneArray = [];
     }
@@ -326,6 +322,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         });
         this.partnnerModel = userFormData;
         this.partnnerModel.address = addressFormData;
+        this.partnnerModel.levelId = this.level;
         return result;
     }
 
@@ -361,9 +358,6 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(100)])],
-            levelId: [this.userEdit.levelId,
-                Validators.compose([
-                    Validators.required])],
             phonesNumbers: this._formBuilder.array([], Validators.compose([
                 Validators.required,
                 Validators.nullValidator

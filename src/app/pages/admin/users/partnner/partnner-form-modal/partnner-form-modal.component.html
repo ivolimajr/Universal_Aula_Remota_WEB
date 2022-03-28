@@ -84,16 +84,6 @@
                     </div>
                     <!--end:cnpj-->
 
-                    <!--start: cargo-->
-                    <mat-form-field appearance="legacy">
-                        <mat-label>Cargo</mat-label>
-                        <mat-select [formControlName]="'levelId'" required>
-                            <mat-option *ngFor="let item of levels" [value]="item.id">{{item.level}}</mat-option>
-                        </mat-select>
-                        <mat-hint align="end">Selecione o cargo</mat-hint>
-                    </mat-form-field>
-                    <!--end: cargo-->
-
                     <!--start:Descrição-->
                     <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
                         <mat-label for="description">Descrição</mat-label>

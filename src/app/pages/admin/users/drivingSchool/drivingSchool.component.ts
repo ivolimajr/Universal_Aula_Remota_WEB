@@ -26,8 +26,7 @@ export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
     dataSource = new MatTableDataSource<DrivingSchool>(ELEMENT_DATA);
     loading: boolean = true;
     isDeleting: boolean = false;
-    showAlert: boolean = false;
-    _users$ = this._autoEscolaServices.getAll(this._authServices.getUserInfoFromStorage().address.uf);
+    _users$ = this._drivingSchoolServices.getAll(this._authServices.getUserInfoFromStorage().address.uf);
     private data$: Subscription;
     private user$: Subscription;
 
@@ -39,14 +38,13 @@ export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
     @ViewChild(MatTable) table: MatTable<DrivingSchool>;
 
   constructor(
-      public dialog: MatDialog,
+      public _dialog: MatDialog,
       private _snackBar: MatSnackBar,
       private _authServices: AuthService,
       private _changeDetectorRef: ChangeDetectorRef,
       private _router: Router,
-      private _autoEscolaServices: DrivingSchoolService
+      private _drivingSchoolServices: DrivingSchoolService
       ) {
-      console.log(this._authServices.getUserInfoFromStorage().address.uf);
   }
 
   ngOnInit(): void {
@@ -89,7 +87,7 @@ export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
         //Se o id informado for nulo, ou se o usuário for remover ele mesmo, é retornado um erro
         if (email !== this._authServices.getUserInfoFromStorage().email) {
             //Exibe o alerta de confirmação
-            const dialogRef = this.dialog.open(AlertModalComponent, {
+            const dialogRef = this._dialog.open(AlertModalComponent, {
                 width: '280px',
                 data: {title: 'Confirmar Remoção ?'}
             });
@@ -141,7 +139,7 @@ export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
      * @return void
      */
     private deleteFromApi(id: number): void {
-        this.user$ = this._autoEscolaServices.delete(id).subscribe((res: any)=>{
+        this.user$ = this._drivingSchoolServices.delete(id).subscribe((res: any)=>{
             if (res.error) {
                 this.isDeleting = false;
                 this._changeDetectorRef.markForCheck();
