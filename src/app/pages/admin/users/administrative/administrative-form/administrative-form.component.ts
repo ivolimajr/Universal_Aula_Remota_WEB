@@ -32,6 +32,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     ufList = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB',
         'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
     drivingSchoolList: DrivingSchool[];
+    selectedDrivingSchool: DrivingSchool;
     isAdmin: boolean;
     private userPost = new AdministrativeModel(); //Objeto para envio dos dados para API
     private user$: Subscription;
@@ -438,11 +439,11 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
 
         if (!this.id) {
             this.userForm.value.origin = this.userForm.value.origin + '-' + this.ufOrigin.value;
-            this.userPost.drivingSchoolId = this.drivingSchoolForm.value.id;
+            this.userPost.drivingSchoolId = this.selectedDrivingSchool.id;
             this.userPost.password = 'Pay@2021';
         }
         if (this.isAdmin) {
-            this.userPost.drivingSchoolId = this.drivingSchoolForm.value.id;
+            this.userPost.drivingSchoolId = this.selectedDrivingSchool.id;
         } else{
             this.userPost.drivingSchoolId = 26;
         }
@@ -470,6 +471,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             this._changeDetectorRef.markForCheck();
             this.drivingSchool$ = this._drivingSchoolServices.getAll().subscribe((res) => {
                 this.drivingSchoolList = res;
+                this.selectedDrivingSchool = this.drivingSchoolList.find(e => e.id === id);
                 this.drivingSchoolForm = this._formBuilder.group({
                     id: [id ?? ''],
                     fantasyName: [''],

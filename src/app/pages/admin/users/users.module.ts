@@ -15,6 +15,7 @@ import { DrivingSchoolComponent } from './drivingSchool/drivingSchool.component'
 import { DrivingSchoolFormComponent } from './drivingSchool/drivingSchool-form/drivingSchool-form.component';
 import { AdministrativeComponent } from './administrative/administrative.component';
 import { AdministrativeFormComponent } from './administrative/administrative-form/administrative-form.component';
+import {DropdownModule} from 'primeng/dropdown';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { AdministrativeFormComponent } from './administrative/administrative-for
         FuseCardModule,
         FuseAlertModule,
         TextMaskModule,
+        DropdownModule,
     ]
 })
 export class UsersModule {

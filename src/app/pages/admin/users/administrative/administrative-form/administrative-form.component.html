@@ -22,14 +22,22 @@
             <div class="flex flex-col mt-2.5">
 
                 <form [formGroup]="drivingSchoolForm" *ngIf="isAdmin">
-                    <mat-form-field appearance="legacy" class="w-full">
-                        <mat-label>Auto Escola</mat-label>
-                        <mat-select [formControlName]="'id'" *ngIf="isAdmin" required>
-                            <mat-option *ngFor="let item of drivingSchoolList"
-                                        [value]="item.id">{{item.fantasyName}}</mat-option>
-                        </mat-select>
-                        <mat-hint align="end">Selecione</mat-hint>
-                    </mat-form-field>
+                    <div class="sm:col-span-4 mt-2.5">
+                        <p-dropdown class="fuse-mat-no-subscript w-full" [options]="drivingSchoolList" [(ngModel)]="selectedDrivingSchool"
+                                    [formControlName]="'id'" optionLabel="name" [filter]="true" filterBy="fantasyName"
+                                    [showClear]="true" placeholder="Selecione a auto escola">
+                            <ng-template pTemplate="selectedItem">
+                                <div class="country-item country-item-value" *ngIf="selectedDrivingSchool">
+                                    <div>{{selectedDrivingSchool.fantasyName}}</div>
+                                </div>
+                            </ng-template>
+                            <ng-template let-item pTemplate="item">
+                                <div class="country-item">
+                                    <div>{{item.fantasyName}}</div>
+                                </div>
+                            </ng-template>
+                        </p-dropdown>
+                    </div>
                 </form>
 
                 <form [formGroup]="userForm">
