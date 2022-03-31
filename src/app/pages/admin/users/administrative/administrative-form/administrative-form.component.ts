@@ -391,8 +391,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                 if (this.ufList.indexOf(uf) > 0) {
                     this.ufOrigin.setValue(res.origin.substr(res.origin.length - 2, res.origin.length - 1));
                 }
-                if(this.isAdmin){
-                    console.log('1');
+                if (this.isAdmin) {
                     this.loadDrivingSchools(res.drivingSchoolId);
                 } else {
                     this.closeAlerts();
@@ -402,8 +401,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     }
 
     private setUserData(): boolean {
-
-        if (this.drivingSchoolForm.invalid) {
+        if (this.selectedDrivingSchool === null) {
             this.openSnackBar('Informe a auto escola', 'warn');
             return false;
         }
@@ -439,13 +437,12 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
 
         if (!this.id) {
             this.userForm.value.origin = this.userForm.value.origin + '-' + this.ufOrigin.value;
-            this.userPost.drivingSchoolId = this.selectedDrivingSchool.id;
             this.userPost.password = 'Pay@2021';
         }
         if (this.isAdmin) {
             this.userPost.drivingSchoolId = this.selectedDrivingSchool.id;
-        } else{
-            this.userPost.drivingSchoolId = 26;
+        } else {
+            this.userPost.drivingSchoolId = this._authServices.getUserInfoFromStorage().id;
         }
         return true;
     }
@@ -467,17 +464,14 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     private loadDrivingSchools(id: number = 0): void {
 
         if (this.isAdmin) {
-            this.loading = true;
-            this._changeDetectorRef.markForCheck();
+            if (!this.loading) {
+                this.loading = true;
+                this._changeDetectorRef.markForCheck();
+            }
             this.drivingSchool$ = this._drivingSchoolServices.getAll().subscribe((res) => {
                 this.drivingSchoolList = res;
                 this.selectedDrivingSchool = this.drivingSchoolList.find(e => e.id === id);
-                this.drivingSchoolForm = this._formBuilder.group({
-                    id: [id ?? ''],
-                    fantasyName: [''],
-                });
-                this.loading = false;
-                this._changeDetectorRef.markForCheck();
+                this.closeAlerts();
             });
         }
     }

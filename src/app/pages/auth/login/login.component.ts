@@ -34,8 +34,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     signIn(): void {
         if (!this.loginForm.valid) {
-            this.openSnackBar('Verifique os dados', 'warn');
-            return;
+            return this.openSnackBar('Verifique os dados', 'warn');
         }
         this.loginForm.disable();
 

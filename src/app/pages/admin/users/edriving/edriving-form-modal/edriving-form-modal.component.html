@@ -98,13 +98,12 @@
 
                     <!--start:telefones-->
                     <div class="sm:col-span-4 mt-2.5">
-                        <div class="space-y-4">
                             <ng-container
                                 *ngFor="let phoneNumber of accountForm.get('phonesNumbers')['controls']; let i = index;"
                                 formArrayName="phonesNumbers">
                                 <div class="relative flex">
-                                    <mat-form-field class="fuse-mat-no-subscript flex-auto">
-                                        <mat-label>Telefone(s)</mat-label>
+                                    <mat-form-field class="fuse-mat-no-subscript flex-auto" appearance="legacy">
+                                        <mat-label>Telefone</mat-label>
                                         <input
                                             matInput
                                             phoneNumber [textMask]="{mask: masks.telefone.textMaskFunction}"
@@ -115,22 +114,20 @@
                                     <!-- Remove phone number -->
                                     <ng-container>
                                         <div
-                                            class="flex items-center w-10 pl-2"
-                                            [ngClass]="'mt-6'">
+                                            class="flex items-center w-10 pl-2">
                                             <button
                                                 class="w-8 h-8 min-h-8"
                                                 mat-icon-button
                                                 (click)="removePhoneNumber(phoneNumber.value.id ?? 0,i)"
                                                 matTooltip="Remove">
                                                 <mat-icon
-                                                    class="icon-size-5"
+                                                    class="icon-size-5 text-red-500"
                                                     [svgIcon]="'heroicons_solid:trash'"></mat-icon>
                                             </button>
                                         </div>
                                     </ng-container>
                                 </div>
                             </ng-container>
-                        </div>
                         <!--end:telefones-->
                         <div
                             class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer"

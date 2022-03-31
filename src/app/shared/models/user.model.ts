@@ -3,6 +3,7 @@ import {AddressModel} from './address.model';
 
 export class User {
     id?: number;
+    userId: number;
     name: string;
     email: string;
     status: number;

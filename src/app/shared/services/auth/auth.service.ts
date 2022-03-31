@@ -62,7 +62,6 @@ export class AuthService {
         }
         return this._httpClient.post(API_LOGIN_URL, credentials).pipe(
             switchMap((response: User) => {
-
                 this.storageServices.setValueFromLocalStorage(environment.authStorage, response);
 
                 //Define os atributos de login e senha para salvar no Storage para verificações.

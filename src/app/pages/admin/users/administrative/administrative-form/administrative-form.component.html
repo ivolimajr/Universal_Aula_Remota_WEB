@@ -7,13 +7,13 @@
         <ng-container *ngIf="!id; else editMode">
             <div class="text-3xl font-bold tracking-tight leading-tight">Novo Usuário</div>
             <div class="mt-2 text-md font-medium tracking-tight text-secondary">Você está cadastrando um novo usuário
-                do tipo Edriving
+                do tipo administrativo
             </div>
         </ng-container>
         <ng-template #editMode>
             <div class="text-3xl font-bold tracking-tight leading-tight">Dados do Usuário</div>
             <div class="mt-2 text-md font-medium tracking-tight text-secondary">Você está editando um usuário do tipo
-                Edriving
+                administrativo
             </div>
         </ng-template>
         <div class="w-15 h-0.5 mt-3 mb-3 rounded bg-accent"></div>
@@ -21,11 +21,10 @@
 
             <div class="flex flex-col mt-2.5">
 
-                <form [formGroup]="drivingSchoolForm" *ngIf="isAdmin">
                     <div class="sm:col-span-4 mt-2.5">
                         <p-dropdown class="fuse-mat-no-subscript w-full" [options]="drivingSchoolList" [(ngModel)]="selectedDrivingSchool"
-                                    [formControlName]="'id'" optionLabel="name" [filter]="true" filterBy="fantasyName"
-                                    [showClear]="true" placeholder="Selecione a auto escola">
+                                    optionLabel="fantasyName" [filter]="true" filterBy="fantasyName"
+                                    [showClear]="false" placeholder="Selecione a auto escola"  appearance="legacy">
                             <ng-template pTemplate="selectedItem">
                                 <div class="country-item country-item-value" *ngIf="selectedDrivingSchool">
                                     <div>{{selectedDrivingSchool.fantasyName}}</div>
@@ -38,7 +37,6 @@
                             </ng-template>
                         </p-dropdown>
                     </div>
-                </form>
 
                 <form [formGroup]="userForm">
 
@@ -154,13 +152,12 @@
 
                     <!--start:telefones-->
                     <div class="sm:col-span-4 mt-2.5">
-                        <div class="space-y-4">
                             <ng-container
                                 *ngFor="let phoneNumber of userForm.get('phonesNumbers')['controls']; let i = index;"
                                 formArrayName="phonesNumbers">
                                 <div class="relative flex">
-                                    <mat-form-field class="fuse-mat-no-subscript flex-auto">
-                                        <mat-label>Telefone(s)</mat-label>
+                                    <mat-form-field class="fuse-mat-no-subscript flex-auto" appearance="legacy">
+                                        <mat-label>Telefone</mat-label>
                                         <input
                                             matInput
                                             phoneNumber [textMask]="{mask: masks.telefone.textMaskFunction}"
@@ -171,22 +168,20 @@
                                     <!-- Remove phone number -->
                                     <ng-container>
                                         <div
-                                            class="flex items-center w-10 pl-2"
-                                            [ngClass]="'mt-6'">
+                                            class="flex items-center w-10 pl-2">
                                             <button
                                                 class="w-8 h-8 min-h-8"
                                                 mat-icon-button
                                                 (click)="removePhoneNumber(phoneNumber.value.id ?? 0,i)"
                                                 matTooltip="Remove">
                                                 <mat-icon
-                                                    class="icon-size-5"
+                                                    class="icon-size-5 text-red-500"
                                                     [svgIcon]="'heroicons_solid:trash'"></mat-icon>
                                             </button>
                                         </div>
                                     </ng-container>
                                 </div>
                             </ng-container>
-                        </div>
                         <!--end:telefones-->
                         <div
                             class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer"
