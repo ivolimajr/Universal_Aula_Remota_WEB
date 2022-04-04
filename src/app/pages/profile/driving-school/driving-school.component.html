@@ -1,37 +1,37 @@
 <div class="w-full max-w-3xl">
 
-    <!-- Form -->
     <form [formGroup]="accountForm">
-
         <!-- Section -->
         <div class="w-full">
-            <div class="text-xl">Dados Pessoais</div>
+            <div class="text-xl">Dados da Empresa</div>
             <div class="text-secondary">Mantenha seus dados sempre atualizados!</div>
         </div>
         <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
-            <!-- Nome -->
+
+            <!--start:corporateName-->
             <div class="sm:col-span-4">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
-                    <mat-label for="name">Nome</mat-label>
+                    <mat-label for="corporateName">Razão Social</mat-label>
                     <mat-icon
                         class="icon-size-5"
-                        [svgIcon]="'heroicons_solid:user'"
+                        [svgIcon]="'heroicons_solid:office-building'"
                         matPrefix></mat-icon>
                     <input
-                        id="name"
+                        id="corporateName"
                         matInput
-                        [formControlName]="'name'">
+                        [formControlName]="'corporateName'">
 
                 </mat-form-field>
-                <mat-error *ngIf="accountForm.get('name').hasError('required')">
-                    Informe nome
+                <mat-error *ngIf="accountForm.get('corporateName').hasError('required')">
+                    Informe uma razão social
                 </mat-error>
-                <mat-error *ngIf="accountForm.get('name').hasError('name')">
-                    Insira um nome válido
+                <mat-error *ngIf="accountForm.get('corporateName').hasError('corporateName')">
+                    Insira uma razão social válida
                 </mat-error>
             </div>
+            <!--end:corporateName-->
 
-            <!-- Email -->
+            <!-- start:Email -->
             <div class="sm:col-span-2">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label for="email">Email</mat-label>
@@ -51,8 +51,9 @@
                     Insira um nome válido
                 </mat-error>
             </div>
+            <!-- end:Email -->
 
-            <!-- cnpj -->
+            <!-- start:cnpj -->
             <div class="sm:col-span-2">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label for="cnpj">CNPJ</mat-label>
@@ -73,12 +74,77 @@
                     Insira um cnpj válido
                 </mat-error>
             </div>
+            <!-- end:cnpj -->
+
+            <!-- start:fantasyName -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label for="fantasyName">Nome Fantasia</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:user'"
+                        matPrefix></mat-icon>
+                    <input
+                        id="fantasyName"
+                        matInput
+                        [formControlName]="'fantasyName'">
+
+                </mat-form-field>
+                <mat-error *ngIf="accountForm.get('fantasyName').hasError('required')">
+                    Informe uma razão social
+                </mat-error>
+                <mat-error *ngIf="accountForm.get('fantasyName').hasError('fantasyName')">
+                    Insira uma razão social válida
+                </mat-error>
+            </div>
+            <!-- end:fantasyName -->
+
+            <!-- start:identification -->
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label for="stateRegistration">Inscrição Estadual</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:identification'"
+                        matPrefix></mat-icon>
+                    <input
+                        id="stateRegistration"
+                        [formControlName]="'stateRegistration'"
+                        matInput>
+                </mat-form-field>
+                <mat-error *ngIf="accountForm.get('stateRegistration').hasError('required')">
+                    Informe nome
+                </mat-error>
+                <mat-error *ngIf="accountForm.get('stateRegistration').hasError('stateRegistration')">
+                    Insira um nome válido
+                </mat-error>
+            </div>
+            <!-- end:identification -->
+
+            <!-- start:calendar -->
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label for="foundingDate">Data da fundação</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:calendar'"
+                        matPrefix></mat-icon>
+                    <input id="foundingDate" matInput type="date" [formControlName]="'foundingDate'"
+                           [max]="'2021-01-31'">
+                </mat-form-field>
+                <mat-error *ngIf="accountForm.get('foundingDate').hasError('required')">
+                    Informe cnpj
+                </mat-error>
+                <mat-error *ngIf="accountForm.get('foundingDate').hasError('foundingDate')">
+                    Insira um cnpj válido
+                </mat-error>
+            </div>
+            <!-- end:calendar -->
+
         </div>
 
-        <!-- Divider -->
-        <div class="my-10 border-t"></div>
-        <!-- descricao -->
-        <div class="sm:col-span-2">
+        <!-- start:annotation -->
+        <div class="sm:col-span-4">
             <mat-form-field class="fuse-mat-no-subscript w-full">
                 <mat-label for="description">Descrição</mat-label>
                 <mat-icon
@@ -87,19 +153,20 @@
                     matPrefix></mat-icon>
                 <textarea
                     id="description"
-                    [formControlName]="'description'"
-                    matInput> </textarea>
+                    matInput
+                    [formControlName]="'description'"></textarea>
+
             </mat-form-field>
             <mat-error *ngIf="accountForm.get('description').hasError('required')">
-                Informe uma descrição
+                Informe uma razão social
             </mat-error>
             <mat-error *ngIf="accountForm.get('description').hasError('description')">
-                Insira uma descrição válido
+                Insira uma descrição
             </mat-error>
         </div>
-        <div class="my-10 border-t"></div>
+        <!-- end:annotation -->
 
-        <!-- Section -->
+        <!-- start:phones -->
         <div class="w-full">
             <div class="text-xl">Dados de contato</div>
             <div class="text-secondary">Dados necessário para nossa equipe entrar em contato com você.
@@ -152,6 +219,7 @@
                 <span class="ml-2 font-medium text-secondary group-hover:underline">Inserir novo contato</span>
             </div>
         </div>
+        <!-- end:phones -->
 
         <!-- Divider -->
         <div class="mt-11 mb-10 border-t"></div>
@@ -163,16 +231,14 @@
                 Cancelar
             </button>
             <button
-                [disabled]="accountForm.disabled"
+                [disabled]="accountForm.disabled || accountForm.invalid"
                 class="ml-4"
                 mat-flat-button
                 type="button"
-                (click)="update()"
+                (click)="submit()"
                 [color]="'primary'">
                 <span>Salvar</span>
             </button>
         </div>
     </form>
-
-
 </div>

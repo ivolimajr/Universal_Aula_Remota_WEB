@@ -37,7 +37,6 @@ export class EdrivingComponent implements OnInit, OnDestroy {
     public userLogin: UserLogin;
     public masks = MASKS;
     public loading: boolean;
-    private edrivingModel = new EdrivingModel();
     private user$: Subscription;
     private phone$: Subscription;
 
@@ -64,7 +63,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         if (this.setUserData() === false) {
             return this.closeAlerts();
         }
-        this.user$ = this._edrivingServices.update(this.edrivingModel).subscribe((res: any) => {
+        this.user$ = this._edrivingServices.update(this.edrivingUser).subscribe((res: any) => {
             //Set o edrivingUser com os dados atualizados
             if (res.error) {
                 return this.closeAlerts();
@@ -179,6 +178,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
         this.accountForm = this._formBuilder.group({
+            id: [this.edrivingUser.id],
             name: [this.edrivingUser.name,
                 Validators.compose([
                     Validators.required,
@@ -259,10 +259,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
                 item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
-        this.edrivingModel = formData;
-        if(this.edrivingUser){
-            this.edrivingModel.id = this.edrivingUser.id;
-        }
+        this.edrivingUser = formData;
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {

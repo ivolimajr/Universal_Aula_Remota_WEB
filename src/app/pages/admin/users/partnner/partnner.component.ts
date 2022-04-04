@@ -27,7 +27,7 @@ export class PartnnerComponent implements AfterViewInit, OnInit,OnDestroy {
     loading: boolean = true;
     isDeleting: boolean = false;
     showAlert: boolean = false;
-    _users$ = this._parceiroServices.getAll();
+    _users$ = this._partnnerServices.getAll();
     private data$: Subscription;
     private user$: Subscription;
 
@@ -43,7 +43,7 @@ export class PartnnerComponent implements AfterViewInit, OnInit,OnDestroy {
         private _snackBar: MatSnackBar,
         private _authServices: AuthService,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _parceiroServices: PartnnerService
+        private _partnnerServices: PartnnerService
     ) {
     }
 
@@ -160,7 +160,7 @@ export class PartnnerComponent implements AfterViewInit, OnInit,OnDestroy {
      * @return void
      */
     private deleteFromApi(id: number): void {
-        this.user$ = this._parceiroServices.delete(id).subscribe((res: any)=>{
+        this.user$ = this._partnnerServices.delete(id).subscribe((res: any)=>{
             if (res.error) {
                 this.isDeleting = false;
                 this._changeDetectorRef.markForCheck();

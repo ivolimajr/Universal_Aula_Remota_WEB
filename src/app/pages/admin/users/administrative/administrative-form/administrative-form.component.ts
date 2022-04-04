@@ -10,7 +10,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {CepService} from '../../../../../shared/services/http/cep.service';
 import {UserService} from '../../../../../shared/services/http/user.service';
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
-import {DrivingSchool} from '../../../../../shared/models/drivingSchool.model';
+import {DrivingSchoolModel} from '../../../../../shared/models/drivingSchool.model';
 import {DrivingSchoolService} from '../../../../../shared/services/http/drivingSchool.service';
 import {AuthService} from '../../../../../shared/services/auth/auth.service';
 
@@ -31,8 +31,8 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     drivingSchoolForm: FormGroup;
     ufList = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB',
         'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
-    drivingSchoolList: DrivingSchool[];
-    selectedDrivingSchool: DrivingSchool;
+    drivingSchoolList: DrivingSchoolModel[];
+    selectedDrivingSchool: DrivingSchoolModel;
     isAdmin: boolean;
     private userPost = new AdministrativeModel(); //Objeto para envio dos dados para API
     private user$: Subscription;
@@ -142,7 +142,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    buscaCep(event): void {
+    getCep(event): void {
         if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
             this.openSnackBar('Cep inválido');
             return;

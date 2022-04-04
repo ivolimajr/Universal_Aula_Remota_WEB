@@ -62,7 +62,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
      * @return void
      */
     submit(): void {
-        const formIsValid = this.prepareUser();
+        const formIsValid = this.setUserData();
         if (formIsValid) {
             this.loading = true;
             this._changeDetectorRef.markForCheck();
@@ -240,7 +240,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
     /**
      * Prepara o usuário para envio
      */
-    private prepareUser(): boolean {
+    private setUserData(): boolean {
         const formData = this.accountForm.value;
         let result: boolean = true;
         if (this.accountForm.invalid) {

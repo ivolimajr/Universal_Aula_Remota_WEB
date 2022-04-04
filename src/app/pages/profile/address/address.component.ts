@@ -39,7 +39,7 @@ export class AddressComponent implements OnInit, OnDestroy {
         private _snackBar: MatSnackBar,
         private _changeDetectorRef: ChangeDetectorRef,
         private _cepService: CepService,
-        private _userService: UserService,
+        private _userServices: UserService,
     ) {
     }
 
@@ -54,7 +54,7 @@ export class AddressComponent implements OnInit, OnDestroy {
         this.addressForm.disable();
         this.setData();
 
-        this.user$ = this._userService.updateAddress(this.addressModel).subscribe((res: any) => {
+        this.user$ = this._userServices.updateAddress(this.addressModel).subscribe((res: any) => {
             if (res.error) {
                 this.addressForm.enable();
                 this._changeDetectorRef.markForCheck();
@@ -72,7 +72,7 @@ export class AddressComponent implements OnInit, OnDestroy {
         return item.id || index;
     }
 
-    buscaCep(event): void {
+    getCep(event): void {
         if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
             this.openSnackBar('Cep inválido');
             return;
@@ -106,8 +106,8 @@ export class AddressComponent implements OnInit, OnDestroy {
             this.openSnackBar('UF Inválida');
             this.addressForm.enable();
         }
+        addressFormValue.cep = addressFormValue.cep.replace(/[^0-9,]*/g, '');
         this.addressModel = addressFormValue;
-        this.addressModel.cep = addressFormValue.cep.replace(/[^0-9,]*/g, '');
     }
 
     private prepareForm(): void {

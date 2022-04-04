@@ -116,7 +116,7 @@
                                 matPrefix></mat-icon>
                             <input
                                 id="cep"
-                                (blur)="buscaCep($event.target)"
+                                (blur)="getCep($event.target)"
                                 matInput
                                 cep [textMask]="{mask: masks.cep.textMask}"
                                 [formControlName]="'cep'">

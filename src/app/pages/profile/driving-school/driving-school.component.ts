@@ -7,34 +7,36 @@ import {
     OnInit,
     ViewEncapsulation
 } from '@angular/core';
-import {MASKS} from 'ng-brazil';
+import {Observable, Subscription} from 'rxjs';
+import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Observable, Subscription} from 'rxjs';
 import {fuseAnimations} from '../../../../@fuse/animations';
+import {DrivingSchoolModel} from '../../../shared/models/drivingSchool.model';
 import {User} from '../../../shared/models/user.model';
-import {PartnnerModel} from '../../../shared/models/partnner.model';
 import {UserService} from '../../../shared/services/http/user.service';
 import {AuthService} from '../../../shared/services/auth/auth.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
-import {PartnnerService} from '../../../shared/services/http/partnner.service';
+import {DrivingSchoolService} from '../../../shared/services/http/drivingSchool.service';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
-import {environment} from '../../../../environments/environment';
+import {formatDate} from '@angular/common';
+import {environment} from "../../../../environments/environment";
 
 @Component({
-    selector: 'app-partnner',
-    templateUrl: './partnner.component.html',
+    selector: 'app-driving-school',
+    templateUrl: './driving-school.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations
 })
-export class PartnnerComponent implements OnInit, OnDestroy {
-    @Input() partnnerUser: PartnnerModel;
+export class DrivingSchoolComponent implements OnInit, OnDestroy {
+    @Input() drivingSchoolUser: DrivingSchoolModel;
 
     accountForm: FormGroup;
     user: User;
     masks = MASKS;
+    loading: boolean = true;
     private user$: Subscription;
     private phone$: Subscription;
 
@@ -44,68 +46,57 @@ export class PartnnerComponent implements OnInit, OnDestroy {
         private _formBuilder: FormBuilder,
         private _userServices: UserService,
         private _authServices: AuthService,
-        private _partnnerServices: PartnnerService,
+        private _drivingSchoolServices: DrivingSchoolService,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _storageServices: LocalStorageService
-    ) {
+        private _storageServices: LocalStorageService) {
     }
 
     ngOnInit(): void {
-        //Prepara o formulário
         this.prepareForm();
     }
 
-    /**
-     * Atualiza o usuário do tipo Edriving
-     *
-     * @return void
-     */
-    update(): void {
+    submit(): void {
+        if (this.setUserData()) {
+            this.accountForm.disable();
+            this.user$ = this._drivingSchoolServices.updateFormEncoded(this.drivingSchoolUser).subscribe((res:any)=>{
+                if (res.error) {
+                    return this.closeAlerts();
+                }
+                this.drivingSchoolUser = res;
+                this.user = this._authServices.getUserInfoFromStorage();
+                this.user.name = res.fantasyName;
+                this.user.email = res.email;
+                this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
 
-        //Verifica se o formulário é valido
-        if (this.checkFormToSend() === false) {
-            return null;
-        }
-        this.accountForm.disable();
-        this.user$ = this._partnnerServices.update(this.partnnerUser).subscribe((res: any) => {
-            //Set o edrivingUser com os dados atualizados
-            if (res.error) {
+                const lastPhoneIdFromUser = res.phonesNumbers[res.phonesNumbers.length - 1];
+
+                //Pega o último registro de telefone que contem no array de telefones
+                const lastPhoneFromPhoneArray = this.accountForm.get('phonesNumbers') as FormArray;
+
+                //Se os IDS forem diferentes, incluir no array
+                if (lastPhoneIdFromUser.id !== lastPhoneFromPhoneArray.value[lastPhoneFromPhoneArray.length - 1].id) {
+
+                    const lastFromArray = lastPhoneFromPhoneArray[lastPhoneFromPhoneArray.length - 1];
+                    // Remove the phone number field
+                    lastPhoneFromPhoneArray.removeAt(lastFromArray);
+
+                    const phoneNumberFormGroup = this._formBuilder.group({
+                        id: [lastPhoneIdFromUser.id],
+                        phoneNumber: [lastPhoneIdFromUser.phoneNumber]
+                    });
+
+                    // Adiciona o formGroup ao array de telefones
+                    (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumberFormGroup);
+                }
+
+                //Retorna a mensagem de atualizado
+                this.openSnackBar('Atualizado');
                 return this.closeAlerts();
-            }
-            this.partnnerUser = res;
-
-            //Atualiza os dados do localStorage
-            this.user = this._authServices.getUserInfoFromStorage();
-            this.user.name = res.name;
-            this.user.email = res.email;
-            this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
-
-            //Pega o último registro de telefone que veio do usuario atualizado
-            const lastPhoneIdFromUser = res.phonesNumbers[res.phonesNumbers.length - 1];
-
-            //Pega o último registro de telefone que contem no array de telefones
-            const lastPhoneFromPhoneArray = this.accountForm.get('phonesNumbers') as FormArray;
-
-            //Se os IDS forem diferentes, incluir no array
-            if (lastPhoneIdFromUser.id !== lastPhoneFromPhoneArray.value[lastPhoneFromPhoneArray.length - 1].id) {
-
-                const lastFromArray = lastPhoneFromPhoneArray[lastPhoneFromPhoneArray.length - 1];
-                // Remove the phone number field
-                lastPhoneFromPhoneArray.removeAt(lastFromArray);
-
-                const phoneNumberFormGroup = this._formBuilder.group({
-                    id: [lastPhoneIdFromUser.id],
-                    phoneNumber: [lastPhoneIdFromUser.phoneNumber]
-                });
-
-                // Adiciona o formGroup ao array de telefones
-                (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumberFormGroup);
-            }
-
-            //Retorna a mensagem de atualizado
-            this.openSnackBar('Atualizado');
+            });
+        } else {
+            this.openSnackBar('Dados Inválidos','warn');
             return this.closeAlerts();
-        });
+        }
     }
 
     /**
@@ -143,7 +134,7 @@ export class PartnnerComponent implements OnInit, OnDestroy {
             this.openSnackBar('Remoção Inválida', 'warn');
             return this._changeDetectorRef.markForCheck();
         }
-        if (this.partnnerUser.phonesNumbers.length === 1) {
+        if (this.drivingSchoolUser.phonesNumbers.length === 1) {
             this.openSnackBar('Remoção Inválida', 'warn');
             this._changeDetectorRef.markForCheck();
         }
@@ -157,8 +148,8 @@ export class PartnnerComponent implements OnInit, OnDestroy {
             if (!modalResult) {
                 return this.closeAlerts();
             }
-            this.removePhoneFromApi(id).subscribe((apiResult: any)=>{
-                if(apiResult){
+            this.removePhoneFromApi(id).subscribe((apiResult: any) => {
+                if (apiResult) {
                     this.openSnackBar('Removido');
                     const phoneNumbersFormArray = this.accountForm.get('phonesNumbers') as FormArray;
                     // Remove the phone number field
@@ -172,10 +163,6 @@ export class PartnnerComponent implements OnInit, OnDestroy {
         });
     }
 
-    trackByFn(index: number, item: any): any {
-        return item.id || index;
-    }
-
     ngOnDestroy(): void {
         if (this.user$) {
             this.user$.unsubscribe();
@@ -186,72 +173,62 @@ export class PartnnerComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    /**
-     * Valida os dados vindo do formulário antes de enviar para API
-     *
-     * @private
-     * @return um boleano
-     */
-    private checkFormToSend(): boolean {
-        if (this.accountForm.invalid) {
-            this.openSnackBar('Dados Inválidos', 'warn');
-            return false;
-        }
-        const formDataValues = this.accountForm.value;
-        formDataValues.cnpj = formDataValues.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
-        formDataValues.phonesNumbers.forEach((item) => {
-            if (item.phoneNumber.length !== 11) {
-                item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
-            }
-        });
-        this.partnnerUser = formDataValues;
-        return true;
-    }
-
     private prepareForm(): void {
         this.accountForm = this._formBuilder.group({
-            id:[this.partnnerUser.id],
-            name: [this.partnnerUser.name,
+            id: [this.drivingSchoolUser.id],
+            corporateName: [this.drivingSchoolUser.corporateName,
                 Validators.compose([
                     Validators.required,
-                    Validators.nullValidator,
-                    Validators.minLength(5),
-                    Validators.maxLength(100)]
-                )],
-            email: [this.partnnerUser.email,
+                    Validators.maxLength(150)
+                ])],
+            fantasyName: [this.drivingSchoolUser.fantasyName,
                 Validators.compose([
                     Validators.required,
-                    Validators.nullValidator,
-                    Validators.minLength(5),
-                    Validators.maxLength(70)])],
-            cnpj: [this.partnnerUser.cnpj,
+                    Validators.maxLength(150)
+                ])],
+            stateRegistration: [this.drivingSchoolUser.stateRegistration,
                 Validators.compose([
                     Validators.required,
-                    Validators.nullValidator,
-                    Validators.minLength(14),
-                    Validators.maxLength(14)])],
-            description: [this.partnnerUser.description,
+                    Validators.minLength(8),
+                    Validators.maxLength(30)
+                ])],
+            foundingDate: [formatDate(this.drivingSchoolUser.foundingDate, 'yyyy-MM-dd', 'en'),
+                Validators.required,
+            ],
+            email: [this.drivingSchoolUser.email,
                 Validators.compose([
                     Validators.required,
-                    Validators.nullValidator,
-                    Validators.minLength(5),
-                    Validators.maxLength(100)])],
-            levelId: [this.partnnerUser.levelId,
+                    Validators.email,
+                    Validators.maxLength(70)
+                ])],
+            description: [this.drivingSchoolUser.description,
                 Validators.compose([
-                    Validators.required])],
+                    Validators.required,
+                    Validators.maxLength(150)
+                ])],
+            site: [this.drivingSchoolUser.site,
+                Validators.compose([
+                    Validators.required,
+                    Validators.maxLength(100)
+                ])],
+            cnpj: [this.drivingSchoolUser.cnpj,
+                Validators.compose([
+                    Validators.required,
+                    Validators.maxLength(18),
+                    NgBrazilValidators.cnpj
+                ])],
             phonesNumbers: this._formBuilder.array([], Validators.compose([
                 Validators.required,
                 Validators.nullValidator
             ])),
         });
-
         // cria um array para montar o formBuilder de telefones
         const phoneNumbersFormGroups = [];
 
         //Só monta o array de telefones se houver telefones de contato cadastrado
-        if (this.partnnerUser.phonesNumbers.length > 0) {
+        if (this.drivingSchoolUser.phonesNumbers.length > 0) {
             // Iterate through them
-            this.partnnerUser.phonesNumbers.forEach((phoneNumber) => {
+            this.drivingSchoolUser.phonesNumbers.forEach((phoneNumber) => {
 
                 //Cria um formGroup de telefone
                 phoneNumbersFormGroups.push(
@@ -283,11 +260,29 @@ export class PartnnerComponent implements OnInit, OnDestroy {
         phoneNumbersFormGroups.forEach((phoneNumbersFormGroup) => {
             (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumbersFormGroup);
         });
+
         this._changeDetectorRef.markForCheck();
+    }
+
+    private setUserData(): boolean {
+        if (this.accountForm.invalid) {
+            this.openSnackBar('Dados Inválidos', 'warn');
+            return false;
+        }
+        const formDataValues = this.accountForm.value;
+        formDataValues.cnpj = formDataValues.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
+        formDataValues.phonesNumbers.forEach((item) => {
+            if (item.phoneNumber.length !== 11) {
+                item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
+            }
+        });
+        this.drivingSchoolUser = formDataValues;
+        return true;
     }
 
     private closeAlerts(): void {
         this.accountForm.enable();
+        this.loading = false;
         this._changeDetectorRef.markForCheck();
     }
 

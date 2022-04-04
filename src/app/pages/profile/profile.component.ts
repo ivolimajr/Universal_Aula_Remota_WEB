@@ -18,6 +18,8 @@ import {PartnnerModel} from '../../shared/models/partnner.model';
 import {PartnnerService} from '../../shared/services/http/partnner.service';
 import {AddressModel} from '../../shared/models/address.model';
 import {RolesConstants} from '../../shared/constants';
+import {DrivingSchoolModel} from '../../shared/models/drivingSchool.model';
+import {DrivingSchoolService} from "../../shared/services/http/drivingSchool.service";
 
 @Component({
     selector: 'app-perfil',
@@ -34,8 +36,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
     selectedPanel: string = 'dadosPessoais';
 
     edrivingUser: EdrivingModel = null;
-    parceiroUser: PartnnerModel = null;
-    enderecoUser: AddressModel = null;
+    drivingSchoolUser: DrivingSchoolModel = null;
+    partnnerUser: PartnnerModel = null;
+    addressModel: AddressModel = null;
     loading: boolean = true;
     idUser: number;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -47,7 +50,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _authService: AuthService,
         private _edrivingServices: EdrivingService,
-        private _parceiroServices: PartnnerService
+        private _partnnerServices: PartnnerService,
+        private _drivingSchoolServices: DrivingSchoolService
     ) {
     }
 
@@ -58,10 +62,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        if(this.user$){
+        if (this.user$) {
             this.user$.unsubscribe();
         }
-        if(this.auth$){
+        if (this.auth$) {
             this.auth$.unsubscribe();
         }
         this._unsubscribeAll.next();
@@ -163,7 +167,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         //pega os dados do usuário que estão no localstorage
         this.auth$ = this._authService.user$.subscribe((res) => {
             //verifica se o usuário tem perfil de edriving - perfil que gerencia a plataforma
-            if (res.roles.find(r => r.role === RolesConstants.EDRIVING) ) {
+            if (res.roles.find(r => r.role === RolesConstants.EDRIVING)) {
                 //busca o usuário na API
                 this.user$ = this._edrivingServices.getOne(res.id).subscribe((result) => {
                     this.edrivingUser = result;
@@ -176,11 +180,32 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 });
             }
             //verifica se o usuário tem perfil de edriving - perfil que gerencia a plataforma
-            if (res.roles.find(r => r.role === RolesConstants.PARCEIRO) ) {
+            if (res.roles.find(r => r.role === RolesConstants.PARCEIRO)) {
                 //busca o usuário na API
-                this.user$ = this._parceiroServices.getOne(res.id).subscribe((result) => {
-                    this.parceiroUser = result;
-                    this.enderecoUser = result.address;
+                this.user$ = this._partnnerServices.getOne(res.id).subscribe((result) => {
+                    this.partnnerUser = result;
+                    this.addressModel = result.address;
+                    //Set o id do usuário para alterar a senha
+                    this.idUser = result.id;
+                    //carrega o painel A
+                    this.loadPanel();
+                    this.panels.push(
+                        {
+                            id: 'endereco',
+                            icon: 'heroicons_outline:lock-closed',
+                            title: 'Endereço',
+                            description: 'Mantenha seu endereço atualizado.'
+                        }
+                    );
+                    this.loading = false;
+                    this._changeDetectorRef.markForCheck();
+                });
+            }
+            if (res.roles.find(r => r.role === RolesConstants.AUTOESCOLA)) {
+                //busca o usuário na API
+                this.user$ = this._drivingSchoolServices.getOne(res.id).subscribe((result) => {
+                    this.drivingSchoolUser = result;
+                    this.addressModel = result.address;
                     //Set o id do usuário para alterar a senha
                     this.idUser = result.id;
                     //carrega o painel A

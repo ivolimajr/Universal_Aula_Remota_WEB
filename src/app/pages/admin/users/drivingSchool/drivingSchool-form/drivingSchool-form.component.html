@@ -191,7 +191,7 @@
                                                 matInput
                                                 [formControlName]="'cep'"
                                                 [placeholder]="'Cep'"
-                                                (blur)="buscaCep($event.target)"
+                                                (blur)="getCep($event.target)"
                                                 cep [textMask]="{mask: masks.cep.textMask}"
                                                 required>
                                             <mat-icon
@@ -296,6 +296,7 @@
                                     </div>
                                 </form>
                             </mat-step>
+                            <!--end:Step-Endereco-->
                             <!--end:Step-Endereco-->
 
                             <!--start:Step-Telefone-->
@@ -472,7 +473,7 @@
                                             mat-flat-button
                                             [disabled]="filesForm.invalid"
                                             [color]="'primary'"
-                                            (click)="setPersonalData()"
+                                            (click)="setUserData()"
                                             type="button"
                                             matStepperNext>
                                             Avançar

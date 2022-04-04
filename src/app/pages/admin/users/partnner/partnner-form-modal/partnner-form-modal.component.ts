@@ -43,7 +43,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         private _formBuilder: FormBuilder,
         public dialogRef: MatDialogRef<PartnnerFormModalComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _parceiroServices: PartnnerService,
+        private _partnnerServices: PartnnerService,
         private _userServices: UserService,
         private _cepService: CepService
     ) {
@@ -73,14 +73,14 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
 
     submit(): void {
         this.accountForm.disable();
-        const formIsValid = this.prepareUser();
+        const formIsValid = this.setUserData();
         if (formIsValid) {
             //Exibe o alerta de salvando dados
             this.loading = true;
             this._changeDetectorRef.markForCheck();
 
             if (this.userEdit) {
-                this.user$ = this._parceiroServices.update(this.partnnerModel).subscribe((res: any) => {
+                this.user$ = this._partnnerServices.update(this.partnnerModel).subscribe((res: any) => {
                     if (res.error) {
                         return this.closeAlerts();
                     }
@@ -88,7 +88,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                     return this.dialogRef.close(res);
                 });
             } else {
-                this.user$ = this._parceiroServices.create(this.partnnerModel).subscribe((res: any) => {
+                this.user$ = this._partnnerServices.create(this.partnnerModel).subscribe((res: any) => {
                     if (res.error) {
                         return this.closeAlerts();
                     }
@@ -158,7 +158,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    buscaCep(event): void {
+    getCep(event): void {
         if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
             this.openSnackBar('Cep inválido');
             return;
@@ -179,7 +179,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
      * Busca os cargos dos usuário do tipo edriving
      */
     private getCargos(): void {
-        this.level$ = this._parceiroServices.getCargos().subscribe((res) => {
+        this.level$ = this._partnnerServices.getCargos().subscribe((res) => {
             this.level = res.find(e => e.level === ParceiroCargosConstants.EMPRESA).id;
             this._changeDetectorRef.markForCheck();
         });
@@ -296,7 +296,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
     /**
      * Prepara o usuário para envio
      */
-    private prepareUser(): boolean {
+    private setUserData(): boolean {
         const userFormData = this.accountForm.value;
         const addressFormData = this.addressForm.value;
         let result: boolean = true;

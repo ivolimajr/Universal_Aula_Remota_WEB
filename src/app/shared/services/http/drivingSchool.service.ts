@@ -4,7 +4,7 @@ import {Observable, of} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
 import {Level} from '../../models/level.model';
-import {DrivingSchool} from '../../models/drivingSchool.model';
+import {DrivingSchoolModel} from '../../models/drivingSchool.model';
 import {AuthService} from '../auth/auth.service';
 import {HttpBaseServices} from './httpBaseServices';
 
@@ -14,7 +14,7 @@ const URL_AUTOESCOLA_CARGO = `${environment.apiUrl}/DrivingSchoolLevel`;
 @Injectable({
     providedIn: 'root'
 })
-export class DrivingSchoolService extends HttpBaseServices<DrivingSchool> {
+export class DrivingSchoolService extends HttpBaseServices<DrivingSchoolModel> {
 
     constructor(
          _httpClient: HttpClient,

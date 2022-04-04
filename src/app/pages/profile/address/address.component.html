@@ -25,7 +25,7 @@
                         [svgIcon]="'heroicons_solid:hashtag'"
                         matPrefix></mat-icon>
                     <input
-                        (blur)="buscaCep($event.target)"
+                        (blur)="getCep($event.target)"
                         cep [textMask]="{mask: masks.cep.textMask}"
                         [formControlName]="'cep'"
                         matInput>

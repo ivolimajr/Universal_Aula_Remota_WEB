@@ -1,7 +1,7 @@
 import {User} from './user.model';
 import {PhoneNumberModel} from './phoneNumber.model';
 import {AddressModel} from './address.model';
-import {DrivingSchool} from './drivingSchool.model';
+import {DrivingSchoolModel} from './drivingSchool.model';
 
 export class AdministrativeModel {
     id: number;
@@ -15,7 +15,7 @@ export class AdministrativeModel {
     address: AddressModel;
     phonesNumbers: Array<PhoneNumberModel>;
     drivingSchoolId: number;
-    drivingSchool: DrivingSchool;
+    drivingSchool: DrivingSchoolModel;
     userId: number;
     password?: string;
     user: User;

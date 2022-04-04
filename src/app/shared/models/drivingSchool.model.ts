@@ -3,7 +3,7 @@ import {User} from './user.model';
 import {PhoneNumberModel} from './phoneNumber.model';
 import {FileModel} from './file.model';
 
-export class DrivingSchool {
+export class DrivingSchoolModel {
     id: number;
     corporateName: string;
     fantasyName: string;

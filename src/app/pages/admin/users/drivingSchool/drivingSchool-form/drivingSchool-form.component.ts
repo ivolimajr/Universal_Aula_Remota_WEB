@@ -6,7 +6,7 @@ import {formatDate} from '@angular/common';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CepService} from '../../../../../shared/services/http/cep.service';
 import {Observable, Subscription} from 'rxjs';
-import {DrivingSchool} from '../../../../../shared/models/drivingSchool.model';
+import {DrivingSchoolModel} from '../../../../../shared/models/drivingSchool.model';
 import {DrivingSchoolService} from '../../../../../shared/services/http/drivingSchool.service';
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
 import {MatDialog} from '@angular/material/dialog';
@@ -35,7 +35,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
     public id: number = parseInt(this.routeAcitve.snapshot.paramMap.get('id'), 10);
     files: Set<File>;
     private phoneArray = [];
-    private drivinSchoolModel = new DrivingSchool();
+    private drivinSchoolModel = new DrivingSchoolModel();
     private cep$: Subscription;
     private user$: Subscription;
     private fileArray = [];
@@ -240,7 +240,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
      *
      * @param event
      */
-    buscaCep(event): void {
+    getCep(event): void {
         if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
             this.openSnackBar('Cep inválido');
             return;
@@ -283,7 +283,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
      *
      * @userPost: é o objeto do tipo usuario AutoEscola que será enviado para o BackEnd
      */
-    setPersonalData(): void {
+    setUserData(): void {
         //Dados da instituição
         if (this.accountForm.valid) {
             const data = this.accountForm.value;

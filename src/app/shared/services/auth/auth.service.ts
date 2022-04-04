@@ -24,7 +24,7 @@ export class AuthService {
 
     constructor(
         private _httpClient: HttpClient,
-        private _userService: UserService,
+        private _userServices: UserService,
         private storageServices: LocalStorageService
     ) {
     }

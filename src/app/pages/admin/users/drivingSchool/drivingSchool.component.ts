@@ -9,10 +9,10 @@ import {fuseAnimations} from '../../../../../@fuse/animations';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
 import {DrivingSchoolService} from '../../../../shared/services/http/drivingSchool.service';
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
-import {DrivingSchool} from '../../../../shared/models/drivingSchool.model';
+import {DrivingSchoolModel} from '../../../../shared/models/drivingSchool.model';
 import {Router} from '@angular/router';
 
-const ELEMENT_DATA: DrivingSchool[] = [];
+const ELEMENT_DATA: DrivingSchoolModel[] = [];
 
 @Component({
   selector: 'app-drivingSchool',
@@ -23,7 +23,7 @@ const ELEMENT_DATA: DrivingSchool[] = [];
 export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
 
     displayedColumns: string[] = ['corporateName', 'email', 'id'];
-    dataSource = new MatTableDataSource<DrivingSchool>(ELEMENT_DATA);
+    dataSource = new MatTableDataSource<DrivingSchoolModel>(ELEMENT_DATA);
     loading: boolean = true;
     isDeleting: boolean = false;
     _users$ = this._drivingSchoolServices.getAll(this._authServices.getUserInfoFromStorage().address.uf);
@@ -35,7 +35,7 @@ export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatPaginator) paginator: MatPaginator;
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    @ViewChild(MatTable) table: MatTable<DrivingSchool>;
+    @ViewChild(MatTable) table: MatTable<DrivingSchoolModel>;
 
   constructor(
       public _dialog: MatDialog,
@@ -61,7 +61,7 @@ export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
      * @param id -> se tiver ID exibe e atualiza, caso contrário, adiciona
      * @return void
      */
-    setUser(user: DrivingSchool): void {
+    setUser(user: DrivingSchoolModel): void {
 
         //Atualiza um usuário
         if (user) {
@@ -125,7 +125,7 @@ export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
      * @return void
      */
     private getUsers(): void {
-        this.data$ = this._users$.subscribe((items: DrivingSchool[]) => {
+        this.data$ = this._users$.subscribe((items: DrivingSchoolModel[]) => {
             this.dataSource.data = items;
             this.loading = false;
             this._changeDetectorRef.markForCheck();

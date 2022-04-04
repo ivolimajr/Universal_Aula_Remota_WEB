@@ -11,6 +11,7 @@ import {AddressComponent} from './address/address.component';
 import {CustomMaterialModule} from '../../shared/material.module';
 import {TextMaskModule} from 'angular2-text-mask';
 import { PartnnerComponent } from './partnner/partnner.component';
+import { DrivingSchoolComponent } from './driving-school/driving-school.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { PartnnerComponent } from './partnner/partnner.component';
         ChangePasswordComponent,
         AddressComponent,
         PartnnerComponent,
-        ProfileComponent
+        ProfileComponent,
+        DrivingSchoolComponent
     ],
     imports: [
         RouterModule.forChild(perfilRoutes),
