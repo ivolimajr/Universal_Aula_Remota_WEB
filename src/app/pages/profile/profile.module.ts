@@ -12,6 +12,7 @@ import {CustomMaterialModule} from '../../shared/material.module';
 import {TextMaskModule} from 'angular2-text-mask';
 import { PartnnerComponent } from './partnner/partnner.component';
 import { DrivingSchoolComponent } from './driving-school/driving-school.component';
+import { FilesComponent } from './files/files.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { DrivingSchoolComponent } from './driving-school/driving-school.componen
         AddressComponent,
         PartnnerComponent,
         ProfileComponent,
-        DrivingSchoolComponent
+        DrivingSchoolComponent,
+        FilesComponent
     ],
     imports: [
         RouterModule.forChild(perfilRoutes),

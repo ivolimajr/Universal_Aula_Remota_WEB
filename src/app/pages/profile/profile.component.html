@@ -93,6 +93,10 @@
                             <ng-container *ngSwitchCase="'endereco'">
                                 <app-address [addressModel]="addressModel" [idUser]="idUser"></app-address>
                             </ng-container>
+                            <!-- Plan & Billing -->
+                            <ng-container *ngSwitchCase="'files'">
+                                <app-files [items]="drivingSchoolUser.files" [idUser]="drivingSchoolUser.id"></app-files>
+                            </ng-container>
                         </ng-container>
                     </div>
 

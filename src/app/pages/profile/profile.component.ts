@@ -19,7 +19,7 @@ import {PartnnerService} from '../../shared/services/http/partnner.service';
 import {AddressModel} from '../../shared/models/address.model';
 import {RolesConstants} from '../../shared/constants';
 import {DrivingSchoolModel} from '../../shared/models/drivingSchool.model';
-import {DrivingSchoolService} from "../../shared/services/http/drivingSchool.service";
+import {DrivingSchoolService} from '../../shared/services/http/drivingSchool.service';
 
 @Component({
     selector: 'app-perfil',
@@ -33,7 +33,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'dadosPessoais';
+    // selectedPanel: string = 'dadosPessoais';
+    selectedPanel: string = 'files';
 
     edrivingUser: EdrivingModel = null;
     drivingSchoolUser: DrivingSchoolModel = null;
@@ -192,7 +193,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                     this.panels.push(
                         {
                             id: 'endereco',
-                            icon: 'heroicons_outline:lock-closed',
+                            icon: 'heroicons_outline:home',
                             title: 'Endereço',
                             description: 'Mantenha seu endereço atualizado.'
                         }
@@ -213,9 +214,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
                     this.panels.push(
                         {
                             id: 'endereco',
-                            icon: 'heroicons_outline:lock-closed',
+                            icon: 'heroicons_outline:home',
                             title: 'Endereço',
                             description: 'Mantenha seu endereço atualizado.'
+                        },
+                        {
+                            id: 'files',
+                            icon: 'heroicons_outline:folder',
+                            title: 'Arquivos',
+                            description: 'Seus arquivos estão aqui'
                         }
                     );
                     this.loading = false;
