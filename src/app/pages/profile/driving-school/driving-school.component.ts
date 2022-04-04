@@ -21,7 +21,7 @@ import {LocalStorageService} from '../../../shared/services/storage/localStorage
 import {DrivingSchoolService} from '../../../shared/services/http/drivingSchool.service';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
 import {formatDate} from '@angular/common';
-import {environment} from "../../../../environments/environment";
+import {environment} from '../../../../environments/environment';
 
 @Component({
     selector: 'app-driving-school',
@@ -36,7 +36,7 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
     accountForm: FormGroup;
     user: User;
     masks = MASKS;
-    loading: boolean = true;
+    loading: boolean;
     private user$: Subscription;
     private phone$: Subscription;
 
@@ -58,7 +58,7 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
     submit(): void {
         if (this.setUserData()) {
             this.accountForm.disable();
-            this.user$ = this._drivingSchoolServices.updateFormEncoded(this.drivingSchoolUser).subscribe((res:any)=>{
+            this.user$ = this._drivingSchoolServices.updateFormEncoded(this.drivingSchoolUser).subscribe((res: any)=>{
                 if (res.error) {
                     return this.closeAlerts();
                 }
@@ -124,41 +124,33 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
      * @param index do array de telefones a ser removido
      */
     removePhoneNumber(id: number, index: number): void {
+        this.loading = true;
+        this._changeDetectorRef.markForCheck();
         const phonesFormArray = this.accountForm.get('phonesNumbers') as FormArray;
-
         if (id === 0 && phonesFormArray.length > 1) {
             phonesFormArray.removeAt(index);
-            return this._changeDetectorRef.markForCheck();
+            return this.closeAlerts();
         }
         if (phonesFormArray.length === 1) {
             this.openSnackBar('Remoção Inválida', 'warn');
-            return this._changeDetectorRef.markForCheck();
+            return this.closeAlerts();
         }
-        if (this.drivingSchoolUser.phonesNumbers.length === 1) {
-            this.openSnackBar('Remoção Inválida', 'warn');
-            this._changeDetectorRef.markForCheck();
-        }
-        this._changeDetectorRef.markForCheck();
         const dialogRef = this.dialog.open(AlertModalComponent, {
             width: '280px',
             data: {title: 'Confirma remoção do telefone?'}
         });
-
-        dialogRef.afterClosed().subscribe((modalResult) => {
-            if (!modalResult) {
+        dialogRef.afterClosed().subscribe((result) => {
+            if (!result) {
                 return this.closeAlerts();
             }
-            this.removePhoneFromApi(id).subscribe((apiResult: any) => {
-                if (apiResult) {
+            this.removePhoneFromApi(id).subscribe((res: any)=>{
+                if(res){
                     this.openSnackBar('Removido');
-                    const phoneNumbersFormArray = this.accountForm.get('phonesNumbers') as FormArray;
-                    // Remove the phone number field
-                    phoneNumbersFormArray.removeAt(index);
-                    this.closeAlerts();
-                    return;
+                    phonesFormArray.removeAt(index);
+                    return this.closeAlerts();
                 }
                 this.openSnackBar('Remoção Inválida', 'warn');
-                this.closeAlerts();
+                return this.closeAlerts();
             });
         });
     }

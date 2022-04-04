@@ -29,6 +29,7 @@ export class AddressComponent implements OnInit, OnDestroy {
     addressForm: FormGroup;
     plans: any[];
     cep: string;
+    loading: boolean;
     states = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
         'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
     private user$: Subscription;

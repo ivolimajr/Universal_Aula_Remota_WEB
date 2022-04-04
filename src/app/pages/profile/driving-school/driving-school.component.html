@@ -1,5 +1,7 @@
+<ng-container *ngIf="loading;">
+    <mat-progress-bar class="mb-5" [mode]="'indeterminate'"></mat-progress-bar>
+</ng-container>
 <div class="w-full max-w-3xl">
-
     <form [formGroup]="accountForm">
         <!-- Section -->
         <div class="w-full">
@@ -221,8 +223,6 @@
         </div>
         <!-- end:phones -->
 
-        <!-- Divider -->
-        <div class="mt-11 mb-10 border-t"></div>
         <!-- Actions -->
         <div class="flex items-center justify-end">
             <button
