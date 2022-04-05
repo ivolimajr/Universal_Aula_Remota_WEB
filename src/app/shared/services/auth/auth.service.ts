@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, of, ReplaySubject, throwError} from 'rxjs';
 import {catchError, switchMap} from 'rxjs/operators';
-import {UserService} from 'app/shared/services/http/user.service';
 import {LocalStorageService} from '../storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
 import {User, UserLogin} from '../../models/user.model';
@@ -19,12 +18,10 @@ export class AuthService {
     private _authenticated: boolean = false;
     private userLogin = new UserLogin();
     private userModel: User;
-
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
 
     constructor(
         private _httpClient: HttpClient,
-        private _userServices: UserService,
         private storageServices: LocalStorageService
     ) {
     }
@@ -97,10 +94,6 @@ export class AuthService {
         this._authenticated = false;
 
         return of(true);
-    }
-
-    signUp(user: { name: string; email: string; password: string; company: string }): Observable<any> {
-        return this._httpClient.post('api/auth/sign-up', user);
     }
 
     /**

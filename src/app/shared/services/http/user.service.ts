@@ -1,19 +1,31 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../../../environments/environment';
-import {HttpClient} from '@angular/common/http';
+import {HttpBackend, HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {catchError, switchMap} from 'rxjs/operators';
 import {AddressModel} from '../../models/address.model';
+import {HttpBaseServices} from './httpBaseServices';
+import {AuthService} from '../auth/auth.service';
 
-
+const URL_USER = '/User';
 const URL_USER_API = `${environment.apiUrl}/User`;
 
 @Injectable({
     providedIn: 'root'
 })
-export class UserService {
+export class UserService extends HttpBaseServices<any> {
 
-    constructor(private _httpClient: HttpClient) {
+    constructor(
+        _httpClient: HttpClient,
+        _httpBackend: HttpBackend,
+        _authService: AuthService,
+    ) {
+        super(
+            _httpClient,
+            URL_USER,
+            _authService,
+            _httpBackend
+        );
     }
 
     /**
@@ -26,11 +38,12 @@ export class UserService {
         if (id === 0 || id == null) {
             return of(false);
         }
-        return this._httpClient.delete(URL_USER_API + '/telefone/' + id).pipe(
+        return this._httpClient.delete(URL_USER_API + '/phone/' + id).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e.error))
         );
     }
+
     /**
      * Remove um arquivo de um usuário
      *
@@ -41,7 +54,7 @@ export class UserService {
         if (id === 0 || id == null) {
             return of(false);
         }
-        return this._httpClient.delete(URL_USER_API + '/RemoveArquivo/' + id).pipe(
+        return this._httpClient.delete(URL_USER_API + '/file/' + id).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e.error))
         );
@@ -58,7 +71,7 @@ export class UserService {
             return of(false);
         }
 
-        return this._httpClient.post(URL_USER_API + '/alterar-senha/', credentials).pipe(
+        return this._httpClient.put(URL_USER_API + '/password/', credentials).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))
         );
@@ -75,7 +88,7 @@ export class UserService {
             return of(null);
         }
 
-        return this._httpClient.put(URL_USER_API + '/update-address/', endereco).pipe(
+        return this._httpClient.put(URL_USER_API + '/address/', endereco).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))
         );
