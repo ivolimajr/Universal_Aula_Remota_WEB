@@ -26,5 +26,5 @@ export class DrivingSchoolModel {
     addressNumber: string;
     complement: string;
     password: string;
-    files: Array<FileModel>;
+    files: FileModel[];
 }

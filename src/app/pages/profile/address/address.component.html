@@ -16,9 +16,10 @@
         <div class="mt-5 mb-10 border-t"></div>
 
         <!-- Section -->
-        <div class="grid grid-cols-4 gap-6 w-full mt-8">
+        <div class="grid grid-cols-6 gap-6 w-full mt-5">
+
             <!--start:cep-->
-            <div class="col-span-2 sm:col-span-1">
+            <div class="col-span-2 sm:col-span-2">
                 <mat-form-field
                     class="fuse-mat-no-subscript w-full"
                     [floatLabel]="'always'">
@@ -35,8 +36,9 @@
                 </mat-form-field>
             </div>
             <!--end:cep-->
+
             <!-- start:enderecoLogradouro -->
-            <div class="col-span-4 sm:col-span-3">
+            <div class="col-span-4 sm:col-span-4">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Endereço</mat-label>
                     <mat-icon
@@ -49,8 +51,9 @@
                 </mat-form-field>
             </div>
             <!--end:enderecoLogradouro-->
+
             <!--start:bairro-->
-            <div class="col-span-4 sm:col-span-3">
+            <div class="col-span-4 sm:col-span-4">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Bairro</mat-label>
                     <mat-icon
@@ -63,8 +66,9 @@
                 </mat-form-field>
             </div>
             <!--end:bairro-->
+
             <!--start:numero-->
-            <div class="col-span-2 sm:col-span-1">
+            <div class="col-span-2 sm:col-span-2">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Número</mat-label>
                     <mat-icon
@@ -77,8 +81,22 @@
                 </mat-form-field>
             </div>
             <!--end:numero-->
+
+            <!--start:complemento-->
+            <div class="col-span-3 sm:col-span-3">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>Complemento</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:annotation'"
+                        matPrefix></mat-icon>
+                    <input matInput [formControlName]="'complement'">
+                </mat-form-field>
+            </div>
+            <!--end:complemento-->
+
             <!--start:uf-->
-            <div class="col-span-4 sm:col-span-2">
+            <div class="col-span-1 sm:col-span-1">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>UF</mat-label>
                     <mat-icon
@@ -91,8 +109,9 @@
                 </mat-form-field>
             </div>
             <!--end:uf-->
+
             <!--start:cidade-->
-            <div class="col-span-4 sm:col-span-2">
+            <div class="col-span-2 sm:col-span-2">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Cidade</mat-label>
                     <mat-icon
@@ -103,6 +122,7 @@
                 </mat-form-field>
             </div>
             <!--end:cidade-->
+
         </div>
 
         <!-- Divider -->
@@ -110,11 +130,6 @@
 
         <!-- Actions -->
         <div class="flex items-center justify-end">
-            <button
-                mat-stroked-button
-                type="button">
-                Cancel
-            </button>
             <button
                 class="ml-4"
                 mat-flat-button

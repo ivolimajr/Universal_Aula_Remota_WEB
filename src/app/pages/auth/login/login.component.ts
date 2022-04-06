@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     private prepareForm(): void {
         this.loginForm = this._formBuilder.group({
-            email: ['PARCEIROP2R@EDRIVING.COM',
+            email: ['IVO@EDRIVING.COM',
                 Validators.compose([
                     Validators.required,
                     Validators.email,

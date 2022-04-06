@@ -53,18 +53,16 @@ export class AddressComponent implements OnInit, OnDestroy {
             return null;
         }
         this.addressForm.disable();
+        this.loading = true;
         this.setData();
 
         this.user$ = this._userServices.updateAddress(this.addressModel).subscribe((res: any) => {
             if (res.error) {
-                this.addressForm.enable();
-                this._changeDetectorRef.markForCheck();
-                return;
+                return this.closeAlerts();
             }
             //Retorna a mensagem de atualizado
             this.openSnackBar('Atualizado');
-            this.addressForm.enable();
-            this._changeDetectorRef.markForCheck();
+            this.closeAlerts();
 
         });
     }
@@ -75,8 +73,7 @@ export class AddressComponent implements OnInit, OnDestroy {
 
     getCep(event): void {
         if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
-            this.openSnackBar('Cep inválido');
-            return;
+            return this.openSnackBar('Cep inválido');
         }
         this.cep$ = this._cepService.getCep(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
             this.addressForm.patchValue({
@@ -105,7 +102,7 @@ export class AddressComponent implements OnInit, OnDestroy {
 
         if (addressFormValue.uf.length !== 2) {
             this.openSnackBar('UF Inválida');
-            this.addressForm.enable();
+            this.closeAlerts();
         }
         addressFormValue.cep = addressFormValue.cep.replace(/[^0-9,]*/g, '');
         this.addressModel = addressFormValue;
@@ -151,7 +148,16 @@ export class AddressComponent implements OnInit, OnDestroy {
                 Validators.minLength(1),
                 Validators.maxLength(10)
             ])],
+            complement:[this.addressModel.complement,  Validators.compose([
+                Validators.maxLength(100)
+            ])],
         });
+    }
+
+    private closeAlerts(): void{
+        this.addressForm.enable();
+        this.loading = false;
+        this._changeDetectorRef.markForCheck();
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {

@@ -58,7 +58,7 @@
                             <div class="truncate" [matTooltip]="file.fileName">
                                 {{file.fileName}}
                             </div>
-                            <button mat-stroked-button color="warn">Remover</button>
+                            <button mat-stroked-button color="warn" (click)="removeFile(file)">Remover</button>
                         </div>
                     </div>
                 </ng-container>

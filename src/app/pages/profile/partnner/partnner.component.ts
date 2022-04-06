@@ -40,7 +40,7 @@ export class PartnnerComponent implements OnInit, OnDestroy {
     private phone$: Subscription;
 
     constructor(
-        public dialog: MatDialog,
+        public _dialog: MatDialog,
         private _snackBar: MatSnackBar,
         private _formBuilder: FormBuilder,
         private _userServices: UserService,
@@ -145,7 +145,7 @@ export class PartnnerComponent implements OnInit, OnDestroy {
             this.openSnackBar('Remoção Inválida', 'warn');
             return this.closeAlerts();
         }
-        const dialogRef = this.dialog.open(AlertModalComponent, {
+        const dialogRef = this._dialog.open(AlertModalComponent, {
             width: '280px',
             data: {title: 'Confirma remoção do telefone?'}
         });

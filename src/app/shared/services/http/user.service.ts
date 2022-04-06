@@ -71,7 +71,7 @@ export class UserService extends HttpBaseServices<any> {
             return of(false);
         }
 
-        return this._httpClient.put(URL_USER_API + '/password/', credentials).pipe(
+        return this._httpClient.put(URL_USER_API + '/password', credentials).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))
         );
@@ -84,11 +84,11 @@ export class UserService extends HttpBaseServices<any> {
      * @return retorna um endereco ou error
      */
     updateAddress(endereco: AddressModel): Observable<AddressModel> {
-        if (endereco.id === 0 || endereco.id == null) {
+        if (!endereco.id) {
             return of(null);
         }
-
-        return this._httpClient.put(URL_USER_API + '/address/', endereco).pipe(
+        console.log(endereco);
+        return this._httpClient.put(URL_USER_API + '/address', endereco).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))
         );

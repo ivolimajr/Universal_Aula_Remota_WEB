@@ -58,6 +58,7 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
     submit(): void {
         if (this.setUserData()) {
             this.accountForm.disable();
+            this.loading = true;
             this.user$ = this._drivingSchoolServices.updateFormEncoded(this.drivingSchoolUser).subscribe((res: any)=>{
                 if (res.error) {
                     return this.closeAlerts();

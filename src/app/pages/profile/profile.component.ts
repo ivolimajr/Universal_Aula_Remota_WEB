@@ -34,7 +34,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     drawerOpened: boolean = true;
     panels: any[] = [];
     // selectedPanel: string = 'dadosPessoais';
-    selectedPanel: string = 'files';
+    selectedPanel: string = 'endereco';
 
     edrivingUser: EdrivingModel = null;
     drivingSchoolUser: DrivingSchoolModel = null;

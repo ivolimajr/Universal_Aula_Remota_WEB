@@ -1,8 +1,10 @@
 import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {FileModel, FileModelUpdate} from '../../../shared/models/file.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {Observable, Subscription} from 'rxjs';
+import {FileModel, FileModelUpdate} from '../../../shared/models/file.model';
 import {UserService} from '../../../shared/services/http/user.service';
-import {Subscription} from 'rxjs';
+import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
     selector: 'app-files',
@@ -18,6 +20,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     private user$: Subscription;
 
     constructor(
+        public _dialog: MatDialog,
         private _snackBar: MatSnackBar,
         private _changeDetectorRef: ChangeDetectorRef,
         private _userServices: UserService
@@ -35,24 +38,23 @@ export class FilesComponent implements OnInit, OnDestroy {
 
     save(): void {
         if (this.files.size === 0) {
-            return this.openSnackBar('Sem arquivos para atualizar', 'warn');
+            return this.closeAlerts();
         }
         this.fileModel.userId = this.userId;
         this.files.forEach((item) => {
             this.fileModel.files.push(item);
         });
         this.loading = true;
-        this.user$ = this._userServices.createFormEncoded(this.fileModel, '/files-upload').subscribe((res: any) => {
-            console.log(res);
-            if (res.error) {
+        this.user$ = this._userServices.createFormEncoded(this.fileModel, '/files-upload').subscribe((res: FileModel[]) => {
+            if (res.length === 0) {
                 return;
             }
-            console.log(this.items);
-            this.items = [...res];
-            console.log(this.items);
-            this.loading = false;
-            this.openSnackBar('Upload completo');
-            this._changeDetectorRef.markForCheck();
+            this.removeItemFromFileList();
+            res.forEach((item) => {
+                this.items.push(item);
+            });
+            this.openSnackBar('Upload completo!');
+            this.closeAlerts();
         });
     }
 
@@ -82,6 +84,37 @@ export class FilesComponent implements OnInit, OnDestroy {
         }
     }
 
+    removeFile(fileModel: FileModel): void {
+        this.loading = true;
+        this._changeDetectorRef.markForCheck();
+        if (fileModel.id === 0 && this.items.length > 1) {
+            this.removeItemFromFileList(fileModel);
+            return this.closeAlerts();
+        }
+        if (this.items.length === 1) {
+            this.openSnackBar('Remoção Inválida', 'warn');
+            return this.closeAlerts();
+        }
+        const dialogRef = this._dialog.open(AlertModalComponent, {
+            width: '280px',
+            data: {title: 'Confirma remoção do arquivo?'}
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+            if (!result) {
+                return this.closeAlerts();
+            }
+            this.removeFileFromApi(fileModel.id).subscribe((res: any) => {
+                if (res) {
+                    this.openSnackBar('Removido');
+                    this.removeItemFromFileList(fileModel);
+                    return this.closeAlerts();
+                }
+                this.openSnackBar('Remoção Inválida', 'warn');
+                return this.closeAlerts();
+            });
+        });
+    }
+
     private openSnackBar(message: string, type: string = 'accent'): void {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,
@@ -89,5 +122,31 @@ export class FilesComponent implements OnInit, OnDestroy {
             verticalPosition: 'bottom',
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
+    }
+
+    private removeItemFromFileList(file?: FileModel): void {
+        if(file){
+            const index = this.items.indexOf(file);
+            if (index > -1) {
+                this.items.splice(index, 1);
+            }
+        }
+        this.items.forEach((item) => {
+            if (!item.id) {
+                const index = this.items.indexOf(item);
+                if (index > -1) {
+                    this.items.splice(index, 1);
+                }
+            }
+        });
+    }
+
+    private removeFileFromApi(id: number): Observable<boolean> {
+        return this._userServices.removeFile(id);
+    }
+
+    private closeAlerts(): void {
+        this.loading = false;
+        this._changeDetectorRef.markForCheck();
     }
 }
