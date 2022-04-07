@@ -21,7 +21,7 @@
 
             <div class="flex flex-col mt-2.5">
 
-                    <div class="sm:col-span-4 mt-2.5">
+                    <div class="sm:col-span-4 mt-2.5" *ngIf="isAdmin">
                         <p-dropdown class="fuse-mat-no-subscript w-full" [options]="drivingSchoolList" [(ngModel)]="selectedDrivingSchool"
                                     optionLabel="fantasyName" [filter]="true" filterBy="fantasyName"
                                     [showClear]="false" placeholder="Selecione a auto escola"  appearance="legacy">
