@@ -5,6 +5,7 @@ import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
 import {AuthService} from '../auth/auth.service';
 import {PhoneNumberModel} from '../../models/phoneNumber.model';
+import {FileModel} from "../../models/file.model";
 
 @Injectable({
     providedIn: 'root'
@@ -61,7 +62,6 @@ export class HttpBaseServices<T> {
         this.header = this.header.set('Content-type', 'multipart/form-data');
         const formData = new FormData();
         for (const key in data) {
-
             if (key !== 'files' && key !== 'phonesNumbers') {
                 formData.append(key, data[key]);
             }
@@ -76,9 +76,9 @@ export class HttpBaseServices<T> {
             }
             if (key === 'files') {
                 let i = 0;
-                data['files'].forEach((item: File) => {
+                data['files'].forEach((item: FileModel) => {
                     const name = 'files';
-                    formData.append(name, item);
+                    formData.append(name, item.file);
                     i++;
                 });
             }
@@ -102,6 +102,9 @@ export class HttpBaseServices<T> {
         this.header = this.header.set('Content-type', 'multipart/form-data');
         const formData = new FormData();
         for (const key in data) {
+            if (key !== 'files' && key !== 'phonesNumbers') {
+                formData.append(key, data[key]);
+            }
             if (key === 'phonesNumbers') {
                 let i = 0;
                 data['phonesNumbers'].forEach((item: PhoneNumberModel) => {
@@ -113,8 +116,14 @@ export class HttpBaseServices<T> {
                     formData.append(phone, item.phoneNumber);
                     i++;
                 });
-            } else {
-                formData.append(key, data[key]);
+            }
+            if (key === 'files') {
+                let i = 0;
+                data['files'].forEach((item: FileModel) => {
+                    const name = 'files';
+                    formData.append(name, item.file);
+                    i++;
+                });
             }
         }
         return this._httpClient.put(this.endpoint, formData).pipe(

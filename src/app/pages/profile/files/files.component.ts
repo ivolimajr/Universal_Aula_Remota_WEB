@@ -16,7 +16,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     @Input() items: FileModel[];
     loading: boolean;
     files: Set<File>;
-    private fileModel = new FileModelUpdate();
+    private fileModel = new FileModel();
     private user$: Subscription;
 
     constructor(

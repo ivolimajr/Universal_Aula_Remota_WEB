@@ -32,7 +32,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
     message: string = null; //Mensagem quando estiver salvando ou editando um usuário
     states = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
         'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
-    public id: number = parseInt(this.routeAcitve.snapshot.paramMap.get('id'), 10);
+    public id: number = parseInt(this._routeAcitve.snapshot.paramMap.get('id'), 10);
     files: Set<File>;
     private phoneArray = [];
     private drivinSchoolModel = new DrivingSchoolModel();
@@ -40,16 +40,16 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
     private user$: Subscription;
     private fileArray = [];
     private fileModel: Array<FileModel> = [];
-    private filesUpdate: Array<FileModelUpdate> = [];
+    private filesUpdate: Array<FileModel> = [];
 
     constructor(
-        public dialog: MatDialog,
-        private routeAcitve: ActivatedRoute,
+        public _dialog: MatDialog,
+        private _routeAcitve: ActivatedRoute,
         private _snackBar: MatSnackBar,
         private _router: Router,
         private _changeDetectorRef: ChangeDetectorRef,
         private _cepService: CepService,
-        private _autoEscolaService: DrivingSchoolService,
+        private _drivingSchoolServices: DrivingSchoolService,
         private _userServices: UserService,
         private _authServices: AuthService,
         private _formBuilder: FormBuilder,
@@ -102,7 +102,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
             this.openSnackBar('Remoção Inválida', 'warn');
             return this.closeAlerts();
         }
-        const dialogRef = this.dialog.open(AlertModalComponent, {
+        const dialogRef = this._dialog.open(AlertModalComponent, {
             width: '280px',
             data: {title: 'Confirma remoção do telefone?'}
         });
@@ -110,8 +110,8 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
             if (!result) {
                 return this.closeAlerts();
             }
-            this.removePhoneFromApi(id).subscribe((res: any)=>{
-                if(res){
+            this.removePhoneFromApi(id).subscribe((res: any) => {
+                if (res) {
                     this.openSnackBar('Removido');
                     phonesFormArray.removeAt(index);
                     return this.closeAlerts();
@@ -128,16 +128,15 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
      * @return void
      */
     addFileField(): void {
-
-        const filesFormArray = this._formBuilder.group({
-            file: ['', Validators.compose([
-                Validators.required,
-                Validators.nullValidator
-            ])]
-        });
-
         // Adiciona o formGroup ao array de telefones
-        (this.filesForm.get('files') as FormArray).push(filesFormArray);
+        (this.filesForm.get('files') as FormArray).push(
+            this._formBuilder.group({
+                file: ['', Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator
+                ])]
+            }));
+
         this._changeDetectorRef.markForCheck();
     }
 
@@ -152,18 +151,15 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         this.filesForm.disable();
         this._changeDetectorRef.markForCheck();
         //Exibe o alerta de confirmação
-        const dialogRef = this.dialog.open(AlertModalComponent, {
+        const dialogRef = this._dialog.open(AlertModalComponent, {
             width: '280px',
             data: {title: 'Confirma remoção do documento?'}
         });
         dialogRef.afterClosed().subscribe((result) => {
             if (!result) {
-                this.loadingForm = false;
-                this._changeDetectorRef.markForCheck();
-                return;
+                return this.closeAlerts();
             }
 
-            // Se a confirmação do alerta for um OK, remove o usuário
             this.deleteFileFromApi(id).subscribe((res: any) => {
                 if (res === true) {
                     if (index > -1) {
@@ -175,8 +171,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                     return this.closeAlerts();
                 }
                 this.openSnackBar(res.detail, 'warn');
-                this.loadingForm = false;
-                this._changeDetectorRef.markForCheck();
                 return this.closeAlerts();
             });
         });
@@ -209,15 +203,19 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
 
         //Se não tiver um ID, significa que está criando um novo usuário
         if (!this.id) {
-            this.user$ = this._autoEscolaService.createFormEncoded(this.drivinSchoolModel).subscribe((res: any) => {
-                if (res.error) {return this.closeAlerts();}
+            this.user$ = this._drivingSchoolServices.createFormEncoded(this.drivinSchoolModel).subscribe((res: any) => {
+                if (res.error) {
+                    return this.closeAlerts();
+                }
                 this.closeAlerts();
                 this.openSnackBar('Salvo');
                 this._router.navigate(['usuario/auto-escola']);
             });
         } else {
-            this.user$ = this._autoEscolaService.updateFormEncoded(this.drivinSchoolModel).subscribe((res: any) => {
-                if (res.error) {return this.closeAlerts();}
+            this.user$ = this._drivingSchoolServices.updateFormEncoded(this.drivinSchoolModel).subscribe((res: any) => {
+                if (res.error) {
+                    return this.closeAlerts();
+                }
                 this.closeAlerts();
                 this.openSnackBar('Atualizado');
                 this._router.navigate(['usuario/auto-escola']);
@@ -231,7 +229,10 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
     closeAlerts(): void {
         this.saving = false;
         this.loading = false;
-        this.message = null;
+        this.filesForm.enable();
+        this.accountForm.enable();
+        this.addressForm.enable();
+        this.contactForm.enable();
         this._changeDetectorRef.markForCheck();
     }
 
@@ -266,11 +267,9 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
     onPutFile(event): void {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const selectedFiles = <FileList>event.srcElement.files;
-        const fileNames = [];
         // eslint-disable-next-line @typescript-eslint/prefer-for-of
         for (let i = 0; i < selectedFiles.length; i++) {
-            if (selectedFiles[i].name.length < 50) {
-                fileNames.push(selectedFiles[i].name);
+            if (selectedFiles[i].name.length <= 50) {
                 this.files.add(selectedFiles[i]);
             } else {
                 return this.openSnackBar('Nome do arquivo muito gande', 'warn');
@@ -518,8 +517,10 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
     private prepareEditUser(): void {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
-        this._autoEscolaService.getOne(this.id,this._authServices.getUserInfoFromStorage().address.uf).subscribe((res: any) => {
-            if (res.error) {return;}
+        this._drivingSchoolServices.getOne(this.id, this._authServices.getUserInfoFromStorage().address.uf).subscribe((res: any) => {
+            if (res.error) {
+                return;
+            }
             this.accountForm = this._formBuilder.group({
                 corporateName: [res.corporateName,
                     Validators.compose([
@@ -621,19 +622,18 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
 
             if (res.phonesNumbers.length > 0) {
                 res.phonesNumbers.forEach((item) => {
-                    //Cria um formGroup de telefone
-                    this.phoneArray.push(
+                    (this.contactForm.get('phonesNumbers') as FormArray).push(
                         this._formBuilder.group({
                             id: [item.id],
                             phoneNumber: [item.phoneNumber, Validators.compose([
                                 Validators.required,
                                 Validators.nullValidator
                             ])]
-                        }));
+                        })
+                    );
                 });
             } else {
-                // Create a phone number form group
-                this.phoneArray.push(
+                (this.contactForm.get('phonesNumbers') as FormArray).push(
                     this._formBuilder.group({
                         id: [0],
                         phoneNumber: ['', Validators.compose([
@@ -643,10 +643,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                     })
                 );
             }
-            // Adiciona o array de telefones ao formGroup
-            this.phoneArray.forEach((item) => {
-                (this.contactForm.get('phonesNumbers') as FormArray).push(item);
-            });
 
             // Create a files form group
             if (res.files.length > 0) {
