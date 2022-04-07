@@ -57,11 +57,9 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.loadForm();
     }
-
     goBack(): void {
         window.history.back();
     }
-
     addPhoneNumberField(): void {
         // Adiciona o formGroup ao array de telefones
         (this.contactForm.get('phonesNumbers') as FormArray).push(
@@ -73,7 +71,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
             }));
         this._changeDetectorRef.markForCheck();
     }
-
     removePhoneNumber(id: number, index: number): void {
         // this.loading = true;
         // this._changeDetectorRef.markForCheck();
@@ -105,7 +102,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
             });
         });
     }
-
     addFileField(): void {
         // Adiciona o formGroup ao array de telefones
         (this.filesForm.get('files') as FormArray).push(
@@ -118,7 +114,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
 
         this._changeDetectorRef.markForCheck();
     }
-
     removeFileFieldFromApi(id: number, index): void {
         this.loadingForm = true;
         this.filesForm.disable();
@@ -146,7 +141,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
             });
         });
     }
-
     removeFileField(id: number, index: number): void {
         const phoneNumbersFormArray = this.filesForm.get('files') as FormArray;
         if (phoneNumbersFormArray.length === 1) {
@@ -155,7 +149,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         phoneNumbersFormArray.removeAt(index);
         this._changeDetectorRef.markForCheck();
     }
-
     submit(): void {
         this.saving = true;
         this._changeDetectorRef.markForCheck();
@@ -181,10 +174,9 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
             });
         }
     }
-
     getCep(event): void {
         if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
-            this.openSnackBar('Cep inválido');
+            this.openSnackBar('Cep não encontrado.');
             return;
         }
         this.cep$ = this._cepService.getCep(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
@@ -193,18 +185,12 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                 address: res.logradouro,
                 city: res.localidade,
                 cep: res.cep,
-                uf: res.uf
+                uf: res.uf,
+                complement: res.complemento
             });
             this._changeDetectorRef.markForCheck();
         });
     }
-
-    /**
-     * Evento de captura de upload de arquivo
-     * Popula o array de arquivos this.files com arquivo e nome do arquivo
-     *
-     * @param event
-     */
     onPutFile(event): void {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const selectedFiles = <FileList>event.srcElement.files;
@@ -217,7 +203,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
             }
         }
     }
-
     setUserData(): void {
         //Dados da instituição
         if (this.accountForm.valid) {
@@ -261,7 +246,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
             });
         }
     }
-
     ngOnDestroy(): void {
         if (this.user$) {
             this.user$.unsubscribe();
@@ -393,7 +377,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         );
         this._changeDetectorRef.markForCheck();
     }
-
     private openSnackBar(message: string, type: string = 'accent'): void {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,
@@ -402,7 +385,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
-
     private prepareEditUser(): void {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
@@ -544,7 +526,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
             this.closeAlerts();
         });
     }
-
     private closeAlerts(): void {
         this.saving = false;
         this.loading = false;
@@ -555,11 +536,9 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         this.contactForm.enable();
         this._changeDetectorRef.markForCheck();
     }
-
     private deleteFileFromApi(id: number): Observable<boolean> {
         return this._userServices.removeFile(id);
     }
-
     private removePhoneFromApi(id: number): Observable<boolean> {
         return this._userServices.removePhonenumber(id);
     }

@@ -21,6 +21,7 @@ import {AuthService} from '../../../shared/services/auth/auth.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
 import {environment} from '../../../../environments/environment';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
+import {PhoneNumberModel} from '../../../shared/models/phoneNumber.model';
 
 @Component({
     selector: 'app-edriving',
@@ -41,7 +42,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
     private phone$: Subscription;
 
     constructor(
-        public dialog: MatDialog,
+        public _dialog: MatDialog,
         private _snackBar: MatSnackBar,
         private _formBuilder: FormBuilder,
         private _userServices: UserService,
@@ -55,58 +56,24 @@ export class EdrivingComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.prepareForm();
     }
-
     update(): void {
         this.loading = true;
         this.accountForm.disable();
-        //Verifica se o formulário é valido
         if (this.setUserData() === false) {
             return this.closeAlerts();
         }
         this.user$ = this._edrivingServices.update(this.edrivingUser).subscribe((res: any) => {
-            //Set o edrivingUser com os dados atualizados
             if (res.error) {
                 return this.closeAlerts();
             }
             this.edrivingUser = res;
+            this.updateDataInStorage(res.name, res.email);
+            this.removeLastPhoneUpdated(res.phonesNumbers[res.phonesNumbers.length - 1]);
 
-            //Atualiza os dados do localStorage
-            this.user = this._authServices.getUserInfoFromStorage();
-            this.userLogin = this._storageServices.getValueFromLocalStorage(environment.dataStorage);
-            this.user.name = res.name;
-            this.user.email = res.email;
-            this.userLogin.email = res.email;
-            this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
-            this._storageServices.setValueFromLocalStorage(environment.dataStorage, this.userLogin);
-
-            //Pega o último registro de telefone que veio do usuario atualizado
-            const lastPhoneIdFromUser = res.phonesNumbers[res.phonesNumbers.length - 1];
-
-            //Pega o último registro de telefone que contem no array de phonesNumbers
-            const lastPhoneFromPhoneArray = this.accountForm.get('phonesNumbers') as FormArray;
-
-            //Se os IDS forem diferentes, incluir no array
-            if (lastPhoneIdFromUser.id !== lastPhoneFromPhoneArray.value[lastPhoneFromPhoneArray.length - 1].id) {
-
-                const lastFromArray = lastPhoneFromPhoneArray[lastPhoneFromPhoneArray.length - 1];
-                // Remove the phone number field
-                lastPhoneFromPhoneArray.removeAt(lastFromArray);
-
-                const phoneNumberFormGroup = this._formBuilder.group({
-                    id: [lastPhoneIdFromUser.id],
-                    phoneNumber: [lastPhoneIdFromUser.phoneNumber]
-                });
-
-                // Adiciona o formGroup ao array de telefones
-                (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumberFormGroup);
-            }
-
-            //Retorna a mensagem de atualizado
             this.openSnackBar('Atualizado');
             return this.closeAlerts();
         });
     }
-
     addPhoneNumberField(): void {
         // Adiciona o formGroup ao array de telefones
         (this.accountForm.get('phonesNumbers') as FormArray).push(
@@ -118,7 +85,6 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             }));
         this._changeDetectorRef.markForCheck();
     }
-
     removePhoneNumber(id: number, index: number): void {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
@@ -131,7 +97,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             this.openSnackBar('Remoção Inválida', 'warn');
             return this.closeAlerts();
         }
-        const dialogRef = this.dialog.open(AlertModalComponent, {
+        const dialogRef = this._dialog.open(AlertModalComponent, {
             width: '280px',
             data: {title: 'Confirma remoção do telefone?'}
         });
@@ -150,11 +116,9 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             });
         });
     }
-
     trackByFn(index: number, item: any): any {
         return item.id || index;
     }
-
     ngOnDestroy(): void {
         if (this.user$) {
             this.user$.unsubscribe();
@@ -237,7 +201,6 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         });
         this.closeAlerts();
     }
-
     private setUserData(): boolean {
         const formData = this.accountForm.value;
         if (this.accountForm.invalid) {
@@ -252,7 +215,6 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         });
         this.edrivingUser = formData;
     }
-
     private openSnackBar(message: string, type: string = 'accent'): void {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,
@@ -261,7 +223,6 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
-
     private closeAlerts(): void {
         this.accountForm.enable();
         this.loading = false;
@@ -269,5 +230,36 @@ export class EdrivingComponent implements OnInit, OnDestroy {
     }
     private removePhoneFromApi(id: number): Observable<boolean> {
         return this._userServices.removePhonenumber(id);
+    }
+    private updateDataInStorage(name: string, email: string): void{
+        this.user = this._authServices.getUserInfoFromStorage();
+        this.userLogin = this._storageServices.getValueFromLocalStorage(environment.dataStorage);
+        this.user.name = name;
+        this.user.email = email;
+        this.userLogin.email = email;
+
+        this._storageServices.removeFromStorage(environment.authStorage);
+        this._storageServices.removeFromStorage(environment.dataStorage);
+
+        this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
+        this._storageServices.setValueFromLocalStorage(environment.dataStorage, this.userLogin);
+    }
+    private removeLastPhoneUpdated(lastPhone: PhoneNumberModel): void {
+        //Pega o último registro de telefone que contem no array de telefones
+        const phoneArray = this.accountForm.get('phonesNumbers') as FormArray;
+
+        //Se os IDS forem diferentes, incluir no array
+        if (lastPhone.id !== phoneArray.value[phoneArray.length - 1].id) {
+
+            const lastFromArray = phoneArray[phoneArray.length - 1];
+            // Remove the phone number field
+            phoneArray.removeAt(lastFromArray);
+
+            (this.accountForm.get('phonesNumbers') as FormArray).push(
+                this._formBuilder.group({
+                    id: [lastPhone.id],
+                    phoneNumber: [lastPhone.phoneNumber]
+                }));
+        }
     }
 }

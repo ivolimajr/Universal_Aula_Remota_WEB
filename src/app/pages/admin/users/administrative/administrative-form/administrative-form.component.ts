@@ -28,17 +28,15 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     accountForm: FormGroup;
     addressForm: FormGroup;
     ufOrigin = new FormControl();
-    drivingSchoolForm: FormGroup;
     ufList = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB',
         'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
     drivingSchoolList: DrivingSchoolModel[];
     selectedDrivingSchool: DrivingSchoolModel;
     isAdmin: boolean;
-    private userPost = new AdministrativeModel(); //Objeto para envio dos dados para API
+    private administrativeModel = new AdministrativeModel(); //Objeto para envio dos dados para API
     private user$: Subscription;
     private cep$: Subscription;
     private drivingSchool$: Subscription;
-    private phoneArray = [];
 
     constructor(
         public dialog: MatDialog,
@@ -62,21 +60,18 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             this.cep$.unsubscribe();
         }
     }
-
     ngOnInit(): void {
         this.isAdmin = this._authServices.isAdmin();
         this.prepareForm();
     }
-
     onNoClick(): void {
         this.dialogRef.close();
     }
-
     submit(): void {
         if (this.setUserData()) {
             this.accountForm.disable();
             if (!this.id) {
-                this.user$ = this._administrativeServices.create(this.userPost).subscribe((res: any) => {
+                this.user$ = this._administrativeServices.create(this.administrativeModel).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
                         return;
@@ -85,7 +80,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                     this.dialogRef.close(res);
                 });
             } else {
-                this.user$ = this._administrativeServices.update(this.userPost).subscribe((res: any) => {
+                this.user$ = this._administrativeServices.update(this.administrativeModel).subscribe((res: any) => {
                     if (res.error) {
                         this.accountForm.enable();
                         return;
@@ -96,7 +91,6 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             }
         }
     }
-
     removePhoneNumber(id: number, index: number): void {
         const phonesFormArray = this.accountForm.get('phonesNumbers') as FormArray;
         if (id === 0 && phonesFormArray.length > 1) {
@@ -128,7 +122,6 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             });
         });
     }
-
     addPhoneNumberField(): void {
         // Adiciona o formGroup ao array de telefones
         (this.accountForm.get('phonesNumbers') as FormArray).push(
@@ -140,10 +133,9 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             }));
         this._changeDetectorRef.markForCheck();
     }
-
     getCep(event): void {
         if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
-            this.openSnackBar('Cep inválido');
+            this.openSnackBar('Cep não encontrado.');
             return;
         }
         this.cep$ = this._cepService.getCep(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
@@ -152,7 +144,8 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                 address: res.logradouro,
                 city: res.localidade,
                 cep: res.cep,
-                uf: res.uf
+                uf: res.uf,
+                complement: res.complemento
             });
             this._changeDetectorRef.markForCheck();
         });
@@ -161,7 +154,6 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     private removePhoneFromApi(id: number): Observable<boolean> {
         return this._userServices.removePhonenumber(id);
     }
-
     private prepareForm(): void {
         if (this.id != null) {
             this.prepareEditForm();
@@ -204,21 +196,17 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                     Validators.min(5),
                     Validators.maxLength(100)
                 ])],
-            phonesNumbers: this._formBuilder.array([], Validators.compose([
+            phonesNumbers: this._formBuilder.array([
+                this._formBuilder.group({
+                    phoneNumber: ['', Validators.compose([Validators.required])]
+                })
+            ], Validators.compose([
                 Validators.required,
                 Validators.nullValidator
-            ]))
+            ])),
+            password: ['Pay@2021'],
+            drivingSchoolId: [this._authServices.getUserInfoFromStorage().id]
         });
-
-        this.phoneArray.push(
-            this._formBuilder.group({
-                phoneNumber: ['', Validators.compose([Validators.required])]
-            })
-        );
-        this.phoneArray.forEach((item) => {
-            (this.accountForm.get('phonesNumbers') as FormArray).push(item);
-        });
-
         this.addressForm = this._formBuilder.group({
             cep: ['',
                 Validators.compose([
@@ -264,16 +252,16 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
 
         this._changeDetectorRef.markForCheck();
     }
-
     private prepareEditForm(): void {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
         this.user$ = this._administrativeServices.getOne(this.id)
             .subscribe((res) => {
                 if (!res.id) {
-                    return;
+                    return this.closeAlerts();
                 }
                 this.accountForm = this._formBuilder.group({
+                    id:[this.id],
                     name: [res.name,
                         Validators.compose([
                             Validators.required,
@@ -317,18 +305,18 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
 
                 if (res.phonesNumbers.length > 0) {
                     res.phonesNumbers.forEach((phoneNumber) => {
-                        this.phoneArray.push(
+                        (this.accountForm.get('phonesNumbers') as FormArray).push(
                             this._formBuilder.group({
                                 id: [phoneNumber.id],
                                 phoneNumber: [phoneNumber.phoneNumber, Validators.compose([
                                     Validators.required,
                                     Validators.nullValidator
                                 ])]
-                            }));
+                            })
+                        );
                     });
                 } else {
-                    // Create a phone number form group
-                    this.phoneArray.push(
+                    (this.accountForm.get('phonesNumbers') as FormArray).push(
                         this._formBuilder.group({
                             id: [0],
                             phoneNumber: ['', Validators.compose([
@@ -338,9 +326,6 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                         })
                     );
                 }
-                this.phoneArray.forEach((item) => {
-                    (this.accountForm.get('phonesNumbers') as FormArray).push(item);
-                });
 
                 this.addressForm = this._formBuilder.group({
                     cep: [res.address.cep,
@@ -386,6 +371,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                             Validators.maxLength(100)])],
                 });
 
+                //Pega os dois últimos caracteres da expedição do documento e define como valor padrão no select de UF
                 const uf = res.origin.substr(res.origin.length - 2, res.origin.length - 1);
                 if (this.ufList.indexOf(uf) > 0) {
                     this.ufOrigin.setValue(res.origin.substr(res.origin.length - 2, res.origin.length - 1));
@@ -395,57 +381,40 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                 } else {
                     this.closeAlerts();
                 }
-                this.phoneArray = [];
             });
     }
-
     private setUserData(): boolean {
         if (this.selectedDrivingSchool === null) {
             this.openSnackBar('Informe a auto escola', 'warn');
             return false;
         }
-        const userFormValues = this.accountForm.value;
+        const accountFormValues = this.accountForm.value;
         const addressFormValues = this.addressForm.value;
 
-
-        //Verifica se os telefones informados são válidos
-        userFormValues.phonesNumbers.forEach((item) => {
+        accountFormValues.phonesNumbers.forEach((item) => {
             if (item.phoneNumber === null || item.phoneNumber === '' || item.phoneNumber.length < 10) {
                 this.openSnackBar('Insira um telefone', 'warn');
-                this.accountForm.enable();
-                return;
-            }
-        });
-
-        this.userPost = userFormValues;
-        this.userPost.cpf = userFormValues.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
-
-        this.userPost.address = addressFormValues;
-        this.userPost.address.cep = addressFormValues.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
-
-        userFormValues.phonesNumbers.forEach((item) => {
-            if (item.phoneNumber.length !== 11) {
+                return this.accountForm.enable();
+            } else {
                 item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
+        accountFormValues.cpf = accountFormValues.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
+        this.administrativeModel = accountFormValues;
 
-        this.userPost.phonesNumbers = userFormValues.phonesNumbers;
+        addressFormValues.cep = addressFormValues.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
+        this.administrativeModel.address = addressFormValues;
 
-
-        this.userPost.id = this.id ?? null;
+        this.administrativeModel.phonesNumbers = accountFormValues.phonesNumbers;
 
         if (!this.id) {
             this.accountForm.value.origin = this.accountForm.value.origin + '-' + this.ufOrigin.value;
-            this.userPost.password = 'Pay@2021';
         }
         if (this.isAdmin) {
-            this.userPost.drivingSchoolId = this.selectedDrivingSchool.id;
-        } else {
-            this.userPost.drivingSchoolId = this._authServices.getUserInfoFromStorage().id;
+            this.administrativeModel.drivingSchoolId = this.selectedDrivingSchool.id;
         }
         return true;
     }
-
     private openSnackBar(message: string, type: string = 'accent'): void {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,
@@ -454,14 +423,11 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
-
     private closeAlerts(): void {
         this.loading = false;
         this._changeDetectorRef.markForCheck();
     }
-
     private loadDrivingSchools(id: number = 0): void {
-
         if (this.isAdmin) {
             if (!this.loading) {
                 this.loading = true;

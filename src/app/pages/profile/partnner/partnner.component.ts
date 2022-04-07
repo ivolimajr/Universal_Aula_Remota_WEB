@@ -21,6 +21,7 @@ import {LocalStorageService} from '../../../shared/services/storage/localStorage
 import {PartnnerService} from '../../../shared/services/http/partnner.service';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
 import {environment} from '../../../../environments/environment';
+import {PhoneNumberModel} from '../../../shared/models/phoneNumber.model';
 
 @Component({
     selector: 'app-partnner',
@@ -52,7 +53,6 @@ export class PartnnerComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        //Prepara o formulário
         this.prepareForm();
     }
 
@@ -67,43 +67,16 @@ export class PartnnerComponent implements OnInit, OnDestroy {
         if (this.checkFormToSend() === false) {
             return null;
         }
+        this.loading = true;
+        this._changeDetectorRef.markForCheck();
         this.accountForm.disable();
         this.user$ = this._partnnerServices.update(this.partnnerUser).subscribe((res: any) => {
-            //Set o edrivingUser com os dados atualizados
             if (res.error) {
                 return this.closeAlerts();
             }
             this.partnnerUser = res;
-
-            //Atualiza os dados do localStorage
-            this.user = this._authServices.getUserInfoFromStorage();
-            this.user.name = res.name;
-            this.user.email = res.email;
-            this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
-
-            //Pega o último registro de telefone que veio do usuario atualizado
-            const lastPhoneIdFromUser = res.phonesNumbers[res.phonesNumbers.length - 1];
-
-            //Pega o último registro de telefone que contem no array de telefones
-            const lastPhoneFromPhoneArray = this.accountForm.get('phonesNumbers') as FormArray;
-
-            //Se os IDS forem diferentes, incluir no array
-            if (lastPhoneIdFromUser.id !== lastPhoneFromPhoneArray.value[lastPhoneFromPhoneArray.length - 1].id) {
-
-                const lastFromArray = lastPhoneFromPhoneArray[lastPhoneFromPhoneArray.length - 1];
-                // Remove the phone number field
-                lastPhoneFromPhoneArray.removeAt(lastFromArray);
-
-                const phoneNumberFormGroup = this._formBuilder.group({
-                    id: [lastPhoneIdFromUser.id],
-                    phoneNumber: [lastPhoneIdFromUser.phoneNumber]
-                });
-
-                // Adiciona o formGroup ao array de telefones
-                (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumberFormGroup);
-            }
-
-            //Retorna a mensagem de atualizado
+            this.updateDataInStorage(res.email,res.name);
+            this.removeLastPhoneUpdated(res.phonesNumbers[res.phonesNumbers.length - 1]);
             this.openSnackBar('Atualizado');
             return this.closeAlerts();
         });
@@ -152,8 +125,8 @@ export class PartnnerComponent implements OnInit, OnDestroy {
             if (!result) {
                 return this.closeAlerts();
             }
-            this.removePhoneFromApi(id).subscribe((res: any)=>{
-                if(res){
+            this.removePhoneFromApi(id).subscribe((res: any) => {
+                if (res) {
                     this.openSnackBar('Removido');
                     phonesFormArray.removeAt(index);
                     return this.closeAlerts();
@@ -178,12 +151,6 @@ export class PartnnerComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    /**
-     * Valida os dados vindo do formulário antes de enviar para API
-     *
-     * @private
-     * @return um boleano
-     */
     private checkFormToSend(): boolean {
         if (this.accountForm.invalid) {
             this.openSnackBar('Dados Inválidos', 'warn');
@@ -199,10 +166,12 @@ export class PartnnerComponent implements OnInit, OnDestroy {
         this.partnnerUser = formDataValues;
         return true;
     }
-
     private prepareForm(): void {
+        this.loading = true;
+        this._changeDetectorRef.markForCheck();
+
         this.accountForm = this._formBuilder.group({
-            id:[this.partnnerUser.id],
+            id: [this.partnnerUser.id],
             name: [this.partnnerUser.name,
                 Validators.compose([
                     Validators.required,
@@ -237,16 +206,9 @@ export class PartnnerComponent implements OnInit, OnDestroy {
             ])),
         });
 
-        // cria um array para montar o formBuilder de telefones
-        const phoneNumbersFormGroups = [];
-
-        //Só monta o array de telefones se houver telefones de contato cadastrado
         if (this.partnnerUser.phonesNumbers.length > 0) {
-            // Iterate through them
             this.partnnerUser.phonesNumbers.forEach((phoneNumber) => {
-
-                //Cria um formGroup de telefone
-                phoneNumbersFormGroups.push(
+                (this.accountForm.get('phonesNumbers') as FormArray).push(
                     this._formBuilder.group({
                         id: [phoneNumber.id],
                         phoneNumber: [phoneNumber.phoneNumber,
@@ -259,8 +221,7 @@ export class PartnnerComponent implements OnInit, OnDestroy {
                 );
             });
         } else {
-            // Create a phone number form group
-            phoneNumbersFormGroups.push(
+            (this.accountForm.get('phonesNumbers') as FormArray).push(
                 this._formBuilder.group({
                     id: [0],
                     phoneNumber: ['', Validators.compose([
@@ -270,23 +231,16 @@ export class PartnnerComponent implements OnInit, OnDestroy {
                 })
             );
         }
-
-        // Adiciona o array de telefones ao fomrGroup
-        phoneNumbersFormGroups.forEach((phoneNumbersFormGroup) => {
-            (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumbersFormGroup);
-        });
-        this._changeDetectorRef.markForCheck();
+        this.closeAlerts();
     }
-
     private closeAlerts(): void {
         this.accountForm.enable();
+        this.loading = false;
         this._changeDetectorRef.markForCheck();
     }
-
     private removePhoneFromApi(id: number): Observable<boolean> {
         return this._userServices.removePhonenumber(id);
     }
-
     private openSnackBar(message: string, type: string = 'accent'): void {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,
@@ -294,5 +248,30 @@ export class PartnnerComponent implements OnInit, OnDestroy {
             verticalPosition: 'bottom',
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
+    }
+    private updateDataInStorage(email: string, name: string): void{
+        this.user = this._authServices.getUserInfoFromStorage();
+        this.user.name = name;
+        this.user.email = email;
+        this._storageServices.removeFromStorage(environment.authStorage);
+        this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
+    }
+    private removeLastPhoneUpdated(lastPhone: PhoneNumberModel): void {
+        //Pega o último registro de telefone que contem no array de telefones
+        const phoneArray = this.accountForm.get('phonesNumbers') as FormArray;
+
+        //Se os IDS forem diferentes, incluir no array
+        if (lastPhone.id !== phoneArray.value[phoneArray.length - 1].id) {
+
+            const lastFromArray = phoneArray[phoneArray.length - 1];
+            // Remove the phone number field
+            phoneArray.removeAt(lastFromArray);
+
+            (this.accountForm.get('phonesNumbers') as FormArray).push(
+                this._formBuilder.group({
+                    id: [lastPhone.id],
+                    phoneNumber: [lastPhone.phoneNumber]
+                }));
+        }
     }
 }

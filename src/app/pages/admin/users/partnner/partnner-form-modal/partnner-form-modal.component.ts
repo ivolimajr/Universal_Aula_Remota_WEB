@@ -155,7 +155,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
 
     getCep(event): void {
         if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
-            return this.openSnackBar('Cep inválido');
+            return this.openSnackBar('Cep não encontrado.');
         }
         this.cep$ = this._cepService.getCep(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
             this.addressForm.patchValue({
@@ -163,7 +163,8 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                 address: res.logradouro,
                 city: res.localidade,
                 cep: res.cep,
-                uf: res.uf
+                uf: res.uf,
+                complement: res.complemento
             });
             this._changeDetectorRef.markForCheck();
         });

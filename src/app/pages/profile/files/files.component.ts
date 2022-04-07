@@ -1,10 +1,10 @@
 import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {Observable, Subscription} from 'rxjs';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatDialog} from '@angular/material/dialog';
 import {FileModel} from '../../../shared/models/file.model';
 import {UserService} from '../../../shared/services/http/user.service';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
-import {MatDialog} from '@angular/material/dialog';
 
 @Component({
     selector: 'app-files',
@@ -17,7 +17,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     loading: boolean;
     files: Set<File>;
     private fileModel = new FileModel();
-    private user$: Subscription;
+    private file$: Subscription;
 
     constructor(
         public _dialog: MatDialog,
@@ -45,7 +45,7 @@ export class FilesComponent implements OnInit, OnDestroy {
             this.fileModel.files.push(item);
         });
         this.loading = true;
-        this.user$ = this._userServices.createFormEncoded(this.fileModel, '/files-upload').subscribe((res: FileModel[]) => {
+        this.file$ = this._userServices.createFormEncoded(this.fileModel, '/files-upload').subscribe((res: FileModel[]) => {
             if (res.length === 0) {
                 return;
             }
@@ -79,8 +79,8 @@ export class FilesComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.user$) {
-            this.user$.unsubscribe();
+        if (this.file$) {
+            this.file$.unsubscribe();
         }
     }
 

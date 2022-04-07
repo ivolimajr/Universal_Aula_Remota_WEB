@@ -11,7 +11,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {AuthService} from '../../../shared/services/auth/auth.service';
 import {UserLogin} from '../../../shared/models/user.model';
-import {FuseAlertType} from '../../../../@fuse/components/alert';
 import {fuseAnimations} from '../../../../@fuse/animations';
 import {UserService} from '../../../shared/services/http/user.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
@@ -26,13 +25,8 @@ import {MatSnackBar} from '@angular/material/snack-bar';
     animations: fuseAnimations
 })
 
-
 export class ChangePasswordComponent implements OnInit, OnDestroy {
     @Input() idUser: number;
-    alert: { type: FuseAlertType; message: string } = {
-        type: 'error',
-        message: ''
-    };
 
     public securityForm: FormGroup;
     public loading: boolean;
@@ -49,61 +43,40 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     ) {
     }
 
-    /**
-     * On init
-     */
     ngOnInit(): void {
         this.loadForm();
-        this._changeDetectorRef.markForCheck();
     }
-
-    /**
-     * Atualiza a senha de acesso do usuário
-     *
-     * @return void
-     */
     update(): void {
-        //Verifica se o formulário é válido
         if (this.securityForm.invalid) {
             return this.openSnackBar('Dados Inválidos.', 'warn');
         }
-        this.loading = true;
-        this._changeDetectorRef.markForCheck();
         this.securityForm.disable();
+        if (this.validatePass()) {
+            this.loading = true;
+            this._changeDetectorRef.markForCheck();
 
-        const formData = this.securityForm.value;
-        const storagePassword = this._authServices.getLoginFromStorage().password;
-        if (formData.currentPassword !== storagePassword) {
-            this.openSnackBar('Senha atual não confere', 'warn');
-            this.closeAlerts();
-            return;
-        }
-        //atualiza a senha na API
-        this.auth$ = this._userServices.updatePassById(this.securityForm.value).subscribe((res: any) => {
-            if (res.error) {
+            this.auth$ = this._userServices.updatePassById(this.securityForm.value).subscribe((res: any) => {
+                if (res.error) {
+                    return this.closeAlerts();
+                }
+                this.updateDataInStorage(this.securityForm.value.newPassword);
+                this.openSnackBar('Senha Atualizada');
                 return this.closeAlerts();
-            }
-            this.openSnackBar('Senha Atualizada');
-
-            //Atualiza a senha no localStorage
-            this.loginUser.email = this._authServices.getUserInfoFromStorage().email;
-            this._storageServices.removeFromStorage(environment.dataStorage);
-            this.loginUser.password = formData.newPassword;
-            this._storageServices.setValueFromLocalStorage(environment.dataStorage, this.loginUser);
-
-            this.closeAlerts();
-            return;
-        });
+            });
+        }
+        return this.closeAlerts();
     }
-
     ngOnDestroy(): void {
-        if(this.auth$){
+        if (this.auth$) {
             this.auth$.unsubscribe();
         }
         this._changeDetectorRef.markForCheck();
     }
 
     private loadForm(): void {
+        this.loading = true;
+        this._changeDetectorRef.markForCheck();
+
         this.securityForm = this._formBuilder.group({
             id: [this.idUser],
             currentPassword: ['', Validators.compose([
@@ -117,20 +90,34 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
                 Validators.minLength(5),
                 Validators.maxLength(70)])]
         });
-        this._changeDetectorRef.markForCheck();
+        this.closeAlerts();
     }
-
+    private validatePass(): boolean {
+        const securityFormValues = this.securityForm.value;
+        const storagePassword = this._authServices.getLoginFromStorage().password;
+        if (securityFormValues.currentPassword !== storagePassword) {
+            this.openSnackBar('Senha atual não confere', 'warn');
+            this.closeAlerts();
+            return;
+        }
+    }
     private closeAlerts(): void {
         this.loading = false;
         this.securityForm.enable();
         this._changeDetectorRef.markForCheck();
     }
     private openSnackBar(message: string, type: string = 'accent'): void {
-        this._snackBar.open(message,'',{
-            duration: 5*1000,
+        this._snackBar.open(message, '', {
+            duration: 5 * 1000,
             horizontalPosition: 'center',
             verticalPosition: 'bottom',
-            panelClass: ['mat-toolbar', 'mat-'+type]
+            panelClass: ['mat-toolbar', 'mat-' + type]
         });
+    }
+    private updateDataInStorage(newPassword: string): void {
+        this.loginUser.email = this._authServices.getUserInfoFromStorage().email;
+        this.loginUser.password = newPassword;
+        this._storageServices.removeFromStorage(environment.dataStorage);
+        this._storageServices.setValueFromLocalStorage(environment.dataStorage, this.loginUser);
     }
 }

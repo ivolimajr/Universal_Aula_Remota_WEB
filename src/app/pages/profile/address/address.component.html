@@ -1,7 +1,7 @@
 <ng-container *ngIf="loading;">
     <mat-progress-bar class="mb-5" [mode]="'indeterminate'"></mat-progress-bar>
 </ng-container>
-<div class="w-full max-w-3xl">
+<div class="w-full max-w-3xl" *ngIf="!loading">
 
     <!-- Form -->
     <form [formGroup]="addressForm">

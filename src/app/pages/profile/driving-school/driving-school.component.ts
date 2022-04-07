@@ -22,6 +22,7 @@ import {DrivingSchoolService} from '../../../shared/services/http/drivingSchool.
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
 import {formatDate} from '@angular/common';
 import {environment} from '../../../../environments/environment';
+import {PhoneNumberModel} from '../../../shared/models/phoneNumber.model';
 
 @Component({
     selector: 'app-driving-school',
@@ -41,7 +42,7 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
     private phone$: Subscription;
 
     constructor(
-        public dialog: MatDialog,
+        public _dialog: MatDialog,
         private _snackBar: MatSnackBar,
         private _formBuilder: FormBuilder,
         private _userServices: UserService,
@@ -54,57 +55,28 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.prepareForm();
     }
-
     submit(): void {
         if (this.setUserData()) {
             this.accountForm.disable();
             this.loading = true;
-            this.user$ = this._drivingSchoolServices.updateFormEncoded(this.drivingSchoolUser).subscribe((res: any)=>{
+            this._changeDetectorRef.markForCheck();
+
+            this.user$ = this._drivingSchoolServices.updateFormEncoded(this.drivingSchoolUser).subscribe((res: any) => {
                 if (res.error) {
                     return this.closeAlerts();
                 }
                 this.drivingSchoolUser = res;
-                this.user = this._authServices.getUserInfoFromStorage();
-                this.user.name = res.fantasyName;
-                this.user.email = res.email;
-                this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
-
-                const lastPhoneIdFromUser = res.phonesNumbers[res.phonesNumbers.length - 1];
-
-                //Pega o último registro de telefone que contem no array de telefones
-                const lastPhoneFromPhoneArray = this.accountForm.get('phonesNumbers') as FormArray;
-
-                //Se os IDS forem diferentes, incluir no array
-                if (lastPhoneIdFromUser.id !== lastPhoneFromPhoneArray.value[lastPhoneFromPhoneArray.length - 1].id) {
-
-                    const lastFromArray = lastPhoneFromPhoneArray[lastPhoneFromPhoneArray.length - 1];
-                    // Remove the phone number field
-                    lastPhoneFromPhoneArray.removeAt(lastFromArray);
-
-                    const phoneNumberFormGroup = this._formBuilder.group({
-                        id: [lastPhoneIdFromUser.id],
-                        phoneNumber: [lastPhoneIdFromUser.phoneNumber]
-                    });
-
-                    // Adiciona o formGroup ao array de telefones
-                    (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumberFormGroup);
-                }
-
+                this.updateDataInStorage(res.fantasyName, res.email);
+                this.removeLastPhoneUpdated(res.phonesNumbers[res.phonesNumbers.length - 1]);
                 //Retorna a mensagem de atualizado
                 this.openSnackBar('Atualizado');
                 return this.closeAlerts();
             });
         } else {
-            this.openSnackBar('Dados Inválidos','warn');
+            this.openSnackBar('Dados Inválidos', 'warn');
             return this.closeAlerts();
         }
     }
-
-    /**
-     * Adiciona mais um campo no formulário de contato
-     *
-     * @return void
-     */
     addPhoneNumberField(): void {
         // Adiciona o formGroup ao array de telefones
         (this.accountForm.get('phonesNumbers') as FormArray).push(
@@ -116,13 +88,6 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
             }));
         this._changeDetectorRef.markForCheck();
     }
-
-    /**
-     * Remove um telefone do formulário de contato e do banco de dados
-     *
-     * @param id do telefone a ser removido
-     * @param index do array de telefones a ser removido
-     */
     removePhoneNumber(id: number, index: number): void {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
@@ -135,7 +100,7 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
             this.openSnackBar('Remoção Inválida', 'warn');
             return this.closeAlerts();
         }
-        const dialogRef = this.dialog.open(AlertModalComponent, {
+        const dialogRef = this._dialog.open(AlertModalComponent, {
             width: '280px',
             data: {title: 'Confirma remoção do telefone?'}
         });
@@ -143,8 +108,8 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
             if (!result) {
                 return this.closeAlerts();
             }
-            this.removePhoneFromApi(id).subscribe((res: any)=>{
-                if(res){
+            this.removePhoneFromApi(id).subscribe((res: any) => {
+                if (res) {
                     this.openSnackBar('Removido');
                     phonesFormArray.removeAt(index);
                     return this.closeAlerts();
@@ -154,7 +119,6 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
             });
         });
     }
-
     ngOnDestroy(): void {
         if (this.user$) {
             this.user$.unsubscribe();
@@ -166,6 +130,9 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
     }
 
     private prepareForm(): void {
+        this.loading = true;
+        this._changeDetectorRef.markForCheck();
+
         this.accountForm = this._formBuilder.group({
             id: [this.drivingSchoolUser.id],
             corporateName: [this.drivingSchoolUser.corporateName,
@@ -214,16 +181,12 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
                 Validators.nullValidator
             ])),
         });
-        // cria um array para montar o formBuilder de telefones
-        const phoneNumbersFormGroups = [];
 
         //Só monta o array de telefones se houver telefones de contato cadastrado
         if (this.drivingSchoolUser.phonesNumbers.length > 0) {
             // Iterate through them
             this.drivingSchoolUser.phonesNumbers.forEach((phoneNumber) => {
-
-                //Cria um formGroup de telefone
-                phoneNumbersFormGroups.push(
+                (this.accountForm.get('phonesNumbers') as FormArray).push(
                     this._formBuilder.group({
                         id: [phoneNumber.id],
                         phoneNumber: [phoneNumber.phoneNumber,
@@ -237,7 +200,7 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
             });
         } else {
             // Create a phone number form group
-            phoneNumbersFormGroups.push(
+            (this.accountForm.get('phonesNumbers') as FormArray).push(
                 this._formBuilder.group({
                     id: [0],
                     phoneNumber: ['', Validators.compose([
@@ -247,41 +210,32 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
                 })
             );
         }
-
-        // Adiciona o array de telefones ao fomrGroup
-        phoneNumbersFormGroups.forEach((phoneNumbersFormGroup) => {
-            (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumbersFormGroup);
-        });
-
+        this.loading = false;
         this._changeDetectorRef.markForCheck();
     }
-
     private setUserData(): boolean {
         if (this.accountForm.invalid) {
             this.openSnackBar('Dados Inválidos', 'warn');
             return false;
         }
-        const formDataValues = this.accountForm.value;
-        formDataValues.cnpj = formDataValues.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
-        formDataValues.phonesNumbers.forEach((item) => {
+        const accountFormValues = this.accountForm.value;
+        accountFormValues.cnpj = accountFormValues.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
+        accountFormValues.phonesNumbers.forEach((item) => {
             if (item.phoneNumber.length !== 11) {
                 item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
-        this.drivingSchoolUser = formDataValues;
+        this.drivingSchoolUser = accountFormValues;
         return true;
     }
-
     private closeAlerts(): void {
         this.accountForm.enable();
         this.loading = false;
         this._changeDetectorRef.markForCheck();
     }
-
     private removePhoneFromApi(id: number): Observable<boolean> {
         return this._userServices.removePhonenumber(id);
     }
-
     private openSnackBar(message: string, type: string = 'accent'): void {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,
@@ -289,5 +243,30 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
             verticalPosition: 'bottom',
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
+    }
+    private updateDataInStorage(fantasyName: string, email: string): void {
+        this.user = this._authServices.getUserInfoFromStorage();
+        this.user.name = fantasyName;
+        this.user.email = email;
+        this._storageServices.removeFromStorage(environment.authStorage);
+        this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
+    }
+    private removeLastPhoneUpdated(lastPhone: PhoneNumberModel): void {
+        //Pega o último registro de telefone que contem no array de telefones
+        const phoneArray = this.accountForm.get('phonesNumbers') as FormArray;
+
+        //Se os IDS forem diferentes, incluir no array
+        if (lastPhone.id !== phoneArray.value[phoneArray.length - 1].id) {
+
+            const lastFromArray = phoneArray[phoneArray.length - 1];
+            // Remove the phone number field
+            phoneArray.removeAt(lastFromArray);
+
+            (this.accountForm.get('phonesNumbers') as FormArray).push(
+                this._formBuilder.group({
+                    id: [lastPhone.id],
+                    phoneNumber: [lastPhone.phoneNumber]
+                }));
+        }
     }
 }
