@@ -20,25 +20,24 @@ import {AuthService} from '../../../../../shared/services/auth/auth.service';
 })
 export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
 
+    public id: number = parseInt(this._routeAcitve.snapshot.paramMap.get('id'), 10);
+
     accountForm: FormGroup;
     addressForm: FormGroup;
     contactForm: FormGroup;
     filesForm: FormGroup;
 
     masks = MASKS;
+    files: Set<File>;
     loading: boolean = false; //Inicia o componente com um lading
     loadingForm: boolean = false; //Inicia o componente com um lading
     saving: boolean = false;
-    message: string = null; //Mensagem quando estiver salvando ou editando um usuário
     states = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
         'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
-    public id: number = parseInt(this._routeAcitve.snapshot.paramMap.get('id'), 10);
-    files: Set<File>;
     private drivinSchoolModel = new DrivingSchoolModel();
+    private filesUpdate: Array<FileModel> = [];
     private cep$: Subscription;
     private user$: Subscription;
-    private fileModel: Array<FileModel> = [];
-    private filesUpdate: Array<FileModel> = [];
 
     constructor(
         public _dialog: MatDialog,
@@ -63,11 +62,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         window.history.back();
     }
 
-    /**
-     * Adiciona mais um campo no formulário de contato
-     *
-     * @return void
-     */
     addPhoneNumberField(): void {
 
         const phonesFormArray = this._formBuilder.group({
@@ -82,12 +76,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    /**
-     * Remove um telefone do formulário de contato e do banco de dados
-     *
-     * @param id do telefone a ser removido
-     * @param index do array de telefones a ser removido
-     */
     removePhoneNumber(id: number, index: number): void {
         // this.loading = true;
         // this._changeDetectorRef.markForCheck();
@@ -120,11 +108,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     * Adiciona mais um campo no formulário de contato
-     *
-     * @return void
-     */
     addFileField(): void {
         // Adiciona o formGroup ao array de telefones
         (this.filesForm.get('files') as FormArray).push(
@@ -138,12 +121,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    /**
-     * Remove um telefone do formulário de contato e do banco de dados
-     *
-     * @param id do telefone a ser removido
-     * @param index do array de telefones a ser removido
-     */
     removeFileFieldFromApi(id: number, index): void {
         this.loadingForm = true;
         this.filesForm.disable();
@@ -172,12 +149,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     * Remove um telefone do formulário de contato e do banco de dados
-     *
-     * @param id do telefone a ser removido
-     * @param index do array de telefones a ser removido
-     */
     removeFileField(id: number, index: number): void {
         const phoneNumbersFormArray = this.filesForm.get('files') as FormArray;
         if (phoneNumbersFormArray.length === 1) {
@@ -187,14 +158,8 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    /**
-     * Atualiza ou cria um novo usuário do tipo AutoEscola
-     */
     submit(): void {
-        //Exibe o alerta de salvando dados
-        this.loading = true;
         this.saving = true;
-        this.message = 'Salvando';
         this._changeDetectorRef.markForCheck();
 
         //Se não tiver um ID, significa que está criando um novo usuário
@@ -219,25 +184,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     * Fecha todos os alertas e loadings da tela
-     */
-    closeAlerts(): void {
-        this.saving = false;
-        this.loading = false;
-        this.loadingForm = false;
-        this.filesForm.enable();
-        this.accountForm.enable();
-        this.addressForm.enable();
-        this.contactForm.enable();
-        this._changeDetectorRef.markForCheck();
-    }
-
-    /**
-     * Consulta o cep pela API dos correios
-     *
-     * @param event
-     */
     getCep(event): void {
         if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
             this.openSnackBar('Cep inválido');
@@ -274,73 +220,47 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     * Define os dados pessoais no objeto para envio
-     *
-     * @userPost: é o objeto do tipo usuario AutoEscola que será enviado para o BackEnd
-     */
     setUserData(): void {
         //Dados da instituição
         if (this.accountForm.valid) {
-            const data = this.accountForm.value;
-
-            if (this.id) {
-                this.drivinSchoolModel.id = this.id;
-            }
-
-            this.drivinSchoolModel.corporateName = data.corporateName;
-            this.drivinSchoolModel.fantasyName = data.fantasyName;
-            this.drivinSchoolModel.stateRegistration = data.stateRegistration.replace(/[^0-9,]*/g, '').replace('-', '').replace('/', '');
-            this.drivinSchoolModel.foundingDate = data.foundingDate;
-            this.drivinSchoolModel.email = data.email;
-            this.drivinSchoolModel.description = data.description;
-            this.drivinSchoolModel.site = data.site;
-            this.drivinSchoolModel.cnpj = data.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
-            if (!this.id) {
-                this.drivinSchoolModel.password = 'Pay@2021';
-            }
+            const accountFormValues = this.accountForm.value;
+            accountFormValues.stateRegistration = accountFormValues.stateRegistration.replace(/[^0-9,]*/g, '').replace('-', '').replace('/', '');
+            accountFormValues.cnpj = accountFormValues.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.').replace('-', '');
+            this.drivinSchoolModel = accountFormValues;
         }
         // Dados de endereço
         if (this.addressForm.valid) {
-            const data = this.addressForm.value;
-
-            this.drivinSchoolModel.cep = data.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
-            this.drivinSchoolModel.uf = data.uf;
-            this.drivinSchoolModel.district = data.district;
-            this.drivinSchoolModel.city = data.city;
-            this.drivinSchoolModel.addressNumber = data.addressNumber;
-            this.drivinSchoolModel.fullAddress = data.address;
-            this.drivinSchoolModel.complement = data.complement;
+            const addressFormValues = this.addressForm.value;
+            addressFormValues.cep = addressFormValues.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
+            this.drivinSchoolModel.address = addressFormValues;
         }
         // dados de contato
         if (this.contactForm.valid) {
-            const data = this.contactForm.value;
+            const contactFormValues = this.contactForm.value;
             //Verifica se os telefones informados são válidos
-            data.phonesNumbers.forEach((item) => {
-                if (item.phoneNumber === null || item.phoneNumber === '' || item.phoneNumber.length < 11) {
-                    this.openSnackBar('Insira um telefone', 'warn');
-                    return;
+            contactFormValues.phonesNumbers.forEach((item) => {
+                if (!item.phoneNumber || item.phoneNumber.length < 11) {
+                    return this.openSnackBar('Insira um telefone', 'warn');
                 }
             });
-            data.phonesNumbers.forEach((item) => {
+            contactFormValues.phonesNumbers.forEach((item) => {
                 if (item.phoneNumber.length !== 11) {
                     item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
                 }
             });
-            this.drivinSchoolModel.phonesNumbers = data.phonesNumbers;
+            this.drivinSchoolModel.phonesNumbers = contactFormValues.phonesNumbers;
         }
 
         //Dados de arquivos de upload
         if (this.filesForm.valid) {
             this.files.forEach((item) => {
-                if (!this.fileModel.find(f => f.file.name === item.name)) {
+                if (!this.drivinSchoolModel.files.find(f => f.file.name === item.name)) {
                     const file = new FileModel();
                     file.file = item;
                     file.fileName = item.name;
-                    this.fileModel.push(file);
+                    this.drivinSchoolModel.files.push(file);
                 }
             });
-            this.drivinSchoolModel.files = this.fileModel;
         }
     }
 
@@ -353,11 +273,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         }
     }
 
-    /**
-     * Monta todos os formulários
-     *
-     * @private
-     */
     private loadForm(): void {
 
         if (this.id) {
@@ -406,6 +321,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                     Validators.maxLength(18),
                     NgBrazilValidators.cnpj
                 ])],
+            password: ['Pay@2021']
         });
         this.addressForm = this._formBuilder.group({
             cep: ['70702-406',
@@ -489,11 +405,6 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     * Monta todos os formulário para edição do usuário
-     *
-     * @private
-     */
     private prepareEditUser(): void {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
@@ -502,6 +413,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                 return this.closeAlerts();
             }
             this.accountForm = this._formBuilder.group({
+                id: [res.id],
                 corporateName: [res.corporateName,
                     Validators.compose([
                         Validators.required,
@@ -635,12 +547,17 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    /**
-     * Remove um arquivo da API
-     *
-     * @param id
-     * @private
-     */
+    private closeAlerts(): void {
+        this.saving = false;
+        this.loading = false;
+        this.loadingForm = false;
+        this.filesForm.enable();
+        this.accountForm.enable();
+        this.addressForm.enable();
+        this.contactForm.enable();
+        this._changeDetectorRef.markForCheck();
+    }
+
     private deleteFileFromApi(id: number): Observable<boolean> {
         return this._userServices.removeFile(id);
     }
