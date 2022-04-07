@@ -10,7 +10,7 @@ import {DrivingSchoolModel} from '../../../../../shared/models/drivingSchool.mod
 import {DrivingSchoolService} from '../../../../../shared/services/http/drivingSchool.service';
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
 import {MatDialog} from '@angular/material/dialog';
-import {FileModel, FileModelUpdate} from '../../../../../shared/models/file.model';
+import {FileModel} from '../../../../../shared/models/file.model';
 import {UserService} from '../../../../../shared/services/http/user.service';
 import {AuthService} from '../../../../../shared/services/auth/auth.service';
 
@@ -34,11 +34,9 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
     public id: number = parseInt(this._routeAcitve.snapshot.paramMap.get('id'), 10);
     files: Set<File>;
-    private phoneArray = [];
     private drivinSchoolModel = new DrivingSchoolModel();
     private cep$: Subscription;
     private user$: Subscription;
-    private fileArray = [];
     private fileModel: Array<FileModel> = [];
     private filesUpdate: Array<FileModel> = [];
 
@@ -163,10 +161,8 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
             this.deleteFileFromApi(id).subscribe((res: any) => {
                 if (res === true) {
                     if (index > -1) {
-                        this.fileArray.splice(index, 1);
+                        this.filesUpdate.splice(index, 1);
                     }
-                    this.loadingForm = false;
-                    this._changeDetectorRef.markForCheck();
                     this.openSnackBar('Removido');
                     return this.closeAlerts();
                 }
@@ -229,6 +225,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
     closeAlerts(): void {
         this.saving = false;
         this.loading = false;
+        this.loadingForm = false;
         this.filesForm.enable();
         this.accountForm.enable();
         this.addressForm.enable();
@@ -464,9 +461,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                     Validators.nullValidator
                 ]))
         });
-
-        // Create a phone number form group
-        this.phoneArray.push(
+        (this.contactForm.get('phonesNumbers') as FormArray).push(
             this._formBuilder.group({
                 phoneNumber: ['', Validators.compose([
                     Validators.required,
@@ -474,14 +469,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                 ])]
             })
         );
-
-        // Adiciona o array de telefones ao formGroup
-        this.phoneArray.forEach((item) => {
-            (this.contactForm.get('phonesNumbers') as FormArray).push(item);
-        });
-
-        // Create a phone number form group
-        this.fileArray.push(
+        (this.filesForm.get('files') as FormArray).push(
             this._formBuilder.group({
                 file: [null, Validators.compose([
                     Validators.required,
@@ -489,15 +477,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                 ])]
             })
         );
-
-        // Adiciona o array de arquivos ao fomrGroup
-        this.fileArray.forEach((item) => {
-            (this.filesForm.get('files') as FormArray).push(item);
-        });
-
         this._changeDetectorRef.markForCheck();
-        this.phoneArray = [];
-        this.fileArray = [];
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {
@@ -519,7 +499,7 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
         this._drivingSchoolServices.getOne(this.id, this._authServices.getUserInfoFromStorage().address.uf).subscribe((res: any) => {
             if (res.error) {
-                return;
+                return this.closeAlerts();
             }
             this.accountForm = this._formBuilder.group({
                 corporateName: [res.corporateName,
@@ -613,7 +593,12 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                     ]))
             });
             this.filesForm = this._formBuilder.group({
-                files: this._formBuilder.array([],
+                files: this._formBuilder.array([
+                        this._formBuilder.group({
+                            id: [0],
+                            file: ['']
+                        })
+                    ],
                     Validators.compose([
                         Validators.required,
                         Validators.nullValidator
@@ -643,44 +628,10 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
                     })
                 );
             }
-
-            // Create a files form group
             if (res.files.length > 0) {
-
                 this.filesUpdate = res.files;
-
-                // Create a files form group
-                this.fileArray.push(
-                    this._formBuilder.group({
-                        id: [0],
-                        file: ['']
-                    })
-                );
-            } else {
-                // Create a phone number form group
-                this.fileArray.push(
-                    this._formBuilder.group({
-                        id: [0],
-                        file: ['', Validators.compose([
-                            Validators.required,
-                            Validators.nullValidator
-                        ])]
-                    })
-                );
-
             }
-
-            // Adiciona o array de telefones ao formGroup
-            this.fileArray.forEach((item) => {
-                (this.filesForm.get('files') as FormArray).push(item);
-            });
-
-            this.fileArray = [];
-            this.fileArray = res.files;
-
-            this.loading = false;
-            this._changeDetectorRef.markForCheck();
-            this.phoneArray = [];
+            this.closeAlerts();
         });
     }
 

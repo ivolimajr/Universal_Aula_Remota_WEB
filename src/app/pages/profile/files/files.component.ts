@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Observable, Subscription} from 'rxjs';
-import {FileModel, FileModelUpdate} from '../../../shared/models/file.model';
+import {FileModel} from '../../../shared/models/file.model';
 import {UserService} from '../../../shared/services/http/user.service';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
 import {MatDialog} from '@angular/material/dialog';

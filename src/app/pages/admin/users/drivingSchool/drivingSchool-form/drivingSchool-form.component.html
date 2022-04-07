@@ -389,9 +389,9 @@
                                         <mat-progress-bar class="mb-5" [mode]="'indeterminate'"></mat-progress-bar>
                                     </ng-container>
                                     <!--start:EditMode-->
-                                    <div class="my-6 font-medium" *ngIf="fileArray.length">
+                                    <div class="my-6 font-medium" *ngIf="filesUpdate.length">
                                         <div class="flex flex-wrap">
-                                            <ng-container *ngFor="let item of fileArray;let i = index;">
+                                            <ng-container *ngFor="let item of filesUpdate;let i = index;">
                                                 <div
                                                     class="ml-2.5 text-center justify-center m-4 p-4 min-w-36 max-w-36 min-h-30 max-h-30 rounded border-2 bg-card ng-star-inserted">
                                                     <mat-icon class="sm:icon-size-5 md:icon-size-10"
@@ -533,7 +533,7 @@
                                                 <li class="mt-1"><b>Doc: </b>{{item.fileName}}</li>
                                             </ul>
                                             <ul *ngFor="let item of filesUpdate">
-                                                <li class="mt-1"><b>Doc: </b>{{item.fileName}}</li>
+                                                <li class="mt-1"><b>Doci: </b>{{item.fileName}}</li>
                                             </ul>
                                         </div>
                                     </div>
