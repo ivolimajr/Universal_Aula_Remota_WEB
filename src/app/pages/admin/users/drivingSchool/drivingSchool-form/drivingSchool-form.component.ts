@@ -63,16 +63,14 @@ export class DrivingSchoolFormComponent implements OnInit, OnDestroy {
     }
 
     addPhoneNumberField(): void {
-
-        const phonesFormArray = this._formBuilder.group({
-            phoneNumber: ['', Validators.compose([
-                Validators.required,
-                Validators.nullValidator
-            ])]
-        });
-
         // Adiciona o formGroup ao array de telefones
-        (this.contactForm.get('phonesNumbers') as FormArray).push(phonesFormArray);
+        (this.contactForm.get('phonesNumbers') as FormArray).push(
+            this._formBuilder.group({
+                phoneNumber: ['', Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator
+                ])]
+            }));
         this._changeDetectorRef.markForCheck();
     }
 

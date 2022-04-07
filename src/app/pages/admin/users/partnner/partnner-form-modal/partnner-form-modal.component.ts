@@ -7,7 +7,6 @@ import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {fuseAnimations} from '../../../../../../@fuse/animations';
 import {PartnnerModel} from '../../../../../shared/models/partnner.model';
 import {PartnnerService} from '../../../../../shared/services/http/partnner.service';
-import {User} from '../../../../../shared/models/user.model';
 import {CepService} from '../../../../../shared/services/http/cep.service';
 import {UserService} from '../../../../../shared/services/http/user.service';
 import {AlertModalComponent} from '../../../../../layout/common/alert/alert-modal.component';
@@ -27,21 +26,20 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
     addressForm: FormGroup;
     masks = MASKS;
     loading: boolean = true;
-    level: number;
+    levelId: number;
     states = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MS', 'MT', 'MG', 'PA', 'PB', 'PR', 'PE',
         'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
     private partnnerModel = new PartnnerModel();
     private phoneArray = [];
-    private user: User;
     private level$: Subscription;
     private user$: Subscription;
     private cep$: Subscription;
 
     constructor(
-        public dialog: MatDialog,
+        public _dialog: MatDialog,
+        public _dialogRef: MatDialogRef<PartnnerFormModalComponent>,
         private _snackBar: MatSnackBar,
         private _formBuilder: FormBuilder,
-        public dialogRef: MatDialogRef<PartnnerFormModalComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
         private _partnnerServices: PartnnerService,
         private _userServices: UserService,
@@ -64,17 +62,16 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getCargos();
-        this.prepareForm();
     }
 
     onNoClick(): void {
-        this.dialogRef.close();
+        this._dialogRef.close();
     }
 
     submit(): void {
-        this.accountForm.disable();
         const formIsValid = this.setUserData();
         if (formIsValid) {
+            this.accountForm.disable();
             //Exibe o alerta de salvando dados
             this.loading = true;
             this._changeDetectorRef.markForCheck();
@@ -85,7 +82,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                         return this.closeAlerts();
                     }
                     this.closeAlerts();
-                    return this.dialogRef.close(res);
+                    return this._dialogRef.close(res);
                 });
             } else {
                 this.user$ = this._partnnerServices.create(this.partnnerModel).subscribe((res: any) => {
@@ -93,7 +90,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                         return this.closeAlerts();
                     }
                     this.closeAlerts();
-                    return this.dialogRef.close(res);
+                    return this._dialogRef.close(res);
                 });
             }
         } else {
@@ -119,7 +116,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
             this.openSnackBar('Remoção Inválida', 'warn');
             return this.closeAlerts();
         }
-        const dialogRef = this.dialog.open(AlertModalComponent, {
+        const dialogRef = this._dialog.open(AlertModalComponent, {
             width: '280px',
             data: {title: 'Confirma remoção do telefone?'}
         });
@@ -127,8 +124,8 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
             if (!result) {
                 return this.closeAlerts();
             }
-            this.removePhoneFromApi(id).subscribe((res: any)=>{
-                if(res){
+            this.removePhoneFromApi(id).subscribe((res: any) => {
+                if (res) {
                     this.openSnackBar('Removido');
                     phonesFormArray.removeAt(index);
                     return this.closeAlerts();
@@ -145,23 +142,20 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
      * @return void
      */
     addPhoneNumberField(): void {
-
-        const phonesFormArray = this._formBuilder.group({
-            phoneNumber: ['', Validators.compose([
-                Validators.required,
-                Validators.nullValidator
-            ])]
-        });
-
         // Adiciona o formGroup ao array de telefones
-        (this.accountForm.get('phonesNumbers') as FormArray).push(phonesFormArray);
+        (this.accountForm.get('phonesNumbers') as FormArray).push(
+            this._formBuilder.group({
+                phoneNumber: ['', Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator
+                ])]
+            }));
         this._changeDetectorRef.markForCheck();
     }
 
     getCep(event): void {
         if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
-            this.openSnackBar('Cep inválido');
-            return;
+            return this.openSnackBar('Cep inválido');
         }
         this.cep$ = this._cepService.getCep(event.value.replace(/[^0-9,]*/g, '')).subscribe((res) => {
             this.addressForm.patchValue({
@@ -179,9 +173,11 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
      * Busca os cargos dos usuário do tipo edriving
      */
     private getCargos(): void {
+        this.loading = true;
+        this._changeDetectorRef.markForCheck();
         this.level$ = this._partnnerServices.getCargos().subscribe((res) => {
-            this.level = res.find(e => e.level === ParceiroCargosConstants.EMPRESA).id;
-            this._changeDetectorRef.markForCheck();
+            this.levelId = res.find(e => e.level === ParceiroCargosConstants.EMPRESA).id;
+            this.prepareForm();
         });
     }
 
@@ -194,12 +190,9 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
      * @private
      */
     private prepareForm(): void {
-        //Cria um formulário para exibição e atualização de um usuário
         if (this.userEdit !== null) {
-            this.prepareEditForm();
-            return;
+            return this.prepareEditForm();
         }
-        //Cria um formulário para adição de um usuário
         this.accountForm = this._formBuilder.group({
             name: ['',
                 Validators.compose([
@@ -227,8 +220,16 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(100)])],
-            password:['Pay@2021'],
-            phonesNumbers: this._formBuilder.array([], Validators.compose([
+            password: ['Pay@2021'],
+            levelId: [this.levelId],
+            phonesNumbers: this._formBuilder.array([
+                this._formBuilder.group({
+                    phoneNumber: ['', Validators.compose([
+                        Validators.required,
+                        Validators.nullValidator
+                    ])]
+                })
+            ], Validators.compose([
                 Validators.required,
                 Validators.nullValidator,
             ])),
@@ -275,62 +276,46 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                 Validators.compose([
                     Validators.maxLength(100)])],
         });
-        // Create a phone number form group
-        this.phoneArray.push(
-            this._formBuilder.group({
-                phoneNumber: ['', Validators.compose([
-                    Validators.required,
-                    Validators.nullValidator
-                ])]
-            })
-        );
 
-        // Adiciona o array de telefones ao fomrGroup
-        this.phoneArray.forEach((phoneNumbersFormGroup) => {
-            (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumbersFormGroup);
-        });
         this.closeAlerts();
-        this.phoneArray = [];
     }
 
     /**
      * Prepara o usuário para envio
      */
     private setUserData(): boolean {
-        const userFormData = this.accountForm.value;
-        const addressFormData = this.addressForm.value;
-        let result: boolean = true;
-
         if (this.accountForm.invalid) {
             this.openSnackBar('Dados Inválidos', 'warn');
             return false;
         }
+
+        let result: boolean = true;
+
+        const userFormDataValues = this.accountForm.value;
+        const addressFormDataValues = this.addressForm.value;
+
         //Verifica se os telefones informados são válidos
-        userFormData.phonesNumbers.forEach((item) => {
+        userFormDataValues.phonesNumbers.forEach((item) => {
             if (item.phoneNumber === null || item.phoneNumber === '' || item.phoneNumber.length < 11) {
                 this.openSnackBar('Insira um telefone', 'warn');
                 result = false;
             }
         });
-        userFormData.cnpj = userFormData.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
-        addressFormData.cep = addressFormData.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
+        userFormDataValues.cnpj = userFormDataValues.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
+        addressFormDataValues.cep = addressFormDataValues.cep.replace(/[^0-9,]*/g, '').replace(',', '.');
 
-        userFormData.phonesNumbers.forEach((item) => {
+        userFormDataValues.phonesNumbers.forEach((item) => {
             if (item.phoneNumber.length !== 11) {
                 item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
-        this.partnnerModel = userFormData;
-        this.partnnerModel.address = addressFormData;
-        this.partnnerModel.levelId = this.level;
+        this.partnnerModel = userFormDataValues;
+        this.partnnerModel.address = addressFormDataValues;
+        this.partnnerModel.levelId = this.levelId;
         return result;
     }
 
     private prepareEditForm(): void {
-
-        this.loading = true;
-        this._changeDetectorRef.markForCheck();
-
         this.accountForm = this._formBuilder.group({
             id: [this.userEdit.id],
             name: [this.userEdit.name,
@@ -362,6 +347,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
                 Validators.required,
                 Validators.nullValidator
             ])),
+            levelId: [this.levelId]
         });
         this.addressForm = this._formBuilder.group({
             cep: [this.userEdit.address.cep,
@@ -410,7 +396,6 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         if (this.userEdit.phonesNumbers.length > 0) {
             // Iterate through them
             this.userEdit.phonesNumbers.forEach((phoneNumber) => {
-
                 //Cria um formGroup de telefone
                 this.phoneArray.push(
                     this._formBuilder.group({
@@ -437,6 +422,7 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         this.phoneArray.forEach((phoneNumbersFormGroup) => {
             (this.accountForm.get('phonesNumbers') as FormArray).push(phoneNumbersFormGroup);
         });
+
         this.closeAlerts();
         this.phoneArray = [];
     }
@@ -445,9 +431,9 @@ export class PartnnerFormModalComponent implements OnInit, OnDestroy {
         return this._userServices.removePhonenumber(id);
     }
 
-    //Fecha o alerta na tela
     private closeAlerts(): void {
         this.accountForm.enable();
+        this.addressForm.enable();
         this.loading = false;
         this._changeDetectorRef.markForCheck();
     }

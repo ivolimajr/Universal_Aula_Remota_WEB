@@ -38,7 +38,7 @@
                         </p-dropdown>
                     </div>
 
-                <form [formGroup]="userForm">
+                <form [formGroup]="accountForm">
 
                     <!--start: Nome-->
                     <div class="sm:col-span-4 mt-2.5">
@@ -53,7 +53,7 @@
                                 matInput
                                 [formControlName]="'name'">
                         </mat-form-field>
-                        <mat-error *ngIf="userForm.get('name').hasError('name')">
+                        <mat-error *ngIf="accountForm.get('name').hasError('name')">
                             Insira um nome válido
                         </mat-error>
                     </div>
@@ -73,7 +73,7 @@
                                 [formControlName]="'email'">
 
                         </mat-form-field>
-                        <mat-error *ngIf="userForm.get('email').hasError('email')">
+                        <mat-error *ngIf="accountForm.get('email').hasError('email')">
                             Insira um e-mail válido
                         </mat-error>
                     </div>
@@ -94,7 +94,7 @@
                                 [formControlName]="'cpf'">
 
                         </mat-form-field>
-                        <mat-error *ngIf="userForm.get('cpf').hasError('cpf')">
+                        <mat-error *ngIf="accountForm.get('cpf').hasError('cpf')">
                             Insira um cpf válido
                         </mat-error>
                     </div>
@@ -114,7 +114,7 @@
                                 [formControlName]="'identity'">
 
                         </mat-form-field>
-                        <mat-error *ngIf="userForm.get('identity').hasError('identity')">
+                        <mat-error *ngIf="accountForm.get('identity').hasError('identity')">
                             Insira um RG válido
                         </mat-error>
                     </div>
@@ -134,7 +134,7 @@
                                 [formControlName]="'origin'">
 
                         </mat-form-field>
-                        <mat-error *ngIf="userForm.get('origin').hasError('origin')">
+                        <mat-error *ngIf="accountForm.get('origin').hasError('origin')">
                             Insira um orgão válido válido
                         </mat-error>
                     </div>
@@ -153,7 +153,7 @@
                     <!--start:telefones-->
                     <div class="sm:col-span-4 mt-2.5">
                             <ng-container
-                                *ngFor="let phoneNumber of userForm.get('phonesNumbers')['controls']; let i = index;"
+                                *ngFor="let phoneNumber of accountForm.get('phonesNumbers')['controls']; let i = index;"
                                 formArrayName="phonesNumbers">
                                 <div class="relative flex">
                                     <mat-form-field class="fuse-mat-no-subscript flex-auto" appearance="legacy">
@@ -344,7 +344,7 @@
             <!-- start:Submit -->
             <button
                 class="ml-1 items-center"
-                [disabled]="userForm.invalid || userForm.disabled || ufOrigin.invalid || addressForm.invalid || addressForm.disabled"
+                [disabled]="accountForm.invalid || accountForm.disabled || ufOrigin.invalid || addressForm.invalid || addressForm.disabled"
                 class="fuse-mat-button-large mt-10"
                 mat-stroked-button
                 (click)="submit()"

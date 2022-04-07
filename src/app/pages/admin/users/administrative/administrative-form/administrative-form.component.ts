@@ -25,7 +25,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     @Input() id: number;
     masks = MASKS;
     loading: boolean = false;
-    userForm: FormGroup;
+    accountForm: FormGroup;
     addressForm: FormGroup;
     ufOrigin = new FormControl();
     drivingSchoolForm: FormGroup;
@@ -74,23 +74,23 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
 
     submit(): void {
         if (this.setUserData()) {
-            this.userForm.disable();
+            this.accountForm.disable();
             if (!this.id) {
                 this.user$ = this._administrativeServices.create(this.userPost).subscribe((res: any) => {
                     if (res.error) {
-                        this.userForm.enable();
+                        this.accountForm.enable();
                         return;
                     }
-                    this.userForm.enable();
+                    this.accountForm.enable();
                     this.dialogRef.close(res);
                 });
             } else {
                 this.user$ = this._administrativeServices.update(this.userPost).subscribe((res: any) => {
                     if (res.error) {
-                        this.userForm.enable();
+                        this.accountForm.enable();
                         return;
                     }
-                    this.userForm.enable();
+                    this.accountForm.enable();
                     this.dialogRef.close(res);
                 });
             }
@@ -98,7 +98,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     }
 
     removePhoneNumber(id: number, index: number): void {
-        const phonesFormArray = this.userForm.get('phonesNumbers') as FormArray;
+        const phonesFormArray = this.accountForm.get('phonesNumbers') as FormArray;
         if (id === 0 && phonesFormArray.length > 1) {
             phonesFormArray.removeAt(index);
             return this.closeAlerts();
@@ -130,15 +130,14 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     }
 
     addPhoneNumberField(): void {
-        const phonesFormArray = this._formBuilder.group({
-            phoneNumber: ['', Validators.compose([
-                Validators.required,
-                Validators.nullValidator
-            ])]
-        });
-
         // Adiciona o formGroup ao array de telefones
-        (this.userForm.get('phonesNumbers') as FormArray).push(phonesFormArray);
+        (this.accountForm.get('phonesNumbers') as FormArray).push(
+            this._formBuilder.group({
+                phoneNumber: ['', Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator
+                ])]
+            }));
         this._changeDetectorRef.markForCheck();
     }
 
@@ -169,7 +168,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             return;
         }
         this.loadDrivingSchools();
-        this.userForm = this._formBuilder.group({
+        this.accountForm = this._formBuilder.group({
             name: ['',
                 Validators.compose([
                     Validators.required,
@@ -217,7 +216,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             })
         );
         this.phoneArray.forEach((item) => {
-            (this.userForm.get('phonesNumbers') as FormArray).push(item);
+            (this.accountForm.get('phonesNumbers') as FormArray).push(item);
         });
 
         this.addressForm = this._formBuilder.group({
@@ -274,7 +273,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                 if (!res.id) {
                     return;
                 }
-                this.userForm = this._formBuilder.group({
+                this.accountForm = this._formBuilder.group({
                     name: [res.name,
                         Validators.compose([
                             Validators.required,
@@ -340,7 +339,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                     );
                 }
                 this.phoneArray.forEach((item) => {
-                    (this.userForm.get('phonesNumbers') as FormArray).push(item);
+                    (this.accountForm.get('phonesNumbers') as FormArray).push(item);
                 });
 
                 this.addressForm = this._formBuilder.group({
@@ -405,7 +404,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             this.openSnackBar('Informe a auto escola', 'warn');
             return false;
         }
-        const userFormValues = this.userForm.value;
+        const userFormValues = this.accountForm.value;
         const addressFormValues = this.addressForm.value;
 
 
@@ -413,7 +412,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
         userFormValues.phonesNumbers.forEach((item) => {
             if (item.phoneNumber === null || item.phoneNumber === '' || item.phoneNumber.length < 10) {
                 this.openSnackBar('Insira um telefone', 'warn');
-                this.userForm.enable();
+                this.accountForm.enable();
                 return;
             }
         });
@@ -436,7 +435,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
         this.userPost.id = this.id ?? null;
 
         if (!this.id) {
-            this.userForm.value.origin = this.userForm.value.origin + '-' + this.ufOrigin.value;
+            this.accountForm.value.origin = this.accountForm.value.origin + '-' + this.ufOrigin.value;
             this.userPost.password = 'Pay@2021';
         }
         if (this.isAdmin) {
