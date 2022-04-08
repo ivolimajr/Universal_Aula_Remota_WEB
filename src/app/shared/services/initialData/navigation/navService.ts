@@ -33,26 +33,17 @@ export class NavServices {
         this.registerHandlers();
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Register Mock API handlers
-     */
     private registerHandlers(): void {
-        // -----------------------------------------------------------------------------------------------------
-        // @ Navigation - GET
-        // -----------------------------------------------------------------------------------------------------
+
         this._fuseMockApiService
             .onGet('api/common/navigation')
             .reply(() => {
                 this._dataNavigation = [];
+                this._dataNavigation.push(...this._defaultNavigation);
 
                 if (this._authServices.getUserInfoFromStorage()) {
                     this.roles = this._authServices.getUserInfoFromStorage().roles;
                 } else {
-                    this._dataNavigation.push(...this._defaultNavigation);
                     return [
                         200,
                         {
@@ -63,23 +54,20 @@ export class NavServices {
                         }
                     ];
                 }
-
                 //Montagem do menu para os usuário da plataforma do tipo Edriving
-                if (this.roles.find(r => r.role === RolesConstants.EDRIVING)) {
-                    this._dataNavigation.push(...this._defaultNavigation);
+                if (this._authServices.isAdmin()) {
                     this._dataNavigation.push(...this._plataformaNavigation);
-                    this._dataNavigation.push(...this._parceiroNavigation);
-                    this._dataNavigation.push(...this._autoEscolaNavigation);
                 }
                 //Montagem do menu para os usuários do tipo parceiro
-                else if (this.roles.find(r => r.role === RolesConstants.EDRIVING) || this.roles.find(r => r.role === RolesConstants.PARCEIRO)) {
-                    this._dataNavigation.push(...this._defaultNavigation);
+                if (this._authServices.isAdmin() || this.roles.find(r => r.role === RolesConstants.PARCEIRO)) {
                     this._dataNavigation.push(...this._parceiroNavigation);
                 }
                 //Montagem do menu para os usuários do tipo autoEscola
-                else if (this.roles.find(r => r.role === RolesConstants.EDRIVING) || this.roles.find(r => r.role === RolesConstants.AUTOESCOLA)) {
-                    this._dataNavigation.push(...this._defaultNavigation);
+                if (this._authServices.isAdmin() || this.roles.find(r => r.role === RolesConstants.AUTOESCOLA)) {
                     this._dataNavigation.push(...this._autoEscolaNavigation);
+                }
+                //Montagem do menu para os usuários do tipo autoEscola
+                if (this._authServices.isAdmin() || this.roles.find(r => r.role === RolesConstants.ADMINISTRATIVO)) {
                 }
                 // Return the response
                 return [

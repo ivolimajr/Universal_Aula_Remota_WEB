@@ -16,11 +16,10 @@ import {switchMap} from 'rxjs/operators';
 import {RoleModel} from '../../models/role.model';
 import {RolesConstants} from '../../constants';
 
-
 @Injectable({
     providedIn: 'root'
 })
-export class PartnnerGuard implements CanActivate, CanActivateChild, CanLoad {
+export class AdministrativeGuard implements CanActivate, CanActivateChild, CanLoad {
 
     private roles: Array<RoleModel> = null;
 
@@ -59,7 +58,7 @@ export class PartnnerGuard implements CanActivate, CanActivateChild, CanLoad {
                     }
 
                     // Allow the access
-                    if (this.roles.find(r => r.role === RolesConstants.PARCEIRO || r.role === RolesConstants.EDRIVING)) {
+                    if (this.roles.find(r => r.role === RolesConstants.ADMINISTRATIVO || r.role === RolesConstants.EDRIVING)) {
                         return of(true);
                     }
 

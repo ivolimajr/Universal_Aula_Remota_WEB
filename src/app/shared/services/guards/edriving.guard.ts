@@ -44,10 +44,6 @@ export class EdrivingGuard implements CanActivate, CanActivateChild, CanLoad {
         return this._check('/');
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Private methods
-    // -----------------------------------------------------------------------------------------------------
-
     private _check(redirectURL: string): Observable<boolean> {
         // Check the authentication status
         return this._authService.check()

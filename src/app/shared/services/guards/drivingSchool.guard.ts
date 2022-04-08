@@ -45,10 +45,6 @@ export class DrivingSchoolGuard implements CanActivate, CanActivateChild, CanLoa
         return this._check('/');
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Private methods
-    // -----------------------------------------------------------------------------------------------------
-
     private _check(redirectURL: string): Observable<boolean> {
         // Check the authentication status
         return this._authService.check()

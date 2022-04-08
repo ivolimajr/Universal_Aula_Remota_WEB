@@ -54,7 +54,6 @@ export class AdministrativeComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        console.log(this.administrativeUser);
         this.prepareForm();
     }
 
