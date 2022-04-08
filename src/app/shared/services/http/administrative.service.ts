@@ -3,7 +3,6 @@ import {HttpClient} from '@angular/common/http';
 import {AdministrativeModel} from '../../models/administrative.model';
 import {HttpBaseServices} from './httpBaseServices';
 
-
 const URL_ADMINISTRATIVE = '/Administrative';
 
 @Injectable({

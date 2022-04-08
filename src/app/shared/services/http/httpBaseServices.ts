@@ -5,7 +5,7 @@ import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
 import {AuthService} from '../auth/auth.service';
 import {PhoneNumberModel} from '../../models/phoneNumber.model';
-import {FileModel} from "../../models/file.model";
+import {FileModel} from '../../models/file.model';
 
 @Injectable({
     providedIn: 'root'
@@ -15,8 +15,8 @@ export class HttpBaseServices<T> {
 
     public header = new HttpHeaders();
     private endpoint: string;
-    private httpClientBackEnd: HttpClient;
-    private accessToken: string;
+    private readonly httpClientBackEnd: HttpClient;
+    private readonly accessToken: string;
 
     constructor(
         public _httpClient: HttpClient,
@@ -25,12 +25,10 @@ export class HttpBaseServices<T> {
         private _httpBackend?: HttpBackend,
     ) {
         this.endpoint = environment.apiUrl + this.url;
-        if (this.httpClientBackEnd != null) {
+        if (this.httpClientBackEnd != null)
             this.httpClientBackEnd = new HttpClient(_httpBackend);
-        }
-        if (this._authServices != null) {
+        if (this._authServices != null)
             this.accessToken = this._authServices.tokenFromLocalStorage.accessToken;
-        }
     }
 
     getAll(uf: string = ''): Observable<T[]> {
@@ -62,9 +60,8 @@ export class HttpBaseServices<T> {
         this.header = this.header.set('Content-type', 'multipart/form-data');
         const formData = new FormData();
         for (const key in data) {
-            if (key !== 'files' && key !== 'phonesNumbers') {
+            if (key !== 'files' && key !== 'phonesNumbers')
                 formData.append(key, data[key]);
-            }
 
             if (key === 'phonesNumbers') {
                 let i = 0;
@@ -102,9 +99,9 @@ export class HttpBaseServices<T> {
         this.header = this.header.set('Content-type', 'multipart/form-data');
         const formData = new FormData();
         for (const key in data) {
-            if (key !== 'files' && key !== 'phonesNumbers') {
+            if (key !== 'files' && key !== 'phonesNumbers')
                 formData.append(key, data[key]);
-            }
+
             if (key === 'phonesNumbers') {
                 let i = 0;
                 data['phonesNumbers'].forEach((item: PhoneNumberModel) => {
@@ -132,11 +129,9 @@ export class HttpBaseServices<T> {
         );
     }
 
-    delete(id: number):
-        Observable<boolean> {
-        if (id === 0 || id == null) {
-            return of(null);
-        }
+    delete(id: number): Observable<boolean> {
+        if (id === 0 || id == null) return of(null);
+
         return this._httpClient.delete(this.endpoint + '/' + id).pipe(
             switchMap((response: any) => of(response)),
             catchError(e => of(e))

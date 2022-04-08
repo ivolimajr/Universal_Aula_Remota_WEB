@@ -58,6 +58,8 @@
                         "requireForBlockBody": true
                     }
                 ],
+                "guard-for-in": "off",
+                "curly": "off",
                 "brace-style": [
                     "off",
                     "off"

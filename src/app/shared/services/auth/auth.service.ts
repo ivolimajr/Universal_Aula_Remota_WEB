@@ -179,17 +179,13 @@ export class AuthService {
      */
     check(): Observable<boolean> {
         // Check if the user is logged in
-        if (this._authenticated) {
-            return of(true);
-        }
+        if (this._authenticated) return of(true);
 
-        // Check the access token availability
-        if (!this.getUserInfoFromStorage()) {
+        if (!this.getUserInfoFromStorage()) return of(false);
+
+        if (!this.storageServices.getValueFromLocalStorage(environment.dataStorage))
             return of(false);
-        }
-        if (!this.storageServices.getValueFromLocalStorage(environment.dataStorage)) {
-            return of(false);
-        }
+
         this.userModel = this.storageServices.getValueFromLocalStorage(environment.authStorage);
         if (this.userModel) {
             this.user = this.userModel;
@@ -214,9 +210,6 @@ export class AuthService {
 
     isAdmin(): boolean {
         const roles = this.getUserInfoFromStorage().roles;
-        if (roles.find(r => r.role === RolesConstants.EDRIVING)) {
-            return true;
-        }
-        return false;
+        return !!roles.find(r => r.role === RolesConstants.EDRIVING);
     }
 }

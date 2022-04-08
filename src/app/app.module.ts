@@ -7,12 +7,12 @@ import {FuseModule} from '@fuse';
 import {FuseConfigModule} from '@fuse/services/config';
 import {FuseMockApiModule} from '@fuse/lib/mock-api';
 import {appConfig} from 'app/core/config/app.config';
-import {mockApiServices} from 'app/shared/services/initialData';
+import {mockNavServices} from 'app/shared/services/initialData';
 import {LayoutModule} from 'app/layout/layout.module';
 import {AppComponent} from 'app/app.component';
 import {appRoutes} from 'app/app.routing';
-import {AuthModule} from "./shared/services/auth/auth.module";
-import {IconsModule} from "./core/icons/icons.module";
+import {AuthModule} from './shared/services/auth/auth.module';
+import {IconsModule} from './core/icons/icons.module';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
@@ -33,7 +33,7 @@ const routerConfig: ExtraOptions = {
         // Fuse, FuseConfig & FuseMockAPI
         FuseModule,
         FuseConfigModule.forRoot(appConfig),
-        FuseMockApiModule.forRoot(mockApiServices),
+        FuseMockApiModule.forRoot(mockNavServices),
 
         // Core module of your application
         // CoreModule,

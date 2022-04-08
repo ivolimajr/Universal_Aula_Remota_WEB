@@ -20,8 +20,8 @@ import {AddressModel} from '../../shared/models/address.model';
 import {RolesConstants} from '../../shared/constants';
 import {DrivingSchoolModel} from '../../shared/models/drivingSchool.model';
 import {DrivingSchoolService} from '../../shared/services/http/drivingSchool.service';
-import {AdministrativeService} from "../../shared/services/http/administrative.service";
-import {AdministrativeModel} from "../../shared/models/administrative.model";
+import {AdministrativeService} from '../../shared/services/http/administrative.service';
+import {AdministrativeModel} from '../../shared/models/administrative.model';
 
 @Component({
     selector: 'app-perfil',
@@ -65,7 +65,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // Unsubscribe from all subscriptions
         if (this.user$) {
             this.user$.unsubscribe();
         }
@@ -77,8 +76,97 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    //Carrega os dados do painel para usuários do Edriving
-    loadPanel(): void {
+    mediaChanges(): void {
+        this._fuseMediaWatcherService.onMediaChange$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(({matchingAliases}) => {
+
+                // Set the drawerMode and drawerOpened
+                if (matchingAliases.includes('lg')) {
+                    this.drawerMode = 'side';
+                    this.drawerOpened = true;
+                } else {
+                    this.drawerMode = 'over';
+                    this.drawerOpened = false;
+                }
+                this._changeDetectorRef.markForCheck();
+            });
+    }
+
+    goToPanel(panel: string): void {
+        this.selectedPanel = panel;
+
+        // Close the drawer on 'over' mode
+        if (this.drawerMode === 'over')
+            this.drawer.close().then(r => console.log(r));
+        this._changeDetectorRef.markForCheck();
+    }
+
+    getPanelInfo(id: string): any {
+        return this.panels.find(panel => panel.id === id);
+    }
+
+    trackByFn(index: number, item: any): any {
+        return item.id || index;
+    }
+
+    private loadUser(): void {
+        //pega os dados do usuário que estão no localstorage
+        this.auth$ = this._authService.user$.subscribe((res) => {
+            if (res.roles.find(r => r.role === RolesConstants.EDRIVING))
+                this.loadEdrivingPanel(res.id);
+            if (res.roles.find(r => r.role === RolesConstants.PARCEIRO))
+                this.loadPartnnerPanel(res.id);
+            if (res.roles.find(r => r.role === RolesConstants.AUTOESCOLA))
+                this.loadDrivingSchoolPanel(res.id);
+            if (res.roles.find(r => r.role === RolesConstants.ADMINISTRATIVO))
+                this.loadAdministrativePanel(res.id);
+        });
+    }
+
+    private loadEdrivingPanel(id: number): void {
+        this.user$ = this._edrivingServices.getOne(id).subscribe((result) => {
+            this.edrivingUser = result;
+            this.idUser = result.userId;
+            this.loadPanel();
+        });
+    }
+
+    private loadPartnnerPanel(id: number): void {
+        this.user$ = this._partnnerServices.getOne(id).subscribe((result) => {
+            this.partnnerUser = result;
+            this.addressModel = result.address;
+            this.idUser = result.id;
+            this.loadAddressPanel();
+            this.loadPanel();
+        });
+    }
+
+    private loadDrivingSchoolPanel(id: number): void {
+        this.user$ = this._drivingSchoolServices.getOne(id).subscribe((result) => {
+            this.drivingSchoolUser = result;
+            this.addressModel = result.address;
+            this.idUser = result.id;
+            this.loadAddressPanel();
+            this.loadFilesPanel();
+            this.loadPanel();
+        });
+    }
+
+    private loadAdministrativePanel(id: number): void {
+        this.user$ = this._administrativeServices.getOne(id).subscribe((result) => {
+            if (!result) {
+                return null;
+            }
+            this.administrativeUser = result;
+            this.addressModel = result.address;
+            this.idUser = result.userId;
+            this.loadAddressPanel();
+            this.loadPanel();
+        });
+    }
+
+    private loadPanel(): void {
         this.panels = [
             {
                 id: 'dadosPessoais',
@@ -93,157 +181,29 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 description: 'Mantenha sua conta protegida.'
             }
         ];
+        this.loading = false;
         this._changeDetectorRef.markForCheck();
     }
 
-    //Altera entre a sobreposição do painel esquerdo com direito, sobrepoe ou escurece.
-    mediaChanges(): void {
-        this._fuseMediaWatcherService.onMediaChange$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(({matchingAliases}) => {
-
-                // Set the drawerMode and drawerOpened
-                if (matchingAliases.includes('lg')) {
-                    this.drawerMode = 'side';
-                    this.drawerOpened = true;
-                } else {
-                    this.drawerMode = 'over';
-                    this.drawerOpened = false;
-                }
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+    private loadAddressPanel(): void {
+        this.panels.push(
+            {
+                id: 'endereco',
+                icon: 'heroicons_outline:home',
+                title: 'Endereço',
+                description: 'Mantenha seu endereço atualizado.'
+            }
+        );
     }
 
-    /**
-     * Navega entre os paineis
-     *
-     * @param id do painel
-     */
-    goToPanel(panel: string): void {
-        this.selectedPanel = panel;
-
-        // Close the drawer on 'over' mode
-        if (this.drawerMode === 'over') {
-            this.drawer.close();
-        }
-        this._changeDetectorRef.markForCheck();
-    }
-
-    /**
-     * Busca as informações do Painel
-     *
-     * @param id do painel
-     */
-    getPanelInfo(id: string): any {
-        return this.panels.find(panel => panel.id === id);
-        this._changeDetectorRef.markForCheck();
-    }
-
-    /**
-     * Track by function for ngFor loops
-     *
-     * @param index
-     * @param item
-     */
-    trackByFn(index: number, item: any): any {
-        return item.id || index;
-    }
-
-    /**
-     * Carrega o usuário para edição dos dados
-     * É um condicional para exibir o formulário, dependendo do nível de acesso é renderizado um componente.
-     *
-     * @private
-     */
-    private loadUser(): void {
-        //pega os dados do usuário que estão no localstorage
-        this.auth$ = this._authService.user$.subscribe((res) => {
-            //verifica se o usuário tem perfil de edriving - perfil que gerencia a plataforma
-            if (res.roles.find(r => r.role === RolesConstants.EDRIVING)) {
-                //busca o usuário na API
-                this.user$ = this._edrivingServices.getOne(res.id).subscribe((result) => {
-                    this.edrivingUser = result;
-                    //Set o id do usuário para alterar a senha
-                    this.idUser = result.userId;
-                    //carrega o painel A
-                    this.loadPanel();
-                    this.loading = false;
-                    this._changeDetectorRef.markForCheck();
-                });
+    private loadFilesPanel(): void {
+        this.panels.push(
+            {
+                id: 'files',
+                icon: 'heroicons_outline:folder',
+                title: 'Arquivos',
+                description: 'Seus arquivos estão aqui'
             }
-            //verifica se o usuário tem perfil de edriving - perfil que gerencia a plataforma
-            if (res.roles.find(r => r.role === RolesConstants.PARCEIRO)) {
-                //busca o usuário na API
-                this.user$ = this._partnnerServices.getOne(res.id).subscribe((result) => {
-                    this.partnnerUser = result;
-                    this.addressModel = result.address;
-                    //Set o id do usuário para alterar a senha
-                    this.idUser = result.id;
-                    //carrega o painel A
-                    this.loadPanel();
-                    this.panels.push(
-                        {
-                            id: 'endereco',
-                            icon: 'heroicons_outline:home',
-                            title: 'Endereço',
-                            description: 'Mantenha seu endereço atualizado.'
-                        }
-                    );
-                    this.loading = false;
-                    this._changeDetectorRef.markForCheck();
-                });
-            }
-            if (res.roles.find(r => r.role === RolesConstants.AUTOESCOLA)) {
-                //busca o usuário na API
-                this.user$ = this._drivingSchoolServices.getOne(res.id).subscribe((result) => {
-                    this.drivingSchoolUser = result;
-                    this.addressModel = result.address;
-                    //Set o id do usuário para alterar a senha
-                    this.idUser = result.id;
-                    //carrega o painel A
-                    this.loadPanel();
-                    this.panels.push(
-                        {
-                            id: 'endereco',
-                            icon: 'heroicons_outline:home',
-                            title: 'Endereço',
-                            description: 'Mantenha seu endereço atualizado.'
-                        },
-                        {
-                            id: 'files',
-                            icon: 'heroicons_outline:folder',
-                            title: 'Arquivos',
-                            description: 'Seus arquivos estão aqui'
-                        }
-                    );
-                    this.loading = false;
-                    this._changeDetectorRef.markForCheck();
-                });
-            }
-            if (res.roles.find(r => r.role === RolesConstants.ADMINISTRATIVO)) {
-                this.user$ = this._administrativeServices.getOne(res.id).subscribe((result) => {
-                    if (!result) {
-                        return null;
-                    }
-                    this.administrativeUser = result;
-                    this.addressModel = result.address;
-                    this.idUser = result.userId;
-                    this.loadPanel();
-                    this.panels.push(
-                        {
-                            id: 'endereco',
-                            icon: 'heroicons_outline:home',
-                            title: 'Endereço',
-                            description: 'Mantenha seu endereço atualizado.'
-                        }
-                    );
-                    this.loading = false;
-                    this._changeDetectorRef.markForCheck();
-                });
-            }
-            this._changeDetectorRef.markForCheck();
-        });
+        );
     }
 }

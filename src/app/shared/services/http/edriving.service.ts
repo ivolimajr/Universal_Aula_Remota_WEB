@@ -7,7 +7,6 @@ import {catchError, switchMap} from 'rxjs/operators';
 import {Level} from '../../models/level.model';
 import {HttpBaseServices} from './httpBaseServices';
 
-
 const URL_EDRIVING = '/edriving';
 const URL_EDRIVING_CARGO = `${environment.apiUrl}/EdrivingLevel`;
 
