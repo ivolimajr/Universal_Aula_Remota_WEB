@@ -183,6 +183,7 @@ export class PartnnerComponent implements OnInit, OnDestroy {
             email: [this.partnnerUser.email,
                 Validators.compose([
                     Validators.required,
+                    Validators.email,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(70)])],

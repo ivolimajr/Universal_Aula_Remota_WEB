@@ -287,6 +287,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
             email: [this.userEdit.email,
                 Validators.compose([
                     Validators.required,
+                    Validators.email,
                     Validators.nullValidator,
                     Validators.minLength(5),
                     Validators.maxLength(70)])],

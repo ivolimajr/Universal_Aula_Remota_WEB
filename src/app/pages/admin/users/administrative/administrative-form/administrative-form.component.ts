@@ -178,6 +178,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             email: ['@edriving.com',
                 Validators.compose([
                     Validators.required,
+                    Validators.email,
                     Validators.nullValidator,
                     Validators.min(5),
                     Validators.maxLength(100)
@@ -280,6 +281,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                     email: [res.email,
                         Validators.compose([
                             Validators.required,
+                            Validators.email,
                             Validators.nullValidator,
                             Validators.min(5),
                             Validators.maxLength(100)

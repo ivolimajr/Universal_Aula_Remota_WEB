@@ -21,7 +21,7 @@ import {User, UserLogin} from '../../../shared/models/user.model';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
 import {environment} from '../../../../environments/environment';
 import {PhoneNumberModel} from '../../../shared/models/phoneNumber.model';
-import {AdministrativeService} from "../../../shared/services/http/administrative.service";
+import {AdministrativeService} from '../../../shared/services/http/administrative.service';
 
 @Component({
     selector: 'app-administrative',
@@ -144,40 +144,36 @@ export class AdministrativeComponent implements OnInit, OnDestroy {
                     Validators.required,
                     Validators.nullValidator,
                     Validators.min(5),
-                    Validators.maxLength(100)
-                ])],
+                    Validators.maxLength(100)])],
             email: [this.administrativeUser.email,
                 Validators.compose([
                     Validators.required,
+                    Validators.email,
                     Validators.nullValidator,
                     Validators.min(5),
-                    Validators.maxLength(100)
-                ])],
+                    Validators.maxLength(100),
+                    NgBrazilValidators.email])],
             cpf: [this.administrativeUser.cpf,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.min(5),
-                    Validators.maxLength(100),
-                    NgBrazilValidators.cpf])],
+                    Validators.maxLength(100)])],
             identity: [this.administrativeUser.identity,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.min(5),
-                    Validators.maxLength(100)
-                ])],
+                    Validators.maxLength(100)])],
             origin: [this.administrativeUser.origin,
                 Validators.compose([
                     Validators.required,
                     Validators.nullValidator,
                     Validators.min(5),
-                    Validators.maxLength(100)
-                ])],
+                    Validators.maxLength(100)])],
             phonesNumbers: this._formBuilder.array([], Validators.compose([
                 Validators.required,
-                Validators.nullValidator
-            ]))
+                Validators.nullValidator]))
         });
 
         if (this.administrativeUser.phonesNumbers.length > 0) {
@@ -203,6 +199,7 @@ export class AdministrativeComponent implements OnInit, OnDestroy {
                 })
             );
         }
+        this.closeAlerts();
     }
 
     private setUserData(): boolean {
