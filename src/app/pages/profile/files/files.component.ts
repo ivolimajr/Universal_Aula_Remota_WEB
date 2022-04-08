@@ -125,7 +125,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     }
 
     private removeItemFromFileList(file?: FileModel): void {
-        if(file){
+        if (file) {
             const index = this.items.indexOf(file);
             if (index > -1) {
                 this.items.splice(index, 1);

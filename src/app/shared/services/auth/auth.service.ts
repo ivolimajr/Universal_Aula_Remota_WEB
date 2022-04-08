@@ -18,7 +18,6 @@ export class AuthService {
     private _authenticated: boolean = false;
     private userLogin = new UserLogin();
     private userModel: User;
-    private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
 
     constructor(
         private _httpClient: HttpClient,
@@ -26,9 +25,55 @@ export class AuthService {
     ) {
     }
 
+    private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
+
     // -----------------------------------------------------------------------------------------------------
     // Login, logout e Recuperação de senha
     // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * Insere valor no Usuário Logado.
+     *
+     * @param model de Usuario
+     */
+    set user(value: User) {
+        if (value) {
+            this.storageServices.setValueFromLocalStorage(environment.authStorage, value);
+        }
+        this._user.next(value);
+    }
+
+    /**
+     * retorna o token do storage
+     * Se não tiver um token no storage é retornado uma string vazio
+     *
+     * @public
+     * return: string
+     */
+    get tokenFromLocalStorage(): TokenResult {
+        return this.storageServices.getValueFromLocalStorage(environment.tokenStorage) ?? '';
+    }
+
+    /**
+     * retorna o token do storage
+     * Se não tiver um token no storage é retornado uma string vazio
+     *
+     * @public
+     * @param somente o access token em formato de string (cláro né)
+     * return: void
+     */
+    set tokenFromLocalStorage(token: TokenResult) {
+        this.storageServices.setValueFromLocalStorage(environment.tokenStorage, token);
+    }
+
+    /**
+     * Retorna um observable do usuário logado
+     */
+    get user$(): Observable<User> {
+        this.userModel = this.getUserInfoFromStorage();
+        this._user.next(this.userModel);
+        return this._user.asObservable();
+    }
 
     /**
      * Forgot password
@@ -38,6 +83,10 @@ export class AuthService {
     forgotPassword(email: string): Observable<any> {
         return this._httpClient.post('api/auth/forgot-password', email);
     }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ TOKEM DA API
+    // -----------------------------------------------------------------------------------------------------
 
     /**
      * Reset password
@@ -106,7 +155,7 @@ export class AuthService {
     }
 
     // -----------------------------------------------------------------------------------------------------
-    // @ TOKEM DA API
+    // @ ESTADO DO USUÁRIO LOGADO
     // -----------------------------------------------------------------------------------------------------
 
     /***
@@ -116,6 +165,7 @@ export class AuthService {
     getApiTokenFromApi(): Observable<TokenResult> {
         return this._httpClient.post<TokenResult>(`${API_TOKEN_URL}/TokenGenerate`, {USERNAME, PASSWORD});
     }
+
     /***
      *Método responsável por buscar o token de autenticação na API
      * @return consome a API e retorna o Observable do TokenResult
@@ -123,33 +173,6 @@ export class AuthService {
     refreshToken(accessToken: string, refreshToken: string): Observable<TokenResult> {
         return this._httpClient.post<TokenResult>(`${API_TOKEN_URL}/refresh`, {accessToken, refreshToken});
     }
-
-    /**
-     * retorna o token do storage
-     * Se não tiver um token no storage é retornado uma string vazio
-     *
-     * @public
-     * @param somente o access token em formato de string (cláro né)
-     * return: void
-     */
-    set tokenFromLocalStorage(token: TokenResult) {
-        this.storageServices.setValueFromLocalStorage(environment.tokenStorage, token);
-    }
-
-    /**
-     * retorna o token do storage
-     * Se não tiver um token no storage é retornado uma string vazio
-     *
-     * @public
-     * return: string
-     */
-    get tokenFromLocalStorage(): TokenResult {
-        return this.storageServices.getValueFromLocalStorage(environment.tokenStorage) ?? '';
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ ESTADO DO USUÁRIO LOGADO
-    // -----------------------------------------------------------------------------------------------------
 
     /**
      * Check the authentication status
@@ -176,25 +199,6 @@ export class AuthService {
     }
 
     /**
-     * Insere valor no Usuário Logado.
-     *
-     * @param model de Usuario
-     */
-    set user(value: User) {
-        if (value) {this.storageServices.setValueFromLocalStorage(environment.authStorage, value);}
-        this._user.next(value);
-    }
-
-    /**
-     * Retorna um observable do usuário logado
-     */
-    get user$(): Observable<User> {
-        this.userModel = this.getUserInfoFromStorage();
-        this._user.next(this.userModel);
-        return this._user.asObservable();
-    }
-
-    /**
      * Retorna o usuário do localStorage
      */
     getUserInfoFromStorage(): User {
@@ -210,7 +214,9 @@ export class AuthService {
 
     isAdmin(): boolean {
         const roles = this.getUserInfoFromStorage().roles;
-        if(roles.find(r => r.role === RolesConstants.EDRIVING)) {return true;}
+        if (roles.find(r => r.role === RolesConstants.EDRIVING)) {
+            return true;
+        }
         return false;
     }
 }

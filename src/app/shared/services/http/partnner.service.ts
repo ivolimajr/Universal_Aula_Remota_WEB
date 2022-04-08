@@ -14,14 +14,15 @@ const URL_PARCEIRO_CARGO = `${environment.apiUrl}/PartnnerLevel`;
 @Injectable({
     providedIn: 'root'
 })
-export class PartnnerService extends HttpBaseServices<PartnnerModel>{
+export class PartnnerService extends HttpBaseServices<PartnnerModel> {
 
-    constructor( _httpClient: HttpClient) {
+    constructor(_httpClient: HttpClient) {
         super(
             _httpClient,
             URL_PARCEIRO
         );
     }
+
     /**
      * Busca todos os cargos referente ao usuário do tipo Edriving
      *

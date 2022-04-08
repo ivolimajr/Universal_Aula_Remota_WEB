@@ -55,6 +55,40 @@ export class FuseAutogrowDirective implements OnChanges, OnInit, OnDestroy {
     // -----------------------------------------------------------------------------------------------------
 
     /**
+     * On changes
+     *
+     * @param changes
+     */
+    ngOnChanges(changes: SimpleChanges): void {
+        // Padding
+        if ('fuseAutogrowVerticalPadding' in changes) {
+            // Resize
+            this._resize();
+        }
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Lifecycle hooks
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * On init
+     */
+    ngOnInit(): void {
+        // Resize for the first time
+        this._resize();
+    }
+
+    /**
+     * On destroy
+     */
+    ngOnDestroy(): void {
+        // Unsubscribe from all subscriptions
+        this._unsubscribeAll.next();
+        this._unsubscribeAll.complete();
+    }
+
+    /**
      * Resize on 'input' and 'ngModelChange' events
      *
      * @private
@@ -80,39 +114,5 @@ export class FuseAutogrowDirective implements OnChanges, OnInit, OnDestroy {
                 this._changeDetectorRef.detectChanges();
             });
         });
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On changes
-     *
-     * @param changes
-     */
-    ngOnChanges(changes: SimpleChanges): void {
-        // Padding
-        if ('fuseAutogrowVerticalPadding' in changes) {
-            // Resize
-            this._resize();
-        }
-    }
-
-    /**
-     * On init
-     */
-    ngOnInit(): void {
-        // Resize for the first time
-        this._resize();
-    }
-
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
     }
 }

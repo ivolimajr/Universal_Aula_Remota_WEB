@@ -14,7 +14,7 @@ const URL_EDRIVING_CARGO = `${environment.apiUrl}/EdrivingLevel`;
 @Injectable({
     providedIn: 'root'
 })
-export class EdrivingService extends HttpBaseServices<EdrivingModel>{
+export class EdrivingService extends HttpBaseServices<EdrivingModel> {
 
     constructor(_httpClient: HttpClient) {
         super(

@@ -1,5 +1,5 @@
 <ng-container *ngIf="loading;">
-    <mat-progress-bar class="mb-5" [mode]="'indeterminate'"></mat-progress-bar>
+    <mat-progress-bar [mode]="'indeterminate'" class="mb-5"></mat-progress-bar>
 </ng-container>
 <div mat-dialog-content>
     <fuse-card class="flex-col p-6 sm:py-12 sm:px-10 filter-pricing border-2 border-gray-100">
@@ -21,37 +21,38 @@
 
             <div class="flex flex-col mt-2.5">
 
-                    <div class="sm:col-span-4 mt-2.5" *ngIf="isAdmin">
-                        <p-dropdown class="fuse-mat-no-subscript w-full" [options]="drivingSchoolList" [(ngModel)]="selectedDrivingSchool"
-                                    optionLabel="fantasyName" [filter]="true" filterBy="fantasyName"
-                                    [showClear]="false" placeholder="Selecione a auto escola"  appearance="legacy">
-                            <ng-template pTemplate="selectedItem">
-                                <div class="country-item country-item-value" *ngIf="selectedDrivingSchool">
-                                    <div>{{selectedDrivingSchool.fantasyName}}</div>
-                                </div>
-                            </ng-template>
-                            <ng-template let-item pTemplate="item">
-                                <div class="country-item">
-                                    <div>{{item.fantasyName}}</div>
-                                </div>
-                            </ng-template>
-                        </p-dropdown>
-                    </div>
+                <div *ngIf="isAdmin" class="sm:col-span-4 mt-2.5">
+                    <p-dropdown [(ngModel)]="selectedDrivingSchool" [filter]="true"
+                                [options]="drivingSchoolList"
+                                [showClear]="false" appearance="legacy" class="fuse-mat-no-subscript w-full"
+                                filterBy="fantasyName" optionLabel="fantasyName" placeholder="Selecione a auto escola">
+                        <ng-template pTemplate="selectedItem">
+                            <div *ngIf="selectedDrivingSchool" class="country-item country-item-value">
+                                <div>{{selectedDrivingSchool.fantasyName}}</div>
+                            </div>
+                        </ng-template>
+                        <ng-template let-item pTemplate="item">
+                            <div class="country-item">
+                                <div>{{item.fantasyName}}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </div>
 
                 <form [formGroup]="accountForm">
 
                     <!--start: Nome-->
                     <div class="sm:col-span-4 mt-2.5">
-                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                        <mat-form-field appearance="legacy" class="fuse-mat-no-subscript w-full">
                             <mat-label for="name">Nome</mat-label>
                             <mat-icon
-                                class="icon-size-5 mr-0.5"
                                 [svgIcon]="'heroicons_solid:mail'"
+                                class="icon-size-5 mr-0.5"
                                 matPrefix></mat-icon>
                             <input
+                                [formControlName]="'name'"
                                 id="name"
-                                matInput
-                                [formControlName]="'name'">
+                                matInput>
                         </mat-form-field>
                         <mat-error *ngIf="accountForm.get('name').hasError('name')">
                             Insira um nome válido
@@ -61,16 +62,16 @@
 
                     <!--start: Email-->
                     <div class="sm:col-span-4 mt-2.5">
-                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                        <mat-form-field appearance="legacy" class="fuse-mat-no-subscript w-full">
                             <mat-label for="email">Email</mat-label>
                             <mat-icon
-                                class="icon-size-5 mr-0.5"
                                 [svgIcon]="'heroicons_solid:mail'"
+                                class="icon-size-5 mr-0.5"
                                 matPrefix></mat-icon>
                             <input
+                                [formControlName]="'email'"
                                 id="email"
-                                matInput
-                                [formControlName]="'email'">
+                                matInput>
 
                         </mat-form-field>
                         <mat-error *ngIf="accountForm.get('email').hasError('email')">
@@ -81,17 +82,17 @@
 
                     <!--start: CPF-->
                     <div class="sm:col-span-4 mt-2.5">
-                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                        <mat-form-field appearance="legacy" class="fuse-mat-no-subscript w-full">
                             <mat-label for="cpf">CPF</mat-label>
                             <mat-icon
-                                class="icon-size-5 mr-0.5"
                                 [svgIcon]="'heroicons_solid:identification'"
+                                class="icon-size-5 mr-0.5"
                                 matPrefix></mat-icon>
                             <input
-                                id="cpf"
-                                matInput
-                                cpf [textMask]="{mask: masks.cpf.textMask}"
-                                [formControlName]="'cpf'">
+                                [formControlName]="'cpf'"
+                                [textMask]="{mask: masks.cpf.textMask}"
+                                cpf id="cpf"
+                                matInput>
 
                         </mat-form-field>
                         <mat-error *ngIf="accountForm.get('cpf').hasError('cpf')">
@@ -102,16 +103,16 @@
 
                     <!--start: Identity-->
                     <div class="sm:col-span-4 mt-2.5">
-                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                        <mat-form-field appearance="legacy" class="fuse-mat-no-subscript w-full">
                             <mat-label for="identity">Identidade</mat-label>
                             <mat-icon
-                                class="icon-size-5 mr-0.5"
                                 [svgIcon]="'heroicons_solid:identification'"
+                                class="icon-size-5 mr-0.5"
                                 matPrefix></mat-icon>
                             <input
+                                [formControlName]="'identity'"
                                 id="identity"
-                                matInput
-                                [formControlName]="'identity'">
+                                matInput>
 
                         </mat-form-field>
                         <mat-error *ngIf="accountForm.get('identity').hasError('identity')">
@@ -122,16 +123,16 @@
 
                     <!--start: Origin-->
                     <div class="sm:col-span-4 mt-2.5">
-                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                        <mat-form-field appearance="legacy" class="fuse-mat-no-subscript w-full">
                             <mat-label for="origin">Orgão Expeditor</mat-label>
                             <mat-icon
-                                class="icon-size-5 mr-0.5"
                                 [svgIcon]="'heroicons_solid:information-circle'"
+                                class="icon-size-5 mr-0.5"
                                 matPrefix></mat-icon>
                             <input
+                                [formControlName]="'origin'"
                                 id="origin"
-                                matInput
-                                [formControlName]="'origin'">
+                                matInput>
 
                         </mat-form-field>
                         <mat-error *ngIf="accountForm.get('origin').hasError('origin')">
@@ -152,43 +153,44 @@
 
                     <!--start:telefones-->
                     <div class="sm:col-span-4 mt-2.5">
-                            <ng-container
-                                *ngFor="let phoneNumber of accountForm.get('phonesNumbers')['controls']; let i = index;"
-                                formArrayName="phonesNumbers">
-                                <div class="relative flex">
-                                    <mat-form-field class="fuse-mat-no-subscript flex-auto" appearance="legacy">
-                                        <mat-label>Telefone</mat-label>
-                                        <input
-                                            matInput
-                                            phoneNumber [textMask]="{mask: masks.telefone.textMaskFunction}"
-                                            [placeholder]="'phoneNumber'"
-                                            [formControl]="phoneNumber.get('phoneNumber')"
-                                            [value]="phoneNumber.value.phoneNumber ?? ''">
-                                    </mat-form-field>
-                                    <!-- Remove phone number -->
-                                    <ng-container>
-                                        <div
-                                            class="flex items-center w-10 pl-2">
-                                            <button
-                                                class="w-8 h-8 min-h-8"
-                                                mat-icon-button
-                                                (click)="removePhoneNumber(phoneNumber.value.id ?? 0,i)"
-                                                matTooltip="Remove">
-                                                <mat-icon
-                                                    class="icon-size-5 text-red-500"
-                                                    [svgIcon]="'heroicons_solid:trash'"></mat-icon>
-                                            </button>
-                                        </div>
-                                    </ng-container>
-                                </div>
-                            </ng-container>
+                        <ng-container
+                            *ngFor="let phoneNumber of accountForm.get('phonesNumbers')['controls']; let i = index;"
+                            formArrayName="phonesNumbers">
+                            <div class="relative flex">
+                                <mat-form-field appearance="legacy" class="fuse-mat-no-subscript flex-auto">
+                                    <mat-label>Telefone</mat-label>
+                                    <input
+                                        [formControl]="phoneNumber.get('phoneNumber')"
+                                        [placeholder]="'phoneNumber'"
+                                        [textMask]="{mask: masks.telefone.textMaskFunction}"
+                                        [value]="phoneNumber.value.phoneNumber ?? ''"
+                                        matInput
+                                        phoneNumber>
+                                </mat-form-field>
+                                <!-- Remove phone number -->
+                                <ng-container>
+                                    <div
+                                        class="flex items-center w-10 pl-2">
+                                        <button
+                                            (click)="removePhoneNumber(phoneNumber.value.id ?? 0,i)"
+                                            class="w-8 h-8 min-h-8"
+                                            mat-icon-button
+                                            matTooltip="Remove">
+                                            <mat-icon
+                                                [svgIcon]="'heroicons_solid:trash'"
+                                                class="icon-size-5 text-red-500"></mat-icon>
+                                        </button>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </ng-container>
                         <!--end:telefones-->
                         <div
-                            class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer"
-                            (click)="addPhoneNumberField()">
+                            (click)="addPhoneNumberField()"
+                            class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer">
                             <mat-icon
-                                class="icon-size-5"
-                                [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                                [svgIcon]="'heroicons_solid:plus-circle'"
+                                class="icon-size-5"></mat-icon>
                             <span
                                 class="ml-2 font-medium text-secondary group-hover:underline">Inserir novo contato</span>
                         </div>
@@ -202,17 +204,17 @@
 
                     <!--start: Cep-->
                     <div class="sm:col-span-4 mt-2.5">
-                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                        <mat-form-field appearance="legacy" class="fuse-mat-no-subscript w-full">
                             <mat-label for="cep">Cep</mat-label>
                             <mat-icon
-                                class="icon-size-5 mr-0.5"
                                 [svgIcon]="'heroicons_solid:hashtag'"
+                                class="icon-size-5 mr-0.5"
                                 matPrefix></mat-icon>
                             <input
-                                id="cep"
                                 (blur)="getCep($event.target)"
-                                matInput
-                                [formControlName]="'cep'">
+                                [formControlName]="'cep'"
+                                id="cep"
+                                matInput>
 
                         </mat-form-field>
                         <mat-error *ngIf="addressForm.get('cep').hasError('cep')">
@@ -223,16 +225,16 @@
 
                     <!--start: Address-->
                     <div class="sm:col-span-4 mt-2.5">
-                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                        <mat-form-field appearance="legacy" class="fuse-mat-no-subscript w-full">
                             <mat-label for="address">Endereço</mat-label>
                             <mat-icon
-                                class="icon-size-5 mr-0.5"
                                 [svgIcon]="'heroicons_solid:location-marker'"
+                                class="icon-size-5 mr-0.5"
                                 matPrefix></mat-icon>
                             <input
+                                [formControlName]="'address'"
                                 id="address"
-                                matInput
-                                [formControlName]="'address'">
+                                matInput>
 
                         </mat-form-field>
                         <mat-error *ngIf="addressForm.get('address').hasError('address')">
@@ -243,16 +245,16 @@
 
                     <!--start: district-->
                     <div class="sm:col-span-4 mt-2.5">
-                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                        <mat-form-field appearance="legacy" class="fuse-mat-no-subscript w-full">
                             <mat-label for="district">Bairro</mat-label>
                             <mat-icon
-                                class="icon-size-5 mr-0.5"
                                 [svgIcon]="'heroicons_solid:home'"
+                                class="icon-size-5 mr-0.5"
                                 matPrefix></mat-icon>
                             <input
+                                [formControlName]="'district'"
                                 id="district"
-                                matInput
-                                [formControlName]="'district'">
+                                matInput>
 
                         </mat-form-field>
                         <mat-error *ngIf="addressForm.get('district').hasError('district')">
@@ -263,16 +265,16 @@
 
                     <!--start: city-->
                     <div class="sm:col-span-4 mt-2.5">
-                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                        <mat-form-field appearance="legacy" class="fuse-mat-no-subscript w-full">
                             <mat-label for="city">Cidade</mat-label>
                             <mat-icon
-                                class="icon-size-5 mr-0.5"
                                 [svgIcon]="'heroicons_solid:map'"
+                                class="icon-size-5 mr-0.5"
                                 matPrefix></mat-icon>
                             <input
+                                [formControlName]="'city'"
                                 id="city"
-                                matInput
-                                [formControlName]="'city'">
+                                matInput>
 
                         </mat-form-field>
                         <mat-error *ngIf="addressForm.get('city').hasError('city')">
@@ -283,11 +285,11 @@
 
                     <!--start: uf-->
                     <div class="sm:col-span-4 mt-2.5">
-                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                        <mat-form-field appearance="legacy" class="fuse-mat-no-subscript w-full">
                             <mat-label for="uf">Estado</mat-label>
                             <mat-icon
-                                class="icon-size-5 mr-0.5"
                                 [svgIcon]="'heroicons_solid:location-marker'"
+                                class="icon-size-5 mr-0.5"
                                 matPrefix></mat-icon>
                             <mat-select [formControlName]="'uf'">
                                 <mat-option *ngFor="let item of ufList" [value]="item">{{item}}</mat-option>
@@ -302,16 +304,16 @@
 
                     <!--start: number-->
                     <div class="sm:col-span-4 mt-2.5">
-                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                        <mat-form-field appearance="legacy" class="fuse-mat-no-subscript w-full">
                             <mat-label for="addressNumber">Número</mat-label>
                             <mat-icon
-                                class="icon-size-5 mr-0.5"
                                 [svgIcon]="'heroicons_solid:annotation'"
+                                class="icon-size-5 mr-0.5"
                                 matPrefix></mat-icon>
                             <input
+                                [formControlName]="'addressNumber'"
                                 id="addressNumber"
-                                matInput
-                                [formControlName]="'addressNumber'">
+                                matInput>
 
                         </mat-form-field>
                         <mat-error *ngIf="addressForm.get('addressNumber').hasError('addressNumber')">
@@ -322,16 +324,16 @@
 
                     <!--start: complement-->
                     <div class="sm:col-span-4 mt-2.5">
-                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                        <mat-form-field appearance="legacy" class="fuse-mat-no-subscript w-full">
                             <mat-label for="complement">Complemento</mat-label>
                             <mat-icon
-                                class="icon-size-5 mr-0.5"
                                 [svgIcon]="'heroicons_solid:annotation'"
+                                class="icon-size-5 mr-0.5"
                                 matPrefix></mat-icon>
                             <input
+                                [formControlName]="'complement'"
                                 id="complement"
-                                matInput
-                                [formControlName]="'complement'">
+                                matInput>
 
                         </mat-form-field>
                         <mat-error *ngIf="addressForm.get('complement').hasError('complement')">
@@ -343,12 +345,12 @@
             </div>
             <!-- start:Submit -->
             <button
-                class="ml-1 items-center"
-                [disabled]="accountForm.invalid || accountForm.disabled || ufOrigin.invalid || addressForm.invalid || addressForm.disabled"
-                class="fuse-mat-button-large mt-10"
-                mat-stroked-button
                 (click)="submit()"
-                [color]="'primary'">
+                [color]="'primary'"
+                [disabled]="accountForm.invalid || accountForm.disabled || ufOrigin.invalid || addressForm.invalid || addressForm.disabled"
+                class="ml-1 items-center"
+                class="fuse-mat-button-large mt-10"
+                mat-stroked-button>
                 Salvar
             </button>
             <!-- end:Submit -->
@@ -356,7 +358,7 @@
     </fuse-card>
 
 </div>
-<div mat-dialog-actions class="mt-5">
-    <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
+<div class="mt-5" mat-dialog-actions>
+    <button (click)="onNoClick()" mat-button mat-dialog-close>Cancelar</button>
 </div>
 

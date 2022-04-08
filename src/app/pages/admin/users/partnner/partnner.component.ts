@@ -15,12 +15,12 @@ import {PartnnerFormModalComponent} from './partnner-form-modal/partnner-form-mo
 const ELEMENT_DATA: PartnnerModel[] = [];
 
 @Component({
-  selector: 'app-partnner',
-  templateUrl: './partnner.component.html',
-  styleUrls: ['./partnner.component.scss'],
+    selector: 'app-partnner',
+    templateUrl: './partnner.component.html',
+    styleUrls: ['./partnner.component.scss'],
     animations: fuseAnimations
 })
-export class PartnnerComponent implements AfterViewInit, OnInit,OnDestroy {
+export class PartnnerComponent implements AfterViewInit, OnInit, OnDestroy {
 
     displayedColumns: string[] = ['name', 'email', 'id'];
     dataSource = new MatTableDataSource<PartnnerModel>(ELEMENT_DATA);
@@ -28,15 +28,14 @@ export class PartnnerComponent implements AfterViewInit, OnInit,OnDestroy {
     isDeleting: boolean = false;
     showAlert: boolean = false;
     _users$ = this._partnnerServices.getAll();
-    private data$: Subscription;
-    private user$: Subscription;
-
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatSort) sort: MatSort;
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatPaginator) paginator: MatPaginator;
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatTable) table: MatTable<PartnnerModel>;
+    private data$: Subscription;
+    private user$: Subscription;
 
     constructor(
         public dialog: MatDialog,
@@ -80,8 +79,8 @@ export class PartnnerComponent implements AfterViewInit, OnInit,OnDestroy {
             const dialogRef = this.dialog.open(PartnnerFormModalComponent);
             dialogRef.componentInstance.userEdit = user;
             dialogRef.afterClosed().subscribe((result) => {
-                if(result){
-                    this.dataSource.data = [...this.dataSource.data,result];
+                if (result) {
+                    this.dataSource.data = [...this.dataSource.data, result];
                     this.openSnackBar('Inserido');
                     this._changeDetectorRef.detectChanges();
                 }
@@ -129,10 +128,10 @@ export class PartnnerComponent implements AfterViewInit, OnInit,OnDestroy {
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        if(this.user$){
+        if (this.user$) {
             this.user$.unsubscribe();
         }
-        if(this.data$){
+        if (this.data$) {
             this.data$.unsubscribe();
         }
         this._changeDetectorRef.markForCheck();
@@ -160,7 +159,7 @@ export class PartnnerComponent implements AfterViewInit, OnInit,OnDestroy {
      * @return void
      */
     private deleteFromApi(id: number): void {
-        this.user$ = this._partnnerServices.delete(id).subscribe((res: any)=>{
+        this.user$ = this._partnnerServices.delete(id).subscribe((res: any) => {
             if (res.error) {
                 this.isDeleting = false;
                 this._changeDetectorRef.markForCheck();
@@ -175,11 +174,11 @@ export class PartnnerComponent implements AfterViewInit, OnInit,OnDestroy {
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {
-        this._snackBar.open(message,'',{
-            duration: 5*1000,
+        this._snackBar.open(message, '', {
+            duration: 5 * 1000,
             horizontalPosition: 'center',
             verticalPosition: 'bottom',
-            panelClass: ['mat-toolbar', 'mat-'+type]
+            panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
 }

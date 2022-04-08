@@ -9,7 +9,7 @@ const URL_ADMINISTRATIVE = '/Administrative';
 @Injectable({
     providedIn: 'root'
 })
-export class AdministrativeService extends HttpBaseServices<AdministrativeModel>{
+export class AdministrativeService extends HttpBaseServices<AdministrativeModel> {
 
     constructor(
         public _httpClient: HttpClient

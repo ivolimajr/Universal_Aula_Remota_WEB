@@ -4,11 +4,11 @@
 
         <!-- Drawer -->
         <mat-drawer
-            class="sm:w-96 dark:bg-gray-900"
+            #drawer
             [autoFocus]="false"
             [mode]="drawerMode"
             [opened]="drawerOpened"
-            #drawer>
+            class="sm:w-96 dark:bg-gray-900">
             <!-- Header -->
             <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
                 <!-- Title -->
@@ -16,8 +16,8 @@
                 <!-- Close button -->
                 <div class="lg:hidden">
                     <button
-                        mat-icon-button
-                        (click)="drawer.close()">
+                        (click)="drawer.close()"
+                        mat-icon-button>
                         <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
                     </button>
                 </div>
@@ -26,18 +26,18 @@
             <div class="flex flex-col divide-y border-t border-b">
                 <ng-container *ngFor="let panel of panels; trackBy: trackByFn">
                     <div
-                        class="flex px-8 py-5 cursor-pointer"
+                        (click)="goToPanel(panel.id)"
                         [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedPanel || selectedPanel !== panel.id,
                                     'bg-primary-50 dark:bg-hover': selectedPanel && selectedPanel === panel.id}"
-                        (click)="goToPanel(panel.id)">
+                        class="flex px-8 py-5 cursor-pointer">
                         <mat-icon
                             [ngClass]="{'text-hint': !selectedPanel || selectedPanel !== panel.id,
                                         'text-primary dark:text-primary-500': selectedPanel && selectedPanel === panel.id}"
                             [svgIcon]="panel.icon"></mat-icon>
                         <div class="ml-3">
                             <div
-                                class="font-medium leading-6"
-                                [ngClass]="{'text-primary dark:text-primary-500': selectedPanel && selectedPanel === panel.id}">
+                                [ngClass]="{'text-primary dark:text-primary-500': selectedPanel && selectedPanel === panel.id}"
+                                class="font-medium leading-6">
                                 {{panel.title}}
                             </div>
                             <div class="mt-0.5 text-secondary">
@@ -63,9 +63,9 @@
 
                         <!-- Drawer toggle -->
                         <button
+                            (click)="drawer.toggle()"
                             class="lg:hidden -ml-2"
-                            mat-icon-button
-                            (click)="drawer.toggle()">
+                            mat-icon-button>
                             <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
                         </button>
 
@@ -82,8 +82,10 @@
                             <ng-container *ngSwitchCase="'dadosPessoais'">
                                 <app-edriving *ngIf="edrivingUser" [edrivingUser]="edrivingUser"></app-edriving>
                                 <app-partnner *ngIf="partnnerUser" [partnnerUser]="partnnerUser"></app-partnner>
-                                <app-driving-school *ngIf="drivingSchoolUser" [drivingSchoolUser]="drivingSchoolUser"></app-driving-school>
-
+                                <app-driving-school *ngIf="drivingSchoolUser"
+                                                    [drivingSchoolUser]="drivingSchoolUser"></app-driving-school>
+                                <app-administrative *ngIf="administrativeUser"
+                                                    [administrativeUser]="administrativeUser"></app-administrative>
                             </ng-container>
                             <!-- Security -->
                             <ng-container *ngSwitchCase="'seguranca'">
@@ -95,7 +97,8 @@
                             </ng-container>
                             <!-- Plan & Billing -->
                             <ng-container *ngSwitchCase="'files'">
-                                <app-files [items]="drivingSchoolUser.files" [userId]="drivingSchoolUser.userId"></app-files>
+                                <app-files [items]="drivingSchoolUser.files"
+                                           [userId]="drivingSchoolUser.userId"></app-files>
                             </ng-container>
                         </ng-container>
                     </div>
@@ -103,7 +106,7 @@
                 </ng-container>
 
                 <ng-template #loadinScreen>
-                    <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12" align="center">
+                    <div align="center" class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <mat-progress-spinner
                             [diameter]="24"
                             [mode]="'indeterminate'">

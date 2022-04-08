@@ -1,71 +1,71 @@
 <!-- Item wrapper -->
 <div
-    class="fuse-horizontal-navigation-item-wrapper"
     [class.fuse-horizontal-navigation-item-has-subtitle]="!!item.subtitle"
-    [ngClass]="item.classes?.wrapper">
+    [ngClass]="item.classes?.wrapper"
+    class="fuse-horizontal-navigation-item-wrapper">
 
     <!-- Item with an internal link -->
     <div
-        class="fuse-horizontal-navigation-item"
         *ngIf="item.link && !item.externalLink && !item.function && !item.disabled"
         [ngClass]="{'fuse-horizontal-navigation-item-active-forced': item.active}"
-        [routerLink]="[item.link]"
+        [routerLinkActiveOptions]="isActiveMatchOptions"
         [routerLinkActive]="'fuse-horizontal-navigation-item-active'"
-        [routerLinkActiveOptions]="isActiveMatchOptions">
+        [routerLink]="[item.link]"
+        class="fuse-horizontal-navigation-item">
         <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
     </div>
 
     <!-- Item with an external link -->
     <a
-        class="fuse-horizontal-navigation-item"
         *ngIf="item.link && item.externalLink && !item.function && !item.disabled"
-        [href]="item.link">
+        [href]="item.link"
+        class="fuse-horizontal-navigation-item">
         <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
     </a>
 
     <!-- Item with a function -->
     <div
-        class="fuse-horizontal-navigation-item"
+        (click)="item.function(item)"
         *ngIf="!item.link && item.function && !item.disabled"
         [ngClass]="{'fuse-horizontal-navigation-item-active-forced': item.active}"
-        (click)="item.function(item)">
+        class="fuse-horizontal-navigation-item">
         <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
     </div>
 
     <!-- Item with an internal link and function -->
     <div
-        class="fuse-horizontal-navigation-item"
+        (click)="item.function(item)"
         *ngIf="item.link && !item.externalLink && item.function && !item.disabled"
         [ngClass]="{'fuse-horizontal-navigation-item-active-forced': item.active}"
-        [routerLink]="[item.link]"
-        [routerLinkActive]="'fuse-horizontal-navigation-item-active'"
         [routerLinkActiveOptions]="isActiveMatchOptions"
-        (click)="item.function(item)">
+        [routerLinkActive]="'fuse-horizontal-navigation-item-active'"
+        [routerLink]="[item.link]"
+        class="fuse-horizontal-navigation-item">
         <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
     </div>
 
     <!-- Item with an external link and function -->
     <a
-        class="fuse-horizontal-navigation-item"
+        (click)="item.function(item)"
         *ngIf="item.link && item.externalLink && item.function && !item.disabled"
         [href]="item.link"
-        (click)="item.function(item)"
+        class="fuse-horizontal-navigation-item"
         mat-menu-item>
         <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
     </a>
 
     <!-- Item with a no link and no function -->
     <div
-        class="fuse-horizontal-navigation-item"
         *ngIf="!item.link && !item.function && !item.disabled"
-        [ngClass]="{'fuse-horizontal-navigation-item-active-forced': item.active}">
+        [ngClass]="{'fuse-horizontal-navigation-item-active-forced': item.active}"
+        class="fuse-horizontal-navigation-item">
         <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
     </div>
 
     <!-- Item is disabled -->
     <div
-        class="fuse-horizontal-navigation-item fuse-horizontal-navigation-item-disabled"
-        *ngIf="item.disabled">
+        *ngIf="item.disabled"
+        class="fuse-horizontal-navigation-item fuse-horizontal-navigation-item-disabled">
         <ng-container *ngTemplateOutlet="itemTemplate"></ng-container>
     </div>
 
@@ -76,10 +76,10 @@
 
     <!-- Icon -->
     <mat-icon
-        class="fuse-horizontal-navigation-item-icon"
-        [ngClass]="item.classes?.icon"
         *ngIf="item.icon"
-        [svgIcon]="item.icon"></mat-icon>
+        [ngClass]="item.classes?.icon"
+        [svgIcon]="item.icon"
+        class="fuse-horizontal-navigation-item-icon"></mat-icon>
 
     <!-- Title & Subtitle -->
     <div class="fuse-horizontal-navigation-item-title-wrapper">
@@ -89,8 +89,8 @@
             </span>
         </div>
         <div
-            class="fuse-horizontal-navigation-item-subtitle text-hint"
-            *ngIf="item.subtitle">
+            *ngIf="item.subtitle"
+            class="fuse-horizontal-navigation-item-subtitle text-hint">
             <span [ngClass]="item.classes?.subtitle">
                 {{item.subtitle}}
             </span>
@@ -99,11 +99,11 @@
 
     <!-- Badge -->
     <div
-        class="fuse-horizontal-navigation-item-badge"
-        *ngIf="item.badge">
+        *ngIf="item.badge"
+        class="fuse-horizontal-navigation-item-badge">
         <div
-            class="fuse-horizontal-navigation-item-badge-content"
-            [ngClass]="item.badge.classes">
+            [ngClass]="item.badge.classes"
+            class="fuse-horizontal-navigation-item-badge-content">
             {{item.badge.title}}
         </div>
     </div>

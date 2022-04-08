@@ -20,6 +20,8 @@ import {AddressModel} from '../../shared/models/address.model';
 import {RolesConstants} from '../../shared/constants';
 import {DrivingSchoolModel} from '../../shared/models/drivingSchool.model';
 import {DrivingSchoolService} from '../../shared/services/http/drivingSchool.service';
+import {AdministrativeService} from "../../shared/services/http/administrative.service";
+import {AdministrativeModel} from "../../shared/models/administrative.model";
 
 @Component({
     selector: 'app-perfil',
@@ -38,6 +40,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     edrivingUser: EdrivingModel = null;
     drivingSchoolUser: DrivingSchoolModel = null;
     partnnerUser: PartnnerModel = null;
+    administrativeUser: AdministrativeModel = null;
     addressModel: AddressModel = null;
     loading: boolean = true;
     idUser: number;
@@ -51,7 +54,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
         private _authService: AuthService,
         private _edrivingServices: EdrivingService,
         private _partnnerServices: PartnnerService,
-        private _drivingSchoolServices: DrivingSchoolService
+        private _drivingSchoolServices: DrivingSchoolService,
+        private _administrativeServices: AdministrativeService
     ) {
     }
 
@@ -73,11 +77,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-
-    // -----------------------------------------------------------------------------------------------------
-    // Comportamento do painel
-    // -----------------------------------------------------------------------------------------------------
-
     //Carrega os dados do painel para usuários do Edriving
     loadPanel(): void {
         this.panels = [
@@ -96,7 +95,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         ];
         this._changeDetectorRef.markForCheck();
     }
-
 
     //Altera entre a sobreposição do painel esquerdo com direito, sobrepoe ou escurece.
     mediaChanges(): void {
@@ -152,10 +150,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     trackByFn(index: number, item: any): any {
         return item.id || index;
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // Usuario
-    // -----------------------------------------------------------------------------------------------------
 
     /**
      * Carrega o usuário para edição dos dados
@@ -222,6 +216,27 @@ export class ProfileComponent implements OnInit, OnDestroy {
                             icon: 'heroicons_outline:folder',
                             title: 'Arquivos',
                             description: 'Seus arquivos estão aqui'
+                        }
+                    );
+                    this.loading = false;
+                    this._changeDetectorRef.markForCheck();
+                });
+            }
+            if (res.roles.find(r => r.role === RolesConstants.ADMINISTRATIVO)) {
+                this.user$ = this._administrativeServices.getOne(res.id).subscribe((result) => {
+                    if (!result) {
+                        return null;
+                    }
+                    this.administrativeUser = result;
+                    this.addressModel = result.address;
+                    this.idUser = result.userId;
+                    this.loadPanel();
+                    this.panels.push(
+                        {
+                            id: 'endereco',
+                            icon: 'heroicons_outline:home',
+                            title: 'Endereço',
+                            description: 'Mantenha seu endereço atualizado.'
                         }
                     );
                     this.loading = false;

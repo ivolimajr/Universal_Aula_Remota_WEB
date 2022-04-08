@@ -93,38 +93,6 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy {
     // -----------------------------------------------------------------------------------------------------
 
     /**
-     * On mouseenter
-     *
-     * @private
-     */
-    @HostListener('mouseenter')
-    private _onMouseenter(): void {
-        // Enable the animations
-        this._enableAnimations();
-
-        // Set the hovered
-        this._hovered = true;
-    }
-
-    /**
-     * On mouseleave
-     *
-     * @private
-     */
-    @HostListener('mouseleave')
-    private _onMouseleave(): void {
-        // Enable the animations
-        this._enableAnimations();
-
-        // Set the hovered
-        this._hovered = false;
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
      * On changes
      *
      * @param changes
@@ -204,6 +172,10 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy {
         this._fuseDrawerService.registerComponent(this.name, this);
     }
 
+    // -----------------------------------------------------------------------------------------------------
+    // @ Lifecycle hooks
+    // -----------------------------------------------------------------------------------------------------
+
     /**
      * On destroy
      */
@@ -211,10 +183,6 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy {
         // Deregister the drawer from the registry
         this._fuseDrawerService.deregisterComponent(this.name);
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
 
     /**
      * Open the drawer
@@ -242,6 +210,10 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy {
         this._toggleOpened(false);
     }
 
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+
     /**
      * Toggle the drawer
      */
@@ -251,6 +223,34 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy {
         } else {
             this.open();
         }
+    }
+
+    /**
+     * On mouseenter
+     *
+     * @private
+     */
+    @HostListener('mouseenter')
+    private _onMouseenter(): void {
+        // Enable the animations
+        this._enableAnimations();
+
+        // Set the hovered
+        this._hovered = true;
+    }
+
+    /**
+     * On mouseleave
+     *
+     * @private
+     */
+    @HostListener('mouseleave')
+    private _onMouseleave(): void {
+        // Enable the animations
+        this._enableAnimations();
+
+        // Set the hovered
+        this._hovered = false;
     }
 
     // -----------------------------------------------------------------------------------------------------

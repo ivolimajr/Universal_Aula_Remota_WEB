@@ -7,37 +7,37 @@ import {
     OnInit,
     ViewEncapsulation
 } from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
-import {MASKS, NgBrazilValidators} from 'ng-brazil';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MASKS, NgBrazilValidators} from 'ng-brazil';
+import {Observable, Subscription} from 'rxjs';
 import {fuseAnimations} from '../../../../@fuse/animations';
-import {DrivingSchoolModel} from '../../../shared/models/drivingSchool.model';
-import {User} from '../../../shared/models/user.model';
+import {AdministrativeModel} from '../../../shared/models/administrative.model';
 import {UserService} from '../../../shared/services/http/user.service';
 import {AuthService} from '../../../shared/services/auth/auth.service';
 import {LocalStorageService} from '../../../shared/services/storage/localStorage.service';
-import {DrivingSchoolService} from '../../../shared/services/http/drivingSchool.service';
+import {User, UserLogin} from '../../../shared/models/user.model';
 import {AlertModalComponent} from '../../../layout/common/alert/alert-modal.component';
-import {formatDate} from '@angular/common';
 import {environment} from '../../../../environments/environment';
 import {PhoneNumberModel} from '../../../shared/models/phoneNumber.model';
+import {AdministrativeService} from "../../../shared/services/http/administrative.service";
 
 @Component({
-    selector: 'app-driving-school',
-    templateUrl: './driving-school.component.html',
+    selector: 'app-administrative',
+    templateUrl: './administrative.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations
 })
-export class DrivingSchoolComponent implements OnInit, OnDestroy {
-    @Input() drivingSchoolUser: DrivingSchoolModel;
+export class AdministrativeComponent implements OnInit, OnDestroy {
+    @Input() administrativeUser: AdministrativeModel;
 
-    accountForm: FormGroup;
-    user: User;
-    masks = MASKS;
-    loading: boolean;
+    public accountForm: FormGroup;
+    public user: User;
+    public userLogin: UserLogin;
+    public masks = MASKS;
+    public loading: boolean;
     private user$: Subscription;
     private phone$: Subscription;
 
@@ -47,40 +47,47 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
         private _formBuilder: FormBuilder,
         private _userServices: UserService,
         private _authServices: AuthService,
-        private _drivingSchoolServices: DrivingSchoolService,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _storageServices: LocalStorageService) {
+        private _storageServices: LocalStorageService,
+        private _administrativeServices: AdministrativeService
+    ) {
     }
 
     ngOnInit(): void {
+        console.log(this.administrativeUser);
         this.prepareForm();
     }
 
-    submit(): void {
-        if (this.setUserData()) {
-            this.accountForm.disable();
-            this.loading = true;
-            this._changeDetectorRef.markForCheck();
-
-            this.user$ = this._drivingSchoolServices.updateFormEncoded(this.drivingSchoolUser).subscribe((res: any) => {
-                if (res.error) {
-                    return this.closeAlerts();
-                }
-                this.drivingSchoolUser = res;
-                this.updateDataInStorage(res.fantasyName, res.email);
-                this.removeLastPhoneUpdated(res.phonesNumbers[res.phonesNumbers.length - 1]);
-                //Retorna a mensagem de atualizado
-                this.openSnackBar('Atualizado');
-                return this.closeAlerts();
-            });
-        } else {
-            this.openSnackBar('Dados Inválidos', 'warn');
+    update(): void {
+        this.loading = true;
+        this.accountForm.disable();
+        if (this.setUserData() === false) {
             return this.closeAlerts();
         }
+        this.user$ = this._administrativeServices.update(this.administrativeUser).subscribe((res: any) => {
+            if (res.error) {
+                return this.closeAlerts();
+            }
+            this.administrativeUser = res;
+            this.updateDataInStorage(res.name, res.email);
+            this.removeLastPhoneUpdated(res.phonesNumbers[res.phonesNumbers.length - 1]);
+
+            this.openSnackBar('Atualizado');
+            return this.closeAlerts();
+        });
+    }
+
+    ngOnDestroy(): void {
+        if (this.user$) {
+            this.user$.unsubscribe();
+        }
+        if (this.phone$) {
+            this.phone$.unsubscribe();
+        }
+        this._changeDetectorRef.markForCheck();
     }
 
     addPhoneNumberField(): void {
-        // Adiciona o formGroup ao array de telefones
         (this.accountForm.get('phonesNumbers') as FormArray).push(
             this._formBuilder.group({
                 phoneNumber: ['', Validators.compose([
@@ -123,87 +130,69 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy(): void {
-        if (this.user$) {
-            this.user$.unsubscribe();
-        }
-        if (this.phone$) {
-            this.phone$.unsubscribe();
-        }
-        this._changeDetectorRef.markForCheck();
+    trackByFn(index: number, item: any): any {
+        return item.id || index;
     }
 
     private prepareForm(): void {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
-
         this.accountForm = this._formBuilder.group({
-            id: [this.drivingSchoolUser.id],
-            corporateName: [this.drivingSchoolUser.corporateName,
+            id: [this.administrativeUser.id],
+            name: [this.administrativeUser.name,
                 Validators.compose([
                     Validators.required,
-                    Validators.maxLength(150)
-                ])],
-            fantasyName: [this.drivingSchoolUser.fantasyName,
-                Validators.compose([
-                    Validators.required,
-                    Validators.maxLength(150)
-                ])],
-            stateRegistration: [this.drivingSchoolUser.stateRegistration,
-                Validators.compose([
-                    Validators.required,
-                    Validators.minLength(8),
-                    Validators.maxLength(30)
-                ])],
-            foundingDate: [formatDate(this.drivingSchoolUser.foundingDate, 'yyyy-MM-dd', 'en'),
-                Validators.required,
-            ],
-            email: [this.drivingSchoolUser.email,
-                Validators.compose([
-                    Validators.required,
-                    Validators.email,
-                    Validators.maxLength(70)
-                ])],
-            description: [this.drivingSchoolUser.description,
-                Validators.compose([
-                    Validators.required,
-                    Validators.maxLength(150)
-                ])],
-            site: [this.drivingSchoolUser.site,
-                Validators.compose([
-                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.min(5),
                     Validators.maxLength(100)
                 ])],
-            cnpj: [this.drivingSchoolUser.cnpj,
+            email: [this.administrativeUser.email,
                 Validators.compose([
                     Validators.required,
-                    Validators.maxLength(18),
-                    NgBrazilValidators.cnpj
+                    Validators.nullValidator,
+                    Validators.min(5),
+                    Validators.maxLength(100)
+                ])],
+            cpf: [this.administrativeUser.cpf,
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.min(5),
+                    Validators.maxLength(100),
+                    NgBrazilValidators.cpf])],
+            identity: [this.administrativeUser.identity,
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.min(5),
+                    Validators.maxLength(100)
+                ])],
+            origin: [this.administrativeUser.origin,
+                Validators.compose([
+                    Validators.required,
+                    Validators.nullValidator,
+                    Validators.min(5),
+                    Validators.maxLength(100)
                 ])],
             phonesNumbers: this._formBuilder.array([], Validators.compose([
                 Validators.required,
                 Validators.nullValidator
-            ])),
+            ]))
         });
 
-        //Só monta o array de telefones se houver telefones de contato cadastrado
-        if (this.drivingSchoolUser.phonesNumbers.length > 0) {
-            // Iterate through them
-            this.drivingSchoolUser.phonesNumbers.forEach((phoneNumber) => {
+        if (this.administrativeUser.phonesNumbers.length > 0) {
+            this.administrativeUser.phonesNumbers.forEach((phoneNumber) => {
                 (this.accountForm.get('phonesNumbers') as FormArray).push(
                     this._formBuilder.group({
                         id: [phoneNumber.id],
-                        phoneNumber: [phoneNumber.phoneNumber,
-                            Validators.compose([
-                                Validators.required,
-                                Validators.nullValidator
-                            ])
-                        ]
+                        phoneNumber: [phoneNumber.phoneNumber, Validators.compose([
+                            Validators.required,
+                            Validators.nullValidator
+                        ])]
                     })
                 );
             });
         } else {
-            // Create a phone number form group
             (this.accountForm.get('phonesNumbers') as FormArray).push(
                 this._formBuilder.group({
                     id: [0],
@@ -214,24 +203,30 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
                 })
             );
         }
-        this.loading = false;
-        this._changeDetectorRef.markForCheck();
     }
 
     private setUserData(): boolean {
+        const formData = this.accountForm.value;
         if (this.accountForm.invalid) {
             this.openSnackBar('Dados Inválidos', 'warn');
             return false;
         }
-        const accountFormValues = this.accountForm.value;
-        accountFormValues.cnpj = accountFormValues.cnpj.replace(/[^0-9,]*/g, '').replace(',', '.');
-        accountFormValues.phonesNumbers.forEach((item) => {
+        formData.cpf = formData.cpf.replace(/[^0-9,]*/g, '').replace(',', '.');
+        formData.phonesNumbers.forEach((item) => {
             if (item.phoneNumber.length !== 11) {
                 item.phoneNumber = item.phoneNumber.replace(/[^0-9,]*/g, '').replace(',', '.');
             }
         });
-        this.drivingSchoolUser = accountFormValues;
-        return true;
+        this.administrativeUser = formData;
+    }
+
+    private openSnackBar(message: string, type: string = 'accent'): void {
+        this._snackBar.open(message, '', {
+            duration: 5 * 1000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            panelClass: ['mat-toolbar', 'mat-' + type]
+        });
     }
 
     private closeAlerts(): void {
@@ -244,21 +239,18 @@ export class DrivingSchoolComponent implements OnInit, OnDestroy {
         return this._userServices.removePhonenumber(id);
     }
 
-    private openSnackBar(message: string, type: string = 'accent'): void {
-        this._snackBar.open(message, '', {
-            duration: 5 * 1000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            panelClass: ['mat-toolbar', 'mat-' + type]
-        });
-    }
-
-    private updateDataInStorage(fantasyName: string, email: string): void {
+    private updateDataInStorage(name: string, email: string): void {
         this.user = this._authServices.getUserInfoFromStorage();
-        this.user.name = fantasyName;
+        this.userLogin = this._storageServices.getValueFromLocalStorage(environment.dataStorage);
+        this.user.name = name;
         this.user.email = email;
+        this.userLogin.email = email;
+
         this._storageServices.removeFromStorage(environment.authStorage);
+        this._storageServices.removeFromStorage(environment.dataStorage);
+
         this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
+        this._storageServices.setValueFromLocalStorage(environment.dataStorage, this.userLogin);
     }
 
     private removeLastPhoneUpdated(lastPhone: PhoneNumberModel): void {

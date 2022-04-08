@@ -21,9 +21,9 @@
 
     <!-- Expansion -->
     <div
-        class="fuse-card-expansion"
         *ngIf="expanded"
-        [@expandCollapse]>
+        [@expandCollapse]
+        class="fuse-card-expansion">
         <ng-content select="[fuseCardExpansion]"></ng-content>
     </div>
 

@@ -30,11 +30,10 @@ import {ShortcutsService} from 'app/layout/common/shortcuts/shortcuts.service';
 })
 export class ShortcutsComponent implements OnChanges, OnInit, OnDestroy {
     @Input() shortcuts: Shortcut[];
-    @ViewChild('shortcutsOrigin') private _shortcutsOrigin: MatButton;
-    @ViewChild('shortcutsPanel') private _shortcutsPanel: TemplateRef<any>;
-
     mode: 'view' | 'modify' | 'add' | 'edit' = 'view';
     shortcutForm: FormGroup;
+    @ViewChild('shortcutsOrigin') private _shortcutsOrigin: MatButton;
+    @ViewChild('shortcutsPanel') private _shortcutsPanel: TemplateRef<any>;
     private _overlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 

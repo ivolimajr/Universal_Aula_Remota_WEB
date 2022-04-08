@@ -1,8 +1,8 @@
 <!-- Button -->
 <button
-    class="bg-white"
-    mat-icon-button
+    (click)="toggleFullscreen()"
     [matTooltip]="'Tela Cheia'"
-    (click)="toggleFullscreen()">
+    class="bg-white"
+    mat-icon-button>
     <mat-icon [svgIcon]="'heroicons_outline:arrows-expand'"></mat-icon>
 </button>

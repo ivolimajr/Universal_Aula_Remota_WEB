@@ -8,17 +8,18 @@ export interface DialogData {
 }
 
 @Component({
-  selector: 'app-delete-modal',
-  templateUrl: './alert-modal.component.html',
-  styleUrls: ['./alert-modal.component.scss']
+    selector: 'app-delete-modal',
+    templateUrl: './alert-modal.component.html',
+    styleUrls: ['./alert-modal.component.scss']
 })
 export class AlertModalComponent {
 
     constructor(
         public dialogRef: MatDialogRef<AlertModalComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+        @Inject(MAT_DIALOG_DATA) public data: DialogData) {
+    }
 
-  onNoClick(): void {
+    onNoClick(): void {
         this.dialogRef.close();
     }
 }

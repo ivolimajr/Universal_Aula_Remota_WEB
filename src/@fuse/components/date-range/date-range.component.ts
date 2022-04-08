@@ -39,12 +39,6 @@ import {Moment} from 'moment';
 })
 export class FuseDateRangeComponent implements ControlValueAccessor, OnInit, OnDestroy {
     @Output() readonly rangeChanged: EventEmitter<{ start: string; end: string }> = new EventEmitter<{ start: string; end: string }>();
-    @ViewChild('matMonthView1') private _matMonthView1: MatMonthView<any>;
-    @ViewChild('matMonthView2') private _matMonthView2: MatMonthView<any>;
-    @ViewChild('pickerPanelOrigin', {read: ElementRef}) private _pickerPanelOrigin: ElementRef;
-    @ViewChild('pickerPanel') private _pickerPanel: TemplateRef<any>;
-    @HostBinding('class.fuse-date-range') private _defaultClassNames = true;
-
     activeDates: { month1: Moment | null; month2: Moment | null } = {
         month1: null,
         month2: null
@@ -52,16 +46,14 @@ export class FuseDateRangeComponent implements ControlValueAccessor, OnInit, OnD
     setWhichDate: 'start' | 'end' = 'start';
     startTimeFormControl: FormControl;
     endTimeFormControl: FormControl;
-    private _dateFormat: string;
+    @ViewChild('matMonthView1') private _matMonthView1: MatMonthView<any>;
+    @ViewChild('matMonthView2') private _matMonthView2: MatMonthView<any>;
+    @ViewChild('pickerPanelOrigin', {read: ElementRef}) private _pickerPanelOrigin: ElementRef;
+    @ViewChild('pickerPanel') private _pickerPanel: TemplateRef<any>;
+    @HostBinding('class.fuse-date-range') private _defaultClassNames = true;
     private _onChange: (value: any) => void;
     private _onTouched: (value: any) => void;
     private _programmaticChange!: boolean;
-    private _range: { start: Moment | null; end: Moment | null } = {
-        start: null,
-        end: null
-    };
-    private _timeFormat: string;
-    private _timeRange: boolean;
     private readonly _timeRegExp: RegExp = new RegExp('^(0[0-9]|1[0-9]|2[0-4]|[0-9]):([0-5][0-9])(A|(?:AM)|P|(?:PM))?$', 'i');
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -86,9 +78,11 @@ export class FuseDateRangeComponent implements ControlValueAccessor, OnInit, OnD
         this._init();
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Accessors
-    // -----------------------------------------------------------------------------------------------------
+    private _dateFormat: string;
+
+    get dateFormat(): string {
+        return this._dateFormat;
+    }
 
     /**
      * Setter & getter for dateFormat input
@@ -106,56 +100,27 @@ export class FuseDateRangeComponent implements ControlValueAccessor, OnInit, OnD
         this._dateFormat = value;
     }
 
-    get dateFormat(): string {
-        return this._dateFormat;
-    }
+    private _range: { start: Moment | null; end: Moment | null } = {
+        start: null,
+        end: null
+    };
 
-    /**
-     * Setter & getter for timeFormat input
-     *
-     * @param value
-     */
-    @Input()
-    set timeFormat(value: string) {
-        // Return if the values are the same
-        if (this._timeFormat === value) {
-            return;
-        }
+    // -----------------------------------------------------------------------------------------------------
+    // @ Accessors
+    // -----------------------------------------------------------------------------------------------------
 
-        // Set format based on the time format input
-        this._timeFormat = value === '12' ? 'hh:mmA' : 'HH:mm';
-    }
+    get range(): any {
+        // Clone the range start and end
+        const start = this._range.start.clone();
+        const end = this._range.end.clone();
 
-    get timeFormat(): string {
-        return this._timeFormat;
-    }
-
-    /**
-     * Setter & getter for timeRange input
-     *
-     * @param value
-     */
-    @Input()
-    set timeRange(value: boolean) {
-        // Return if the values are the same
-        if (this._timeRange === value) {
-            return;
-        }
-
-        // Store the value
-        this._timeRange = value;
-
-        // If the time range turned off...
-        if (!value) {
-            this.range = {
-                start: this._range.start.clone().startOf('day'),
-                end: this._range.end.clone().endOf('day')
-            };
-        }
-    }
-
-    get timeRange(): boolean {
-        return this._timeRange;
+        // Build and return the range object
+        return {
+            startDate: start.clone().format(this.dateFormat),
+            startTime: this.timeRange ? start.clone().format(this.timeFormat) : null,
+            endDate: end.clone().format(this.dateFormat),
+            endTime: this.timeRange ? end.clone().format(this.timeFormat) : null
+        };
     }
 
     /**
@@ -274,18 +239,56 @@ export class FuseDateRangeComponent implements ControlValueAccessor, OnInit, OnD
         this._programmaticChange = false;
     }
 
-    get range(): any {
-        // Clone the range start and end
-        const start = this._range.start.clone();
-        const end = this._range.end.clone();
+    private _timeFormat: string;
 
-        // Build and return the range object
-        return {
-            startDate: start.clone().format(this.dateFormat),
-            startTime: this.timeRange ? start.clone().format(this.timeFormat) : null,
-            endDate: end.clone().format(this.dateFormat),
-            endTime: this.timeRange ? end.clone().format(this.timeFormat) : null
-        };
+    get timeFormat(): string {
+        return this._timeFormat;
+    }
+
+    /**
+     * Setter & getter for timeFormat input
+     *
+     * @param value
+     */
+    @Input()
+    set timeFormat(value: string) {
+        // Return if the values are the same
+        if (this._timeFormat === value) {
+            return;
+        }
+
+        // Set format based on the time format input
+        this._timeFormat = value === '12' ? 'hh:mmA' : 'HH:mm';
+    }
+
+    private _timeRange: boolean;
+
+    get timeRange(): boolean {
+        return this._timeRange;
+    }
+
+    /**
+     * Setter & getter for timeRange input
+     *
+     * @param value
+     */
+    @Input()
+    set timeRange(value: boolean) {
+        // Return if the values are the same
+        if (this._timeRange === value) {
+            return;
+        }
+
+        // Store the value
+        this._timeRange = value;
+
+        // If the time range turned off...
+        if (!value) {
+            this.range = {
+                start: this._range.start.clone().startOf('day'),
+                end: this._range.end.clone().endOf('day')
+            };
+        }
     }
 
     // -----------------------------------------------------------------------------------------------------

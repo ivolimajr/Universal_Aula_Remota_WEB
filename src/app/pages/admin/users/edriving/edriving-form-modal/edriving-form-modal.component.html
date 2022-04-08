@@ -1,5 +1,5 @@
 <ng-container *ngIf="loading;">
-    <mat-progress-bar class="mb-5" [mode]="'indeterminate'"></mat-progress-bar>
+    <mat-progress-bar [mode]="'indeterminate'" class="mb-5"></mat-progress-bar>
 </ng-container>
 <div mat-dialog-content>
     <fuse-card class="flex-col p-6 sm:py-12 sm:px-10 border-2 border-gray-100">
@@ -25,16 +25,16 @@
 
                     <!--start: Nome-->
                     <div class="sm:col-span-4">
-                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                        <mat-form-field appearance="legacy" class="fuse-mat-no-subscript w-full">
                             <mat-label for="name">Nome</mat-label>
                             <mat-icon
-                                class="icon-size-5 mr-0.5"
                                 [svgIcon]="'heroicons_solid:user'"
+                                class="icon-size-5 mr-0.5"
                                 matPrefix></mat-icon>
                             <input
+                                [formControlName]="'name'"
                                 id="name"
-                                matInput
-                                [formControlName]="'name'">
+                                matInput>
 
                         </mat-form-field>
                         <mat-error *ngIf="accountForm.get('name').hasError('name')">
@@ -45,16 +45,16 @@
 
                     <!--start: Email-->
                     <div class="sm:col-span-4 mt-2.5">
-                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                        <mat-form-field appearance="legacy" class="fuse-mat-no-subscript w-full">
                             <mat-label for="email">Email</mat-label>
                             <mat-icon
-                                class="icon-size-5 mr-0.5"
                                 [svgIcon]="'heroicons_solid:mail'"
+                                class="icon-size-5 mr-0.5"
                                 matPrefix></mat-icon>
                             <input
+                                [formControlName]="'email'"
                                 id="email"
-                                matInput
-                                [formControlName]="'email'">
+                                matInput>
 
                         </mat-form-field>
                         <mat-error *ngIf="accountForm.get('email').hasError('email')">
@@ -65,17 +65,17 @@
 
                     <!--start: CPF-->
                     <div class="sm:col-span-4 mt-2.5">
-                        <mat-form-field class="fuse-mat-no-subscript w-full" appearance="legacy">
+                        <mat-form-field appearance="legacy" class="fuse-mat-no-subscript w-full">
                             <mat-label for="cpf">CPF</mat-label>
                             <mat-icon
-                                class="icon-size-5 mr-0.5"
                                 [svgIcon]="'heroicons_solid:identification'"
+                                class="icon-size-5 mr-0.5"
                                 matPrefix></mat-icon>
                             <input
-                                id="cpf"
-                                matInput
-                                cpf [textMask]="{mask: masks.cpf.textMask}"
-                                [formControlName]="'cpf'">
+                                [formControlName]="'cpf'"
+                                [textMask]="{mask: masks.cpf.textMask}"
+                                cpf id="cpf"
+                                matInput>
 
                         </mat-form-field>
                         <mat-error *ngIf="accountForm.get('cpf').hasError('cpf')">
@@ -98,43 +98,44 @@
 
                     <!--start:telefones-->
                     <div class="sm:col-span-4 mt-2.5">
-                            <ng-container
-                                *ngFor="let phoneNumber of accountForm.get('phonesNumbers')['controls']; let i = index;"
-                                formArrayName="phonesNumbers">
-                                <div class="relative flex">
-                                    <mat-form-field class="fuse-mat-no-subscript flex-auto" appearance="legacy">
-                                        <mat-label>Telefone</mat-label>
-                                        <input
-                                            matInput
-                                            phoneNumber [textMask]="{mask: masks.telefone.textMaskFunction}"
-                                            [placeholder]="'phoneNumber'"
-                                            [formControl]="phoneNumber.get('phoneNumber')"
-                                            [value]="phoneNumber.value.phoneNumber ?? ''">
-                                    </mat-form-field>
-                                    <!-- Remove phone number -->
-                                    <ng-container>
-                                        <div
-                                            class="flex items-center w-10 pl-2">
-                                            <button
-                                                class="w-8 h-8 min-h-8"
-                                                mat-icon-button
-                                                (click)="removePhoneNumber(phoneNumber.value.id ?? 0,i)"
-                                                matTooltip="Remove">
-                                                <mat-icon
-                                                    class="icon-size-5 text-red-500"
-                                                    [svgIcon]="'heroicons_solid:trash'"></mat-icon>
-                                            </button>
-                                        </div>
-                                    </ng-container>
-                                </div>
-                            </ng-container>
+                        <ng-container
+                            *ngFor="let phoneNumber of accountForm.get('phonesNumbers')['controls']; let i = index;"
+                            formArrayName="phonesNumbers">
+                            <div class="relative flex">
+                                <mat-form-field appearance="legacy" class="fuse-mat-no-subscript flex-auto">
+                                    <mat-label>Telefone</mat-label>
+                                    <input
+                                        [formControl]="phoneNumber.get('phoneNumber')"
+                                        [placeholder]="'phoneNumber'"
+                                        [textMask]="{mask: masks.telefone.textMaskFunction}"
+                                        [value]="phoneNumber.value.phoneNumber ?? ''"
+                                        matInput
+                                        phoneNumber>
+                                </mat-form-field>
+                                <!-- Remove phone number -->
+                                <ng-container>
+                                    <div
+                                        class="flex items-center w-10 pl-2">
+                                        <button
+                                            (click)="removePhoneNumber(phoneNumber.value.id ?? 0,i)"
+                                            class="w-8 h-8 min-h-8"
+                                            mat-icon-button
+                                            matTooltip="Remove">
+                                            <mat-icon
+                                                [svgIcon]="'heroicons_solid:trash'"
+                                                class="icon-size-5 text-red-500"></mat-icon>
+                                        </button>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </ng-container>
                         <!--end:telefones-->
                         <div
-                            class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer"
-                            (click)="addPhoneNumberField()">
+                            (click)="addPhoneNumberField()"
+                            class="group inline-flex items-center mt-2 -ml-4 py-2 px-4 rounded cursor-pointer">
                             <mat-icon
-                                class="icon-size-5"
-                                [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                                [svgIcon]="'heroicons_solid:plus-circle'"
+                                class="icon-size-5"></mat-icon>
                             <span
                                 class="ml-2 font-medium text-secondary group-hover:underline">Inserir novo contato</span>
                         </div>
@@ -145,12 +146,12 @@
             </div>
             <!-- start:Submit -->
             <button
-                class="ml-1 items-center"
-                [disabled]="accountForm.invalid || accountForm.disabled"
-                class="fuse-mat-button-large mt-10"
-                mat-stroked-button
                 (click)="submit()"
-                [color]="'primary'">
+                [color]="'primary'"
+                [disabled]="accountForm.invalid || accountForm.disabled"
+                class="ml-1 items-center"
+                class="fuse-mat-button-large mt-10"
+                mat-stroked-button>
                 Salvar
             </button>
             <!-- end:Submit -->
@@ -158,7 +159,7 @@
     </fuse-card>
 
 </div>
-<div mat-dialog-actions class="mt-5">
-    <button mat-button mat-dialog-close (click)="onNoClick()">Cancelar</button>
+<div class="mt-5" mat-dialog-actions>
+    <button (click)="onNoClick()" mat-button mat-dialog-close>Cancelar</button>
 </div>
 

@@ -28,15 +28,14 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
     loading: boolean = true;
     isDeleting: boolean = false;
     _users$ = this._edrivingServices.getAll(); //Observable dos usuário
-    private data$: Subscription;
-    private user$: Subscription;
-
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatSort) sort: MatSort;
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatPaginator) paginator: MatPaginator;
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatTable) table: MatTable<EdrivingModel>;
+    private data$: Subscription;
+    private user$: Subscription;
 
     constructor(
         public dialog: MatDialog,
@@ -127,10 +126,10 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        if(this.user$){
+        if (this.user$) {
             this.user$.unsubscribe();
         }
-        if(this.data$){
+        if (this.data$) {
             this.data$.unsubscribe();
         }
         this._changeDetectorRef.markForCheck();
@@ -158,7 +157,7 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
      * @return void
      */
     private deleteFromApi(id: number): void {
-        this.user$ = this._edrivingServices.delete(id).subscribe((res: any)=>{
+        this.user$ = this._edrivingServices.delete(id).subscribe((res: any) => {
             if (res.error) {
                 this.isDeleting = false;
                 this._changeDetectorRef.markForCheck();
@@ -173,11 +172,11 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {
-        this._snackBar.open(message,'',{
-            duration: 5*1000,
+        this._snackBar.open(message, '', {
+            duration: 5 * 1000,
             horizontalPosition: 'center',
             verticalPosition: 'bottom',
-            panelClass: ['mat-toolbar', 'mat-'+type]
+            panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
 }

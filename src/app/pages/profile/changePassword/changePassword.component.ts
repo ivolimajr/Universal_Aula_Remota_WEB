@@ -46,6 +46,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.loadForm();
     }
+
     update(): void {
         if (this.securityForm.invalid) {
             return this.openSnackBar('Dados Inválidos.', 'warn');
@@ -66,6 +67,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
         }
         return this.closeAlerts();
     }
+
     ngOnDestroy(): void {
         if (this.auth$) {
             this.auth$.unsubscribe();
@@ -92,6 +94,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
         });
         this.closeAlerts();
     }
+
     private validatePass(): boolean {
         const securityFormValues = this.securityForm.value;
         const storagePassword = this._authServices.getLoginFromStorage().password;
@@ -101,11 +104,13 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
             return;
         }
     }
+
     private closeAlerts(): void {
         this.loading = false;
         this.securityForm.enable();
         this._changeDetectorRef.markForCheck();
     }
+
     private openSnackBar(message: string, type: string = 'accent'): void {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,
@@ -114,6 +119,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
+
     private updateDataInStorage(newPassword: string): void {
         this.loginUser.email = this._authServices.getUserInfoFromStorage().email;
         this.loginUser.password = newPassword;

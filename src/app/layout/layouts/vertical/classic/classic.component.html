@@ -1,24 +1,24 @@
 <!-- Navigation -->
 <fuse-vertical-navigation
-    class="dark bg-gray-900 print:hidden"
     [mode]="isScreenSmall ? 'over' : 'side'"
     [name]="'mainNavigation'"
     [navigation]="data.navigation.default"
-    [opened]="!isScreenSmall">
+    [opened]="!isScreenSmall"
+    class="dark bg-gray-900 print:hidden">
     <!-- Navigation header hook -->
     <ng-container fuseVerticalNavigationContentHeader>
         <!-- Logo -->
         <div class="flex items-center h-20 p-6 pb-0">
             <!-- Light version -->
             <img
+                alt="Logo image"
                 class="dark:hidden w-30"
-                src="assets/images/logo/logo-text.svg"
-                alt="Logo image">
+                src="assets/images/logo/logo-text.svg">
             <!-- Dark version -->
             <img
+                alt="Logo image"
                 class="hidden dark:flex w-30"
-                src="assets/images/logo/edrivinglogo.png"
-                alt="Logo image">
+                src="assets/images/logo/edrivinglogo.png">
         </div>
     </ng-container>
 </fuse-vertical-navigation>
@@ -31,8 +31,8 @@
         class="relative flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow dark:shadow-none dark:border-b bg-card dark:bg-transparent print:hidden">
         <!-- Navigation toggle button -->
         <button
-            mat-icon-button
-            (click)="toggleNavigation('mainNavigation')">
+            (click)="toggleNavigation('mainNavigation')"
+            mat-icon-button>
             <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
         </button>
         <!-- Components -->

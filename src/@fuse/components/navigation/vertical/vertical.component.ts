@@ -65,12 +65,11 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
     @Output() readonly modeChanged: EventEmitter<FuseVerticalNavigationMode> = new EventEmitter<FuseVerticalNavigationMode>();
     @Output() readonly openedChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() readonly positionChanged: EventEmitter<FuseVerticalNavigationPosition> = new EventEmitter<FuseVerticalNavigationPosition>();
-    @ViewChild('navigationContent') private _navigationContentEl: ElementRef;
-
     activeAsideItemId: string | null = null;
     onCollapsableItemCollapsed: ReplaySubject<FuseNavigationItem> = new ReplaySubject<FuseNavigationItem>(1);
     onCollapsableItemExpanded: ReplaySubject<FuseNavigationItem> = new ReplaySubject<FuseNavigationItem>(1);
     onRefreshed: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
+    @ViewChild('navigationContent') private _navigationContentEl: ElementRef;
     private _animationsEnabled: boolean = false;
     private _asideOverlay: HTMLElement;
     private readonly _handleAsideOverlayClick: any;
@@ -79,7 +78,6 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
     private _overlay: HTMLElement;
     private _player: AnimationPlayer;
     private _scrollStrategy: ScrollStrategy = this._scrollStrategyOptions.block();
-    private _fuseScrollbarDirectives!: QueryList<FuseScrollbarDirective>;
     private _fuseScrollbarDirectivesSubscription: Subscription;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -104,35 +102,11 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
         };
     }
 
+    private _fuseScrollbarDirectives!: QueryList<FuseScrollbarDirective>;
+
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
     // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Host binding for component classes
-     */
-    @HostBinding('class') get classList(): any {
-        return {
-            'fuse-vertical-navigation-animations-enabled': this._animationsEnabled,
-            [`fuse-vertical-navigation-appearance-${this.appearance}`]: true,
-            'fuse-vertical-navigation-hover': this._hovered,
-            'fuse-vertical-navigation-inner': this.inner,
-            'fuse-vertical-navigation-mode-over': this.mode === 'over',
-            'fuse-vertical-navigation-mode-side': this.mode === 'side',
-            'fuse-vertical-navigation-opened': this.opened,
-            'fuse-vertical-navigation-position-left': this.position === 'left',
-            'fuse-vertical-navigation-position-right': this.position === 'right'
-        };
-    }
-
-    /**
-     * Host binding for component inline styles
-     */
-    @HostBinding('style') get styleList(): any {
-        return {
-            'visibility': this.opened ? 'visible' : 'hidden'
-        };
-    }
 
     /**
      * Setter for fuseScrollbarDirectives
@@ -171,40 +145,34 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
                 });
     }
 
+    /**
+     * Host binding for component classes
+     */
+    @HostBinding('class') get classList(): any {
+        return {
+            'fuse-vertical-navigation-animations-enabled': this._animationsEnabled,
+            [`fuse-vertical-navigation-appearance-${this.appearance}`]: true,
+            'fuse-vertical-navigation-hover': this._hovered,
+            'fuse-vertical-navigation-inner': this.inner,
+            'fuse-vertical-navigation-mode-over': this.mode === 'over',
+            'fuse-vertical-navigation-mode-side': this.mode === 'side',
+            'fuse-vertical-navigation-opened': this.opened,
+            'fuse-vertical-navigation-position-left': this.position === 'left',
+            'fuse-vertical-navigation-position-right': this.position === 'right'
+        };
+    }
+
+    /**
+     * Host binding for component inline styles
+     */
+    @HostBinding('style') get styleList(): any {
+        return {
+            'visibility': this.opened ? 'visible' : 'hidden'
+        };
+    }
+
     // -----------------------------------------------------------------------------------------------------
     // @ Decorated methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On mouseenter
-     *
-     * @private
-     */
-    @HostListener('mouseenter')
-    private _onMouseenter(): void {
-        // Enable the animations
-        this._enableAnimations();
-
-        // Set the hovered
-        this._hovered = true;
-    }
-
-    /**
-     * On mouseleave
-     *
-     * @private
-     */
-    @HostListener('mouseleave')
-    private _onMouseleave(): void {
-        // Enable the animations
-        this._enableAnimations();
-
-        // Set the hovered
-        this._hovered = false;
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------
 
     /**
@@ -325,6 +293,10 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
             });
     }
 
+    // -----------------------------------------------------------------------------------------------------
+    // @ Lifecycle hooks
+    // -----------------------------------------------------------------------------------------------------
+
     /**
      * After view init
      */
@@ -376,10 +348,6 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
         this._unsubscribeAll.complete();
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
     /**
      * Refresh the component to apply the changes
      */
@@ -403,6 +371,10 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
         // Set the opened
         this._toggleOpened(true);
     }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
 
     /**
      * Close the navigation
@@ -489,6 +461,34 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
      */
     trackByFn(index: number, item: any): any {
         return item.id || index;
+    }
+
+    /**
+     * On mouseenter
+     *
+     * @private
+     */
+    @HostListener('mouseenter')
+    private _onMouseenter(): void {
+        // Enable the animations
+        this._enableAnimations();
+
+        // Set the hovered
+        this._hovered = true;
+    }
+
+    /**
+     * On mouseleave
+     *
+     * @private
+     */
+    @HostListener('mouseleave')
+    private _onMouseleave(): void {
+        // Enable the animations
+        this._enableAnimations();
+
+        // Set the hovered
+        this._hovered = false;
     }
 
     // -----------------------------------------------------------------------------------------------------

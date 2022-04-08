@@ -10,9 +10,10 @@ import {ChangePasswordComponent} from './changePassword/changePassword.component
 import {AddressComponent} from './address/address.component';
 import {CustomMaterialModule} from '../../shared/material.module';
 import {TextMaskModule} from 'angular2-text-mask';
-import { PartnnerComponent } from './partnner/partnner.component';
-import { DrivingSchoolComponent } from './driving-school/driving-school.component';
-import { FilesComponent } from './files/files.component';
+import {PartnnerComponent} from './partnner/partnner.component';
+import {DrivingSchoolComponent} from './driving-school/driving-school.component';
+import {FilesComponent} from './files/files.component';
+import {AdministrativeComponent} from './administrative/administrative.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { FilesComponent } from './files/files.component';
         PartnnerComponent,
         ProfileComponent,
         DrivingSchoolComponent,
-        FilesComponent
+        FilesComponent,
+        AdministrativeComponent
     ],
     imports: [
         RouterModule.forChild(perfilRoutes),

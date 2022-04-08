@@ -47,15 +47,16 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         private _formBuilder: FormBuilder,
         private _userServices: UserService,
         private _authServices: AuthService,
-        private _edrivingServices: EdrivingService,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _storageServices: LocalStorageService
+        private _storageServices: LocalStorageService,
+        private _edrivingServices: EdrivingService
     ) {
     }
 
     ngOnInit(): void {
         this.prepareForm();
     }
+
     update(): void {
         this.loading = true;
         this.accountForm.disable();
@@ -74,6 +75,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             return this.closeAlerts();
         });
     }
+
     addPhoneNumberField(): void {
         // Adiciona o formGroup ao array de telefones
         (this.accountForm.get('phonesNumbers') as FormArray).push(
@@ -85,6 +87,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             }));
         this._changeDetectorRef.markForCheck();
     }
+
     removePhoneNumber(id: number, index: number): void {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
@@ -105,8 +108,8 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             if (!result) {
                 return this.closeAlerts();
             }
-            this.removePhoneFromApi(id).subscribe((res: any)=>{
-                if(res){
+            this.removePhoneFromApi(id).subscribe((res: any) => {
+                if (res) {
                     this.openSnackBar('Removido');
                     phonesFormArray.removeAt(index);
                     return this.closeAlerts();
@@ -116,9 +119,11 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             });
         });
     }
+
     trackByFn(index: number, item: any): any {
         return item.id || index;
     }
+
     ngOnDestroy(): void {
         if (this.user$) {
             this.user$.unsubscribe();
@@ -201,6 +206,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         });
         this.closeAlerts();
     }
+
     private setUserData(): boolean {
         const formData = this.accountForm.value;
         if (this.accountForm.invalid) {
@@ -215,6 +221,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         });
         this.edrivingUser = formData;
     }
+
     private openSnackBar(message: string, type: string = 'accent'): void {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,
@@ -223,15 +230,18 @@ export class EdrivingComponent implements OnInit, OnDestroy {
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
+
     private closeAlerts(): void {
         this.accountForm.enable();
         this.loading = false;
         this._changeDetectorRef.markForCheck();
     }
+
     private removePhoneFromApi(id: number): Observable<boolean> {
         return this._userServices.removePhonenumber(id);
     }
-    private updateDataInStorage(name: string, email: string): void{
+
+    private updateDataInStorage(name: string, email: string): void {
         this.user = this._authServices.getUserInfoFromStorage();
         this.userLogin = this._storageServices.getValueFromLocalStorage(environment.dataStorage);
         this.user.name = name;
@@ -244,6 +254,7 @@ export class EdrivingComponent implements OnInit, OnDestroy {
         this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
         this._storageServices.setValueFromLocalStorage(environment.dataStorage, this.userLogin);
     }
+
     private removeLastPhoneUpdated(lastPhone: PhoneNumberModel): void {
         //Pega o último registro de telefone que contem no array de telefones
         const phoneArray = this.accountForm.get('phonesNumbers') as FormArray;

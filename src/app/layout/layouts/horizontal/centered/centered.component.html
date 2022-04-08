@@ -3,11 +3,11 @@
     <!-- Navigation -->
     <ng-container *ngIf="isScreenSmall">
         <fuse-vertical-navigation
-            class="dark bg-gray-900 print:hidden"
             [mode]="'over'"
             [name]="'mainNavigation'"
             [navigation]="data.navigation.default"
-            [opened]="false">
+            [opened]="false"
+            class="dark bg-gray-900 print:hidden">
             <!-- Navigation header hook -->
             <ng-container fuseVerticalNavigationContentHeader>
                 <!-- Logo -->
@@ -33,33 +33,33 @@
                     <div class="hidden lg:flex">
                         <!-- Light version -->
                         <img
+                            alt="Logo image"
                             class="dark:hidden w-24"
-                            src="assets/images/logo/logo-text.svg"
-                            alt="Logo image">
+                            src="assets/images/logo/logo-text.svg">
                         <!-- Dark version -->
                         <img
+                            alt="Logo image"
                             class="hidden dark:flex w-24"
-                            src="assets/images/logo/edrivinglogo.png"
-                            alt="Logo image">
+                            src="assets/images/logo/edrivinglogo.png">
                     </div>
                     <!-- Small version -->
                     <img
+                        alt="Logo image"
                         class="flex lg:hidden w-13"
-                        src="assets/images/logo/velo.png"
-                        alt="Logo image">
+                        src="assets/images/logo/velo.png">
                 </div>
                 <!-- Horizontal navigation -->
                 <fuse-horizontal-navigation
-                    class="mr-2"
                     [name]="'mainNavigation'"
-                    [navigation]="data.navigation.horizontal"></fuse-horizontal-navigation>
+                    [navigation]="data.navigation.horizontal"
+                    class="mr-2"></fuse-horizontal-navigation>
             </ng-container>
             <!-- Navigation toggle button -->
             <ng-container *ngIf="isScreenSmall">
                 <button
+                    (click)="toggleNavigation('mainNavigation')"
                     class="mr-2"
-                    mat-icon-button
-                    (click)="toggleNavigation('mainNavigation')">
+                    mat-icon-button>
                     <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
                 </button>
             </ng-container>

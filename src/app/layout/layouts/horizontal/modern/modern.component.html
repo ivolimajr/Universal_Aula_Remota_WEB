@@ -1,19 +1,19 @@
 <!-- Navigation -->
 <ng-container *ngIf="isScreenSmall">
     <fuse-vertical-navigation
-        class="dark bg-gray-900 print:hidden"
         [mode]="'over'"
         [name]="'mainNavigation'"
         [navigation]="data.navigation.default"
-        [opened]="false">
+        [opened]="false"
+        class="dark bg-gray-900 print:hidden">
         <!-- Navigation header hook -->
         <ng-container fuseVerticalNavigationContentHeader>
             <!-- Logo -->
             <div class="flex items-center h-20 pt-6 px-8">
                 <img
+                    alt="Logo image"
                     class="w-24"
-                    src="assets/images/logo/edrivinglogo.png"
-                    alt="Logo image">
+                    src="assets/images/logo/edrivinglogo.png">
             </div>
         </ng-container>
     </fuse-vertical-navigation>
@@ -42,15 +42,15 @@
             </div>
             <!-- Horizontal navigation -->
             <fuse-horizontal-navigation
-                class="mr-2"
                 [name]="'mainNavigation'"
-                [navigation]="data.navigation.horizontal"></fuse-horizontal-navigation>
+                [navigation]="data.navigation.horizontal"
+                class="mr-2"></fuse-horizontal-navigation>
         </ng-container>
         <!-- Navigation toggle button -->
         <ng-container *ngIf="isScreenSmall">
             <button
-                mat-icon-button
-                (click)="toggleNavigation('mainNavigation')">
+                (click)="toggleNavigation('mainNavigation')"
+                mat-icon-button>
                 <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
             </button>
         </ng-container>

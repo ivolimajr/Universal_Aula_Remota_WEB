@@ -45,8 +45,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
 @NgModule({
-    declarations: [
-    ],
+    declarations: [],
     exports: [
         A11yModule,
         ClipboardModule,

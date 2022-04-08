@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Observable, of, throwError} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {AuthService} from 'app/shared/services/auth/auth.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -31,7 +31,7 @@ export class AuthInterceptor implements HttpInterceptor {
                 this.openSnackBar(err.error.UserMessage ? err.error.UserMessage : err.error.InnerExceptionMessage);
                 return throwError(err);
             }
-            if(!err.ok && err.statusText === 'Unknown Error'){
+            if (!err.ok && err.statusText === 'Unknown Error') {
                 this.openSnackBar('Serviço indisponível');
                 return throwError(err);
             }

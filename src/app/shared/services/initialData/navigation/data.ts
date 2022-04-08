@@ -11,7 +11,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
     }
 ];
 
-export const plataformaNavigation: FuseNavigationItem[] =[
+export const plataformaNavigation: FuseNavigationItem[] = [
     {
         id: 'edriving',
         title: 'Usuario da Plataforma',
@@ -28,7 +28,7 @@ export const plataformaNavigation: FuseNavigationItem[] =[
     }
 ];
 
-export const parceiroNavigation: FuseNavigationItem[] =[
+export const parceiroNavigation: FuseNavigationItem[] = [
     {
         id: 'autoescola',
         title: 'Auto Escolas',
@@ -38,7 +38,7 @@ export const parceiroNavigation: FuseNavigationItem[] =[
     }
 ];
 
-export const autoEscolaNavigation: FuseNavigationItem[] =[
+export const autoEscolaNavigation: FuseNavigationItem[] = [
     {
         id: 'administrativo',
         title: 'Administrativos',

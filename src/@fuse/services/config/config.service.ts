@@ -7,8 +7,6 @@ import {FUSE_APP_CONFIG} from '@fuse/services/config/config.constants';
     providedIn: 'root'
 })
 export class FuseConfigService {
-    private _config: BehaviorSubject<any>;
-
     /**
      * Constructor
      */
@@ -16,6 +14,8 @@ export class FuseConfigService {
         // Private
         this._config = new BehaviorSubject(config);
     }
+
+    private _config: BehaviorSubject<any>;
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors

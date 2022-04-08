@@ -1,13 +1,13 @@
 <div
-    class="range"
+    #pickerPanelOrigin
     (click)="openPickerPanel()"
-    #pickerPanelOrigin>
+    class="range">
 
     <div class="start">
         <div class="date">{{range.startDate}}</div>
         <div
-            class="time"
-            *ngIf="range.startTime">{{range.startTime}}</div>
+            *ngIf="range.startTime"
+            class="time">{{range.startTime}}</div>
     </div>
 
     <div class="separator">-</div>
@@ -15,8 +15,8 @@
     <div class="end">
         <div class="date">{{range.endDate}}</div>
         <div
-            class="time"
-            *ngIf="range.endTime">{{range.endTime}}</div>
+            *ngIf="range.endTime"
+            class="time">{{range.endTime}}</div>
     </div>
 
 </div>
@@ -29,32 +29,32 @@
         <div class="month">
             <div class="month-header">
                 <button
+                    (click)="prev()"
                     class="previous-button"
                     mat-icon-button
-                    (click)="prev()"
                     tabindex="1">
                     <mat-icon [svgIcon]="'heroicons_outline:chevron-left'"></mat-icon>
                 </button>
                 <div class="month-label">{{getMonthLabel(1)}}</div>
             </div>
             <mat-month-view
-                [(activeDate)]="activeDates.month1"
-                [dateFilter]="dateFilter()"
-                [dateClass]="dateClass()"
+                #matMonthView1
                 (click)="$event.stopImmediatePropagation()"
                 (selectedChange)="onSelectedDateChange($event)"
-                #matMonthView1>
+                [(activeDate)]="activeDates.month1"
+                [dateClass]="dateClass()"
+                [dateFilter]="dateFilter()">
             </mat-month-view>
         </div>
 
         <mat-form-field
-            class="fuse-mat-no-subscript time start-time"
-            *ngIf="timeRange">
+            *ngIf="timeRange"
+            class="fuse-mat-no-subscript time start-time">
             <input
-                matInput
+                (blur)="updateStartTime($event)"
                 [autocomplete]="'off'"
                 [formControl]="startTimeFormControl"
-                (blur)="updateStartTime($event)"
+                matInput
                 tabindex="3">
             <mat-label>Start time</mat-label>
         </mat-form-field>
@@ -68,30 +68,30 @@
             <div class="month-header">
                 <div class="month-label">{{getMonthLabel(2)}}</div>
                 <button
+                    (click)="next()"
                     class="next-button"
                     mat-icon-button
-                    (click)="next()"
                     tabindex="2">
                     <mat-icon [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
                 </button>
             </div>
             <mat-month-view
-                [(activeDate)]="activeDates.month2"
-                [dateFilter]="dateFilter()"
-                [dateClass]="dateClass()"
+                #matMonthView2
                 (click)="$event.stopImmediatePropagation()"
                 (selectedChange)="onSelectedDateChange($event)"
-                #matMonthView2>
+                [(activeDate)]="activeDates.month2"
+                [dateClass]="dateClass()"
+                [dateFilter]="dateFilter()">
             </mat-month-view>
         </div>
 
         <mat-form-field
-            class="fuse-mat-no-subscript time end-time"
-            *ngIf="timeRange">
+            *ngIf="timeRange"
+            class="fuse-mat-no-subscript time end-time">
             <input
-                matInput
-                [formControl]="endTimeFormControl"
                 (blur)="updateEndTime($event)"
+                [formControl]="endTimeFormControl"
+                matInput
                 tabindex="4">
             <mat-label>End time</mat-label>
         </mat-form-field>

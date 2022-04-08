@@ -92,7 +92,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                     return this.dialogRef.close(res);
                 });
             }
-        } else{
+        } else {
             this.closeAlerts();
         }
     }
@@ -123,8 +123,8 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
             if (!result) {
                 return this.closeAlerts();
             }
-            this.removePhoneFromApi(id).subscribe((res: any)=>{
-                if(res){
+            this.removePhoneFromApi(id).subscribe((res: any) => {
+                if (res) {
                     this.openSnackBar('Removido');
                     phonesFormArray.removeAt(index);
                     return this.closeAlerts();
@@ -342,8 +342,9 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
     }
 
     private removePhoneFromApi(id: number): Observable<boolean> {
-       return this._userServices.removePhonenumber(id);
+        return this._userServices.removePhonenumber(id);
     }
+
     //Fecha o alerta na tela
     private closeAlerts(): void {
         this.loading = false;

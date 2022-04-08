@@ -1,20 +1,20 @@
 <div
-    class="fuse-vertical-navigation-item-wrapper"
     [class.fuse-vertical-navigation-item-has-subtitle]="!!item.subtitle"
-    [ngClass]="item.classes?.wrapper">
+    [ngClass]="item.classes?.wrapper"
+    class="fuse-vertical-navigation-item-wrapper">
 
     <div
-        class="fuse-vertical-navigation-item"
         [ngClass]="{'fuse-vertical-navigation-item-active': active,
                     'fuse-vertical-navigation-item-disabled': item.disabled,
-                    'fuse-vertical-navigation-item-active-forced': item.active}">
+                    'fuse-vertical-navigation-item-active-forced': item.active}"
+        class="fuse-vertical-navigation-item">
 
         <!-- Icon -->
         <mat-icon
-            class="fuse-vertical-navigation-item-icon"
-            [ngClass]="item.classes?.icon"
             *ngIf="item.icon"
-            [svgIcon]="item.icon"></mat-icon>
+            [ngClass]="item.classes?.icon"
+            [svgIcon]="item.icon"
+            class="fuse-vertical-navigation-item-icon"></mat-icon>
 
         <!-- Title & Subtitle -->
         <div class="fuse-vertical-navigation-item-title-wrapper">
@@ -24,8 +24,8 @@
                 </span>
             </div>
             <div
-                class="fuse-vertical-navigation-item-subtitle"
-                *ngIf="item.subtitle">
+                *ngIf="item.subtitle"
+                class="fuse-vertical-navigation-item-subtitle">
                 <span [ngClass]="item.classes?.subtitle">
                     {{item.subtitle}}
                 </span>
@@ -34,11 +34,11 @@
 
         <!-- Badge -->
         <div
-            class="fuse-vertical-navigation-item-badge"
-            *ngIf="item.badge">
+            *ngIf="item.badge"
+            class="fuse-vertical-navigation-item-badge">
             <div
-                class="fuse-vertical-navigation-item-badge-content"
-                [ngClass]="item.badge.classes">
+                [ngClass]="item.badge.classes"
+                class="fuse-vertical-navigation-item-badge-content">
                 {{item.badge.title}}
             </div>
         </div>
@@ -65,9 +65,9 @@
                 <!-- Collapsable -->
                 <fuse-vertical-navigation-collapsable-item
                     *ngIf="item.type === 'collapsable'"
+                    [autoCollapse]="autoCollapse"
                     [item]="item"
-                    [name]="name"
-                    [autoCollapse]="autoCollapse"></fuse-vertical-navigation-collapsable-item>
+                    [name]="name"></fuse-vertical-navigation-collapsable-item>
 
                 <!-- Divider -->
                 <fuse-vertical-navigation-divider-item

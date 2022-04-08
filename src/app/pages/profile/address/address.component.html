@@ -1,7 +1,7 @@
 <ng-container *ngIf="loading;">
-    <mat-progress-bar class="mb-5" [mode]="'indeterminate'"></mat-progress-bar>
+    <mat-progress-bar [mode]="'indeterminate'" class="mb-5"></mat-progress-bar>
 </ng-container>
-<div class="w-full max-w-3xl" *ngIf="!loading">
+<div *ngIf="!loading" class="w-full max-w-3xl">
 
     <!-- Form -->
     <form [formGroup]="addressForm">
@@ -21,17 +21,17 @@
             <!--start:cep-->
             <div class="col-span-2 sm:col-span-2">
                 <mat-form-field
-                    class="fuse-mat-no-subscript w-full"
-                    [floatLabel]="'always'">
+                    [floatLabel]="'always'"
+                    class="fuse-mat-no-subscript w-full">
                     <mat-label>CEP</mat-label>
                     <mat-icon
-                        class="icon-size-5"
                         [svgIcon]="'heroicons_solid:hashtag'"
+                        class="icon-size-5"
                         matPrefix></mat-icon>
                     <input
                         (blur)="getCep($event.target)"
-                        cep [textMask]="{mask: masks.cep.textMask}"
-                        [formControlName]="'cep'"
+                        [formControlName]="'cep'" [textMask]="{mask: masks.cep.textMask}"
+                        cep
                         matInput>
                 </mat-form-field>
             </div>
@@ -42,8 +42,8 @@
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Endereço</mat-label>
                     <mat-icon
-                        class="icon-size-5"
                         [svgIcon]="'heroicons_solid:location-marker'"
+                        class="icon-size-5"
                         matPrefix></mat-icon>
                     <input
                         [formControlName]="'address'"
@@ -57,8 +57,8 @@
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Bairro</mat-label>
                     <mat-icon
-                        class="icon-size-5"
                         [svgIcon]="'heroicons_solid:home'"
+                        class="icon-size-5"
                         matPrefix></mat-icon>
                     <input
                         [formControlName]="'district'"
@@ -72,8 +72,8 @@
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Número</mat-label>
                     <mat-icon
-                        class="icon-size-5"
                         [svgIcon]="'heroicons_solid:annotation'"
+                        class="icon-size-5"
                         matPrefix></mat-icon>
                     <input
                         [formControlName]="'addressNumber'"
@@ -87,10 +87,10 @@
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Complemento</mat-label>
                     <mat-icon
-                        class="icon-size-5"
                         [svgIcon]="'heroicons_solid:annotation'"
+                        class="icon-size-5"
                         matPrefix></mat-icon>
-                    <input matInput [formControlName]="'complement'">
+                    <input [formControlName]="'complement'" matInput>
                 </mat-form-field>
             </div>
             <!--end:complemento-->
@@ -100,8 +100,8 @@
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>UF</mat-label>
                     <mat-icon
-                        class="icon-size-5"
                         [svgIcon]="'heroicons_solid:location-marker'"
+                        class="icon-size-5"
                         matPrefix></mat-icon>
                     <mat-select [formControlName]="'uf'">
                         <mat-option *ngFor="let item of states" [value]="item">{{item}}</mat-option>
@@ -115,10 +115,10 @@
                 <mat-form-field class="fuse-mat-no-subscript w-full">
                     <mat-label>Cidade</mat-label>
                     <mat-icon
-                        class="icon-size-5"
                         [svgIcon]="'heroicons_solid:map'"
+                        class="icon-size-5"
                         matPrefix></mat-icon>
-                    <input matInput [formControlName]="'city'">
+                    <input [formControlName]="'city'" matInput>
                 </mat-form-field>
             </div>
             <!--end:cidade-->
@@ -131,12 +131,12 @@
         <!-- Actions -->
         <div class="flex items-center justify-end">
             <button
+                (click)="update()"
+                [color]="'primary'"
+                [disabled]="addressForm.disabled"
                 class="ml-4"
                 mat-flat-button
-                [disabled]="addressForm.disabled"
-                (click)="update()"
-                type="button"
-                [color]="'primary'">Salvar
+                type="button">Salvar
             </button>
         </div>
     </form>

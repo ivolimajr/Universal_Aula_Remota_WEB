@@ -13,7 +13,7 @@ import {AppComponent} from 'app/app.component';
 import {appRoutes} from 'app/app.routing';
 import {AuthModule} from "./shared/services/auth/auth.module";
 import {IconsModule} from "./core/icons/icons.module";
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 
 const routerConfig: ExtraOptions = {

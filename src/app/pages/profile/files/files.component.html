@@ -1,19 +1,19 @@
 <ng-container *ngIf="loading;">
-    <mat-progress-bar class="mb-5" [mode]="'indeterminate'"></mat-progress-bar>
+    <mat-progress-bar [mode]="'indeterminate'" class="mb-5"></mat-progress-bar>
 </ng-container>
-<div class="w-full max-w-3xl" *ngIf="!loading">
+<div *ngIf="!loading" class="w-full max-w-3xl">
     <div class="flex items-center justify-end">
         <input #csvInput
-               hidden="true"
-               type="file"
-               multiple
+               (change)="uploadFile($event)"
                accept=".pdf,.jpg,.jpeg"
-               onclick="this.value=null" (change)="uploadFile($event)"/>
+               hidden="true"
+               multiple
+               onclick="this.value=null" type="file"/>
         <button
-            mat-flat-button
-            [color]="'primary'">
+            [color]="'primary'"
+            mat-flat-button>
             <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-            <span class="ml-2 mr-1" (click)="csvInput.click()">Upload</span>
+            <span (click)="csvInput.click()" class="ml-2 mr-1">Upload</span>
         </button>
     </div>
     <div class="mt-5 border-t"></div>
@@ -31,21 +31,21 @@
                                     <!-- Folder -->
                                     <ng-container *ngSwitchCase="'folder'">
                                         <mat-icon
-                                            class="icon-size-14 text-hint"
-                                            [svgIcon]="'iconsmind:folder'"></mat-icon>
+                                            [svgIcon]="'iconsmind:folder'"
+                                            class="icon-size-14 text-hint"></mat-icon>
                                     </ng-container>
                                     <!-- File -->
                                     <ng-container *ngSwitchDefault>
                                         <div class="relative">
                                             <a [href]="file.destiny" [target]="'_blank'">
                                                 <mat-icon
-                                                    class="icon-size-20 text-hint"
-                                                    [svgIcon]="'iconsmind:file'"></mat-icon>
+                                                    [svgIcon]="'iconsmind:file'"
+                                                    class="icon-size-20 text-hint"></mat-icon>
                                                 <div
-                                                    class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
-                                                    [class.bg-red-600]="file.extension === '.pdf'"
+                                                    [class.bg-amber-600]="file.extension === '.jpg'"
                                                     [class.bg-green-600]="file.extension === '.jpeg'"
-                                                    [class.bg-amber-600]="file.extension === '.jpg'">
+                                                    [class.bg-red-600]="file.extension === '.pdf'"
+                                                    class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white">
                                                     {{file.extension.toUpperCase()}}
                                                 </div>
                                             </a>
@@ -55,10 +55,10 @@
                             </div>
                         </div>
                         <div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
-                            <div class="truncate" [matTooltip]="file.fileName">
+                            <div [matTooltip]="file.fileName" class="truncate">
                                 {{file.fileName}}
                             </div>
-                            <button mat-stroked-button color="warn" (click)="removeFile(file)">Remover</button>
+                            <button (click)="removeFile(file)" color="warn" mat-stroked-button>Remover</button>
                         </div>
                     </div>
                 </ng-container>
@@ -68,18 +68,18 @@
     <ng-template #noItems>
         <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
             <mat-icon
-                class="icon-size-24"
-                [svgIcon]="'iconsmind:file_hide'"></mat-icon>
+                [svgIcon]="'iconsmind:file_hide'"
+                class="icon-size-24"></mat-icon>
             <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">There are no items!</div>
         </div>
     </ng-template>
 </div>
 <div class="flex items-center justify-end mt-10">
     <button
+        (click)="save()"
+        [color]="'primary'"
         class="ml-4"
         mat-flat-button
-        (click)="save()"
-        type="button"
-        [color]="'primary'">Salvar
+        type="button">Salvar
     </button>
 </div>

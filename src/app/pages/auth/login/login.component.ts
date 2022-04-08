@@ -39,13 +39,13 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.loginForm.disable();
 
         if (!this._authService.tokenFromLocalStorage) {
-            this.loginSub =  this._authService.getApiTokenFromApi()
+            this.loginSub = this._authService.getApiTokenFromApi()
                 .subscribe((result: TokenResult) => {
                     this._authService.tokenFromLocalStorage = result;
                     this.login();
                     return;
                 });
-        } else{
+        } else {
             this.login();
         }
     }
@@ -76,7 +76,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         });
     }
 
-    private login(): void{
+    private login(): void {
         this._authService.signIn(this.loginForm.value).subscribe((res) => {
             if (res.error) {
                 return this.loginForm.enable();

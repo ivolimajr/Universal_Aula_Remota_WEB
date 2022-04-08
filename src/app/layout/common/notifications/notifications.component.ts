@@ -29,10 +29,9 @@ import {NotificationsService} from 'app/layout/common/notifications/notification
 })
 export class NotificationsComponent implements OnChanges, OnInit, OnDestroy {
     @Input() notifications: Notification[];
+    unreadCount: number = 0;
     @ViewChild('notificationsOrigin') private _notificationsOrigin: MatButton;
     @ViewChild('notificationsPanel') private _notificationsPanel: TemplateRef<any>;
-
-    unreadCount: number = 0;
     private _overlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 

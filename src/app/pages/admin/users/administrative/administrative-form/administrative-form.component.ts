@@ -60,13 +60,16 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             this.cep$.unsubscribe();
         }
     }
+
     ngOnInit(): void {
         this.isAdmin = this._authServices.isAdmin();
         this.prepareForm();
     }
+
     onNoClick(): void {
         this.dialogRef.close();
     }
+
     submit(): void {
         if (this.setUserData()) {
             this.accountForm.disable();
@@ -91,6 +94,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             }
         }
     }
+
     removePhoneNumber(id: number, index: number): void {
         const phonesFormArray = this.accountForm.get('phonesNumbers') as FormArray;
         if (id === 0 && phonesFormArray.length > 1) {
@@ -122,6 +126,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             });
         });
     }
+
     addPhoneNumberField(): void {
         // Adiciona o formGroup ao array de telefones
         (this.accountForm.get('phonesNumbers') as FormArray).push(
@@ -133,6 +138,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             }));
         this._changeDetectorRef.markForCheck();
     }
+
     getCep(event): void {
         if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
             this.openSnackBar('Cep não encontrado.');
@@ -154,6 +160,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     private removePhoneFromApi(id: number): Observable<boolean> {
         return this._userServices.removePhonenumber(id);
     }
+
     private prepareForm(): void {
         if (this.id != null) {
             this.prepareEditForm();
@@ -252,6 +259,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
 
         this._changeDetectorRef.markForCheck();
     }
+
     private prepareEditForm(): void {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
@@ -261,7 +269,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                     return this.closeAlerts();
                 }
                 this.accountForm = this._formBuilder.group({
-                    id:[this.id],
+                    id: [this.id],
                     name: [res.name,
                         Validators.compose([
                             Validators.required,
@@ -383,6 +391,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                 }
             });
     }
+
     private setUserData(): boolean {
         if (this.selectedDrivingSchool === null) {
             this.openSnackBar('Informe a auto escola', 'warn');
@@ -415,6 +424,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
         }
         return true;
     }
+
     private openSnackBar(message: string, type: string = 'accent'): void {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,
@@ -423,10 +433,12 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
+
     private closeAlerts(): void {
         this.loading = false;
         this._changeDetectorRef.markForCheck();
     }
+
     private loadDrivingSchools(id: number = 0): void {
         if (this.isAdmin) {
             if (!this.loading) {

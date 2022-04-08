@@ -17,9 +17,9 @@ const URL_AUTOESCOLA_CARGO = `${environment.apiUrl}/DrivingSchoolLevel`;
 export class DrivingSchoolService extends HttpBaseServices<DrivingSchoolModel> {
 
     constructor(
-         _httpClient: HttpClient,
-         _httpBackend: HttpBackend,
-         _authService: AuthService
+        _httpClient: HttpClient,
+        _httpBackend: HttpBackend,
+        _authService: AuthService
     ) {
         super(
             _httpClient,

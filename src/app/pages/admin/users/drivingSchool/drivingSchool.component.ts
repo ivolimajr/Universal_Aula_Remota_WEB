@@ -15,40 +15,40 @@ import {Router} from '@angular/router';
 const ELEMENT_DATA: DrivingSchoolModel[] = [];
 
 @Component({
-  selector: 'app-drivingSchool',
-  templateUrl: './drivingSchool.component.html',
-  styleUrls: ['./drivingSchool.component.scss'],
+    selector: 'app-drivingSchool',
+    templateUrl: './drivingSchool.component.html',
+    styleUrls: ['./drivingSchool.component.scss'],
     animations: fuseAnimations
 })
-export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
+export class DrivingSchoolComponent implements AfterViewInit, OnInit, OnDestroy {
 
     displayedColumns: string[] = ['corporateName', 'email', 'id'];
     dataSource = new MatTableDataSource<DrivingSchoolModel>(ELEMENT_DATA);
     loading: boolean = true;
     isDeleting: boolean = false;
     _users$ = this._drivingSchoolServices.getAll(this._authServices.getUserInfoFromStorage().address.uf);
-    private data$: Subscription;
-    private user$: Subscription;
-
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatSort) sort: MatSort;
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatPaginator) paginator: MatPaginator;
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatTable) table: MatTable<DrivingSchoolModel>;
+    private data$: Subscription;
+    private user$: Subscription;
 
-  constructor(
-      public _dialog: MatDialog,
-      private _snackBar: MatSnackBar,
-      private _authServices: AuthService,
-      private _changeDetectorRef: ChangeDetectorRef,
-      private _router: Router,
-      private _drivingSchoolServices: DrivingSchoolService
-      ) {
-  }
+    constructor(
+        public _dialog: MatDialog,
+        private _snackBar: MatSnackBar,
+        private _authServices: AuthService,
+        private _changeDetectorRef: ChangeDetectorRef,
+        private _router: Router,
+        private _drivingSchoolServices: DrivingSchoolService
+    ) {
+    }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
+
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -75,6 +75,7 @@ export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
+
     /**
      * Remove um usuário caso o alert de confirmação dê OK
      *
@@ -110,14 +111,15 @@ export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        if(this.user$){
+        if (this.user$) {
             this.user$.unsubscribe();
         }
-        if(this.data$){
+        if (this.data$) {
             this.data$.unsubscribe();
         }
         this._changeDetectorRef.markForCheck();
     }
+
     /**
      * Lista os usuários
      *
@@ -131,6 +133,7 @@ export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
             this._changeDetectorRef.markForCheck();
         });
     }
+
     /**
      * Remove o usuário
      *
@@ -139,7 +142,7 @@ export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
      * @return void
      */
     private deleteFromApi(id: number): void {
-        this.user$ = this._drivingSchoolServices.delete(id).subscribe((res: any)=>{
+        this.user$ = this._drivingSchoolServices.delete(id).subscribe((res: any) => {
             if (res.error) {
                 this.isDeleting = false;
                 this._changeDetectorRef.markForCheck();
@@ -154,11 +157,11 @@ export class DrivingSchoolComponent implements AfterViewInit, OnInit,OnDestroy {
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {
-        this._snackBar.open(message,'',{
-            duration: 5*1000,
+        this._snackBar.open(message, '', {
+            duration: 5 * 1000,
             horizontalPosition: 'center',
             verticalPosition: 'bottom',
-            panelClass: ['mat-toolbar', 'mat-'+type]
+            panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
 }

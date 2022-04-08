@@ -25,15 +25,14 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
     isDeleting: boolean = false;
     _users$ = this._administrativeServices.getAll();
     loading: boolean = true;
-    private data$: Subscription;
-    private user$: Subscription;
-
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatSort) sort: MatSort;
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatPaginator) paginator: MatPaginator;
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatTable) table: MatTable<AdministrativeModel>;
+    private data$: Subscription;
+    private user$: Subscription;
 
     constructor(
         public dialog: MatDialog,
@@ -58,12 +57,12 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
                     this.getUsers();
                 }
             });
-        } else{
+        } else {
             const dialogRef = this.dialog.open(AdministrativeFormComponent);
             dialogRef.componentInstance.id = null;
-            dialogRef.afterClosed().subscribe((res)=>{
-                if(res){
-                    this.dataSource.data = [...this.dataSource.data,res];
+            dialogRef.afterClosed().subscribe((res) => {
+                if (res) {
+                    this.dataSource.data = [...this.dataSource.data, res];
                     this.openSnackBar('Inserido');
                     this._changeDetectorRef.detectChanges();
                 }
@@ -138,8 +137,9 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
             this._changeDetectorRef.markForCheck();
         });
     }
+
     private deleteFromApi(id: number): void {
-        this.user$ = this._administrativeServices.delete(id).subscribe((res: any)=>{
+        this.user$ = this._administrativeServices.delete(id).subscribe((res: any) => {
             if (res.error) {
                 this.isDeleting = false;
                 this._changeDetectorRef.markForCheck();
@@ -154,11 +154,11 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
     }
 
     private openSnackBar(message: string, type: string = 'accent'): void {
-        this._snackBar.open(message,'',{
-            duration: 5*1000,
+        this._snackBar.open(message, '', {
+            duration: 5 * 1000,
             horizontalPosition: 'center',
             verticalPosition: 'bottom',
-            panelClass: ['mat-toolbar', 'mat-'+type]
+            panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
 

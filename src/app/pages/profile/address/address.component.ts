@@ -45,8 +45,9 @@ export class AddressComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.prepareForm();
     }
+
     update(): void {
-        if(this.addressForm.invalid){
+        if (this.addressForm.invalid) {
             return this.openSnackBar('Verifique os dados', 'warn');
         }
         this.addressForm.disable();
@@ -62,9 +63,11 @@ export class AddressComponent implements OnInit, OnDestroy {
             this.closeAlerts();
         });
     }
+
     trackByFn(index: number, item: any): any {
         return item.id || index;
     }
+
     getCep(event): void {
         if (event.value.replace(/[^0-9,]*/g, '').length < 8) {
             return this.openSnackBar('Cep não encontrado.');
@@ -81,6 +84,7 @@ export class AddressComponent implements OnInit, OnDestroy {
             this._changeDetectorRef.markForCheck();
         });
     }
+
     ngOnDestroy(): void {
         if (this.cep$) {
             this.cep$.unsubscribe();
@@ -101,6 +105,7 @@ export class AddressComponent implements OnInit, OnDestroy {
         addressFormValue.cep = addressFormValue.cep.replace(/[^0-9,]*/g, '');
         this.addressModel = addressFormValue;
     }
+
     private prepareForm(): void {
         this.addressForm = this._formBuilder.group({
             id: [this.addressModel.id],
@@ -141,16 +146,18 @@ export class AddressComponent implements OnInit, OnDestroy {
                 Validators.minLength(1),
                 Validators.maxLength(10)
             ])],
-            complement:[this.addressModel.complement,  Validators.compose([
+            complement: [this.addressModel.complement, Validators.compose([
                 Validators.maxLength(100)
             ])],
         });
     }
-    private closeAlerts(): void{
+
+    private closeAlerts(): void {
         this.addressForm.enable();
         this.loading = false;
         this._changeDetectorRef.markForCheck();
     }
+
     private openSnackBar(message: string, type: string = 'accent'): void {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,

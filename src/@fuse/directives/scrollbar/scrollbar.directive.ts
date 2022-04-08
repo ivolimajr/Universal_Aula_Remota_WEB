@@ -25,7 +25,6 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy {
 
     private _animation: number;
     private _options: PerfectScrollbar.Options;
-    private _ps: PerfectScrollbar;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -38,22 +37,24 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy {
     ) {
     }
 
+    private _ps: PerfectScrollbar;
+
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
     // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Getter for _elementRef
-     */
-    get elementRef(): ElementRef {
-        return this._elementRef;
-    }
 
     /**
      * Getter for _ps
      */
     get ps(): PerfectScrollbar | null {
         return this._ps;
+    }
+
+    /**
+     * Getter for _elementRef
+     */
+    get elementRef(): ElementRef {
+        return this._elementRef;
     }
 
     // -----------------------------------------------------------------------------------------------------

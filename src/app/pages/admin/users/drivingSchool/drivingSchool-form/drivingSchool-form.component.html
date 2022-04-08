@@ -1,17 +1,17 @@
 <div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
 
-    <ng-container class="flex flex-col flex-auto min-w-0" *ngIf="loading;">
+    <ng-container *ngIf="loading;" class="flex flex-col flex-auto min-w-0">
         <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
     </ng-container>
 
     <!-- Main -->
-    <div class="flex-auto -mt-16 p-6 sm:p-10 rounded-t-2xl shadow overflow-y-auto bg-card"
-         cdkScrollable>
+    <div cdkScrollable
+         class="flex-auto -mt-16 p-6 sm:p-10 rounded-t-2xl shadow overflow-y-auto bg-card">
 
         <!-- CONTENT GOES HERE -->
         <div class="h-400 min-h-400 max-h-400">
 
-            <div class="flex flex-col flex-auto min-w-0" *ngIf="!loading || saving">
+            <div *ngIf="!loading || saving" class="flex flex-col flex-auto min-w-0">
                 <div
                     class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b">
                     <!-- Title -->
@@ -21,16 +21,16 @@
                         <!-- Add product button -->
                         <button
                             (click)="goBack()"
+                            [color]="'primary'"
                             class="ml-1 items-center"
-                            mat-flat-button
-                            [color]="'primary'">
+                            mat-flat-button>
                             <mat-icon [svgIcon]="'heroicons_outline:arrow-left'"></mat-icon>
                             <span class="ml-1 mr-1">Voltar</span>
                         </button>
                     </div>
                 </div>
                 <div class="flex-auto p-6 sm:p-5">
-                    <div class="mb-8 text-2xl font-bold" *ngIf="id; else inserir">Editar</div>
+                    <div *ngIf="id; else inserir" class="mb-8 text-2xl font-bold">Editar</div>
                     <ng-template #inserir>
                         <div class="mb-8 text-2xl font-bold">Adicionar</div>
                     </ng-template>
@@ -40,7 +40,7 @@
                         <mat-vertical-stepper [linear]="true">
 
                             <!--start:Step-DadosEmpresa-->
-                            <mat-step [stepControl]="accountForm" #step1>
+                            <mat-step #step1 [stepControl]="accountForm">
                                 <form [formGroup]="accountForm">
                                     <ng-template matStepLabel>Informações Básicas</ng-template>
                                     <p class="my-6 font-medium">
@@ -51,14 +51,14 @@
                                     <div class="flex mt-2">
                                         <mat-form-field class="flex-auto">
                                             <input
-                                                matInput
                                                 [formControlName]="'corporateName'"
                                                 [placeholder]="'Razão Social'"
+                                                matInput
                                                 required>
                                             <mat-icon
+                                                [svgIcon]="'heroicons_solid:office-building'"
                                                 class="icon-size-5"
-                                                matPrefix
-                                                [svgIcon]="'heroicons_solid:office-building'"></mat-icon>
+                                                matPrefix></mat-icon>
                                         </mat-form-field>
                                     </div>
                                     <!--end:corporateName-->
@@ -67,109 +67,109 @@
                                         <!--start:fantasyName-->
                                         <mat-form-field class="flex-auto gt-xs:pr-3">
                                             <input
-                                                matInput
                                                 [formControlName]="'fantasyName'"
                                                 [placeholder]="'Nome Fantasia'"
+                                                matInput
                                                 required>
                                             <mat-icon
+                                                [svgIcon]="'heroicons_solid:user'"
                                                 class="icon-size-5"
-                                                matPrefix
-                                                [svgIcon]="'heroicons_solid:user'"></mat-icon>
+                                                matPrefix></mat-icon>
                                         </mat-form-field>
                                         <!--end:fantasyName-->
 
                                         <!--start:cnpj-->
                                         <mat-form-field class="flex-auto gt-xs:pl-3">
                                             <input
-                                                matInput
                                                 [formControlName]="'cnpj'"
-                                                cnpj [textMask]="{mask: masks.cnpj.textMask}"
                                                 [placeholder]="'CNPJ'"
+                                                [textMask]="{mask: masks.cnpj.textMask}" cnpj
+                                                matInput
                                                 required>
                                             <mat-icon
+                                                [svgIcon]="'heroicons_solid:identification'"
                                                 class="icon-size-5"
-                                                matPrefix
-                                                [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                                matPrefix></mat-icon>
                                         </mat-form-field>
                                         <!--end:cnpj-->
 
                                         <!--start:stateRegistration-->
                                         <mat-form-field class="flex-auto gt-xs:pl-3">
                                             <input
-                                                matInput
                                                 [formControlName]="'stateRegistration'"
                                                 [placeholder]="'Inscrição Estadual'"
+                                                matInput
                                                 required>
                                             <mat-icon
+                                                [svgIcon]="'heroicons_solid:identification'"
                                                 class="icon-size-5"
-                                                matPrefix
-                                                [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                                                matPrefix></mat-icon>
                                         </mat-form-field>
                                         <!--end:stateRegistration-->
 
                                         <!--start:foundingDate-->
                                         <mat-form-field class="flex-auto gt-xs:pl-3">
                                             <mat-label>Data de Abertura</mat-label>
-                                            <input matInput type="date" [formControlName]="'foundingDate'"
-                                                   [max]="'2021-01-31'">
+                                            <input [formControlName]="'foundingDate'" [max]="'2021-01-31'" matInput
+                                                   type="date">
                                             <mat-icon
+                                                [svgIcon]="'heroicons_solid:calendar'"
                                                 class="icon-size-5"
-                                                matPrefix
-                                                [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
+                                                matPrefix></mat-icon>
                                         </mat-form-field>
                                         <!--end:foundingDate-->
 
                                         <!--start:email-->
                                         <mat-form-field class="flex-auto gt-xs:pl-3">
                                             <input
-                                                matInput
                                                 [formControlName]="'email'"
                                                 [placeholder]="'e-mail'"
+                                                matInput
                                                 required>
                                             <mat-icon
+                                                [svgIcon]="'heroicons_solid:mail'"
                                                 class="icon-size-5"
-                                                matPrefix
-                                                [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                                                matPrefix></mat-icon>
                                         </mat-form-field>
                                         <!--end:email-->
 
                                         <!--start:description-->
                                         <mat-form-field class="flex-auto gt-xs:pl-3">
                                             <input
-                                                matInput
                                                 [formControlName]="'description'"
                                                 [placeholder]="'Descrição'"
+                                                matInput
                                                 required>
                                             <mat-icon
+                                                [svgIcon]="'heroicons_solid:annotation'"
                                                 class="icon-size-5"
-                                                matPrefix
-                                                [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
+                                                matPrefix></mat-icon>
                                         </mat-form-field>
                                         <!--end:description-->
 
                                         <!--start:site-->
                                         <mat-form-field class="flex-auto gt-xs:pl-3">
                                             <input
-                                                matInput
                                                 [formControlName]="'site'"
                                                 [placeholder]="'site'"
+                                                matInput
                                                 required>
                                             <mat-icon
+                                                [svgIcon]="'heroicons_solid:globe-alt'"
                                                 class="icon-size-5"
-                                                matPrefix
-                                                [svgIcon]="'heroicons_solid:globe-alt'"></mat-icon>
+                                                matPrefix></mat-icon>
                                         </mat-form-field>
                                         <!--end:site-->
 
                                     </div>
                                     <div class="flex justify-end">
                                         <button
-                                            class="px-8"
-                                            mat-flat-button
                                             [color]="'primary'"
                                             [disabled]="accountForm.invalid"
-                                            type="button"
-                                            matStepperNext>
+                                            class="px-8"
+                                            mat-flat-button
+                                            matStepperNext
+                                            type="button">
                                             Avançar
                                         </button>
                                     </div>
@@ -178,7 +178,7 @@
                             <!--end:Step-DadosEmpresa-->
 
                             <!--start:Step-Endereco-->
-                            <mat-step [stepControl]="addressForm" #step2>
+                            <mat-step #step2 [stepControl]="addressForm">
 
                                 <form [formGroup]="addressForm">
                                     <ng-template matStepLabel>Endereço</ng-template>
@@ -188,61 +188,61 @@
                                     <div class="flex flex-col gt-xs:flex-row mt-2">
                                         <mat-form-field class="flex-auto gt-xs:pr-3">
                                             <input
-                                                matInput
+                                                (blur)="getCep($event.target)"
                                                 [formControlName]="'cep'"
                                                 [placeholder]="'Cep'"
-                                                (blur)="getCep($event.target)"
-                                                cep [textMask]="{mask: masks.cep.textMask}"
+                                                [textMask]="{mask: masks.cep.textMask}"
+                                                cep matInput
                                                 required>
                                             <mat-icon
+                                                [svgIcon]="'heroicons_solid:hashtag'"
                                                 class="icon-size-5"
-                                                matPrefix
-                                                [svgIcon]="'heroicons_solid:hashtag'"></mat-icon>
+                                                matPrefix></mat-icon>
                                         </mat-form-field>
                                         <mat-form-field class="flex-auto gt-xs:pl-3">
                                             <input
-                                                matInput
                                                 [formControlName]="'address'"
                                                 [placeholder]="'Endereço'"
+                                                matInput
                                                 required>
                                             <mat-icon
+                                                [svgIcon]="'heroicons_solid:location-marker'"
                                                 class="icon-size-5"
-                                                matPrefix
-                                                [svgIcon]="'heroicons_solid:location-marker'"></mat-icon>
+                                                matPrefix></mat-icon>
                                         </mat-form-field>
                                     </div>
                                     <div class="flex">
                                         <mat-form-field class="flex-auto">
                                             <input
-                                                matInput
                                                 [formControlName]="'district'"
                                                 [placeholder]="'Bairro'"
+                                                matInput
                                                 required>
                                             <mat-icon
+                                                [svgIcon]="'heroicons_solid:home'"
                                                 class="icon-size-5"
-                                                matPrefix
-                                                [svgIcon]="'heroicons_solid:home'"></mat-icon>
+                                                matPrefix></mat-icon>
                                         </mat-form-field>
                                     </div>
                                     <div class="flex">
                                         <mat-form-field class="fuse-mat-textarea flex-auto">
                                             <input
-                                                matInput
                                                 [formControlName]="'addressNumber'"
                                                 [placeholder]="'Número'"
+                                                matInput
                                                 required>
                                             <mat-icon
+                                                [svgIcon]="'heroicons_solid:annotation'"
                                                 class="icon-size-5"
-                                                matPrefix
-                                                [svgIcon]="'heroicons_solid:annotation'"></mat-icon>
+                                                matPrefix></mat-icon>
                                         </mat-form-field>
                                     </div>
                                     <div class="flex">
                                         <mat-form-field class="fuse-mat-textarea flex-auto">
                                             <mat-label>UF</mat-label>
                                             <mat-icon
-                                                class="icon-size-5"
                                                 [svgIcon]="'heroicons_solid:location-marker'"
+                                                class="icon-size-5"
                                                 matPrefix></mat-icon>
                                             <mat-select [formControlName]="'uf'">
                                                 <mat-option *ngFor="let item of states"
@@ -253,44 +253,44 @@
                                     <div class="flex">
                                         <mat-form-field class="fuse-mat-textarea flex-auto">
                                             <input
-                                                matInput
                                                 [formControlName]="'city'"
                                                 [placeholder]="'Cidade'"
+                                                matInput
                                                 required>
                                             <mat-icon
+                                                [svgIcon]="'heroicons_solid:map'"
                                                 class="icon-size-5"
-                                                matPrefix
-                                                [svgIcon]="'heroicons_solid:map'"></mat-icon>
+                                                matPrefix></mat-icon>
                                         </mat-form-field>
                                     </div>
                                     <div class="flex">
                                         <mat-form-field class="fuse-mat-textarea flex-auto">
                                             <input
-                                                matInput
                                                 [formControlName]="'complement'"
-                                                [placeholder]="'Complemento'">
+                                                [placeholder]="'Complemento'"
+                                                matInput>
                                             <mat-icon
+                                                [svgIcon]="'heroicons_solid:map'"
                                                 class="icon-size-5"
-                                                matPrefix
-                                                [svgIcon]="'heroicons_solid:map'"></mat-icon>
+                                                matPrefix></mat-icon>
                                         </mat-form-field>
                                     </div>
                                     <div class="flex justify-end">
                                         <button
+                                            [color]="'accent'"
                                             class="px-8 mr-2"
                                             mat-flat-button
-                                            [color]="'accent'"
-                                            type="button"
-                                            matStepperPrevious>
+                                            matStepperPrevious
+                                            type="button">
                                             Voltar
                                         </button>
                                         <button
-                                            class="px-8"
-                                            mat-flat-button
                                             [color]="'primary'"
                                             [disabled]="addressForm.invalid"
-                                            type="button"
-                                            matStepperNext>
+                                            class="px-8"
+                                            mat-flat-button
+                                            matStepperNext
+                                            type="button">
                                             Avançar
                                         </button>
                                     </div>
@@ -300,7 +300,7 @@
                             <!--end:Step-Endereco-->
 
                             <!--start:Step-Telefone-->
-                            <mat-step [stepControl]="contactForm" #step3>
+                            <mat-step #step3 [stepControl]="contactForm">
 
                                 <form [formGroup]="contactForm">
 
@@ -317,25 +317,25 @@
                                                     <mat-form-field class="fuse-mat-no-subscript flex-auto">
                                                         <mat-label>Telefone</mat-label>
                                                         <input
-                                                            matInput
-                                                            [placeholder]="'Telefone'"
-                                                            telefone
-                                                            [textMask]="{mask: masks.telefone.textMaskFunction}"
                                                             [formControl]="item.get('phoneNumber')"
-                                                            [value]="item.value.phoneNumber ?? ''">
+                                                            [placeholder]="'Telefone'"
+                                                            [textMask]="{mask: masks.telefone.textMaskFunction}"
+                                                            [value]="item.value.phoneNumber ?? ''"
+                                                            matInput
+                                                            telefone>
                                                     </mat-form-field>
                                                     <!-- Remove phone number -->
                                                     <ng-container>
                                                         <div
                                                             class="flex items-center w-10 mt-5 ml-2">
                                                             <button
+                                                                (click)="removePhoneNumber(item.value.id ?? 0,i)"
                                                                 class="w-8 h-8 min-h-8"
                                                                 mat-icon-button
-                                                                (click)="removePhoneNumber(item.value.id ?? 0,i)"
                                                                 matTooltip="Remove">
                                                                 <mat-icon
-                                                                    class="icon-size-5 text-red-500"
-                                                                    [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                                                                    [svgIcon]="'heroicons_solid:trash'"
+                                                                    class="icon-size-5 text-red-500"></mat-icon>
                                                             </button>
                                                         </div>
                                                     </ng-container>
@@ -343,11 +343,11 @@
                                             </ng-container>
                                         </div>
                                         <div
-                                            class="group inline-flex items-center mt-2 py-2 rounded cursor-pointer w-1/2"
-                                            (click)="addPhoneNumberField()">
+                                            (click)="addPhoneNumberField()"
+                                            class="group inline-flex items-center mt-2 py-2 rounded cursor-pointer w-1/2">
                                             <mat-icon
-                                                class="icon-size-5 text-green-500"
-                                                [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                                                [svgIcon]="'heroicons_solid:plus-circle'"
+                                                class="icon-size-5 text-green-500"></mat-icon>
                                             <span
                                                 class="ml-2 font-medium text-secondary group-hover:underline">Inserir novo contato</span>
                                         </div>
@@ -358,20 +358,20 @@
                                     </div>
                                     <div class="flex justify-end mt-8">
                                         <button
+                                            [color]="'accent'"
                                             class="px-8 mr-2"
                                             mat-flat-button
-                                            [color]="'accent'"
-                                            type="button"
-                                            matStepperPrevious>
+                                            matStepperPrevious
+                                            type="button">
                                             Voltar
                                         </button>
                                         <button
+                                            [color]="'primary'"
+                                            [disabled]="contactForm.invalid"
                                             class="px-8"
                                             mat-flat-button
-                                            [disabled]="contactForm.invalid"
-                                            [color]="'primary'"
-                                            type="button"
-                                            matStepperNext>
+                                            matStepperNext
+                                            type="button">
                                             Avançar
                                         </button>
                                     </div>
@@ -380,16 +380,16 @@
                             <!--end:Step-Telefone-->
 
                             <!--start:Step-Contratos-->
-                            <mat-step [stepControl]="filesForm" #step4>
+                            <mat-step #step4 [stepControl]="filesForm">
 
                                 <form [formGroup]="filesForm">
 
                                     <ng-template matStepLabel>Documentos</ng-template>
                                     <ng-container *ngIf="loadingForm;">
-                                        <mat-progress-bar class="mb-5" [mode]="'indeterminate'"></mat-progress-bar>
+                                        <mat-progress-bar [mode]="'indeterminate'" class="mb-5"></mat-progress-bar>
                                     </ng-container>
                                     <!--start:EditMode-->
-                                    <div class="my-6 font-medium" *ngIf="filesUpdate.length">
+                                    <div *ngIf="filesUpdate.length" class="my-6 font-medium">
                                         <div class="flex flex-wrap">
                                             <ng-container *ngFor="let item of filesUpdate;let i = index;">
                                                 <div
@@ -397,13 +397,13 @@
                                                     <mat-icon class="sm:icon-size-5 md:icon-size-10"
                                                               svgIcon="iconsmind:file_trash"></mat-icon>
                                                     <button
+                                                        (click)="removeFileFieldFromApi(item.id ?? 0,i)"
                                                         class="w-8 h-8 min-h-8 ml-1.5"
                                                         mat-icon-button
-                                                        (click)="removeFileFieldFromApi(item.id ?? 0,i)"
                                                         matTooltip="Remove">
                                                         <mat-icon
-                                                            class="icon-size-25 text-red-500"
-                                                            [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                                                            [svgIcon]="'heroicons_solid:trash'"
+                                                            class="icon-size-25 text-red-500"></mat-icon>
                                                     </button>
                                                     <a href="{{item.destiny}}" target="_blank">
                                                         <div
@@ -423,24 +423,24 @@
                                                 formArrayName="files">
                                                 <div class="relative flex">
                                                     <input
-                                                        type="file"
-                                                        multiple
-                                                        accept=".pdf,.jpg,.jpeg"
                                                         (change)="onPutFile($event)"
+                                                        [formControl]="file.get('file')"
                                                         [placeholder]="'arquivos'"
-                                                        [formControl]="file.get('file')">
+                                                        accept=".pdf,.jpg,.jpeg"
+                                                        multiple
+                                                        type="file">
                                                     <!-- Remove phone number -->
                                                     <ng-container>
                                                         <div
                                                             class="flex items-center ml-2">
                                                             <button
+                                                                (click)="removeFileField(file.value.id ?? 0,i)"
                                                                 class="w-8 h-8 min-h-8"
                                                                 mat-icon-button
-                                                                (click)="removeFileField(file.value.id ?? 0,i)"
                                                                 matTooltip="Remove">
                                                                 <mat-icon
-                                                                    class="icon-size-5 text-red-500"
-                                                                    [svgIcon]="'heroicons_solid:trash'"></mat-icon>
+                                                                    [svgIcon]="'heroicons_solid:trash'"
+                                                                    class="icon-size-5 text-red-500"></mat-icon>
                                                             </button>
                                                         </div>
                                                     </ng-container>
@@ -449,11 +449,11 @@
                                         </div>
                                         <!--end:arquivos-->
                                         <div
-                                            class="group inline-flex items-center mt-2 py-2 rounded cursor-pointer"
-                                            (click)="addFileField()">
+                                            (click)="addFileField()"
+                                            class="group inline-flex items-center mt-2 py-2 rounded cursor-pointer">
                                             <mat-icon
-                                                class="icon-size-5 text-green-500"
-                                                [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                                                [svgIcon]="'heroicons_solid:plus-circle'"
+                                                class="icon-size-5 text-green-500"></mat-icon>
                                             <span
                                                 class="ml-2 font-medium text-secondary group-hover:underline">Adicionar arquivo</span>
                                         </div>
@@ -461,21 +461,21 @@
                                     </div>
                                     <div class="flex justify-end mt-8">
                                         <button
+                                            [color]="'accent'"
                                             class="px-8 mr-2"
                                             mat-flat-button
-                                            [color]="'accent'"
-                                            type="button"
-                                            matStepperPrevious>
+                                            matStepperPrevious
+                                            type="button">
                                             Voltar
                                         </button>
                                         <button
+                                            (click)="setUserData()"
+                                            [color]="'primary'"
+                                            [disabled]="filesForm.invalid"
                                             class="px-8"
                                             mat-flat-button
-                                            [disabled]="filesForm.invalid"
-                                            [color]="'primary'"
-                                            (click)="setUserData()"
-                                            type="button"
-                                            matStepperNext>
+                                            matStepperNext
+                                            type="button">
                                             Avançar
                                         </button>
                                     </div>
@@ -493,14 +493,17 @@
                                         <div class="text-2xl font-semibold leading-tight">Informações Básicas</div>
                                         <div class="mt-4  justify-center ql-align-center justify-items-center">
                                             <ul>
-                                                <li class="mt-3"><b>Razão Social: </b>{{accountForm.value.corporateName}}</li>
-                                                <li class="mt-3"><b>Nome Fantasia: </b>{{accountForm.value.fantasyName}}</li>
+                                                <li class="mt-3"><b>Razão
+                                                    Social: </b>{{accountForm.value.corporateName}}</li>
+                                                <li class="mt-3"><b>Nome Fantasia: </b>{{accountForm.value.fantasyName}}
+                                                </li>
                                                 <li class="mt-3"><b>Inscrição
                                                     Estadual: </b>{{accountForm.value.stateRegistration}}</li>
                                                 <li class="mt-3"><b>Email: </b>{{accountForm.value.email}}</li>
                                                 <li class="mt-3"><b>Site: </b> {{accountForm.value.site}}</li>
                                                 <li class="mt-3"><b>CNPJ: </b>{{accountForm.value.cnpj}}</li>
-                                                <li class="mt-3"><b>Descrição: </b>{{accountForm.value.description}}</li>
+                                                <li class="mt-3"><b>Descrição: </b>{{accountForm.value.description}}
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -516,7 +519,8 @@
                                                 <li class="mt-1"><b>Cep: </b>{{addressForm.value.cep}}</li>
                                                 <li class="mt-1"><b>UF: </b> {{addressForm.value.uf}}</li>
                                                 <li class="mt-1"><b>N°: </b>{{addressForm.value.addressNumber}}</li>
-                                                <li class="mt-1"><b>Complemento: </b>{{addressForm.value.complement}}</li>
+                                                <li class="mt-1"><b>Complemento: </b>{{addressForm.value.complement}}
+                                                </li>
                                             </ul>
                                         </div>
                                         <div class="flex flex-col h-auto max-w-120 w-full overflow-hidden mt-5">
@@ -543,20 +547,20 @@
 
                                 <div class="flex justify-end mt-3">
                                     <button
+                                        [color]="'accent'"
                                         class="px-8 mr-2"
                                         mat-flat-button
-                                        [color]="'accent'"
-                                        type="button"
-                                        matStepperPrevious>
+                                        matStepperPrevious
+                                        type="button">
                                         Voltar
                                     </button>
                                     <button
-                                        class="px-8"
-                                        mat-flat-button
+                                        (click)="submit();"
                                         [color]="'primary'"
                                         [disabled]="loading"
-                                        type="reset"
-                                        (click)="submit();">
+                                        class="px-8"
+                                        mat-flat-button
+                                        type="reset">
                                         Salvar
                                     </button>
                                 </div>

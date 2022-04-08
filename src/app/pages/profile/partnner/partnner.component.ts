@@ -75,7 +75,7 @@ export class PartnnerComponent implements OnInit, OnDestroy {
                 return this.closeAlerts();
             }
             this.partnnerUser = res;
-            this.updateDataInStorage(res.email,res.name);
+            this.updateDataInStorage(res.email, res.name);
             this.removeLastPhoneUpdated(res.phonesNumbers[res.phonesNumbers.length - 1]);
             this.openSnackBar('Atualizado');
             return this.closeAlerts();
@@ -166,6 +166,7 @@ export class PartnnerComponent implements OnInit, OnDestroy {
         this.partnnerUser = formDataValues;
         return true;
     }
+
     private prepareForm(): void {
         this.loading = true;
         this._changeDetectorRef.markForCheck();
@@ -233,14 +234,17 @@ export class PartnnerComponent implements OnInit, OnDestroy {
         }
         this.closeAlerts();
     }
+
     private closeAlerts(): void {
         this.accountForm.enable();
         this.loading = false;
         this._changeDetectorRef.markForCheck();
     }
+
     private removePhoneFromApi(id: number): Observable<boolean> {
         return this._userServices.removePhonenumber(id);
     }
+
     private openSnackBar(message: string, type: string = 'accent'): void {
         this._snackBar.open(message, '', {
             duration: 5 * 1000,
@@ -249,13 +253,15 @@ export class PartnnerComponent implements OnInit, OnDestroy {
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
-    private updateDataInStorage(email: string, name: string): void{
+
+    private updateDataInStorage(email: string, name: string): void {
         this.user = this._authServices.getUserInfoFromStorage();
         this.user.name = name;
         this.user.email = email;
         this._storageServices.removeFromStorage(environment.authStorage);
         this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
     }
+
     private removeLastPhoneUpdated(lastPhone: PhoneNumberModel): void {
         //Pega o último registro de telefone que contem no array de telefones
         const phoneArray = this.accountForm.get('phonesNumbers') as FormArray;
