@@ -11,7 +11,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
     }
 ];
 
-export const plataformaNavigation: FuseNavigationItem[] = [
+export const edrivingNavigation: FuseNavigationItem[] = [
     {
         id: 'edriving',
         title: 'Usuario da Plataforma',
@@ -28,7 +28,7 @@ export const plataformaNavigation: FuseNavigationItem[] = [
     }
 ];
 
-export const parceiroNavigation: FuseNavigationItem[] = [
+export const partnnerNavigation: FuseNavigationItem[] = [
     {
         id: 'autoescola',
         title: 'Auto Escolas',
@@ -38,10 +38,19 @@ export const parceiroNavigation: FuseNavigationItem[] = [
     }
 ];
 
-export const autoEscolaNavigation: FuseNavigationItem[] = [
+export const drivingSchoolNavigation: FuseNavigationItem[] = [
     {
         id: 'administrativo',
         title: 'Administrativos',
+        type: 'basic',
+        icon: 'heroicons_outline:book-open',
+        link: '/usuario/administrativo'
+    }
+];
+export const administrativeNavigation: FuseNavigationItem[] = [
+    {
+        id: 'instrutor',
+        title: 'Instrutores',
         type: 'basic',
         icon: 'heroicons_outline:book-open',
         link: '/usuario/administrativo'
