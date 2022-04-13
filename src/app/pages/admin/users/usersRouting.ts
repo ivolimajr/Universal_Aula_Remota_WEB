@@ -7,6 +7,7 @@ import {AdministrativeComponent} from './administrative/administrative.component
 import {EdrivingGuard} from '../../../shared/services/guards/edriving.guard';
 import {PartnnerGuard} from 'app/shared/services/guards/partnner.guard';
 import {DrivingSchoolGuard} from '../../../shared/services/guards/drivingSchool.guard';
+import {InstructorComponent} from './instructor/instructor.component';
 
 
 export const usersRouting: Route[] = [
@@ -39,5 +40,10 @@ export const usersRouting: Route[] = [
         path: 'administrativo',
         canActivate: [DrivingSchoolGuard],
         component: AdministrativeComponent
+    },
+    {
+        path: 'instrutor',
+        canActivate: [DrivingSchoolGuard],
+        component: InstructorComponent
     }
 ];

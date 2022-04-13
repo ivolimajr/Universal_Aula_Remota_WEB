@@ -53,6 +53,6 @@ export const administrativeNavigation: FuseNavigationItem[] = [
         title: 'Instrutores',
         type: 'basic',
         icon: 'heroicons_outline:book-open',
-        link: '/usuario/administrativo'
+        link: '/usuario/instrutor'
     }
 ];

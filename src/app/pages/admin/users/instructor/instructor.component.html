@@ -1,0 +1,91 @@
+<ng-container *ngIf="loading;">
+    <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+</ng-container>
+
+<div *ngIf="!loading" class="flex flex-col flex-auto min-w-0">
+
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+
+        <div
+            class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b">
+            <!-- Title -->
+            <div class="text-4xl font-extrabold tracking-tight">Instrutores</div>
+            <!-- Actions -->
+            <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+                <mat-form-field appearance="standard">
+                    <mat-label>Buscar</mat-label>
+                    <input #input (keyup)="applyFilter($event)" matInput placeholder="nome">
+                </mat-form-field>
+                <!-- Add product button -->
+                <button
+                    (click)="setUser(null)"
+                    [color]="'primary'"
+                    class="ml-1 items-center"
+                    mat-flat-button>
+                    <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                    <span class="ml-1 mr-1">Inserir</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="relative flex flex-col">
+            <div>
+                <ng-container *ngIf="isDeleting;">
+                    <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+                </ng-container>
+                <table [dataSource]="dataSource" class="mat-elevation-z8" mat-table matSort>
+
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="name">
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header>Nome</th>
+                        <td *matCellDef="let element" mat-cell> {{element.name}} </td>
+                    </ng-container>
+
+                    <!-- Name Column -->
+                    <ng-container class="hidden" matColumnDef="email">
+                        <th *matHeaderCellDef class="hidden sm:table-cell" mat-header-cell mat-sort-header>Email</th>
+                        <td *matCellDef="let element" class="hidden sm:table-cell" mat-cell> {{element.email}} </td>
+                    </ng-container>
+
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="id">
+                        <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
+                        <td *matCellDef="let element" mat-cell>
+                            <div class="flex space-x-4 ...">
+                                <div>
+                                    <button
+                                        (click)="removeUser(element.id,element.email)"
+                                        class="items-center"
+                                        mat-flat-button
+                                        style="width: auto">
+                                        <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                    </button>
+                                </div>
+                                <div>
+                                    <button
+                                        (click)="setUser(element)"
+                                        class="items-center pl-4 w-auto"
+                                        mat-flat-button>
+                                        <mat-icon [svgIcon]="'heroicons_outline:eye'"></mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+                    <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+                </table>
+            </div>
+            <div>
+                <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                               aria-label="Select page of periodic elements"
+                               showFirstLastButtons>
+                </mat-paginator>
+            </div>
+        </div>
+
+    </div>
+
+</div>

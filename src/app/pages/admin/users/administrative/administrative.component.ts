@@ -35,7 +35,7 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
     private user$: Subscription;
 
     constructor(
-        public dialog: MatDialog,
+        public _dialog: MatDialog,
         private _authServices: AuthService,
         private _snackBar: MatSnackBar,
         private _administrativeServices: AdministrativeService,
@@ -49,7 +49,7 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
 
     addUser(user: AdministrativeModel): void {
         if (user) {
-            const dialogRef = this.dialog.open(AdministrativeFormComponent);
+            const dialogRef = this._dialog.open(AdministrativeFormComponent);
             dialogRef.componentInstance.id = user.id;
             dialogRef.afterClosed().subscribe((result) => {
                 if (result) {
@@ -58,7 +58,7 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
                 }
             });
         } else {
-            const dialogRef = this.dialog.open(AdministrativeFormComponent);
+            const dialogRef = this._dialog.open(AdministrativeFormComponent);
             dialogRef.componentInstance.id = null;
             dialogRef.afterClosed().subscribe((res) => {
                 if (res) {
@@ -76,7 +76,7 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
         //Se o id informado for nulo, ou se o usuário for remover ele mesmo, é retornado um erro
         if (email !== this._authServices.getUserInfoFromStorage().email) {
             //Exibe o alerta de confirmação
-            const dialogRef = this.dialog.open(AlertModalComponent, {
+            const dialogRef = this._dialog.open(AlertModalComponent, {
                 width: '280px',
                 data: {title: 'Confirmar Remoção ?'}
             });

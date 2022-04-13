@@ -1,39 +1,39 @@
 import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatSort} from '@angular/material/sort';
 import {MatTable, MatTableDataSource} from '@angular/material/table';
 import {MatDialog} from '@angular/material/dialog';
-import {MatPaginator} from '@angular/material/paginator';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {Router} from '@angular/router';
+import {MatSort} from '@angular/material/sort';
+import {MatPaginator} from '@angular/material/paginator';
 import {Subscription} from 'rxjs';
 import {fuseAnimations} from '../../../../../@fuse/animations';
-import {EdrivingFormModalComponent} from './edriving-form-modal/edriving-form-modal.component';
-import {EdrivingService} from '../../../../shared/services/http/edriving.service';
-import {EdrivingModel} from '../../../../shared/models/edriving.model';
+import {InstructorModel} from '../../../../shared/models/instructor.model';
 import {AuthService} from '../../../../shared/services/auth/auth.service';
+import {InstructorService} from '../../../../shared/services/http/instructor.service';
 import {AlertModalComponent} from '../../../../layout/common/alert/alert-modal.component';
+import {DrivingSchoolModel} from '../../../../shared/models/drivingSchool.model';
 
-const ELEMENT_DATA: EdrivingModel[] = [];
+const ELEMENT_DATA: InstructorModel[] = [];
 
 @Component({
-    selector: 'app-edriving',
-    templateUrl: './edriving.component.html',
-    styleUrls: ['./edriving.component.scss'],
+    selector: 'app-instructor',
+    templateUrl: './instructor.component.html',
+    styleUrls: ['./instructor.component.scss'],
     animations: fuseAnimations
 })
+export class InstructorComponent implements AfterViewInit, OnInit, OnDestroy {
 
-export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
-
-    displayedColumns: string[] = ['name', 'email', 'id']; //Exibe as colunas da tabela
-    dataSource = new MatTableDataSource<EdrivingModel>(ELEMENT_DATA); //Dados da tabela
+    displayedColumns: string[] = ['name', 'email', 'id'];
+    dataSource = new MatTableDataSource<InstructorModel>(ELEMENT_DATA);
     loading: boolean = true;
     isDeleting: boolean = false;
-    _users$ = this._edrivingServices.getAll(); //Observable dos usuário
+    _users$ = this._instructorServices.getAll(this._authServices.getUserInfoFromStorage().address.uf);
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatSort) sort: MatSort;
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatPaginator) paginator: MatPaginator;
     // eslint-disable-next-line @typescript-eslint/member-ordering
-    @ViewChild(MatTable) table: MatTable<EdrivingModel>;
+    @ViewChild(MatTable) table: MatTable<InstructorModel>;
     private data$: Subscription;
     private user$: Subscription;
 
@@ -42,7 +42,8 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
         private _snackBar: MatSnackBar,
         private _authServices: AuthService,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _edrivingServices: EdrivingService
+        private _router: Router,
+        private _instructorServices: InstructorService
     ) {
     }
 
@@ -55,48 +56,19 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
         this.getUsers();
     }
 
-    /**
-     * Atualiza ou adiciona um novo usuário do tipo Edriving
-     *
-     * @param id -> se tiver ID exibe e atualiza, caso contrário, adiciona
-     * @return void
-     */
-    addUser(user: EdrivingModel): void {
-        //Atualiza um usuário
-        if (user) {
-            const dialogRef = this._dialog.open(EdrivingFormModalComponent);
-            dialogRef.componentInstance.userEdit = user;
-            dialogRef.afterClosed().subscribe((result) => {
-                if (result) {
-                    this.openSnackBar('Atualizado');
-                    this.getUsers();
-                }
-            });
-        } else {
-            //Cria um usuário
-            const dialogRef = this._dialog.open(EdrivingFormModalComponent);
-            dialogRef.componentInstance.userEdit = user;
-            dialogRef.afterClosed().subscribe((result) => {
-                if (result) {
-                    this.dataSource.data = [...this.dataSource.data, result];
-                    this.openSnackBar('Salvo');
-                    this._changeDetectorRef.detectChanges();
-                }
-            });
-        }
-    }
-
     applyFilter(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
+    setUser(user: DrivingSchoolModel): void {
 
-    /**
-     * Remove um usuário caso o alert de confirmação dê OK
-     *
-     * @param id
-     * @return void
-     */
+        //Atualiza um usuário
+        // if (user) {
+        //     this._router.navigate(['usuario/auto-escola', user.id]);
+        // } else {
+        //     this._router.navigateByUrl('usuario/auto-escola/inserir');
+        // }
+    }
     removeUser(id: number, email: string): void {
         this.isDeleting = true;
         this._changeDetectorRef.markForCheck();
@@ -135,29 +107,16 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
         this._changeDetectorRef.markForCheck();
     }
 
-    /**
-     * Lista os usuários
-     *
-     * @private
-     * @return void
-     */
     private getUsers(): void {
-        this.data$ = this._users$.subscribe((items: EdrivingModel[]) => {
+        this.data$ = this._users$.subscribe((items: InstructorModel[]) => {
             this.dataSource.data = items;
             this.loading = false;
             this._changeDetectorRef.markForCheck();
         });
     }
 
-    /**
-     * Remove o usuário
-     *
-     * @param id do usuário a ser removido
-     * @private
-     * @return void
-     */
     private deleteFromApi(id: number): void {
-        this.user$ = this._edrivingServices.delete(id).subscribe((res: any) => {
+        this.user$ = this._instructorServices.delete(id).subscribe((res: any) => {
             if (res.error) {
                 this.isDeleting = false;
                 this._changeDetectorRef.markForCheck();
@@ -179,4 +138,5 @@ export class EdrivingComponent implements AfterViewInit, OnInit, OnDestroy {
             panelClass: ['mat-toolbar', 'mat-' + type]
         });
     }
+
 }

@@ -16,6 +16,7 @@ import {DrivingSchoolFormComponent} from './drivingSchool/drivingSchool-form/dri
 import {AdministrativeComponent} from './administrative/administrative.component';
 import {AdministrativeFormComponent} from './administrative/administrative-form/administrative-form.component';
 import {DropdownModule} from 'primeng/dropdown';
+import {InstructorComponent} from './instructor/instructor.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import {DropdownModule} from 'primeng/dropdown';
         DrivingSchoolComponent,
         DrivingSchoolFormComponent,
         AdministrativeComponent,
-        AdministrativeFormComponent
+        AdministrativeFormComponent,
+        InstructorComponent
     ],
     exports: [
         PartnnerComponent

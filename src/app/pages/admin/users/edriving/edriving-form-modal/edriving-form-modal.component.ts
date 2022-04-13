@@ -35,8 +35,8 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
     private level$: Subscription;
 
     constructor(
-        public dialog: MatDialog,
-        public dialogRef: MatDialogRef<EdrivingFormModalComponent>,
+        public _dialog: MatDialog,
+        public _dialogRef: MatDialogRef<EdrivingFormModalComponent>,
         private _snackBar: MatSnackBar,
         private _formBuilder: FormBuilder,
         private _changeDetectorRef: ChangeDetectorRef,
@@ -53,7 +53,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
     }
 
     onNoClick(): void {
-        this.dialogRef.close();
+        this._dialogRef.close();
     }
 
     /**
@@ -81,7 +81,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                         this._storageServices.setValueFromLocalStorage(environment.authStorage, this.user);
                     }
                     this.closeAlerts();
-                    return this.dialogRef.close(res);
+                    return this._dialogRef.close(res);
                 });
             } else {
                 this.user$ = this._edrivingServices.create(this.edrivingModel).subscribe((res: any) => {
@@ -89,7 +89,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
                         return this.closeAlerts();
                     }
                     this.closeAlerts();
-                    return this.dialogRef.close(res);
+                    return this._dialogRef.close(res);
                 });
             }
         } else {
@@ -115,7 +115,7 @@ export class EdrivingFormModalComponent implements OnInit, OnDestroy {
             this.openSnackBar('Remoção Inválida', 'warn');
             return this.closeAlerts();
         }
-        const dialogRef = this.dialog.open(AlertModalComponent, {
+        const dialogRef = this._dialog.open(AlertModalComponent, {
             width: '280px',
             data: {title: 'Confirma remoção do telefone?'}
         });

@@ -39,11 +39,11 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     private drivingSchool$: Subscription;
 
     constructor(
-        public dialog: MatDialog,
+        public _dialog: MatDialog,
+        public _dialogRef: MatDialogRef<AdministrativeFormComponent>,
         private _snackBar: MatSnackBar,
         private _formBuilder: FormBuilder,
         private _userServices: UserService,
-        public dialogRef: MatDialogRef<AdministrativeFormComponent>,
         private _changeDetectorRef: ChangeDetectorRef,
         private _authServices: AuthService,
         private _cepService: CepService,
@@ -67,7 +67,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
     }
 
     onNoClick(): void {
-        this.dialogRef.close();
+        this._dialogRef.close();
     }
 
     submit(): void {
@@ -80,7 +80,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                         return;
                     }
                     this.accountForm.enable();
-                    this.dialogRef.close(res);
+                    this._dialogRef.close(res);
                 });
             } else {
                 this.user$ = this._administrativeServices.update(this.administrativeModel).subscribe((res: any) => {
@@ -89,7 +89,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
                         return;
                     }
                     this.accountForm.enable();
-                    this.dialogRef.close(res);
+                    this._dialogRef.close(res);
                 });
             }
         }
@@ -107,7 +107,7 @@ export class AdministrativeFormComponent implements OnInit, OnDestroy {
         }
         this.loading = true;
         this._changeDetectorRef.markForCheck();
-        const dialogRef = this.dialog.open(AlertModalComponent, {
+        const dialogRef = this._dialog.open(AlertModalComponent, {
             width: '280px',
             data: {title: 'Confirma remoção do telefone?'}
         });
