@@ -6,6 +6,7 @@ import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
 import {Level} from '../../models/level.model';
 import {HttpBaseServices} from './httpBaseServices';
+import {AuthService} from '../auth/auth.service';
 
 const URL_PARCEIRO = '/Partnner';
 const URL_PARCEIRO_CARGO = `${environment.apiUrl}/PartnnerLevel`;
@@ -15,10 +16,14 @@ const URL_PARCEIRO_CARGO = `${environment.apiUrl}/PartnnerLevel`;
 })
 export class PartnnerService extends HttpBaseServices<PartnnerModel> {
 
-    constructor(_httpClient: HttpClient) {
+    constructor(
+        public _httpClient: HttpClient,
+        public _authService: AuthService
+    ) {
         super(
             _httpClient,
-            URL_PARCEIRO
+            URL_PARCEIRO,
+            _authService,
         );
     }
 

@@ -23,7 +23,7 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
     displayedColumns: string[] = ['name', 'email', 'id']; //Exibe as colunas da tabela
     dataSource = new MatTableDataSource<AdministrativeModel>(ELEMENT_DATA); //Dados da tabela
     isDeleting: boolean = false;
-    _users$ = this._administrativeServices.getAll();
+    _users$ = this._administrativeServices.getAll('', this._authServices.getUserInfoFromStorage().id);
     loading: boolean = true;
     // eslint-disable-next-line @typescript-eslint/member-ordering
     @ViewChild(MatSort) sort: MatSort;
@@ -38,8 +38,8 @@ export class AdministrativeComponent implements AfterViewInit, OnInit, OnDestroy
         public _dialog: MatDialog,
         private _authServices: AuthService,
         private _snackBar: MatSnackBar,
-        private _administrativeServices: AdministrativeService,
-        private _changeDetectorRef: ChangeDetectorRef
+        private _changeDetectorRef: ChangeDetectorRef,
+        private _administrativeServices: AdministrativeService
     ) {
     }
 

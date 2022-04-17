@@ -21,19 +21,19 @@ export class HttpBaseServices<T> {
     constructor(
         public _httpClient: HttpClient,
         private url: string,
-        private _authServices?: AuthService,
+        private _authServices: AuthService,
         private _httpBackend?: HttpBackend,
     ) {
         this.endpoint = environment.apiUrl + this.url;
         if (this.httpClientBackEnd != null)
             this.httpClientBackEnd = new HttpClient(_httpBackend);
-        if (this._authServices != null)
-            this.accessToken = this._authServices.tokenFromLocalStorage.accessToken;
+        this.accessToken = this._authServices.tokenFromLocalStorage.accessToken;
     }
 
-    getAll(uf: string = ''): Observable<T[]> {
+    getAll(uf: string = '', drivingSchoolId: number = 0): Observable<T[]> {
         uf = uf ?? '';
-        return this._httpClient.get<T[]>(this.endpoint + '?uf=' + uf).pipe(
+        if (this._authServices.isAdmin()) drivingSchoolId = 0;
+        return this._httpClient.get<T[]>(this.endpoint + '?uf=' + uf + '&drivingSchoolId=' + drivingSchoolId).pipe(
             switchMap((response: T[]) => of(response)),
             catchError(e => of(e))
         );

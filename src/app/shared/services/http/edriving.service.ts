@@ -6,6 +6,7 @@ import {environment} from '../../../../environments/environment';
 import {catchError, switchMap} from 'rxjs/operators';
 import {Level} from '../../models/level.model';
 import {HttpBaseServices} from './httpBaseServices';
+import {AuthService} from '../auth/auth.service';
 
 const URL_EDRIVING = '/edriving';
 const URL_EDRIVING_CARGO = `${environment.apiUrl}/EdrivingLevel`;
@@ -15,10 +16,14 @@ const URL_EDRIVING_CARGO = `${environment.apiUrl}/EdrivingLevel`;
 })
 export class EdrivingService extends HttpBaseServices<EdrivingModel> {
 
-    constructor(_httpClient: HttpClient) {
+    constructor(
+        public _httpClient: HttpClient,
+        public _authService: AuthService
+    ) {
         super(
             _httpClient,
-            URL_EDRIVING
+            URL_EDRIVING,
+            _authService,
         );
     }
 
